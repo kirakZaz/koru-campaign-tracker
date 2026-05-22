@@ -1,5 +1,6 @@
 import { addBusinessDays, format, isToday, isBefore, isAfter, startOfDay, differenceInBusinessDays } from 'date-fns'
 import { ru } from 'date-fns/locale'
+import type { CampaignDay } from '@/data/campaignData.types'
 
 export function getCampaignDate(startDate: string, dayIndex: number): Date {
     return addBusinessDays(new Date(startDate), dayIndex)
@@ -28,16 +29,20 @@ export function isCampaignDayFuture(startDate: string, dayIndex: number): boolea
     return isAfter(startOfDay(date), startOfDay(new Date()))
 }
 
-export function getTodayDayIndex(startDate: string, totalDays: number): number {
+export function getTodayArrayIndex(startDate: string, days: CampaignDay[]): number {
     const start = startOfDay(new Date(startDate))
     const today = startOfDay(new Date())
     const bizDays = differenceInBusinessDays(today, start)
 
-    if (bizDays < 0) {
-        return 0
+    // Find the day whose dayIndex is closest to today's business day offset
+    let closest = 0
+    let minDiff = Infinity
+    for (let i = 0; i < days.length; i++) {
+        const diff = Math.abs(days[i]!.dayIndex - bizDays)
+        if (diff < minDiff) {
+            minDiff = diff
+            closest = i
+        }
     }
-    if (bizDays >= totalDays) {
-        return totalDays - 1
-    }
-    return bizDays
+    return closest
 }

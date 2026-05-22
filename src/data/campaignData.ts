@@ -5,7 +5,7 @@ export const CAMPAIGN_DAYS: CampaignDay[] = [
     // STORY 0 (3 дня)
     // ==========================================
     {
-        dayIndex: 0, phase: 'Story 0', dayLabel: 'Story 0, День 1',
+        dayIndex: -3, phase: 'Story 0', dayLabel: 'Story 0, День 1 (Ср)',
         title: 'Positioning + инфраструктура + аккаунты',
         summary: 'Фиксируем messaging, создаём Sheets, оптимизируем LinkedIn, создаём Twitter. Макс начинает landing.',
         tasks: [
@@ -17,7 +17,7 @@ export const CAMPAIGN_DAYS: CampaignDay[] = [
         ]
     },
     {
-        dayIndex: 1, phase: 'Story 0', dayLabel: 'Story 0, День 2',
+        dayIndex: -2, phase: 'Story 0', dayLabel: 'Story 0, День 2 (Чт)',
         title: 'Группы + Onboarding + Company Page',
         summary: 'LinkedIn группы, onboarding Насти (новый ICP — 3 сегмента), Company Page в stealth.',
         tasks: [
@@ -28,7 +28,7 @@ export const CAMPAIGN_DAYS: CampaignDay[] = [
         ]
     },
     {
-        dayIndex: 2, phase: 'Story 0', dayLabel: 'Story 0, День 3',
+        dayIndex: -1, phase: 'Story 0', dayLabel: 'Story 0, День 3 (Пт)',
         title: 'Тестовый прогон + написать посты + график',
         summary: 'Настя — тест 5 профилей. Кира — черновики 6 постов. График с Максом.',
         tasks: [
@@ -44,27 +44,27 @@ export const CAMPAIGN_DAYS: CampaignDay[] = [
     // WEEK 1 — INTRIGUE + RESEARCH (5 дней)
     // ==========================================
     {
-        dayIndex: 3, phase: 'Week 1', dayLabel: 'Week 1, Понедельник',
-        title: 'ПОСТ 1 + начало research',
-        summary: 'Публикуем первый пост. Настя начинает LinkedIn searches.',
+        dayIndex: 0, phase: 'Week 1', dayLabel: 'Week 1, Понедельник',
+        title: 'Настя: research start (Кира — учёба)',
+        summary: 'Понедельник = Кира учёба, не работает. Настя начинает research.',
         tasks: [
-            { id: '014', title: '014. Кира: Опубликовать Пост 1 на LinkedIn', description: 'Зачем: Первый пост. Боль keyword research. Алгоритм решает в первые 2 часа.', steps: ['LinkedIn → Start a post → скопировать текст ниже', 'Проверить форматирование', 'Опубликовать'], subtasks: [{ id: '014-st1', text: 'Опубликован' }], assignee: 'Кира', estimate: '10 мин', priority: 'high', tags: ['content'], copyBlocks: [{ label: 'Пост 1 LinkedIn (copy-paste)', text: 'I asked 20 SEO freelancers one simple question:\n\n"How long does keyword research take you per client?"\n\nThe average answer: 3-4 hours.\n\nFor a freelancer managing 10 clients, that\'s 40 hours a month.\n\nJust on research.\nNot strategy.\nNot content creation.\nNot client communication.\n\nJust sitting in Ahrefs, exporting spreadsheets, and manually clustering keywords.\n\n40 hours. That\'s a full work week every month spent on a process that hasn\'t fundamentally changed in 10 years.\n\nThe tools got prettier. The data got bigger. But the workflow? Still manual. Still spreadsheets. Still hours.\n\nHow long does yours take?\n\n#SEO #KeywordResearch #SEOTools' }] },
-            { id: '015', title: '015. Кира: Пост 1 на Twitter', description: 'Зачем: Второй канал.', steps: ['Скопировать текст → Twitter → опубликовать'], subtasks: [{ id: '015-st1', text: 'Tweet опубликован' }], assignee: 'Кира', estimate: '5 мин', priority: 'high', tags: ['content'], copyBlocks: [{ label: 'Tweet (copy-paste)', text: 'I asked 20 SEO freelancers how long keyword research takes per client.\n\nAverage: 3-4 hours.\n\nFor someone with 10 clients = 40 hours/month just on research.\n\nThe tools got better. The workflow didn\'t.\n\nHow long does yours take?\n\n#SEO #KeywordResearch' }] },
-            { id: '016', title: '016. Кира: 2ч engagement — ответить на ВСЕ комменты', description: 'Зачем: Алгоритм решает в первые 2 часа. Каждый ответ = signal.', steps: ['2 часа на LinkedIn + Twitter', 'Каждый коммент = content-rich ответ', 'Записать commenters'], subtasks: [{ id: '016-st1', text: '2ч engagement' }, { id: '016-st2', text: 'Commenters записаны' }], assignee: 'Кира', estimate: '2 часа', priority: 'high', tags: ['engagement'], warning: '2 ЧАСА NON-NEGOTIABLE.', copyBlocks: [{ label: 'Reply: кто-то согласен', text: 'Right? The crazy part is the tools keep getting more powerful, but the actual workflow — going from data to strategy — hasn\'t changed. Do you do the clustering part manually or have you found something that helps?' }, { label: 'Reply: кто-то называет время', text: 'That\'s about average. The clustering step seems to be where most time goes — from flat list to organized topic groups. Is that true for you too?' }, { label: 'Reply: "What\'s the solution?"', text: 'Working on something actually. Not ready to share yet, but the core idea: URL to clustered keyword strategy, automatically. More soon.' }] },
             { id: '017', title: '017. Настя: LinkedIn searches batch 1 (4 запроса)', description: 'Зачем: Начинаем строить базу. Цель: 10-15 профилей.', steps: ['"SEO consultant" AND "freelance"', '"SEO agency" AND "founder"', '"Head of SEO"', '"keyword research" AND "SEO" (в Posts)', 'Для каждого: Sources Log → top 20-30 → 3-5 лучших → Sheets'], subtasks: [{ id: '017-st1', text: '4 queries done' }, { id: '017-st2', text: '10-15 профилей' }], assignee: 'Настя', estimate: '1.5 часа', priority: 'high', tags: ['research'] }
         ]
     },
     {
-        dayIndex: 4, phase: 'Week 1', dayLabel: 'Week 1, Вторник',
-        title: 'Research продолжение',
-        summary: 'Настя — ещё 4 запроса. Кира — follow-up + Twitter listening.',
+        dayIndex: 1, phase: 'Week 1', dayLabel: 'Week 1, Вторник',
+        title: 'ПОСТ 1 + research продолжение',
+        summary: 'Кира публикует первый пост + 2ч engagement. Настя — ещё 4 запроса.',
         tasks: [
-            { id: '018', title: '018. Кира: Follow-up комменты + Twitter listening', description: 'Зачем: Комменты приходят 24-48ч. Twitter listening = понять что обсуждают.', steps: ['LinkedIn: ответить на новые комменты к Посту 1', 'Commenters → если SEO pro → Sheets', 'Twitter: 30 мин listening, лайки, 2-3 replies'], subtasks: [{ id: '018-st1', text: 'Комменты отвечены' }, { id: '018-st2', text: 'Twitter 30 мин' }], assignee: 'Кира', estimate: '1 час', priority: 'medium', tags: ['engagement'] },
+            { id: '014', title: '014. Кира: Опубликовать Пост 1 на LinkedIn', description: 'Зачем: Первый пост. Боль keyword research. Алгоритм решает в первые 2 часа.', steps: ['LinkedIn → Start a post → скопировать текст ниже', 'Проверить форматирование', 'Опубликовать'], subtasks: [{ id: '014-st1', text: 'Опубликован' }], assignee: 'Кира', estimate: '10 мин', priority: 'high', tags: ['content'], copyBlocks: [{ label: 'Пост 1 LinkedIn (copy-paste)', text: 'I asked 20 SEO freelancers one simple question:\n\n"How long does keyword research take you per client?"\n\nThe average answer: 3-4 hours.\n\nFor a freelancer managing 10 clients, that\'s 40 hours a month.\n\nJust on research.\nNot strategy.\nNot content creation.\nNot client communication.\n\nJust sitting in Ahrefs, exporting spreadsheets, and manually clustering keywords.\n\n40 hours. That\'s a full work week every month spent on a process that hasn\'t fundamentally changed in 10 years.\n\nThe tools got prettier. The data got bigger. But the workflow? Still manual. Still spreadsheets. Still hours.\n\nHow long does yours take?\n\n#SEO #KeywordResearch #SEOTools' }] },
+            { id: '015', title: '015. Кира: Пост 1 на Twitter', description: 'Зачем: Второй канал.', steps: ['Скопировать текст → Twitter → опубликовать'], subtasks: [{ id: '015-st1', text: 'Tweet опубликован' }], assignee: 'Кира', estimate: '5 мин', priority: 'high', tags: ['content'], copyBlocks: [{ label: 'Tweet (copy-paste)', text: 'I asked 20 SEO freelancers how long keyword research takes per client.\n\nAverage: 3-4 hours.\n\nFor someone with 10 clients = 40 hours/month just on research.\n\nThe tools got better. The workflow didn\'t.\n\nHow long does yours take?\n\n#SEO #KeywordResearch' }] },
+            { id: '016', title: '016. Кира: 2ч engagement — ответить на ВСЕ комменты', description: 'Зачем: Алгоритм решает в первые 2 часа. Каждый ответ = signal.', steps: ['2 часа на LinkedIn + Twitter', 'Каждый коммент = content-rich ответ', 'Записать commenters'], subtasks: [{ id: '016-st1', text: '2ч engagement' }, { id: '016-st2', text: 'Commenters записаны' }], assignee: 'Кира', estimate: '2 часа', priority: 'high', tags: ['engagement'], warning: '2 ЧАСА NON-NEGOTIABLE.', copyBlocks: [{ label: 'Reply: кто-то согласен', text: 'Right? The crazy part is the tools keep getting more powerful, but the actual workflow — going from data to strategy — hasn\'t changed. Do you do the clustering part manually or have you found something that helps?' }, { label: 'Reply: кто-то называет время', text: 'That\'s about average. The clustering step seems to be where most time goes — from flat list to organized topic groups. Is that true for you too?' }, { label: 'Reply: "What\'s the solution?"', text: 'Working on something actually. Not ready to share yet, but the core idea: URL to clustered keyword strategy, automatically. More soon.' }] },
+            { id: '018', title: '018. Настя: LinkedIn searches batch 1 часть 2 (4 запроса)', description: 'Зачем: Довести до 25-30 total.', steps: ['"SEO manager" AND "agency"', '"SEO audits" AND "freelance"', '"SEO strategist"', '"digital marketing" AND "SEO" AND "director"'], subtasks: [{ id: '018-st1', text: '25-30 total' }], assignee: 'Настя', estimate: '1.5 часа', priority: 'high', tags: ['research'] },
             { id: '019', title: '019. Настя: LinkedIn searches batch 1 часть 2 (4 запроса)', description: 'Зачем: Довести до 25-30 total.', steps: ['"SEO manager" AND "agency"', '"SEO audits" AND "freelance"', '"SEO strategist"', '"digital marketing" AND "SEO" AND "director"'], subtasks: [{ id: '019-st1', text: '25-30 total' }], assignee: 'Настя', estimate: '1.5 часа', priority: 'high', tags: ['research'] }
         ]
     },
     {
-        dayIndex: 5, phase: 'Week 1', dayLabel: 'Week 1, Среда',
+        dayIndex: 2, phase: 'Week 1', dayLabel: 'Week 1, Среда',
         title: 'ПОСТ 2 + batch 2 + review',
         summary: 'Пост 2 (LinkedIn). Новые queries. Mid-week review.',
         tasks: [
@@ -74,7 +74,7 @@ export const CAMPAIGN_DAYS: CampaignDay[] = [
         ]
     },
     {
-        dayIndex: 6, phase: 'Week 1', dayLabel: 'Week 1, Четверг',
+        dayIndex: 3, phase: 'Week 1', dayLabel: 'Week 1, Четверг',
         title: 'Research finish + competitor pain research',
         summary: 'Настя завершает batch 2 + Twitter cross-check. Кира собирает жалобы на конкурентов.',
         tasks: [
@@ -83,7 +83,7 @@ export const CAMPAIGN_DAYS: CampaignDay[] = [
         ]
     },
     {
-        dayIndex: 7, phase: 'Week 1', dayLabel: 'Week 1, Пятница',
+        dayIndex: 4, phase: 'Week 1', dayLabel: 'Week 1, Пятница',
         title: 'ПОСТ 3 + weekly review + черновики W3-W4',
         summary: 'Пост 3 "Tool stack" (thread + LinkedIn). Weekly metrics. Кира пишет посты 7-12.',
         tasks: [
@@ -98,7 +98,7 @@ export const CAMPAIGN_DAYS: CampaignDay[] = [
     // WEEK 2 — HINTS + GROUPS + DMs START (5 дней)
     // ==========================================
     {
-        dayIndex: 8, phase: 'Week 2', dayLabel: 'Week 2, Понедельник',
+        dayIndex: 5, phase: 'Week 2', dayLabel: 'Week 2, Понедельник',
         title: 'ПОСТ 4 (переломный!) + groups + FIRST DMs',
         summary: 'Первый hint на решение "5 minutes". Группы. Первые DMs к тёплым людям.',
         tasks: [
@@ -108,7 +108,7 @@ export const CAMPAIGN_DAYS: CampaignDay[] = [
         ]
     },
     {
-        dayIndex: 9, phase: 'Week 2', dayLabel: 'Week 2, Вторник',
+        dayIndex: 6, phase: 'Week 2', dayLabel: 'Week 2, Вторник',
         title: 'Groups (ч.2) + conferences + DM follow-ups',
         summary: 'Оставшиеся 5 групп. Конференции. Кира follow-up DMs.',
         tasks: [
@@ -117,7 +117,7 @@ export const CAMPAIGN_DAYS: CampaignDay[] = [
         ]
     },
     {
-        dayIndex: 10, phase: 'Week 2', dayLabel: 'Week 2, Среда',
+        dayIndex: 7, phase: 'Week 2', dayLabel: 'Week 2, Среда',
         title: 'ПОСТ 5 + communities',
         summary: 'Пост 5 "Spreadsheet workflow". Настя: SEO communities.',
         tasks: [
@@ -126,7 +126,7 @@ export const CAMPAIGN_DAYS: CampaignDay[] = [
         ]
     },
     {
-        dayIndex: 11, phase: 'Week 2', dayLabel: 'Week 2, Четверг',
+        dayIndex: 8, phase: 'Week 2', dayLabel: 'Week 2, Четверг',
         title: 'G2/Capterra + beta push',
         summary: 'Настя: proven buyers. Кира: push beta invites.',
         tasks: [
@@ -135,7 +135,7 @@ export const CAMPAIGN_DAYS: CampaignDay[] = [
         ]
     },
     {
-        dayIndex: 12, phase: 'Week 2', dayLabel: 'Week 2, Пятница',
+        dayIndex: 9, phase: 'Week 2', dayLabel: 'Week 2, Пятница',
         title: 'ПОСТ 6 (первый тизер + LANDING LINK!) + review',
         summary: 'ПЕРВЫЙ ТИЗЕР. Первая ссылка на landing. С этого момента каждый пост = landing link.',
         tasks: [
@@ -149,7 +149,7 @@ export const CAMPAIGN_DAYS: CampaignDay[] = [
     // WEEK 3 — BUILDING IN PUBLIC (5 дней)
     // ==========================================
     {
-        dayIndex: 13, phase: 'Week 3', dayLabel: 'Week 3, Понедельник',
+        dayIndex: 10, phase: 'Week 3', dayLabel: 'Week 3, Понедельник',
         title: 'HEADLINE CHANGE + ПОСТ 7',
         summary: 'Headline → stealth mode. Первый Building in Public пост.',
         tasks: [
@@ -159,7 +159,7 @@ export const CAMPAIGN_DAYS: CampaignDay[] = [
         ]
     },
     {
-        dayIndex: 14, phase: 'Week 3', dayLabel: 'Week 3, Вторник',
+        dayIndex: 11, phase: 'Week 3', dayLabel: 'Week 3, Вторник',
         title: 'Blog contributors (ч.2) + engagement',
         summary: 'Настя: оставшиеся blogs. Кира: DM follow-ups + beta demos.',
         tasks: [
@@ -168,7 +168,7 @@ export const CAMPAIGN_DAYS: CampaignDay[] = [
         ]
     },
     {
-        dayIndex: 15, phase: 'Week 3', dayLabel: 'Week 3, Среда',
+        dayIndex: 12, phase: 'Week 3', dayLabel: 'Week 3, Среда',
         title: 'ПОСТ 8 + categorization start',
         summary: 'Пост 8 "Topic clusters > keyword lists". Настя начинает финальную категоризацию.',
         tasks: [
@@ -177,7 +177,7 @@ export const CAMPAIGN_DAYS: CampaignDay[] = [
         ]
     },
     {
-        dayIndex: 16, phase: 'Week 3', dayLabel: 'Week 3, Четверг',
+        dayIndex: 13, phase: 'Week 3', dayLabel: 'Week 3, Четверг',
         title: 'Categorization finish + engagement',
         summary: 'Настя финализирует. Кира — спорные cases + beta.',
         tasks: [
@@ -187,7 +187,7 @@ export const CAMPAIGN_DAYS: CampaignDay[] = [
         ]
     },
     {
-        dayIndex: 17, phase: 'Week 3', dayLabel: 'Week 3, Пятница',
+        dayIndex: 14, phase: 'Week 3', dayLabel: 'Week 3, Пятница',
         title: 'ПОСТ 9 + final review Priority A + templates',
         summary: 'Pipeline пост. Кира ревьюит ВСЕ Priority A. Настя готовит connection templates.',
         tasks: [
@@ -202,7 +202,7 @@ export const CAMPAIGN_DAYS: CampaignDay[] = [
     // WEEK 4 — REVEAL + OUTREACH (5 дней)
     // ==========================================
     {
-        dayIndex: 18, phase: 'Week 4', dayLabel: 'Week 4, Понедельник',
+        dayIndex: 15, phase: 'Week 4', dayLabel: 'Week 4, Понедельник',
         title: 'REVEAL KORU + ПОСТ 10 + outreach start',
         summary: 'Бренд KORU раскрыт! Headline финальный. Настя начинает connection requests.',
         tasks: [
@@ -212,7 +212,7 @@ export const CAMPAIGN_DAYS: CampaignDay[] = [
         ]
     },
     {
-        dayIndex: 19, phase: 'Week 4', dayLabel: 'Week 4, Вторник',
+        dayIndex: 16, phase: 'Week 4', dayLabel: 'Week 4, Вторник',
         title: 'Outreach + monitoring + beta testimonials',
         summary: 'Продолжаем outreach. Мониторим acceptance. Собираем testimonials.',
         tasks: [
@@ -221,7 +221,7 @@ export const CAMPAIGN_DAYS: CampaignDay[] = [
         ]
     },
     {
-        dayIndex: 20, phase: 'Week 4', dayLabel: 'Week 4, Среда',
+        dayIndex: 17, phase: 'Week 4', dayLabel: 'Week 4, Среда',
         title: 'ПОСТ 11 + outreach',
         summary: 'Пост 11 "Beta testers saying". Outreach продолжается.',
         tasks: [
@@ -230,7 +230,7 @@ export const CAMPAIGN_DAYS: CampaignDay[] = [
         ]
     },
     {
-        dayIndex: 21, phase: 'Week 4', dayLabel: 'Week 4, Четверг',
+        dayIndex: 18, phase: 'Week 4', dayLabel: 'Week 4, Четверг',
         title: 'Outreach + demo recording',
         summary: 'Настя: outreach. Кира: записать demo GIF.',
         tasks: [
@@ -240,7 +240,7 @@ export const CAMPAIGN_DAYS: CampaignDay[] = [
         ]
     },
     {
-        dayIndex: 22, phase: 'Week 4', dayLabel: 'Week 4, Пятница',
+        dayIndex: 19, phase: 'Week 4', dayLabel: 'Week 4, Пятница',
         title: 'ПОСТ 12 (demo!) + GO/NO-GO',
         summary: 'Demo post. Критический review: acceptance rate.',
         tasks: [
@@ -254,7 +254,7 @@ export const CAMPAIGN_DAYS: CampaignDay[] = [
     // WEEK 5 — PRIORITY B + PRE-LAUNCH (5 дней)
     // ==========================================
     {
-        dayIndex: 23, phase: 'Week 5', dayLabel: 'Week 5, Понедельник',
+        dayIndex: 20, phase: 'Week 5', dayLabel: 'Week 5, Понедельник',
         title: 'Priority B outreach start + launch post draft',
         summary: 'Расширяем на Priority B. Кира пишет launch post.',
         tasks: [
@@ -263,7 +263,7 @@ export const CAMPAIGN_DAYS: CampaignDay[] = [
         ]
     },
     {
-        dayIndex: 24, phase: 'Week 5', dayLabel: 'Week 5, Вторник',
+        dayIndex: 21, phase: 'Week 5', dayLabel: 'Week 5, Вторник',
         title: 'Outreach + launch post review',
         summary: 'Настя: outreach. Кира: review launch post.',
         tasks: [
@@ -272,7 +272,7 @@ export const CAMPAIGN_DAYS: CampaignDay[] = [
         ]
     },
     {
-        dayIndex: 25, phase: 'Week 5', dayLabel: 'Week 5, Среда',
+        dayIndex: 22, phase: 'Week 5', dayLabel: 'Week 5, Среда',
         title: 'Outreach continue',
         summary: 'Настя: outreach. Кира: engagement + beta follow-ups.',
         tasks: [
@@ -282,7 +282,7 @@ export const CAMPAIGN_DAYS: CampaignDay[] = [
         ]
     },
     {
-        dayIndex: 26, phase: 'Week 5', dayLabel: 'Week 5, Четверг',
+        dayIndex: 23, phase: 'Week 5', dayLabel: 'Week 5, Четверг',
         title: 'Outreach + email draft',
         summary: 'Настя: outreach. Кира: email waitlist draft.',
         tasks: [
@@ -291,7 +291,7 @@ export const CAMPAIGN_DAYS: CampaignDay[] = [
         ]
     },
     {
-        dayIndex: 27, phase: 'Week 5', dayLabel: 'Week 5, Пятница',
+        dayIndex: 24, phase: 'Week 5', dayLabel: 'Week 5, Пятница',
         title: 'Pre-launch FINAL check',
         summary: 'ВСЁ проверяем. Launch через выходные.',
         tasks: [
@@ -305,7 +305,7 @@ export const CAMPAIGN_DAYS: CampaignDay[] = [
     // WEEK 6 — LAUNCH (5 дней)
     // ==========================================
     {
-        dayIndex: 28, phase: 'Week 6', dayLabel: 'Week 6, Понедельник',
+        dayIndex: 25, phase: 'Week 6', dayLabel: 'Week 6, Понедельник',
         title: 'Teaser day',
         summary: '"Tomorrow." Финальные проверки.',
         tasks: [
@@ -313,7 +313,7 @@ export const CAMPAIGN_DAYS: CampaignDay[] = [
         ]
     },
     {
-        dayIndex: 29, phase: 'Week 6', dayLabel: 'Week 6, Вторник',
+        dayIndex: 26, phase: 'Week 6', dayLabel: 'Week 6, Вторник',
         title: 'LAUNCH DAY!',
         summary: '9:00 AM пост. Beta testers comment first. Кира online весь день.',
         tasks: [
@@ -325,7 +325,7 @@ export const CAMPAIGN_DAYS: CampaignDay[] = [
         ]
     },
     {
-        dayIndex: 30, phase: 'Week 6', dayLabel: 'Week 6, Среда',
+        dayIndex: 27, phase: 'Week 6', dayLabel: 'Week 6, Среда',
         title: 'Post-launch day 1',
         summary: 'Continue engagement. DMs to interested.',
         tasks: [
@@ -334,7 +334,7 @@ export const CAMPAIGN_DAYS: CampaignDay[] = [
         ]
     },
     {
-        dayIndex: 31, phase: 'Week 6', dayLabel: 'Week 6, Четверг',
+        dayIndex: 28, phase: 'Week 6', dayLabel: 'Week 6, Четверг',
         title: 'Post-launch day 2',
         summary: 'Follow-up. Demo calls.',
         tasks: [
@@ -343,7 +343,7 @@ export const CAMPAIGN_DAYS: CampaignDay[] = [
         ]
     },
     {
-        dayIndex: 32, phase: 'Week 6', dayLabel: 'Week 6, Пятница',
+        dayIndex: 29, phase: 'Week 6', dayLabel: 'Week 6, Пятница',
         title: 'Launch week review',
         summary: 'Полный обзор. Метрики. Retro. Week 7+ plan.',
         tasks: [
@@ -356,7 +356,7 @@ export const CAMPAIGN_DAYS: CampaignDay[] = [
     // WEEK 7+ — POST-LAUNCH
     // ==========================================
     {
-        dayIndex: 33, phase: 'Week 7+', dayLabel: 'Week 7+',
+        dayIndex: 30, phase: 'Week 7+', dayLabel: 'Week 7+',
         title: 'Post-launch: convert → users',
         summary: 'Priority C outreach. Convert engaged → paying users. Regular content.',
         tasks: [

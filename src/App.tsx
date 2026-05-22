@@ -12,7 +12,7 @@ import { CAMPAIGN_DAYS, TOTAL_CAMPAIGN_DAYS } from '@/data/campaignData'
 import type { CampaignTask, CampaignDay, TaskOverride } from '@/data/campaignData.types'
 import type { OverdueDay } from '@/components/organisms/DayView/DayView.types'
 import { useProgress } from '@/hooks/useProgress'
-import { getTodayDayIndex } from '@/utils/dateUtils'
+import { getTodayArrayIndex } from '@/utils/dateUtils'
 import Sidebar from '@/components/organisms/Sidebar/Sidebar'
 import DayView from '@/components/organisms/DayView/DayView'
 import DayNavigation from '@/components/molecules/DayNavigation/DayNavigation'
@@ -58,10 +58,11 @@ function App() {
         if (!progress.startDate) {
             return []
         }
-        const todayIdx = getTodayDayIndex(progress.startDate, TOTAL_CAMPAIGN_DAYS)
+        const todayArrayIdx = getTodayArrayIndex(progress.startDate, mergedDays)
+        const todayDayIndex = mergedDays[todayArrayIdx]?.dayIndex ?? 0
         const result: OverdueDay[] = []
         for (const day of mergedDays) {
-            if (day.dayIndex >= todayIdx) {
+            if (day.dayIndex >= todayDayIndex) {
                 break
             }
             const unfinished = day.tasks.filter((t) => !isTaskCompleted(t.id))
@@ -81,7 +82,7 @@ function App() {
 
     React.useEffect(() => {
         if (!isLoading && progress.startDate) {
-            const todayIndex = getTodayDayIndex(progress.startDate, TOTAL_CAMPAIGN_DAYS)
+            const todayIndex = getTodayArrayIndex(progress.startDate, mergedDays)
             setCurrentDayIndex(todayIndex)
         }
     }, [isLoading, progress.startDate])
@@ -94,7 +95,7 @@ function App() {
 
     const handleGoToToday = React.useCallback(() => {
         if (progress.startDate) {
-            const todayIndex = getTodayDayIndex(progress.startDate, TOTAL_CAMPAIGN_DAYS)
+            const todayIndex = getTodayArrayIndex(progress.startDate, mergedDays)
             setCurrentDayIndex(todayIndex)
         }
     }, [progress.startDate])
