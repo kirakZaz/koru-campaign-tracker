@@ -29,20 +29,20 @@ export function isCampaignDayFuture(startDate: string, dayIndex: number): boolea
     return isAfter(startOfDay(date), startOfDay(new Date()))
 }
 
-export function getTodayArrayIndex(startDate: string, days: CampaignDay[]): number {
+export function getTodayDayIndex(startDate: string, days: CampaignDay[]): number {
     const start = startOfDay(new Date(startDate))
     const today = startOfDay(new Date())
     const bizDays = differenceInBusinessDays(today, start)
 
     // Find the day whose dayIndex is closest to today's business day offset
-    let closest = 0
+    let closestDayIndex = days[0]?.dayIndex ?? 0
     let minDiff = Infinity
-    for (let i = 0; i < days.length; i++) {
-        const diff = Math.abs(days[i]!.dayIndex - bizDays)
+    for (const day of days) {
+        const diff = Math.abs(day.dayIndex - bizDays)
         if (diff < minDiff) {
             minDiff = diff
-            closest = i
+            closestDayIndex = day.dayIndex
         }
     }
-    return closest
+    return closestDayIndex
 }

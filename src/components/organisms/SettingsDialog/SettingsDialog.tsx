@@ -15,7 +15,7 @@ import InputLabel from '@mui/material/InputLabel'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
 import { getCampaignDate, formatCampaignDate } from '@/utils/dateUtils'
-import { TOTAL_CAMPAIGN_DAYS } from '@/data/campaignData'
+import { CAMPAIGN_DAYS } from '@/data/campaignData'
 import type { TeamMember, Assignee } from '@/data/campaignData.types'
 import type { SettingsDialogProps } from './SettingsDialog.types'
 import { styles } from './SettingsDialog.styles'
@@ -95,7 +95,7 @@ const SettingsDialog = React.memo(function SettingsDialog({
     }, [dateValue, teamState, onSetStartDate, onSaveTeam, onClose])
 
     const endDate = dateValue
-        ? formatCampaignDate(getCampaignDate(dateValue, TOTAL_CAMPAIGN_DAYS - 1))
+        ? formatCampaignDate(getCampaignDate(dateValue, CAMPAIGN_DAYS[CAMPAIGN_DAYS.length - 1]!.dayIndex))
         : null
 
     const memberColors: Record<string, string> = {
@@ -154,7 +154,7 @@ const SettingsDialog = React.memo(function SettingsDialog({
                                 <br />
                                 Финиш: {endDate}
                                 <br />
-                                Всего: {TOTAL_CAMPAIGN_DAYS} рабочих дней
+                                Всего: {CAMPAIGN_DAYS.length} дней (включая Story 0)
                             </Box>
                         )}
                     </Box>

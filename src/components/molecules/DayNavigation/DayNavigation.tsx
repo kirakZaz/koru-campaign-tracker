@@ -12,36 +12,38 @@ import { styles } from './DayNavigation.styles'
 
 const DayNavigation = React.memo(function DayNavigation({
     currentDayIndex,
-    totalDays,
+    allDayIndexes,
     startDate,
     onDayChange,
     onGoToToday
 }: DayNavigationProps) {
+    const currentPos = allDayIndexes.indexOf(currentDayIndex)
+
     const handlePrev = React.useCallback(() => {
-        if (currentDayIndex > 0) {
-            onDayChange(currentDayIndex - 1)
+        if (currentPos > 0) {
+            onDayChange(allDayIndexes[currentPos - 1]!)
         }
-    }, [currentDayIndex, onDayChange])
+    }, [currentPos, allDayIndexes, onDayChange])
 
     const handleNext = React.useCallback(() => {
-        if (currentDayIndex < totalDays - 1) {
-            onDayChange(currentDayIndex + 1)
+        if (currentPos < allDayIndexes.length - 1) {
+            onDayChange(allDayIndexes[currentPos + 1]!)
         }
-    }, [currentDayIndex, totalDays, onDayChange])
+    }, [currentPos, allDayIndexes, onDayChange])
 
     const dateLabel = startDate
         ? formatCampaignDate(getCampaignDate(startDate, currentDayIndex))
-        : `День ${currentDayIndex + 1}`
+        : `День ${currentDayIndex}`
 
     return (
         <Box sx={styles.root}>
-            <IconButton onClick={handlePrev} disabled={currentDayIndex === 0} size="small">
+            <IconButton onClick={handlePrev} disabled={currentPos <= 0} size="small">
                 <ChevronLeftRoundedIcon />
             </IconButton>
             <Typography sx={styles.dateText}>
                 {dateLabel}
             </Typography>
-            <IconButton onClick={handleNext} disabled={currentDayIndex === totalDays - 1} size="small">
+            <IconButton onClick={handleNext} disabled={currentPos >= allDayIndexes.length - 1} size="small">
                 <ChevronRightRoundedIcon />
             </IconButton>
             {startDate && (

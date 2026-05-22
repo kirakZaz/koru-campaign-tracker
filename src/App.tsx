@@ -8,11 +8,11 @@ import IconButton from '@mui/material/IconButton'
 import MenuRoundedIcon from '@mui/icons-material/MenuRounded'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { useTheme } from '@mui/material/styles'
-import { CAMPAIGN_DAYS, TOTAL_CAMPAIGN_DAYS } from '@/data/campaignData'
+import { CAMPAIGN_DAYS } from '@/data/campaignData'
 import type { CampaignTask, CampaignDay, TaskOverride } from '@/data/campaignData.types'
 import type { OverdueDay } from '@/components/organisms/DayView/DayView.types'
 import { useProgress } from '@/hooks/useProgress'
-import { getTodayArrayIndex } from '@/utils/dateUtils'
+import { getTodayDayIndex } from '@/utils/dateUtils'
 import Sidebar from '@/components/organisms/Sidebar/Sidebar'
 import DayView from '@/components/organisms/DayView/DayView'
 import DayNavigation from '@/components/molecules/DayNavigation/DayNavigation'
@@ -58,7 +58,7 @@ function App() {
         if (!progress.startDate) {
             return []
         }
-        const todayArrayIdx = getTodayArrayIndex(progress.startDate, mergedDays)
+        const todayArrayIdx = getTodayDayIndex(progress.startDate, mergedDays)
         const todayDayIndex = mergedDays[todayArrayIdx]?.dayIndex ?? 0
         const result: OverdueDay[] = []
         for (const day of mergedDays) {
@@ -82,7 +82,7 @@ function App() {
 
     React.useEffect(() => {
         if (!isLoading && progress.startDate) {
-            const todayIndex = getTodayArrayIndex(progress.startDate, mergedDays)
+            const todayIndex = getTodayDayIndex(progress.startDate, mergedDays)
             setCurrentDayIndex(todayIndex)
         }
     }, [isLoading, progress.startDate])
@@ -95,7 +95,7 @@ function App() {
 
     const handleGoToToday = React.useCallback(() => {
         if (progress.startDate) {
-            const todayIndex = getTodayArrayIndex(progress.startDate, mergedDays)
+            const todayIndex = getTodayDayIndex(progress.startDate, mergedDays)
             setCurrentDayIndex(todayIndex)
         }
     }, [progress.startDate])
@@ -145,7 +145,7 @@ function App() {
         )
     }, [mergedDays, globalAssigneeFilter])
 
-    const currentDay = mergedDays[currentDayIndex]
+    const currentDay = mergedDays.find((d) => d.dayIndex === currentDayIndex) ?? mergedDays[0]
 
     if (isLoading) {
         return (
@@ -207,7 +207,7 @@ function App() {
                     <Box sx={{ flex: 1 }}>
                         <DayNavigation
                             currentDayIndex={currentDayIndex}
-                            totalDays={TOTAL_CAMPAIGN_DAYS}
+                            allDayIndexes={mergedDays.map((d) => d.dayIndex)}
                             startDate={progress.startDate}
                             onDayChange={setCurrentDayIndex}
                             onGoToToday={handleGoToToday}
