@@ -1,0 +1,35 @@
+{
+    "name": "koru-campaign-tracker",
+    "private": true,
+    "version": "1.0.0",
+    "type": "module",
+    "scripts": {
+        "dev": "concurrently \"vite\" \"node server/server.mjs\"",
+        "dev:client": "vite",
+        "dev:server": "node server/server.mjs",
+        "build": "tsc -b && vite build",
+        "preview": "vite preview"
+    },
+    "dependencies": {
+        "@emotion/react": "^11.14.0",
+        "@emotion/styled": "^11.14.0",
+        "@mui/icons-material": "^6.4.0",
+        "@mui/material": "^6.4.0",
+        "@mui/x-date-pickers": "^7.27.0",
+        "@upstash/redis": "^1.38.0",
+        "date-fns": "^4.1.0",
+        "date-fns-tz": "^3.2.0",
+        "react": "^18.3.1",
+        "react-dom": "^18.3.1"
+    },
+    "devDependencies": {
+        "@types/react": "^18.3.18",
+        "@types/react-dom": "^18.3.5",
+        "@vitejs/plugin-react": "^4.3.4",
+        "concurrently": "^9.1.0",
+        "cors": "^2.8.5",
+        "express": "^4.21.0",
+        "typescript": "~5.6.2",
+        "vite": "^6.0.0"
+    }
+}
