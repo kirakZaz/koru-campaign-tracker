@@ -52,9 +52,19 @@ export interface TaskOverride {
     warning?: string
 }
 
+export interface TeamMember {
+    name: string
+    assigneeKey: Assignee
+    email: string
+    timezone: string
+    reminderTime: string
+    remindersEnabled: boolean
+}
+
 export interface ProgressData {
     completedTasks: Record<string, boolean>
     startDate: string | null
     notes: Record<string, string>
     taskOverrides?: Record<string, TaskOverride>
+    team?: TeamMember[]
 }

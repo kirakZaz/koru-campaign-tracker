@@ -36,7 +36,7 @@ function applyOverride(task: CampaignTask, override: TaskOverride | undefined): 
 }
 
 function App() {
-    const { progress, isLoading, error, toggleTask, setStartDate, setNote, isTaskCompleted, saveTaskOverride, getTaskOverride } = useProgress()
+    const { progress, isLoading, error, toggleTask, setStartDate, setNote, isTaskCompleted, saveTaskOverride, getTaskOverride, saveTeam } = useProgress()
     const [currentDayIndex, setCurrentDayIndex] = React.useState(0)
     const [settingsOpen, setSettingsOpen] = React.useState(false)
     const [mobileDrawerOpen, setMobileDrawerOpen] = React.useState(false)
@@ -191,6 +191,8 @@ function App() {
                 onClose={handleCloseSettings}
                 startDate={progress.startDate}
                 onSetStartDate={setStartDate}
+                team={progress.team ?? []}
+                onSaveTeam={saveTeam}
             />
 
             {editingTask && (

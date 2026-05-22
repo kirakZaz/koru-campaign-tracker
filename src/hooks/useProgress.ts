@@ -1,5 +1,5 @@
 import * as React from 'react'
-import type { ProgressData, TaskOverride } from '@/data/campaignData.types'
+import type { ProgressData, TaskOverride, TeamMember } from '@/data/campaignData.types'
 
 const API_URL = '/api/progress'
 
@@ -113,6 +113,21 @@ export function useProgress() {
         return progress.taskOverrides?.[taskId]
     }, [progress.taskOverrides])
 
+    const saveTeam = React.useCallback(async (team: TeamMember[]) => {
+        const updated = { ...progress, team }
+        setProgress(updated)
+
+        try {
+            await fetch(API_URL, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'set-team', team })
+            })
+        } catch {
+            setProgress(progress)
+        }
+    }, [progress])
+
     return {
         progress,
         isLoading,
@@ -123,6 +138,7 @@ export function useProgress() {
         isTaskCompleted,
         saveTaskOverride,
         getTaskOverride,
+        saveTeam,
         refetch: fetchProgress
     }
 }

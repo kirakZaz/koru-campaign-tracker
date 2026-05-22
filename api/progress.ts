@@ -15,9 +15,10 @@ interface ProgressData {
     startDate: string | null
     notes: Record<string, string>
     taskOverrides: Record<string, unknown>
+    team: unknown[]
 }
 
-const DEFAULT_DATA: ProgressData = { completedTasks: {}, startDate: null, notes: {}, taskOverrides: {} }
+const DEFAULT_DATA: ProgressData = { completedTasks: {}, startDate: null, notes: {}, taskOverrides: {}, team: [] }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
     const redis = getRedis()
@@ -55,6 +56,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                 data.notes[req.body.dayIndex as string] = req.body.note as string
             } else if (action === 'set-task-override') {
                 data.taskOverrides[req.body.taskId as string] = req.body.override
+            } else if (action === 'set-team') {
+                data.team = req.body.team as unknown[]
             }
 
             await redis.set(PROGRESS_KEY, data)
