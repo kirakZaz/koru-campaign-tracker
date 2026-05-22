@@ -2,1343 +2,364 @@ import type { CampaignDay } from './campaignData.types'
 
 export const CAMPAIGN_DAYS: CampaignDay[] = [
     // ==========================================
-    // STORY 0, ДЕНЬ 1
+    // STORY 0 (3 дня)
     // ==========================================
     {
-        dayIndex: 0,
-        phase: 'Story 0',
-        dayLabel: 'Story 0, День 1',
+        dayIndex: 0, phase: 'Story 0', dayLabel: 'Story 0, День 1',
         title: 'Positioning + инфраструктура + аккаунты',
-        summary: 'Фиксируем core message, создаём таблицу, профили, аккаунты. Макс начинает landing.',
+        summary: 'Фиксируем messaging, создаём Sheets, оптимизируем LinkedIn, создаём Twitter. Макс начинает landing.',
         tasks: [
-            {
-                id: '001',
-                title: '001. Кира: Написать и зафиксировать core positioning',
-                description: 'Зачем: До любых постов и активностей нужно зафиксировать ЧТО мы говорим. Без этого каждый пост, комментарий, connection request будет "от балды". Positioning — фундамент всей кампании.',
-                steps: [
-                    'Открыть Google Doc (или Notion) — создать документ "KORU Positioning"',
-                    'Записать Core Message:\n  "From URL to keyword strategy in 5 minutes.\n  Topic clusters, priority scoring, page mapping, content briefs — one click.\n  4 hours of manual work, automated."',
-                    'Записать Positioning Statement:\n  "KORU — для SEO-фрилансеров и небольших агентств, которые тратят часы на ручной keyword research. В отличие от Ahrefs/Semrush которые дают данные, KORU даёт готовую стратегию."',
-                    'Записать "Что мы ГОВОРИМ":\n  — "4 hours → 5 minutes" (конкретная экономия времени)\n  — "From URL to strategy" (простота — вставил URL, получил план)\n  — "Topic clusters, not keyword lists" (наш дифференциатор)\n  — "Built for freelancers and small agencies" (для кого)',
-                    'Записать "Что мы НЕ ГОВОРИМ":\n  — "AI-powered" (так говорят все 50 конкурентов)\n  — "All-in-one" (positioning Walmart — ни о чём)\n  — "Cheaper than Ahrefs" (гонка на дно по цене)\n  — "AI visibility tracking" (crowded market, не наш фокус)',
-                    'Расшарить документ с Настей и Максом'
-                ],
-                subtasks: [
-                    { id: '001-st1', text: 'Core message записан' },
-                    { id: '001-st2', text: 'Positioning statement записан' },
-                    { id: '001-st3', text: '"Говорим / не говорим" записано' },
-                    { id: '001-st4', text: 'Документ расшарен с командой' }
-                ],
-                assignee: 'Кира',
-                estimate: '1 час',
-                priority: 'high',
-                tags: ['planning'],
-                tip: 'Этот документ — библия кампании. Перед каждым постом и комментарием сверяйся: мы говорим то что здесь написано?'
-            },
-            {
-                id: '002',
-                title: '002. Кира: Обновить LinkedIn профиль (headline + about)',
-                description: 'Зачем: Когда кто-то увидит пост или получит connection request — первое что сделает — откроет профиль. Профиль должен вызывать любопытство: "что она строит?" Headline строится на БОЛИ клиента, не на решении.',
-                steps: [
-                    'Зайти в LinkedIn → Edit Profile',
-                    'Изменить Headline на:\n  "SEO professionals spend 4 hours on keyword research. I\'m fixing that."',
-                    'Изменить About section на:\n  Параграф 1: "I spent the last 6 months talking to SEO freelancers and agency owners. Every single one told me the same thing: keyword research takes forever, and the tools give data but not answers."\n  Параграф 2: "I keep asking one question: what if you could go from a URL to a full keyword strategy in 5 minutes? Not a list of keywords — a clustered, prioritized, mapped-to-pages plan."\n  Параграф 3: "Building something. More soon."',
-                    'ПРОВЕРИТЬ: нигде НЕТ слова "KORU" или деталей продукта',
-                    'Profile photo: профессиональное, чёткое, нейтральный фон',
-                    'Cover photo: тёмный, минималистичный',
-                    'Попросить Настю посмотреть профиль и дать feedback: "выглядит ли интригующе?"'
-                ],
-                subtasks: [
-                    { id: '002-st1', text: 'Headline обновлён' },
-                    { id: '002-st2', text: 'About обновлён' },
-                    { id: '002-st3', text: 'Нет упоминаний KORU' },
-                    { id: '002-st4', text: 'Настя посмотрела и ОК' }
-                ],
-                assignee: 'Кира',
-                estimate: '1 час',
-                priority: 'high',
-                tags: ['linkedin', 'branding'],
-                tip: 'Headline Evolution по фазам кампании:\n  Weeks 1-2: "...spend 4 hours...I\'m fixing that" (интрига)\n  Weeks 3-4: "Building a tool that turns URL into keyword strategy | In stealth" (building in public)\n  Week 5+: "Founder & CEO at KORU | From URL to SEO strategy in 5 minutes" (reveal)'
-            },
-            {
-                id: '003',
-                title: '003. Кира: Создать Twitter/X аккаунт',
-                description: 'Зачем: SEO-сообщество очень активно в Twitter. Там реально обсуждают инструменты, жалуются на баги, сравнивают tools. LinkedIn = профессиональный networking. Twitter = живые дискуссии. Нужны оба канала.',
-                steps: [
-                    'Зайти на twitter.com (или x.com) → Sign Up',
-                    'Username: что-то связанное с именем (не KORU пока)',
-                    'Bio: "Building a tool that turns URLs into keyword strategies. SEO should take 5 minutes, not 4 hours."',
-                    'Profile photo: то же что LinkedIn',
-                    'Подписаться на 20-30 ключевых SEO-людей:\n  Lily Ray, Aleyda Solis, John Mueller, Barry Schwartz, Kevin Indig, Cyrus Shepard, Marie Haynes, Glenn Gabe',
-                    'Подписаться на хештеги: #SEO, #SEOTools, #TechnicalSEO, #KeywordResearch',
-                    'НЕ постить пока — первая неделя = слушать, лайкать, изучать что обсуждают'
-                ],
-                subtasks: [
-                    { id: '003-st1', text: 'Аккаунт создан' },
-                    { id: '003-st2', text: 'Bio заполнен' },
-                    { id: '003-st3', text: 'Подписки на 20-30 SEO-людей' }
-                ],
-                assignee: 'Кира',
-                estimate: '30 мин',
-                priority: 'high',
-                tags: ['setup']
-            },
-            {
-                id: '004',
-                title: '004. Настя: Создать Google Sheets для tracking prospects',
-                description: 'Зачем: Это основной артефакт кампании — таблица где мы отслеживаем всех людей которых нашли, их статус, приоритет. Без таблицы вся работа Насти по research будет неструктурированной. Таблица используется каждый день до конца кампании.',
-                steps: [
-                    'Создать новый Google Sheet, назвать: "KORU Prospects — 2026"',
-                    'Создать вкладку "Prospects" с 14 колонками:\n  A: Full Name (имя и фамилия)\n  B: LinkedIn URL (ссылка на профиль)\n  C: Title / Role (должность)\n  D: Company (компания)\n  E: Company Size (размер компании)\n  F: Segment — DROPDOWN с 3 вариантами: Freelance SEO | Small Agency 3-15 | In-House Manager\n  G: Location (город, страна)\n  H: Source (откуда нашли: LinkedIn search, Group, Conference, etc.)\n  I: Activity Level — DROPDOWN: High | Medium | Low\n  J: Content Topics (о чём постят)\n  K: Priority — DROPDOWN: A | B | C\n  L: Notes (заметки, зачем этот человек важен)\n  M: Status — DROPDOWN: Researched | Connected | Engaged | Declined\n  N: Date Added (дата добавления)',
-                    'Добавить Data Validation для dropdown колонок (F, I, K, M):\n  Выделить колонку → Data → Data Validation → List of items → ввести варианты',
-                    'Заморозить первую строку: View → Freeze → 1 row',
-                    'Добавить Conditional Formatting:\n  Выделить все строки → Format → Conditional formatting\n  Priority A → зелёная заливка (#D4E8D4)\n  Priority B → жёлтая (#FFF2CC)\n  Priority C → серая (#F4F4F4)',
-                    'Создать вкладку "Metrics" с колонками:\n  Week | Total Profiles | Priority A | Priority B | Priority C | Comments Left | Requests Sent | Acceptance Rate | Notes',
-                    'Создать вкладку "Sources Log" с колонками:\n  Date | Search Query | Platform | Results Found | Notes | Status (Used/Planned)',
-                    'Расшарить доступ:\n  Настя — Editor\n  Макс — Viewer\n  Кира — Owner'
-                ],
-                subtasks: [
-                    { id: '004-st1', text: 'Sheet создан и назван' },
-                    { id: '004-st2', text: '14 колонок на месте' },
-                    { id: '004-st3', text: 'Dropdown validation работает' },
-                    { id: '004-st4', text: 'Conditional formatting работает' },
-                    { id: '004-st5', text: 'Metrics вкладка создана' },
-                    { id: '004-st6', text: 'Sources Log вкладка создана' },
-                    { id: '004-st7', text: 'Доступ расшарен' }
-                ],
-                assignee: 'Настя',
-                estimate: '1 час',
-                priority: 'high',
-                tags: ['setup']
-            },
-            {
-                id: '005',
-                title: '005. Макс: Начать делать landing page koru-seo.com',
-                description: 'Зачем: Когда люди видят профиль Киры и кликают на website — они должны увидеть профессиональный landing, а не 404. Landing собирает emails заинтересованных людей ДО запуска. Дедлайн: конец Story 0 (День 3).',
-                steps: [
-                    'Платформа: Carrd / Framer / Custom — на выбор Макса',
-                    'Дизайн: тёмная тема, цвета #0d1117 (фон) + #3fb68e (акцент)',
-                    'Текст (Кира предоставит):\n  H1: "Stop researching. Start strategizing."\n  Подзаголовок: "From URL to keyword strategy. In minutes, not hours."\n  CTA: "Get early access"\n  Email capture: поле email + кнопка "Notify me"',
-                    'Email service: Mailchimp или ConvertKit — простая форма',
-                    'Thank you message: "Thanks! We\'ll let you know when it\'s ready."',
-                    'КРИТИЧНО: НЕ добавлять скриншоты продукта, списки фич, цены. Только тизер.',
-                    'Проверить mobile и desktop'
-                ],
-                subtasks: [
-                    { id: '005-st1', text: 'Landing page live на koru-seo.com' },
-                    { id: '005-st2', text: 'Email capture работает' },
-                    { id: '005-st3', text: 'Mobile + desktop OK' }
-                ],
-                assignee: 'Макс',
-                estimate: '1 день',
-                priority: 'high',
-                tags: ['landing'],
-                warning: 'Никаких скриншотов, фич, цен! Soft stealth mode.'
-            }
+            { id: '001', title: '001. Кира: Написать и зафиксировать core positioning', description: 'Зачем: Фундамент всей кампании. Без этого посты и комментарии будут "от балды".', steps: ['Создать документ "KORU Positioning"', 'Записать core message, positioning statement, "что говорим / не говорим"', 'Расшарить с командой'], subtasks: [{ id: '001-st1', text: 'Core message записан' }, { id: '001-st2', text: 'Расшарено с командой' }], assignee: 'Кира', estimate: '1 час', priority: 'high', tags: ['planning'], copyBlocks: [{ label: 'Core Message', text: 'From URL to keyword strategy in 5 minutes.\nTopic clusters, priority scoring, page mapping, content briefs — one click.\n4 hours of manual work, automated.' }, { label: 'Positioning Statement', text: 'KORU — для SEO-фрилансеров и небольших агентств, которые тратят часы на ручной keyword research. В отличие от Ahrefs/Semrush которые дают данные, KORU даёт готовую стратегию.' }] },
+            { id: '002', title: '002. Кира: Обновить LinkedIn профиль', description: 'Зачем: Первое что увидит prospect. Headline строится на БОЛИ клиента.', steps: ['Headline: см. текст ниже', 'About: см. текст ниже', 'Photo: профессиональное. Cover: тёмный.', 'Проверить: нигде нет "KORU"'], subtasks: [{ id: '002-st1', text: 'Headline обновлён' }, { id: '002-st2', text: 'About обновлён' }, { id: '002-st3', text: 'Нет упоминаний KORU' }], assignee: 'Кира', estimate: '1 час', priority: 'high', tags: ['linkedin', 'branding'], copyBlocks: [{ label: 'Headline (copy-paste в LinkedIn)', text: 'SEO professionals spend 4 hours on keyword research. I\'m fixing that.' }, { label: 'About (copy-paste в LinkedIn)', text: 'I spent the last 6 months talking to SEO freelancers and agency owners. Every single one told me the same thing: keyword research takes forever, and the tools give data but not answers.\n\nI keep asking one question: what if you could go from a URL to a full keyword strategy in 5 minutes? Not a list of keywords — a clustered, prioritized, mapped-to-pages plan.\n\nBuilding something. More soon.' }] },
+            { id: '003', title: '003. Кира: Создать Twitter/X аккаунт', description: 'Зачем: SEO-сообщество активно в Twitter. Второй канал.', steps: ['Sign up на twitter.com', 'Bio: см. ниже', 'Подписаться на 20-30 SEO-людей: Lily Ray, Aleyda Solis, John Mueller, Barry Schwartz, Kevin Indig', 'НЕ постить пока — неделя listening'], subtasks: [{ id: '003-st1', text: 'Аккаунт создан' }, { id: '003-st2', text: 'Подписки 20-30' }], assignee: 'Кира', estimate: '30 мин', priority: 'high', tags: ['setup'], copyBlocks: [{ label: 'Twitter Bio (copy-paste)', text: 'Building a tool that turns URLs into keyword strategies. SEO should take 5 minutes, not 4 hours.' }] },
+            { id: '004', title: '004. Настя: Создать Google Sheets', description: 'Зачем: Основная таблица для всех prospects. Используется каждый день.', steps: ['Создать "KORU Prospects — 2026"', '14 колонок + data validation + conditional formatting', 'Вкладки Metrics + Sources Log', 'Расшарить команде'], subtasks: [{ id: '004-st1', text: 'Sheet создан' }, { id: '004-st2', text: 'Validation + formatting' }, { id: '004-st3', text: 'Доступ расшарен' }], assignee: 'Настя', estimate: '1 час', priority: 'high', tags: ['setup'] },
+            { id: '005', title: '005. Макс: Landing page koru-seo.com', description: 'Зачем: Email capture. Когда prospect кликнет website — не 404.', steps: ['Тёмная тема, #0d1117 + #3fb68e', 'Текст: см. ниже', 'Email capture + "Notify me"', 'НЕТ скриншотов, фич, цен'], subtasks: [{ id: '005-st1', text: 'Landing live' }, { id: '005-st2', text: 'Email capture работает' }], assignee: 'Макс', estimate: '1 день', priority: 'high', tags: ['landing'], copyBlocks: [{ label: 'Landing page copy', text: 'H1: Stop researching. Start strategizing.\n\nSubheadline: From URL to keyword strategy. In minutes, not hours.\n\nCTA: Get early access\n[Email input] [Notify me]' }] }
         ]
     },
-
-    // ==========================================
-    // STORY 0, ДЕНЬ 2
-    // ==========================================
     {
-        dayIndex: 1,
-        phase: 'Story 0',
-        dayLabel: 'Story 0, День 2',
+        dayIndex: 1, phase: 'Story 0', dayLabel: 'Story 0, День 2',
         title: 'Группы + Onboarding + Company Page',
-        summary: 'Настя подаёт заявки в LinkedIn группы. Кира проводит onboarding Насти (новый ICP). Кира создаёт Company Page.',
+        summary: 'LinkedIn группы, onboarding Насти (новый ICP — 3 сегмента), Company Page в stealth.',
         tasks: [
-            {
-                id: '006',
-                title: '006. Настя: Подать заявки в 10 LinkedIn групп (аккаунт Киры)',
-                description: 'Зачем: Группы — источник prospects на Week 2 (мы будем искать активных участников) и канал органического engagement. Заявки апрувят медленно (иногда неделю), поэтому подаём СЕЙЧАС чтобы к Week 2 были approved.',
-                steps: [
-                    'Зайти в LinkedIn аккаунт КИРЫ → Groups → Discover',
-                    'Найти и подать заявку в каждую из 10 групп:\n  1. SEO Professionals\n  2. Technical SEO\n  3. Search Engine Land\n  4. Digital Marketing\n  5. SEO & SEM Professionals\n  6. Content Marketing & SEO\n  7. Agency Growth & Scaling\n  8. Moz Community\n  9. SEO for Startups\n  10. International SEO',
-                    'Если группа закрытая — заполнить join question:\n  Для Киры: "Interested in SEO workflows and tools as a tech founder"\n  НЕ упоминать KORU или продукт',
-                    'Записать в Sources Log (вкладка в Sheets):\n  Date | Group Name | Status (Pending) | Account (Kira)'
-                ],
-                subtasks: [
-                    { id: '006-st1', text: 'SEO Professionals — заявка подана' },
-                    { id: '006-st2', text: 'Technical SEO — подана' },
-                    { id: '006-st3', text: 'Search Engine Land — подана' },
-                    { id: '006-st4', text: 'Digital Marketing — подана' },
-                    { id: '006-st5', text: 'SEO & SEM Professionals — подана' },
-                    { id: '006-st6', text: 'Content Marketing & SEO — подана' },
-                    { id: '006-st7', text: 'Agency Growth & Scaling — подана' },
-                    { id: '006-st8', text: 'Moz Community — подана' },
-                    { id: '006-st9', text: 'SEO for Startups — подана' },
-                    { id: '006-st10', text: 'International SEO — подана' },
-                    { id: '006-st11', text: 'Все записаны в Sources Log' }
-                ],
-                assignee: 'Настя',
-                estimate: '30 мин',
-                priority: 'high',
-                tags: ['setup', 'linkedin']
-            },
-            {
-                id: '007',
-                title: '007. Настя: Подать заявки в 10 LinkedIn групп (аккаунт Насти)',
-                description: 'Зачем: Два аккаунта в группах = можем видеть больше discussions и participants. Тот же список групп.',
-                steps: [
-                    'Зайти в LinkedIn аккаунт НАСТИ',
-                    'Подать заявку в те же 10 групп',
-                    'Join question для Насти: "Interested in SEO as part of my work in digital marketing"',
-                    'Записать в Sources Log: Account = Nastya'
-                ],
-                subtasks: [
-                    { id: '007-st1', text: '10 заявок подано в аккаунте Насти' },
-                    { id: '007-st2', text: 'Записано в Sources Log' }
-                ],
-                assignee: 'Настя',
-                estimate: '20 мин',
-                priority: 'high',
-                tags: ['setup', 'linkedin']
-            },
-            {
-                id: '008',
-                title: '008. Кира + Настя: Провести onboarding — новый ICP и messaging',
-                description: 'Зачем: Настя будет каждый день искать людей и комментировать посты. Если она не понимает КТО наш клиент и КАКОЙ тон — она будет собирать нерелевантных людей и писать не те комментарии. Лучше потратить 1.5 часа сейчас, чем 3 недели исправлять ошибки.',
-                steps: [
-                    'Созвон 1.5 часа (Zoom/Google Meet)',
-                    'Часть 1 — Кто наш клиент (ICP). Объяснить 3 сегмента:\n  1. Freelance SEO Consultant — работает один, 5-20 клиентов, сам покупает tools, платит $200+/мес за стек инструментов, keyword research = его главная боль (3-4 часа на клиента)\n  2. Small SEO Agency Owner (3-15 человек) — scaling проблема, 10 клиентов x 4 часа = 40 часов/мес на keyword research, нужна эффективность\n  3. In-House SEO Manager (50-500 employees) — отчитывается перед руководством, нужны готовые стратегии для презентации',
-                    'Часть 2 — Priority A/B/C по новым критериям:\n  A: АКТИВНО постит про keyword research, SEO workflows, tool comparisons. Freelance или agency 3-15. High LinkedIn activity.\n  B: SEO professional, но менее активен. In-house managers. Medium activity.\n  C: Tangentially related. Digital marketing generalists. Low activity.',
-                    'Часть 3 — Тон комментариев:\n  ПРАВИЛЬНО: "How long does keyword clustering take you per client?" / "Do you use a tool or spreadsheet for grouping?" / "What\'s your biggest time sink in keyword research?"\n  НЕПРАВИЛЬНО: "Great post!" / "I agree!" / "Interesting thoughts!"\n  Тон: человек который ГЛУБОКО понимает боль keyword research и задаёт sharp вопросы',
-                    'Часть 4 — Живые примеры:\n  Открыть 3-5 LinkedIn профилей → Кира объясняет: "Это Priority A потому что..."\n  Открыть 3-5 постов → Кира объясняет: "Под этим комментируем так..."',
-                    'Часть 5 — Логистика:\n  Daily check-in первые 2 недели (15 мин в конце дня)\n  Weekly retrospective в пятницу\n  Как задавать вопросы если что-то непонятно'
-                ],
-                subtasks: [
-                    { id: '008-st1', text: 'Созвон проведён (1.5+ часа)' },
-                    { id: '008-st2', text: 'Настя может назвать 3 сегмента ICP' },
-                    { id: '008-st3', text: 'Настя понимает разницу A/B/C' },
-                    { id: '008-st4', text: 'Настя знает тон комментариев (sharp вопросы, не "great post!")' },
-                    { id: '008-st5', text: 'Daily check-in настроен' }
-                ],
-                assignee: 'Кира + Настя',
-                estimate: '1.5 часа',
-                priority: 'high',
-                tags: ['onboarding'],
-                warning: 'Если Настя не может объяснить разницу A/B/C своими словами — повторить. Это фундамент.'
-            },
-            {
-                id: '009',
-                title: '009. Кира: Создать LinkedIn Company Page KORU (soft stealth)',
-                description: 'Зачем: Когда prospects кликнут на "KORU" в профиле Киры (позже) — должна быть реальная Company Page. Это даёт доверие: "компания существует". Но в stealth mode — никаких деталей продукта.',
-                steps: [
-                    'LinkedIn → Work → Create a Company Page',
-                    'Company name: KORU',
-                    'Website: koru-seo.com',
-                    'Industry: Software Development',
-                    'Company size: 2-10 employees',
-                    'Company type: Privately Held',
-                    'Logo: текст "KORU" на тёмном фоне (#0d1117). НЕ визуальный логотип — просто текст.',
-                    'Cover image: минималистичная, тёмная. Без скриншотов.',
-                    'About: "Rethinking how SEO professionals do keyword research. Launching 2026."\n  Больше НИЧЕГО.',
-                    'НЕ добавлять KORU в Experience Киры пока — это будет на Week 4-5'
-                ],
-                subtasks: [
-                    { id: '009-st1', text: 'Company Page создана' },
-                    { id: '009-st2', text: 'About = одна тизерная строка' },
-                    { id: '009-st3', text: 'Нет деталей продукта' }
-                ],
-                assignee: 'Кира',
-                estimate: '45 мин',
-                priority: 'medium',
-                tags: ['linkedin', 'branding']
-            }
+            { id: '006', title: '006. Настя: Подать заявки в 10 LinkedIn групп (Кира)', description: 'Зачем: Группы = источник prospects на Week 2. Апрувят медленно → подаём сейчас.', steps: ['LinkedIn аккаунт Киры → Groups → Discover', '10 групп: SEO Professionals, Technical SEO, Search Engine Land, Digital Marketing, SEO & SEM Professionals, Content Marketing & SEO, Agency Growth & Scaling, Moz Community, SEO for Startups, International SEO', 'Записать статусы в Sources Log'], subtasks: [{ id: '006-st1', text: '10 заявок подано (Кира)' }, { id: '006-st2', text: 'Sources Log' }], assignee: 'Настя', estimate: '30 мин', priority: 'high', tags: ['setup', 'linkedin'] },
+            { id: '007', title: '007. Настя: Подать заявки в 10 групп (Настя)', description: 'Зачем: Два аккаунта = больше видимости.', steps: ['Те же 10 групп, аккаунт Насти', 'Sources Log'], subtasks: [{ id: '007-st1', text: '10 заявок (Настя)' }], assignee: 'Настя', estimate: '20 мин', priority: 'high', tags: ['setup', 'linkedin'] },
+            { id: '008', title: '008. Кира + Настя: Onboarding — новый ICP + messaging', description: 'Зачем: Настя каждый день ищет людей и пишет комменты. Без понимания ICP — будет ошибаться.', steps: ['Созвон 1.5 часа', '3 сегмента ICP: Freelance SEO / Small Agency 3-15 / In-House Manager', 'Priority A/B/C по новым критериям', 'Тон комментов: sharp вопросы, не "Great post!"', 'Разбор 5 живых профилей + 3 постов'], subtasks: [{ id: '008-st1', text: 'Созвон проведён' }, { id: '008-st2', text: 'ICP ясен' }, { id: '008-st3', text: 'Тон понятен' }], assignee: 'Кира + Настя', estimate: '1.5 часа', priority: 'high', tags: ['onboarding'] },
+            { id: '009', title: '009. Кира: LinkedIn Company Page (soft stealth)', description: 'Зачем: Доверие. Без деталей продукта.', steps: ['KORU | Software Development | 2-10', 'About: "Rethinking how SEO professionals do keyword research. Launching 2026."', 'НЕ добавлять KORU в Experience пока'], subtasks: [{ id: '009-st1', text: 'Company Page создана' }], assignee: 'Кира', estimate: '45 мин', priority: 'medium', tags: ['linkedin', 'branding'] }
         ]
     },
-
-    // ==========================================
-    // STORY 0, ДЕНЬ 3
-    // ==========================================
     {
-        dayIndex: 2,
-        phase: 'Story 0',
-        dayLabel: 'Story 0, День 3',
+        dayIndex: 2, phase: 'Story 0', dayLabel: 'Story 0, День 3',
         title: 'Тестовый прогон + написать посты + график',
-        summary: 'Настя делает тест 5 профилей. Кира пишет ЧЕРНОВИКИ первых 6 постов (в документ, НЕ публикует). Согласование графика с Максом.',
+        summary: 'Настя — тест 5 профилей. Кира — черновики 6 постов. График с Максом.',
         tasks: [
-            {
-                id: '010',
-                title: '010. Настя: Найти 5 тестовых профилей и добавить в Sheets',
-                description: 'Зачем: Это quality gate перед стартом. Проверяем что Настя правильно понимает новый ICP. Если ошибки — лучше исправить сейчас, а не через 3 недели.',
-                steps: [
-                    'Открыть LinkedIn',
-                    'В поиск ввести: "SEO consultant" AND "freelance"',
-                    'Перейти в People tab',
-                    'Найти 5 профилей которые по мнению Насти = Priority A',
-                    'Для каждого заполнить ВСЕ 14 колонок в Sheets (~10 мин на профиль)',
-                    'В колонке Notes ОБЯЗАТЕЛЬНО написать reasoning: "Priority A because: [конкретные причины]"',
-                    'Пометить эти 5 строк комментом "TEST RUN — review needed"',
-                    'Написать Кире что готово'
-                ],
-                subtasks: [
-                    { id: '010-st1', text: '5 профилей добавлены в Sheets' },
-                    { id: '010-st2', text: 'Все 14 полей заполнены' },
-                    { id: '010-st3', text: 'Reasoning в Notes' },
-                    { id: '010-st4', text: 'Кире сообщено' }
-                ],
-                assignee: 'Настя',
-                estimate: '50 мин',
-                priority: 'high',
-                tags: ['review']
-            },
-            {
-                id: '011',
-                title: '011. Кира: Проревьюить 5 тестовых профилей Насти',
-                description: 'Зачем: Убедиться что Настя правильно определяет Priority, Segment, Activity Level. 4+ из 5 правильных = go. Меньше = дополнительное обучение.',
-                steps: [
-                    'Открыть Sheets → найти 5 строк с "TEST RUN"',
-                    'Для каждого из 5 профилей:\n  — Открыть LinkedIn профиль\n  — Проверить: Priority правильный?\n  — Segment из 3 новых?\n  — Activity Level адекватный?\n  — Notes полезные, с reasoning?',
-                    'Дать feedback Насте:\n  4+ из 5 правильные → "Отлично, стартуем Week 1"\n  3 правильные → "Хорошо, но вот корректировки: [конкретно]"\n  2 или меньше → "Нужна дополнительная сессия, созвон 30 мин"'
-                ],
-                subtasks: [
-                    { id: '011-st1', text: 'Все 5 проревьюены' },
-                    { id: '011-st2', text: '4+ из 5 правильные' },
-                    { id: '011-st3', text: 'Feedback Насте дан' }
-                ],
-                assignee: 'Кира',
-                estimate: '30 мин',
-                priority: 'high',
-                tags: ['review']
-            },
-            {
-                id: '012',
-                title: '012. Кира: Написать ЧЕРНОВИКИ постов 1-6 (в документ, НЕ публиковать)',
-                description: 'Зачем: Пишем ВСЕ посты для Weeks 1-2 заранее в одном документе. Это даёт единый tone, возможность отредактировать как серию, и снимает нагрузку "придумывать контент каждый день". Посты будут публиковаться по графику — сегодня только пишем.',
-                steps: [
-                    'Открыть Google Doc — создать "KORU Campaign Posts"',
-                    'Пост 1 (для Week 1, Понедельник — LinkedIn + Twitter):\n  Тема: "The keyword research time trap"\n  Текст: "I asked 20 SEO freelancers how long keyword research takes per client. Average: 3-4 hours. For a freelancer with 10 clients, that\'s 40 hours/month just on research. Not strategy. Not content. Just research."\n  Финальная строка (CTA): "How long does yours take?"\n  Хэштеги (max 3-5): #SEO #KeywordResearch #SEOTools',
-                    'Пост 2 (Week 1, Среда — LinkedIn):\n  Тема: "Keyword lists vs keyword strategies"\n  Текст: "Every SEO tool gives you a list of keywords sorted by volume and difficulty. But that\'s not a strategy. A strategy is: here are 5 topic clusters, here\'s which pages already cover them, here\'s what\'s missing, here\'s the priority order. Tools give data. Professionals need strategy."\n  CTA: "What does your keyword-to-strategy process look like?"',
-                    'Пост 3 (Week 1, Пятница — Twitter thread + LinkedIn):\n  Тема: "The tool stack problem"\n  Текст: "A typical freelance SEO setup: Ahrefs ($129/mo) + Surfer ($99/mo) + Screaming Frog ($259/yr). That\'s $290/month before you earn a dollar. And you STILL cluster keywords manually in a spreadsheet."\n  CTA: "What\'s your tool stack? And what\'s still manual?"',
-                    'Пост 4 (Week 2, Понедельник — LinkedIn + Twitter):\n  Тема: "What if keyword research took 5 minutes?"\n  Текст: "I keep asking myself: what if you could paste a URL and get topic clusters, page mapping, and a content plan in 5 minutes? Not keyword soup — an actual strategy. Not a list to sort through — an action plan."\n  CTA: "Would that change how you work?"',
-                    'Пост 5 (Week 2, Среда — LinkedIn):\n  Тема: "The spreadsheet SEO workflow"\n  Текст: "I watched an SEO consultant build a keyword strategy last week. She had 4 tabs open: Ahrefs for data, a spreadsheet for clustering, Google Docs for the brief, and Asana for tasks. Four tools that don\'t talk to each other. She spent 3 hours."\n  CTA: "Sound familiar?"',
-                    'Пост 6 (Week 2, Пятница — LinkedIn + Twitter):\n  Тема: "Building something"\n  Текст: "We talked to 30 SEO professionals. The top 3 time sinks: keyword clustering (manual), content brief creation (manual), audit-to-action translation (manual). We\'re building something to fix this. More soon."\n  CTA: нет — тизер. ПЕРВЫЙ РАЗ даём link на landing в КОММЕНТАРИИ.',
-                    'ПРАВИЛА для всех постов:\n  — Короткие абзацы (1-2 предложения)\n  — Личный тон (я, мы), не корпоративный\n  — Без emoji spam\n  — Max 3-5 хэштегов\n  — НИКАКИХ упоминаний KORU в постах 1-5\n  — В посте 6 = только hint, без бренда'
-                ],
-                subtasks: [
-                    { id: '012-st1', text: 'Google Doc создан' },
-                    { id: '012-st2', text: 'Пост 1 написан' },
-                    { id: '012-st3', text: 'Пост 2 написан' },
-                    { id: '012-st4', text: 'Пост 3 написан' },
-                    { id: '012-st5', text: 'Пост 4 написан' },
-                    { id: '012-st6', text: 'Пост 5 написан' },
-                    { id: '012-st7', text: 'Пост 6 написан' },
-                    { id: '012-st8', text: 'Все посты проверены на tone и правила' }
-                ],
-                assignee: 'Кира',
-                estimate: '3 часа',
-                priority: 'high',
-                tags: ['content'],
-                warning: 'Это ЧЕРНОВИКИ в документе! НЕ публиковать сейчас. Публикация начинается Week 1.',
-                tip: 'Пост 4 = переломный. Первый раз звучит "5 minutes" и "URL to strategy". Это seed для всего positioning.'
-            },
-            {
-                id: '013',
-                title: '013. Кира + Макс: Согласовать график и launch date',
-                description: 'Зачем: Без фиксированных дат кампания расплывается. Launch date определяет ВСЕ остальные даты (отсчёт назад).',
-                steps: [
-                    'Созвон 30 мин',
-                    'Согласовать launch date (Week 6). Учесть:\n  — Готовность продукта (keyword clustering — Task из Product Roadmap)\n  — Бизнес-календарь (не в праздники)\n  — День недели для launch post (Вторник или Среда = лучший engagement)',
-                    'От launch date отсчитать назад:\n  Week 5 = -1 неделя | Week 4 = -2 | Week 3 = -3 | Week 2 = -4 | Week 1 = -5',
-                    'Создать Google Calendar события для всей команды',
-                    'Проверить: landing page будет готов к Day 3? Если нет — когда?',
-                    'Уведомить Настю о start date Week 1'
-                ],
-                subtasks: [
-                    { id: '013-st1', text: 'Launch date зафиксирована' },
-                    { id: '013-st2', text: 'Все weeks с датами' },
-                    { id: '013-st3', text: 'Calendar события созданы' },
-                    { id: '013-st4', text: 'Настя уведомлена' }
-                ],
-                assignee: 'Кира + Макс',
-                estimate: '30 мин',
-                priority: 'high',
-                tags: ['planning']
-            }
+            { id: '010', title: '010. Настя: Найти 5 тестовых профилей', description: 'Зачем: Quality gate. Проверяем понимание нового ICP.', steps: ['"SEO consultant" AND "freelance" → 5 Priority A', 'Все 14 колонок + reasoning в Notes', 'Сообщить Кире'], subtasks: [{ id: '010-st1', text: '5 профилей добавлены' }, { id: '010-st2', text: 'Кире сообщено' }], assignee: 'Настя', estimate: '50 мин', priority: 'high', tags: ['review'] },
+            { id: '011', title: '011. Кира: Ревью 5 профилей Насти', description: 'Зачем: 4+ из 5 правильные = go.', steps: ['Открыть каждый → Priority OK? Segment OK? Notes?', 'Feedback Насте'], subtasks: [{ id: '011-st1', text: '4+ из 5 OK' }, { id: '011-st2', text: 'Feedback дан' }], assignee: 'Кира', estimate: '30 мин', priority: 'high', tags: ['review'] },
+            { id: '012', title: '012. Кира: Написать черновики постов 1-6 (НЕ публиковать)', description: 'Зачем: Все посты на 2 недели заранее. Единый tone. Публикация по графику.', steps: ['Создать Google Doc "KORU Campaign Posts"', 'Написать 6 постов (тексты в copy blocks)', 'НЕ публиковать — только черновики'], subtasks: [{ id: '012-st1', text: 'Пост 1 написан' }, { id: '012-st2', text: 'Пост 2 написан' }, { id: '012-st3', text: 'Пост 3 написан' }, { id: '012-st4', text: 'Пост 4 написан' }, { id: '012-st5', text: 'Пост 5 написан' }, { id: '012-st6', text: 'Пост 6 написан' }], assignee: 'Кира', estimate: '3 часа', priority: 'high', tags: ['content'], warning: 'ЧЕРНОВИКИ! НЕ публиковать.' },
+            { id: '013', title: '013. Кира + Макс: График + launch date', description: 'Зачем: Без дат кампания расплывается.', steps: ['Созвон 30 мин', 'Launch date (Week 6)', 'Отсчитать назад, Calendar события'], subtasks: [{ id: '013-st1', text: 'Launch date' }, { id: '013-st2', text: 'Calendar' }], assignee: 'Кира + Макс', estimate: '30 мин', priority: 'high', tags: ['planning'] }
         ],
-        keyMetric: 'Story 0 Done: positioning записан, профили настроены (LinkedIn+Twitter), sheets готов, группы поданы, onboarding проведён, 6 постов написаны (не опубликованы), график зафиксирован.'
+        keyMetric: 'Story 0 Done: positioning, profiles, sheets, groups, onboarding, 6 постов, график.'
     },
 
     // ==========================================
-    // WEEK 1, ПОНЕДЕЛЬНИК
+    // WEEK 1 — INTRIGUE + RESEARCH (5 дней)
     // ==========================================
     {
-        dayIndex: 3,
-        phase: 'Week 1',
-        dayLabel: 'Week 1, Понедельник',
-        title: 'ПУБЛИКАЦИЯ ПОСТА 1 + начало research',
-        summary: 'Кира публикует первый пост из документа и 2 часа отвечает на комментарии. Настя начинает research — первые 4 LinkedIn запроса.',
+        dayIndex: 3, phase: 'Week 1', dayLabel: 'Week 1, Понедельник',
+        title: 'ПОСТ 1 + начало research',
+        summary: 'Публикуем первый пост. Настя начинает LinkedIn searches.',
         tasks: [
-            {
-                id: '014',
-                title: '014. Кира: Опубликовать Пост 1 на LinkedIn',
-                description: 'Зачем: Первый пост кампании. Тема: боль keyword research ("4 hours"). Цель: вызвать дискуссию. Алгоритм LinkedIn решает в первые 2 часа.',
-                steps: [
-                    'Зайти в LinkedIn → Start a post',
-                    'Нажать кнопку копирования на тексте ниже → вставить в LinkedIn',
-                    'Проверить форматирование: короткие абзацы, пробелы между ними',
-                    'Опубликовать',
-                    'Записать время публикации'
-                ],
-                subtasks: [
-                    { id: '014-st1', text: 'Пост 1 опубликован на LinkedIn' },
-                    { id: '014-st2', text: 'Время записано' }
-                ],
-                assignee: 'Кира',
-                estimate: '10 мин',
-                priority: 'high',
-                tags: ['content'],
-                copyBlocks: [{
-                    label: 'Текст поста для LinkedIn (copy-paste)',
-                    text: 'I asked 20 SEO freelancers one simple question:\n\n"How long does keyword research take you per client?"\n\nThe average answer: 3-4 hours.\n\nFor a freelancer managing 10 clients, that\'s 40 hours a month.\n\nJust on research.\nNot strategy.\nNot content creation.\nNot client communication.\n\nJust sitting in Ahrefs, exporting spreadsheets, and manually clustering keywords.\n\n40 hours. That\'s a full work week every month spent on a process that hasn\'t fundamentally changed in 10 years.\n\nThe tools got prettier. The data got bigger. But the workflow? Still manual. Still spreadsheets. Still hours.\n\nHow long does yours take?\n\n#SEO #KeywordResearch #SEOTools'
-                }]
-            },
-            {
-                id: '015',
-                title: '015. Кира: Опубликовать Пост 1 на Twitter',
-                description: 'Зачем: Twitter = второй канал. SEO-тусовка обсуждает инструменты здесь. Адаптированная версия.',
-                steps: [
-                    'Зайти в Twitter → New Tweet',
-                    'Скопировать текст ниже → вставить → опубликовать'
-                ],
-                subtasks: [
-                    { id: '015-st1', text: 'Tweet опубликован' }
-                ],
-                assignee: 'Кира',
-                estimate: '5 мин',
-                priority: 'high',
-                tags: ['content'],
-                copyBlocks: [{
-                    label: 'Tweet (copy-paste)',
-                    text: 'I asked 20 SEO freelancers how long keyword research takes per client.\n\nAverage: 3-4 hours.\n\nFor someone with 10 clients = 40 hours/month just on research.\n\nThe tools got better. The workflow didn\'t.\n\nHow long does yours take?\n\n#SEO #KeywordResearch'
-                }]
-            },
-            {
-                id: '016',
-                title: '016. Кира: 2 часа engagement — отвечать на ВСЕ комментарии',
-                description: 'Зачем: Алгоритм LinkedIn решает в первые 2 часа. Каждый ответ = сигнал алгоритму. Молчание = пост умирает. ИСПОЛЬЗУЙ ТЕМПЛЕЙТЫ НИЖЕ.',
-                steps: [
-                    '2 часа после публикации — быть на LinkedIn и Twitter',
-                    'На КАЖДЫЙ комментарий — ответить (использовать темплейты ниже)',
-                    'Лайкнуть каждый комментарий',
-                    'Записать имена commenters — если SEO professional → Sheets (Source: "Organic Post 1")'
-                ],
-                subtasks: [
-                    { id: '016-st1', text: '2 часа engagement отработаны' },
-                    { id: '016-st2', text: 'Все комментарии отвечены' },
-                    { id: '016-st3', text: 'Commenters записаны' }
-                ],
-                assignee: 'Кира',
-                estimate: '2 часа',
-                priority: 'high',
-                tags: ['engagement'],
-                warning: '2 ЧАСА = NON-NEGOTIABLE. Не отвлекаться. Самый важный момент для поста.',
-                copyBlocks: [
-                    {
-                        label: 'Reply если кто-то согласен ("So true!")',
-                        text: 'Right? The crazy part is that the tools keep getting more powerful, but the actual workflow — going from data to strategy — hasn\'t changed. Curious: do you do the clustering part manually or have you found something that helps?'
-                    },
-                    {
-                        label: 'Reply если кто-то называет своё время ("Mine takes 3 hours")',
-                        text: 'That\'s about average from what I\'ve been hearing. The clustering step seems to be where most of the time goes — going from a flat list to organized topic groups. Is that true for you too, or is it something else?'
-                    },
-                    {
-                        label: 'Reply если кто-то спрашивает "What\'s the solution?"',
-                        text: 'Working on something actually. Not ready to share details yet, but the core idea is: what if you could go from URL to clustered keyword strategy automatically? More soon. Would love your input when it\'s ready.'
-                    },
-                    {
-                        label: 'Reply если кто-то не согласен ("AI can do this already")',
-                        text: 'Interesting — which tools have you found that actually cluster keywords well? Most I\'ve seen give you a flat list sorted by volume, but the actual grouping into topic clusters is still manual. Genuinely curious what\'s working for you.'
-                    }
-                ]
-            },
-            {
-                id: '017',
-                title: '017. Настя: LinkedIn searches — 4 запроса (batch 1 часть 1)',
-                description: 'Зачем: Начинаем строить базу prospects. Каждый запрос — это конкретный search в LinkedIn который находит SEO-профессионалов. Цель сегодня: 10-15 профилей в Sheets.',
-                steps: [
-                    'Запрос 1: Открыть LinkedIn → Search → ввести "SEO consultant" AND "freelance" → People tab',
-                    '  — Записать в Sources Log: Date, Query, Platform=LinkedIn, Results Found\n  — Просмотреть первые 20-30 результатов\n  — Выбрать 3-5 самых релевантных (Priority A по нашим критериям)\n  — Для каждого заполнить ВСЕ 14 колонок в Sheets',
-                    'Запрос 2: "SEO agency" AND "founder" → тот же процесс',
-                    'Запрос 3: "Head of SEO" → тот же процесс',
-                    'Запрос 4: "keyword research" AND "SEO" (искать в Posts, не People — найти тех кто пишет про keyword research) → добавить активных авторов',
-                    'Фокус при выборе:\n  — Кто постит про keyword research, SEO workflows, tool comparisons?\n  — Freelance или agency 3-15 человек?\n  — Высокая LinkedIn активность?'
-                ],
-                subtasks: [
-                    { id: '017-st1', text: 'Запрос 1: "SEO consultant freelance" — сделан' },
-                    { id: '017-st2', text: 'Запрос 2: "SEO agency founder" — сделан' },
-                    { id: '017-st3', text: 'Запрос 3: "Head of SEO" — сделан' },
-                    { id: '017-st4', text: 'Запрос 4: "keyword research" в постах — сделан' },
-                    { id: '017-st5', text: '10-15 профилей добавлены в Sheets' },
-                    { id: '017-st6', text: 'Sources Log обновлён' }
-                ],
-                assignee: 'Настя',
-                estimate: '1.5 часа',
-                priority: 'high',
-                tags: ['research', 'linkedin'],
-                tip: 'LinkedIn free = ~100 searches в месяц (3-4 в день). Каждый поиск дорог! Записывай в Sources Log чтобы не повторяться.'
-            }
+            { id: '014', title: '014. Кира: Опубликовать Пост 1 на LinkedIn', description: 'Зачем: Первый пост. Боль keyword research. Алгоритм решает в первые 2 часа.', steps: ['LinkedIn → Start a post → скопировать текст ниже', 'Проверить форматирование', 'Опубликовать'], subtasks: [{ id: '014-st1', text: 'Опубликован' }], assignee: 'Кира', estimate: '10 мин', priority: 'high', tags: ['content'], copyBlocks: [{ label: 'Пост 1 LinkedIn (copy-paste)', text: 'I asked 20 SEO freelancers one simple question:\n\n"How long does keyword research take you per client?"\n\nThe average answer: 3-4 hours.\n\nFor a freelancer managing 10 clients, that\'s 40 hours a month.\n\nJust on research.\nNot strategy.\nNot content creation.\nNot client communication.\n\nJust sitting in Ahrefs, exporting spreadsheets, and manually clustering keywords.\n\n40 hours. That\'s a full work week every month spent on a process that hasn\'t fundamentally changed in 10 years.\n\nThe tools got prettier. The data got bigger. But the workflow? Still manual. Still spreadsheets. Still hours.\n\nHow long does yours take?\n\n#SEO #KeywordResearch #SEOTools' }] },
+            { id: '015', title: '015. Кира: Пост 1 на Twitter', description: 'Зачем: Второй канал.', steps: ['Скопировать текст → Twitter → опубликовать'], subtasks: [{ id: '015-st1', text: 'Tweet опубликован' }], assignee: 'Кира', estimate: '5 мин', priority: 'high', tags: ['content'], copyBlocks: [{ label: 'Tweet (copy-paste)', text: 'I asked 20 SEO freelancers how long keyword research takes per client.\n\nAverage: 3-4 hours.\n\nFor someone with 10 clients = 40 hours/month just on research.\n\nThe tools got better. The workflow didn\'t.\n\nHow long does yours take?\n\n#SEO #KeywordResearch' }] },
+            { id: '016', title: '016. Кира: 2ч engagement — ответить на ВСЕ комменты', description: 'Зачем: Алгоритм решает в первые 2 часа. Каждый ответ = signal.', steps: ['2 часа на LinkedIn + Twitter', 'Каждый коммент = content-rich ответ', 'Записать commenters'], subtasks: [{ id: '016-st1', text: '2ч engagement' }, { id: '016-st2', text: 'Commenters записаны' }], assignee: 'Кира', estimate: '2 часа', priority: 'high', tags: ['engagement'], warning: '2 ЧАСА NON-NEGOTIABLE.', copyBlocks: [{ label: 'Reply: кто-то согласен', text: 'Right? The crazy part is the tools keep getting more powerful, but the actual workflow — going from data to strategy — hasn\'t changed. Do you do the clustering part manually or have you found something that helps?' }, { label: 'Reply: кто-то называет время', text: 'That\'s about average. The clustering step seems to be where most time goes — from flat list to organized topic groups. Is that true for you too?' }, { label: 'Reply: "What\'s the solution?"', text: 'Working on something actually. Not ready to share yet, but the core idea: URL to clustered keyword strategy, automatically. More soon.' }] },
+            { id: '017', title: '017. Настя: LinkedIn searches batch 1 (4 запроса)', description: 'Зачем: Начинаем строить базу. Цель: 10-15 профилей.', steps: ['"SEO consultant" AND "freelance"', '"SEO agency" AND "founder"', '"Head of SEO"', '"keyword research" AND "SEO" (в Posts)', 'Для каждого: Sources Log → top 20-30 → 3-5 лучших → Sheets'], subtasks: [{ id: '017-st1', text: '4 queries done' }, { id: '017-st2', text: '10-15 профилей' }], assignee: 'Настя', estimate: '1.5 часа', priority: 'high', tags: ['research'] }
         ]
     },
-
-    // ==========================================
-    // WEEK 1, ВТОРНИК
-    // ==========================================
     {
-        dayIndex: 4,
-        phase: 'Week 1',
-        dayLabel: 'Week 1, Вторник',
-        title: 'Research продолжение + follow-up engagement',
-        summary: 'Настя делает ещё 4 запроса. Кира отвечает на новые комментарии + начинает Twitter listening.',
+        dayIndex: 4, phase: 'Week 1', dayLabel: 'Week 1, Вторник',
+        title: 'Research продолжение',
+        summary: 'Настя — ещё 4 запроса. Кира — follow-up + Twitter listening.',
         tasks: [
-            {
-                id: '018',
-                title: '018. Кира: Ответить на новые комментарии к Посту 1 + Twitter listening',
-                description: 'Зачем: Комментарии продолжают приходить 24-48 часов после публикации. Каждый ответ = дополнительный reach. Twitter listening = понять что обсуждает SEO-сообщество.',
-                steps: [
-                    'LinkedIn: открыть Пост 1 → ответить на все НОВЫЕ комментарии (те что появились после вчерашних 2 часов)',
-                    'Для каждого commenter: открыть профиль → если SEO professional → добавить в Sheets (Source: "Organic Post 1")',
-                    'Twitter: 30 минут listening:\n  — Пролистать ленту подписок\n  — Лайкнуть 5-10 постов SEO-людей\n  — Ответить (reply) на 2-3 поста (добавить value, не pitch)\n  — Пример reply: "This is exactly the problem — I talked to 20 consultants and clustering was the #1 time sink for all of them."'
-                ],
-                subtasks: [
-                    { id: '018-st1', text: 'LinkedIn комментарии отвечены' },
-                    { id: '018-st2', text: 'Commenters проверены и добавлены' },
-                    { id: '018-st3', text: 'Twitter: 30 мин listening + 2-3 replies' }
-                ],
-                assignee: 'Кира',
-                estimate: '1 час',
-                priority: 'medium',
-                tags: ['engagement']
-            },
-            {
-                id: '019',
-                title: '019. Настя: LinkedIn searches — 4 запроса (batch 1 часть 2)',
-                description: 'Зачем: Продолжаем строить базу. Цель к концу дня: 25-30 профилей total.',
-                steps: [
-                    'Запрос 5: "SEO manager" AND "agency"',
-                    'Запрос 6: "SEO audits" AND "freelance"',
-                    'Запрос 7: "SEO strategist"',
-                    'Запрос 8: "digital marketing" AND "SEO" AND "director"',
-                    'Тот же процесс: Sources Log → top 20-30 → 3-5 лучших → Sheets',
-                    'Проверить что нет дубликатов со вчерашними'
-                ],
-                subtasks: [
-                    { id: '019-st1', text: '4 запроса сделаны' },
-                    { id: '019-st2', text: '25-30 профилей total' },
-                    { id: '019-st3', text: 'Sources Log обновлён' }
-                ],
-                assignee: 'Настя',
-                estimate: '1.5 часа',
-                priority: 'high',
-                tags: ['research', 'linkedin']
-            }
+            { id: '018', title: '018. Кира: Follow-up комменты + Twitter listening', description: 'Зачем: Комменты приходят 24-48ч. Twitter listening = понять что обсуждают.', steps: ['LinkedIn: ответить на новые комменты к Посту 1', 'Commenters → если SEO pro → Sheets', 'Twitter: 30 мин listening, лайки, 2-3 replies'], subtasks: [{ id: '018-st1', text: 'Комменты отвечены' }, { id: '018-st2', text: 'Twitter 30 мин' }], assignee: 'Кира', estimate: '1 час', priority: 'medium', tags: ['engagement'] },
+            { id: '019', title: '019. Настя: LinkedIn searches batch 1 часть 2 (4 запроса)', description: 'Зачем: Довести до 25-30 total.', steps: ['"SEO manager" AND "agency"', '"SEO audits" AND "freelance"', '"SEO strategist"', '"digital marketing" AND "SEO" AND "director"'], subtasks: [{ id: '019-st1', text: '25-30 total' }], assignee: 'Настя', estimate: '1.5 часа', priority: 'high', tags: ['research'] }
         ]
     },
-
-    // ==========================================
-    // WEEK 1, СРЕДА
-    // ==========================================
     {
-        dayIndex: 5,
-        phase: 'Week 1',
-        dayLabel: 'Week 1, Среда',
-        title: 'ПУБЛИКАЦИЯ ПОСТА 2 + batch 2 + mid-week review',
-        summary: 'Кира публикует Пост 2 (LinkedIn). Настя — новые запросы. Вечером: Кира проверяет 10-15 профилей.',
+        dayIndex: 5, phase: 'Week 1', dayLabel: 'Week 1, Среда',
+        title: 'ПОСТ 2 + batch 2 + review',
+        summary: 'Пост 2 (LinkedIn). Новые queries. Mid-week review.',
         tasks: [
-            {
-                id: '020',
-                title: '020. Кира: Опубликовать Пост 2 на LinkedIn',
-                description: 'Зачем: Пост 2 = "Keyword lists vs strategies". Данные ≠ стратегия. Только LinkedIn.',
-                steps: [
-                    'Скопировать текст ниже → LinkedIn → опубликовать',
-                    'Записать время'
-                ],
-                subtasks: [{ id: '020-st1', text: 'Пост 2 опубликован' }],
-                assignee: 'Кира', estimate: '10 мин', priority: 'high', tags: ['content'],
-                copyBlocks: [{
-                    label: 'Пост 2 для LinkedIn (copy-paste)',
-                    text: 'Every SEO tool on the market gives you the same thing: a list of keywords sorted by volume and difficulty.\n\nBut a list is not a strategy.\n\nA strategy looks like this:\n\n-> Here are 5 topic clusters relevant to your site\n-> Here\'s which of your existing pages already cover each cluster\n-> Here\'s what\'s missing -- the content gaps\n-> Here\'s the priority order based on difficulty, volume, and your current coverage\n-> Here\'s a content brief for each gap\n\nThat\'s what an SEO professional does manually. Open Ahrefs, export to spreadsheet, spend 2 hours grouping, cross-reference with site pages, write briefs in Google Docs.\n\nTools give data. Professionals need strategy.\n\nWhat does your keyword-to-strategy process look like?\n\n#SEO #ContentStrategy #KeywordResearch'
-                }]
-            },
-            {
-                id: '021',
-                title: '021. Кира: 2 часа engagement — Пост 2',
-                description: 'Зачем: Тот же принцип — алгоритм решает в первые 2 часа.',
-                steps: [
-                    '2 часа: отвечать на каждый комментарий',
-                    'Content-rich ответы, follow-up вопросы',
-                    'Записать commenters'
-                ],
-                subtasks: [{ id: '021-st1', text: '2ч engagement' }, { id: '021-st2', text: 'Commenters записаны' }],
-                assignee: 'Кира', estimate: '2 часа', priority: 'high', tags: ['engagement']
-            },
-            {
-                id: '022',
-                title: '022. Настя: LinkedIn searches — 4 запроса (batch 2 часть 1)',
-                description: 'Зачем: Новый набор запросов, более специфичные роли.',
-                steps: [
-                    'Запрос 9: "SEO analyst" AND "senior"',
-                    'Запрос 10: "organic search" AND "manager"',
-                    'Запрос 11: "site audit" AND "SEO"',
-                    'Запрос 12: "SEO" AND "ecommerce" AND "consultant"',
-                    'Sources Log → search → select → Sheets'
-                ],
-                subtasks: [{ id: '022-st1', text: '4 запроса' }, { id: '022-st2', text: '35-40 total' }],
-                assignee: 'Настя', estimate: '1.5 часа', priority: 'high', tags: ['research']
-            },
-            {
-                id: '023',
-                title: '023. Кира + Настя: Mid-week review (15 мин)',
-                description: 'Зачем: Проверить что Настя правильно определяет Priority после 30+ профилей. Лучше скорректировать сейчас.',
-                steps: [
-                    'Кира: открыть 10-15 random профилей в Sheets',
-                    'Проверить: Priority правильный? Segment корректный? Notes полезные?',
-                    'Дать feedback. Если есть ошибки — объяснить.',
-                    'Занимает 15 минут, можно в конце дня'
-                ],
-                subtasks: [{ id: '023-st1', text: 'Review проведён' }, { id: '023-st2', text: 'Feedback дан' }],
-                assignee: 'Кира + Настя', estimate: '15 мин', priority: 'high', tags: ['review']
-            }
+            { id: '020', title: '020. Кира: Пост 2 на LinkedIn + 2ч engagement', description: 'Зачем: "Keyword lists vs strategies". Данные ≠ стратегия.', steps: ['Скопировать текст → LinkedIn → опубликовать', '2ч engagement'], subtasks: [{ id: '020-st1', text: 'Пост + engagement' }], assignee: 'Кира', estimate: '2.5 часа', priority: 'high', tags: ['content', 'engagement'], copyBlocks: [{ label: 'Пост 2 LinkedIn (copy-paste)', text: 'Every SEO tool on the market gives you the same thing: a list of keywords sorted by volume and difficulty.\n\nBut a list is not a strategy.\n\nA strategy looks like this:\n\n-> Here are 5 topic clusters relevant to your site\n-> Here\'s which of your existing pages already cover each cluster\n-> Here\'s what\'s missing — the content gaps\n-> Here\'s the priority order based on difficulty, volume, and your current coverage\n-> Here\'s a content brief for each gap\n\nThat\'s what an SEO professional does manually. Open Ahrefs, export to spreadsheet, spend 2 hours grouping, cross-reference with site pages, write briefs in Google Docs.\n\nTools give data. Professionals need strategy.\n\nWhat does your keyword-to-strategy process look like?\n\n#SEO #ContentStrategy #KeywordResearch' }] },
+            { id: '022', title: '022. Настя: Batch 2 (4 запроса)', description: 'Зачем: Более специфичные роли.', steps: ['"SEO analyst" AND "senior"', '"organic search" AND "manager"', '"site audit" AND "SEO"', '"SEO" AND "ecommerce"'], subtasks: [{ id: '022-st1', text: '35-40 total' }], assignee: 'Настя', estimate: '1.5 часа', priority: 'high', tags: ['research'] },
+            { id: '023', title: '023. Кира + Настя: Mid-week review (15 мин)', description: 'Зачем: Проверить качество после 30+ профилей.', steps: ['Кира: 10-15 random → Priority OK?', 'Feedback'], subtasks: [{ id: '023-st1', text: 'Review + feedback' }], assignee: 'Кира + Настя', estimate: '15 мин', priority: 'high', tags: ['review'] }
         ]
     },
-
-    // ==========================================
-    // WEEK 1, ЧЕТВЕРГ
-    // ==========================================
     {
-        dayIndex: 6,
-        phase: 'Week 1',
-        dayLabel: 'Week 1, Четверг',
-        title: 'Research finish + Twitter cross-check + competitor research',
-        summary: 'Настя завершает batch 2 + проверяет топ профилей в Twitter. Кира собирает жалобы на конкурентов.',
+        dayIndex: 6, phase: 'Week 1', dayLabel: 'Week 1, Четверг',
+        title: 'Research finish + competitor pain research',
+        summary: 'Настя завершает batch 2 + Twitter cross-check. Кира собирает жалобы на конкурентов.',
         tasks: [
-            {
-                id: '024',
-                title: '024. Настя: Batch 2 finish + Twitter cross-check топ 15-20 профилей',
-                description: 'Зачем: Batch 2 завершает основные LinkedIn запросы. Twitter cross-check: Twitter часто показывает более реальную активность чем LinkedIn. Человек может быть тихий в LinkedIn но очень активный в Twitter.',
-                steps: [
-                    'Завершить оставшиеся запросы batch 2',
-                    'Взять топ 15-20 Priority A из Sheets',
-                    'Для каждого: найти Twitter/X аккаунт (часто ссылка в LinkedIn profile)',
-                    'Проверить: частота постов, followers, о чём пишут',
-                    'Обновить Activity Level в Sheets если нужно (если в Twitter очень активен → повысить)',
-                    'В Notes добавить Twitter info',
-                    'Цель: 50+ профилей total'
-                ],
-                subtasks: [
-                    { id: '024-st1', text: 'Batch 2 завершён' },
-                    { id: '024-st2', text: '15-20 проверены в Twitter' },
-                    { id: '024-st3', text: '50+ total в Sheets' }
-                ],
-                assignee: 'Настя', estimate: '2.5 часа', priority: 'high', tags: ['research']
-            },
-            {
-                id: '025',
-                title: '025. Кира: Собрать 10-15 цитат про боль keyword research',
-                description: 'Зачем: Реальные слова реальных людей = лучший маркетинговый copy. Эти цитаты используем в будущих постах (Phase 2) и на landing page.',
-                steps: [
-                    'Искать в LinkedIn: посты с "keyword research" AND "manual" OR "time" OR "hours"',
-                    'Искать в Twitter: #SEOtools complaints, "frustrated with" keyword research',
-                    'Искать в Reddit: r/SEO "alternative to" OR "better than"',
-                    'Записать 10-15 конкретных цитат/жалоб (copy-paste или screenshot)',
-                    'Формат: "Quote" — Name, Role — Source (LinkedIn/Twitter/Reddit)',
-                    'Это сырьё для постов Phase 2 и для launch post'
-                ],
-                subtasks: [
-                    { id: '025-st1', text: '10-15 цитат собраны' },
-                    { id: '025-st2', text: 'Записаны с источником' }
-                ],
-                assignee: 'Кира', estimate: '1.5 часа', priority: 'medium', tags: ['research', 'content'],
-                tip: 'Это золото. Слова реальных людей > любой маркетинговый copy который мы можем придумать.'
-            }
+            { id: '024', title: '024. Настя: Batch 2 finish + Twitter cross-check 15-20', description: 'Зачем: Twitter показывает реальную активность. Цель: 50+ total.', steps: ['Завершить batch 2', 'Топ 15-20 Priority A → найти в Twitter → обновить Activity Level', '50+ total'], subtasks: [{ id: '024-st1', text: 'Batch 2 done' }, { id: '024-st2', text: 'Twitter check' }, { id: '024-st3', text: '50+ total' }], assignee: 'Настя', estimate: '2.5 часа', priority: 'high', tags: ['research'] },
+            { id: '025', title: '025. Кира: Собрать 10-15 цитат про боль keyword research', description: 'Зачем: Реальные слова = лучший marketing copy. Для будущих постов и landing.', steps: ['LinkedIn: посты с "keyword research" AND "manual"', 'Twitter: #SEOtools complaints', 'Reddit: r/SEO "alternative to"', 'Записать 10-15 цитат с источником'], subtasks: [{ id: '025-st1', text: '10-15 цитат' }], assignee: 'Кира', estimate: '1.5 часа', priority: 'medium', tags: ['research', 'content'] }
         ]
     },
-
-    // ==========================================
-    // WEEK 1, ПЯТНИЦА
-    // ==========================================
     {
-        dayIndex: 7,
-        phase: 'Week 1',
-        dayLabel: 'Week 1, Пятница',
+        dayIndex: 7, phase: 'Week 1', dayLabel: 'Week 1, Пятница',
         title: 'ПОСТ 3 + weekly review + черновики W3-W4',
-        summary: 'Кира публикует Пост 3 (Twitter thread + LinkedIn). Настя — weekly metrics. Кира пишет черновики постов 7-12.',
+        summary: 'Пост 3 "Tool stack" (thread + LinkedIn). Weekly metrics. Кира пишет посты 7-12.',
         tasks: [
-            {
-                id: '026',
-                title: '026. Кира: Опубликовать Пост 3 на Twitter (thread)',
-                description: 'Зачем: Пост 3 = "The tool stack problem" ($290/мес). Twitter thread формат идеален — числа, факты, короткие tweets.',
-                steps: [
-                    'Взять текст Поста 3 из Google Doc',
-                    'Адаптировать в thread:\n  Tweet 1: "A typical freelance SEO setup:"\n  Tweet 2: "Ahrefs: $129/mo"\n  Tweet 3: "Surfer SEO: $99/mo"\n  Tweet 4: "Screaming Frog: $259/yr"\n  Tweet 5: "Total: $290/month. And you STILL cluster keywords manually in a spreadsheet."\n  Tweet 6: "What\'s your stack? What\'s still manual?"',
-                    'Опубликовать thread'
-                ],
-                subtasks: [{ id: '026-st1', text: 'Twitter thread опубликован' }],
-                assignee: 'Кира', estimate: '15 мин', priority: 'high', tags: ['content']
-            },
-            {
-                id: '027',
-                title: '027. Кира: Опубликовать Пост 3 на LinkedIn + 2ч engagement',
-                description: 'Зачем: Тот же контент адаптирован для LinkedIn (один пост, не thread). Engagement 2 часа.',
-                steps: [
-                    'Адаптировать Пост 3 для LinkedIn (один текст вместо thread)',
-                    'Опубликовать',
-                    '2 часа engagement на LinkedIn + Twitter (оба)',
-                    'Записать commenters'
-                ],
-                subtasks: [{ id: '027-st1', text: 'LinkedIn пост' }, { id: '027-st2', text: '2ч engagement' }],
-                assignee: 'Кира', estimate: '2.5 часа', priority: 'high', tags: ['content', 'engagement']
-            },
-            {
-                id: '028',
-                title: '028. Настя: Weekly metrics review',
-                description: 'Зачем: Каждую пятницу обновляем метрики чтобы понимать прогресс. Без этого не знаем on track мы или нет.',
-                steps: [
-                    'Открыть вкладку Metrics в Sheets',
-                    'Заполнить строку Week 1:\n  — Total profiles: цель 50-80\n  — Priority A / B / C breakdown\n  — Comments Left: 0 (engagement ещё не начался)\n  — Requests Sent: 0\n  — Notes: что сработало, что нет',
-                    'Проверить Sources Log: сколько LinkedIn searches использовано из 100 в месяц?',
-                    'Проверить статусы заявок в группы (которые подавали в Story 0 День 2)',
-                    'Подготовить короткое summary для Киры (2-3 строки в чат)'
-                ],
-                subtasks: [
-                    { id: '028-st1', text: 'Metrics обновлены' },
-                    { id: '028-st2', text: '50-80 профилей в базе' },
-                    { id: '028-st3', text: 'Группы проверены' },
-                    { id: '028-st4', text: 'Summary Кире отправлено' }
-                ],
-                assignee: 'Настя', estimate: '30 мин', priority: 'high', tags: ['review']
-            },
-            {
-                id: '029',
-                title: '029. Кира: Написать ЧЕРНОВИКИ постов 7-12 (Weeks 3-4)',
-                description: 'Зачем: Пишем заранее вперёд. Посты 7-9 = Phase 2 (Building in Public — показываем ЧТО строим). Посты 10-12 = Phase 3 (Reveal — раскрываем KORU). Не публикуем — только пишем в документ.',
-                steps: [
-                    'Открыть Google Doc "KORU Campaign Posts"',
-                    'Пост 7 (Week 3, Пн): "Building a keyword engine"\n  "What if you could go from URL → crawl → seed extraction → clustering → page mapping — automatically? We\'re building exactly this. No name yet. But it works."',
-                    'Пост 8 (Week 3, Ср): "Topic clusters > keyword lists"\n  Показать mockup/визуализацию кластеров (Кира сделает скриншот или diagram)',
-                    'Пост 9 (Week 3, Пт): "From research to action in one platform"\n  Показать pipeline: audit → keywords → brief → task. Масштаб.',
-                    'Пост 10 (Week 4, Пн): "Meet KORU"\n  REVEAL бренда. Что это, для кого. Ссылка на landing.',
-                    'Пост 11 (Week 4, Ср): "What beta testers are saying"\n  Quotes от beta users (если есть к тому времени)',
-                    'Пост 12 (Week 4, Пт): "URL to strategy — live demo"\n  GIF/video 30 сек. Демо в действии.'
-                ],
-                subtasks: [
-                    { id: '029-st1', text: 'Посты 7-12 написаны в документ' }
-                ],
-                assignee: 'Кира', estimate: '3 часа', priority: 'high', tags: ['content'],
-                warning: 'ЧЕРНОВИКИ! Не публиковать. Публикация по графику на Weeks 3-4.'
-            }
+            { id: '026', title: '026. Кира: Пост 3 Twitter thread + LinkedIn + 2ч engagement', description: 'Зачем: "$290/month и вручную". Числа = engagement magnet.', steps: ['Twitter thread → LinkedIn adaptation', '2ч engagement обе платформы'], subtasks: [{ id: '026-st1', text: 'Twitter thread' }, { id: '026-st2', text: 'LinkedIn пост' }, { id: '026-st3', text: 'Engagement' }], assignee: 'Кира', estimate: '2.5 часа', priority: 'high', tags: ['content', 'engagement'], copyBlocks: [{ label: 'Пост 3 LinkedIn (copy-paste)', text: 'Let\'s talk about the cost of doing SEO in 2026.\n\nA typical freelance SEO setup:\n\nAhrefs: $129/month\nSurfer SEO: $99/month\nScreaming Frog: $259/year ($22/month)\n\nThat\'s $250/month minimum. Before you earn a single dollar from a client.\n\nAnd after paying $250/month for three separate tools, you still:\n- Cluster keywords manually in a spreadsheet\n- Write content briefs in Google Docs\n- Track tasks in Asana or Trello\n- Copy-paste data between four tabs\n\nThe tools don\'t talk to each other.\n\n$250/month for data silos.\n\nWhat\'s your tool stack? And what\'s still manual?\n\n#SEO #SEOTools #FreelanceSEO' }, { label: 'Twitter thread (copy-paste по 1 tweet)', text: '1/ The cost of doing SEO in 2026:\n\n2/ Ahrefs: $129/mo\nSurfer SEO: $99/mo\nScreaming Frog: $22/mo\nTotal: $250/month MINIMUM.\n\n3/ And after $250/month, you still:\n- Cluster keywords manually\n- Write briefs in Google Docs\n- Track tasks separately\n- Copy-paste between everything\n\n4/ The tools don\'t talk to each other.\nAudit ≠ keywords ≠ briefs ≠ tasks.\n$250/month for data silos.\n\n5/ What\'s your stack? What\'s still manual?' }] },
+            { id: '028', title: '028. Настя: Weekly metrics', description: 'Зачем: Каждую пятницу — метрики.', steps: ['Metrics tab: total (target 50-80), A/B/C breakdown', 'Sources Log: сколько searches использовано?', 'Статусы групп', 'Summary Кире'], subtasks: [{ id: '028-st1', text: 'Metrics обновлены' }, { id: '028-st2', text: '50-80 total' }], assignee: 'Настя', estimate: '30 мин', priority: 'high', tags: ['review'] },
+            { id: '029', title: '029. Кира: Черновики постов 7-12 (Weeks 3-4)', description: 'Зачем: Пишем заранее.', steps: ['Посты 7-12 в Google Doc (Building in Public + Reveal)'], subtasks: [{ id: '029-st1', text: '6 постов написаны' }], assignee: 'Кира', estimate: '3 часа', priority: 'high', tags: ['content'] }
         ],
-        keyMetric: 'Week 1: 50-80 profiles, 3 posts published (LinkedIn + Twitter), 10-15 pain quotes collected, posts 7-12 drafted.'
+        keyMetric: 'Week 1: 50-80 profiles, 3 posts, Twitter active, pain quotes collected'
     },
 
-    // Weeks 2-7 follow same granular pattern...
-    // Including key milestone days with same level of detail
-
+    // ==========================================
+    // WEEK 2 — HINTS + GROUPS + DMs START (5 дней)
+    // ==========================================
     {
         dayIndex: 8, phase: 'Week 2', dayLabel: 'Week 2, Понедельник',
-        title: 'ПОСТ 4 (переломный!) + groups research + ПЕРВЫЕ DMs',
-        summary: 'Переломный пост: "What if 5 minutes?" Настя: группы. Кира: ПЕРВЫЕ DMs к людям из комментариев.',
+        title: 'ПОСТ 4 (переломный!) + groups + FIRST DMs',
+        summary: 'Первый hint на решение "5 minutes". Группы. Первые DMs к тёплым людям.',
         tasks: [
-            {
-                id: '030',
-                title: '030. Кира: Опубликовать Пост 4 на LinkedIn + Twitter',
-                description: 'Зачем: ПЕРЕЛОМНЫЙ ПОСТ. Первый раз звучит "5 minutes" и "URL to strategy". Это переход от чистой боли к hints на решение. Должен вызвать "I wish!" и "How?" реакции.',
-                steps: [
-                    'Скопировать Пост 4 из Google Doc',
-                    'Опубликовать на LinkedIn',
-                    'Адаптировать и опубликовать на Twitter',
-                    'НЕ раскрывать продукт. Если кто-то спросит "How?" — ответить: "Working on it. More soon."'
-                ],
-                subtasks: [{ id: '030-st1', text: 'LinkedIn' }, { id: '030-st2', text: 'Twitter' }],
-                assignee: 'Кира', estimate: '15 мин', priority: 'high', tags: ['content'],
-                copyBlocks: [
-                    {
-                        label: 'Пост 4 для LinkedIn (copy-paste)',
-                        text: 'I keep asking myself one question:\n\nWhat if keyword research took 5 minutes instead of 4 hours?\n\nNot a list of keywords to sort through. An actual strategy:\n\n- Paste a URL\n- Get topic clusters automatically grouped by theme\n- See which of your pages already cover each cluster\n- See the gaps -- where you need new content\n- Get a prioritized action plan based on difficulty and opportunity\n\nNot keyword soup. A mapped, clustered, prioritized strategy. From URL to action plan.\n\nIn 5 minutes.\n\nWould that change how you work?\n\n#SEO #KeywordResearch'
-                    },
-                    {
-                        label: 'Пост 4 для Twitter (copy-paste)',
-                        text: 'What if keyword research took 5 minutes instead of 4 hours?\n\nNot a list to sort through.\n\nA mapped, clustered, prioritized strategy. From URL to action plan.\n\nWould that change how you work?\n\n#SEO #KeywordResearch'
-                    }
-                ]
-            },
-            {
-                id: '031',
-                title: '031. Кира: 2ч engagement Пост 4',
-                description: 'Зачем: Этот пост должен получить БОЛЬШЕ реакций чем предыдущие.',
-                steps: [
-                    '2 часа engagement на обеих платформах',
-                    'ОСОБО записать тех кто написал "I wish!", "How?", "Tell me more" — это HOTTEST leads',
-                    'НЕ раскрывать продукт! "Working on it. More soon."'
-                ],
-                subtasks: [{ id: '031-st1', text: '2ч engagement' }, { id: '031-st2', text: 'Hot leads записаны' }],
-                assignee: 'Кира', estimate: '2 часа', priority: 'high', tags: ['engagement'],
-                warning: 'НЕ раскрывать продукт! Интрига = сила. "Working on it. More soon." — максимум.'
-            },
-            {
-                id: '032',
-                title: '032. Кира: Отправить ПЕРВЫЕ 3-5 DMs тёплым людям',
-                description: 'Зачем: Люди из комментариев к постам 1-4 = самые тёплые leads. Они УЖЕ резонируют с проблемой. Не ждать Week 4 — момент горячий СЕЙЧАС. Цель: beta testers / early feedback.',
-                steps: [
-                    'Выбрать 3-5 человек которые активно комментировали посты 1-4',
-                    'Для каждого — написать DM:\n  "Hey [Name], loved your take on [specific thing from their comment]. I\'m actually building something to solve exactly this — keyword research from URL to strategy in minutes. Would love your input as an early tester. No strings — just want feedback from someone who does this daily. Interested?"',
-                    'НЕ pitch. Это приглашение на feedback/beta.',
-                    'Записать: кому отправлено, когда, ответили ли'
-                ],
-                subtasks: [
-                    { id: '032-st1', text: '3-5 DMs отправлены' },
-                    { id: '032-st2', text: 'Записано кому и когда' }
-                ],
-                assignee: 'Кира', estimate: '30 мин', priority: 'high', tags: ['outreach'],
-                tip: 'DMs СЕЙЧАС, не в Week 4! Тёплые контакты из комментариев = лучшие beta testers.',
-                copyBlocks: [{
-                    label: 'DM Template: Beta invite (заменить [Name] и [topic])',
-                    text: 'Hey [Name],\n\nReally enjoyed your takes on [specific topic from their comments]. Especially the point about [specific thing they said].\n\nI\'m actually building something to solve exactly this -- keyword research from URL to clustered strategy in minutes instead of hours.\n\nWould love your input as an early tester. No strings attached -- just want feedback from someone who actually does this work daily.\n\nInterested?'
-                }]
-            },
-            {
-                id: '033',
-                title: '033. Настя: LinkedIn groups deep-dive — первые 5 групп + СТАРТ engagement',
-                description: 'Зачем: Группы = источник quality prospects. Люди в группах активно обсуждают SEO = они наш ICP. ПЛЮС: с сегодня начинаем ежедневный engagement (3-5 комментариев к постам Priority A).',
-                steps: [
-                    'Открыть каждую из 5 групп (те где Настя/Кира уже approved):\n  1. SEO Professionals\n  2. Technical SEO\n  3. Search Engine Land\n  4. Digital Marketing\n  5. SEO & SEM Professionals',
-                    'В каждой группе:\n  — Найти самые активные discussions за последний месяц\n  — Кто часто комментирует? Кто получает engagement?\n  — Добавить 3-5 активных участников в Sheets\n  — Source: "Group: [название группы]"',
-                    'НЕ комментировать в группах пока!',
-                    'ENGAGEMENT (отдельно от групп):\n  — Найти 3-5 свежих постов от Priority A людей в LinkedIn feed\n  — Написать thoughtful comment на каждый:\n    "How long does clustering take you per client?" / "Do you use a tool or spreadsheet?"\n  — Записать в tracking: Date | Prospect | Post topic | Comment'
-                ],
-                subtasks: [
-                    { id: '033-st1', text: '5 групп исследованы' },
-                    { id: '033-st2', text: '15-20 новых профилей' },
-                    { id: '033-st3', text: '3-5 комментариев оставлены (engagement)' }
-                ],
-                assignee: 'Настя', estimate: '3 часа', priority: 'high', tags: ['research', 'engagement'],
-                warning: 'В группах: ТОЛЬКО исследование, не комментировать. Engagement = к ПОСТАМ Priority A в ленте, не в группах.',
-                copyBlocks: [
-                    {
-                        label: 'Комментарий: вопрос про workflow',
-                        text: 'How long does the clustering part take you? That\'s always been the biggest time sink for everyone I\'ve talked to -- going from a flat keyword list to organized topic groups.'
-                    },
-                    {
-                        label: 'Комментарий: data point',
-                        text: 'This matches what I\'ve been hearing too -- the average I\'ve seen is 3-4 hours per client for keyword research alone. And that\'s before you even write a brief or create tasks.'
-                    },
-                    {
-                        label: 'Комментарий: вопрос про tools',
-                        text: 'Do you cluster in a spreadsheet or have you found a tool that actually does it well? Everyone I\'ve talked to is still doing it manually.'
-                    },
-                    {
-                        label: 'Комментарий: personal story',
-                        text: 'I watched a consultant do this exact workflow last week -- four tabs open, copy-pasting between Ahrefs, a spreadsheet, Google Docs, and Asana. Three hours. Sound familiar?'
-                    },
-                    {
-                        label: 'Комментарий: ask for specifics',
-                        text: 'Curious -- when you say "keyword strategy," what does your actual process look like? Do you start with seed keywords and expand, or analyze competitor content first?'
-                    }
-                ]
-            }
+            { id: '030', title: '030. Кира: Пост 4 LinkedIn + Twitter + 2ч engagement', description: 'Зачем: ПЕРЕЛОМНЫЙ. Первый раз "5 minutes" и "URL to strategy".', steps: ['Скопировать → LinkedIn + Twitter', '2ч engagement', 'НЕ раскрывать продукт! "Working on it. More soon."', 'Записать кто написал "I wish!" или "How?"'], subtasks: [{ id: '030-st1', text: 'Посты' }, { id: '030-st2', text: 'Engagement' }, { id: '030-st3', text: 'Hot leads записаны' }], assignee: 'Кира', estimate: '2.5 часа', priority: 'high', tags: ['content', 'engagement'], warning: 'НЕ раскрывать продукт!', copyBlocks: [{ label: 'Пост 4 LinkedIn (copy-paste)', text: 'I keep asking myself one question:\n\nWhat if keyword research took 5 minutes instead of 4 hours?\n\nNot a list of keywords to sort through. An actual strategy:\n\n- Paste a URL\n- Get topic clusters automatically grouped by theme\n- See which of your pages already cover each cluster\n- See the gaps — where you need new content\n- Get a prioritized action plan based on difficulty and opportunity\n\nNot keyword soup. A mapped, clustered, prioritized strategy. From URL to action plan.\n\nIn 5 minutes.\n\nWould that change how you work?\n\n#SEO #KeywordResearch' }, { label: 'Tweet (copy-paste)', text: 'What if keyword research took 5 minutes instead of 4 hours?\n\nNot a list to sort through.\nA mapped, clustered, prioritized strategy. From URL to action plan.\n\nWould that change how you work?\n\n#SEO #KeywordResearch' }] },
+            { id: '032', title: '032. Кира: ПЕРВЫЕ 3-5 DMs тёплым людям', description: 'Зачем: Commenters постов 1-4 = самые тёплые. Момент горячий СЕЙЧАС.', steps: ['3-5 DMs из commenters', 'Записать кому, когда, ответили ли'], subtasks: [{ id: '032-st1', text: '3-5 DMs' }], assignee: 'Кира', estimate: '30 мин', priority: 'high', tags: ['outreach'], copyBlocks: [{ label: 'DM Template (заменить [Name], [topic])', text: 'Hey [Name],\n\nReally enjoyed your takes on [specific topic from their comments]. Especially the point about [specific thing they said].\n\nI\'m actually building something to solve exactly this — keyword research from URL to clustered strategy in minutes instead of hours.\n\nWould love your input as an early tester. No strings attached — just want feedback from someone who actually does this work daily.\n\nInterested?' }] },
+            { id: '033', title: '033. Настя: Groups deep-dive (5 групп) + START engagement', description: 'Зачем: Groups = quality prospects. С сегодня: 3-5 комментов/день.', steps: ['5 групп: SEO Professionals, Technical SEO, Search Engine Land, Digital Marketing, SEO & SEM', 'Активные участники → Sheets', 'СТАРТ engagement: 3-5 комментов к постам Priority A'], subtasks: [{ id: '033-st1', text: '5 групп' }, { id: '033-st2', text: '3-5 комментов' }], assignee: 'Настя', estimate: '3 часа', priority: 'high', tags: ['research', 'engagement'], copyBlocks: [{ label: 'Коммент: вопрос про workflow', text: 'How long does the clustering part take you? That\'s always been the biggest time sink for everyone I\'ve talked to — going from a flat keyword list to organized topic groups.' }, { label: 'Коммент: data point', text: 'This matches what I\'ve been hearing — the average is 3-4 hours per client for keyword research alone. And that\'s before you even write a brief.' }, { label: 'Коммент: вопрос про tools', text: 'Do you cluster in a spreadsheet or have you found a tool that actually does it well? Everyone I\'ve talked to is still doing it manually.' }, { label: 'Коммент: personal story', text: 'I watched a consultant do this exact workflow last week — four tabs open, copy-pasting between Ahrefs, spreadsheet, Google Docs, and Asana. Three hours.' }] }
         ]
     },
-
-    // ... continuing with same granularity for remaining weeks
-    // Key milestone days included below
-
+    {
+        dayIndex: 9, phase: 'Week 2', dayLabel: 'Week 2, Вторник',
+        title: 'Groups (ч.2) + conferences + DM follow-ups',
+        summary: 'Оставшиеся 5 групп. Конференции. Кира follow-up DMs.',
+        tasks: [
+            { id: '034', title: '034. Настя: Groups (5) + conferences (3) + engagement', description: 'Зачем: Расширяем sources.', steps: ['5 групп: Agency Growth, Moz, SEO for Startups, Content Marketing, International SEO', 'Конференции: BrightonSEO, MozCon, SearchLove → speakers → LinkedIn', 'Engagement: 3-5 comments'], subtasks: [{ id: '034-st1', text: 'Groups done' }, { id: '034-st2', text: '3 conferences' }, { id: '034-st3', text: 'Engagement' }], assignee: 'Настя', estimate: '3 часа', priority: 'high', tags: ['research', 'engagement'] },
+            { id: '035', title: '035. Кира: DM follow-ups + warm list', description: 'Зачем: Не потерять горячие контакты.', steps: ['Проверить ответы на DMs', 'Если заинтересован → 15 мин demo или beta access', 'Twitter: 3-5 replies'], subtasks: [{ id: '035-st1', text: 'DM follow-ups' }, { id: '035-st2', text: 'Twitter replies' }], assignee: 'Кира', estimate: '1 час', priority: 'high', tags: ['outreach'] }
+        ]
+    },
+    {
+        dayIndex: 10, phase: 'Week 2', dayLabel: 'Week 2, Среда',
+        title: 'ПОСТ 5 + communities',
+        summary: 'Пост 5 "Spreadsheet workflow". Настя: SEO communities.',
+        tasks: [
+            { id: '036', title: '036. Кира: Пост 5 LinkedIn + 2ч engagement + DMs', description: 'Зачем: "4 tools that don\'t talk to each other" — relatable.', steps: ['Пост 5 на LinkedIn', '2ч engagement', '2-3 DMs к новым commenters'], subtasks: [{ id: '036-st1', text: 'Пост + engagement + DMs' }], assignee: 'Кира', estimate: '3 часа', priority: 'high', tags: ['content', 'outreach'], copyBlocks: [{ label: 'Пост 5 LinkedIn (copy-paste)', text: 'I watched an SEO consultant build a keyword strategy last week.\n\nShe had four tabs open:\n1. Ahrefs — pulling keyword data\n2. Google Sheets — manually clustering keywords by topic\n3. Google Docs — writing the content brief\n4. Asana — creating tasks for her writer\n\nFour tools. None of them connected. She copy-pasted between all four for three hours.\n\nWhen I asked "Is there a tool that connects all of this?" she laughed and said "I wish."\n\nShe\'s not alone. Every SEO professional I\'ve talked to has some version of this workflow.\n\nSound familiar?\n\n#SEO #Productivity #SEOTools' }] },
+            { id: '037', title: '037. Настя: Communities + conferences finish + engagement', description: 'Зачем: Reddit, Facebook, Slack = quality leads.', steps: ['Traffic Think Tank, SEO Signals Lab, r/SEO, r/bigseo, Women in Tech SEO', 'Конференции: SMX, pubcon, Chiang Mai SEO', 'Engagement: 3-5 comments'], subtasks: [{ id: '037-st1', text: 'Communities + conferences' }, { id: '037-st2', text: 'Engagement' }], assignee: 'Настя', estimate: '3 часа', priority: 'medium', tags: ['research', 'engagement'] }
+        ]
+    },
+    {
+        dayIndex: 11, phase: 'Week 2', dayLabel: 'Week 2, Четверг',
+        title: 'G2/Capterra + beta push',
+        summary: 'Настя: proven buyers. Кира: push beta invites.',
+        tasks: [
+            { id: '038', title: '038. Настя: G2/Capterra reviewers + engagement', description: 'Зачем: Reviewers = proven buyers.', steps: ['G2/Capterra: Ahrefs, SEMrush, Screaming Frog, Surfer, Sitebulb', 'Reviewers → LinkedIn → Sheets', 'Engagement: 3-5 comments'], subtasks: [{ id: '038-st1', text: '5 tools' }, { id: '038-st2', text: 'Engagement' }], assignee: 'Настя', estimate: '3 часа', priority: 'high', tags: ['research', 'engagement'] },
+            { id: '039', title: '039. Кира: Beta push + Twitter', description: 'Зачем: К концу Week 2 нужны 3-5 beta testers.', steps: ['DMs к ещё 3-5 людям', 'Follow up с неответившими', 'Twitter: 3-5 replies'], subtasks: [{ id: '039-st1', text: '3-5 beta agreements total' }], assignee: 'Кира', estimate: '1 час', priority: 'high', tags: ['outreach'] }
+        ]
+    },
     {
         dayIndex: 12, phase: 'Week 2', dayLabel: 'Week 2, Пятница',
-        title: 'ПОСТ 6 (первый тизер + landing link!) + weekly review',
-        summary: 'ПЕРВЫЙ ТИЗЕР. Первый раз ссылка на landing в комментарии. С этого момента — каждый пост имеет landing link.',
+        title: 'ПОСТ 6 (первый тизер + LANDING LINK!) + review',
+        summary: 'ПЕРВЫЙ ТИЗЕР. Первая ссылка на landing. С этого момента каждый пост = landing link.',
         tasks: [
-            {
-                id: '040',
-                title: '040. Кира: Опубликовать Пост 6 + ПЕРВЫЙ landing link в комментарии',
-                description: 'Зачем: Пост 6 = "Building something" тизер. ВПЕРВЫЕ даём link на koru-seo.com в комментарии. Это начало email capture funnel. С этого поста — КАЖДЫЙ следующий пост имеет ссылку.',
-                steps: [
-                    'Опубликовать Пост 6 на LinkedIn + Twitter',
-                    'СРАЗУ после публикации — написать ПЕРВЫЙ КОММЕНТАРИЙ под постом:\n  "If you want to see it when it\'s ready: koru-seo.com"',
-                    'На Twitter: добавить ссылку в reply к своему tweet',
-                    '2 часа engagement',
-                    'ПРАВИЛО: с этого момента КАЖДЫЙ пост = ссылка в первом комментарии'
-                ],
-                subtasks: [
-                    { id: '040-st1', text: 'Пост опубликован' },
-                    { id: '040-st2', text: 'Landing link в первом комментарии' },
-                    { id: '040-st3', text: '2ч engagement' }
-                ],
-                assignee: 'Кира', estimate: '2.5 часа', priority: 'high', tags: ['content'],
-                warning: 'С этого момента КАЖДЫЙ пост = landing link в комментарии. Это email capture machine.',
-                copyBlocks: [
-                    {
-                        label: 'Пост 6 для LinkedIn (copy-paste)',
-                        text: 'We talked to 30 SEO professionals over the last three months.\n\nThe top 3 time sinks they mentioned:\n\n1. Keyword clustering -- still done manually in spreadsheets\n2. Content brief creation -- still done manually in Google Docs\n3. Translating audit findings into actual tasks -- still done by hand\n\nThree workflows. All manual. All taking hours every week.\n\nWe\'re building something to change this.\n\nMore soon.\n\n#SEO #BuildInPublic'
-                    },
-                    {
-                        label: 'ПЕРВЫЙ КОММЕНТАРИЙ (сразу после публикации)',
-                        text: 'If you want to see it when it\'s ready: koru-seo.com'
-                    },
-                    {
-                        label: 'Пост 6 для Twitter (copy-paste)',
-                        text: 'We talked to 30 SEO professionals.\n\nTop 3 time sinks:\n1. Keyword clustering (manual)\n2. Content brief creation (manual)\n3. Audit-to-action translation (manual)\n\nWe\'re building something to change this.\n\nMore soon.\n\n#SEO #BuildInPublic'
-                    }
-                ]
-            },
-            {
-                id: '041',
-                title: '041. Настя: Weekly review Week 2',
-                description: 'Зачем: Еженедельные метрики.',
-                steps: [
-                    'Metrics: target 120-180 total',
-                    'Engagement tracking: сколько комментариев за неделю, какие реакции',
-                    'Группы: статусы обновлены?',
-                    'Summary Кире'
-                ],
-                subtasks: [
-                    { id: '041-st1', text: '120-180 total' },
-                    { id: '041-st2', text: 'Engagement stats' }
-                ],
-                assignee: 'Настя', estimate: '30 мин', priority: 'high', tags: ['review']
-            }
+            { id: '040', title: '040. Кира: Пост 6 + ПЕРВЫЙ landing link + 2ч engagement', description: 'Зачем: "Building something." ВПЕРВЫЕ landing link в комментарии. Email capture funnel START.', steps: ['Пост 6 LinkedIn + Twitter', 'СРАЗУ первый коммент: "koru-seo.com"', '2ч engagement', 'ПРАВИЛО: с этого момента КАЖДЫЙ пост = landing link'], subtasks: [{ id: '040-st1', text: 'Пост' }, { id: '040-st2', text: 'Landing link в комменте' }, { id: '040-st3', text: 'Engagement' }], assignee: 'Кира', estimate: '2.5 часа', priority: 'high', tags: ['content'], warning: 'С этого поста КАЖДЫЙ пост = landing link в комментарии.', copyBlocks: [{ label: 'Пост 6 LinkedIn (copy-paste)', text: 'We talked to 30 SEO professionals over the last three months.\n\nThe top 3 time sinks they mentioned:\n\n1. Keyword clustering — still done manually in spreadsheets\n2. Content brief creation — still done manually in Google Docs\n3. Translating audit findings into actual tasks — still done by hand\n\nThree workflows. All manual. All taking hours every week.\n\nWe\'re building something to change this.\n\nMore soon.\n\n#SEO #BuildInPublic' }, { label: 'Первый комментарий (сразу после поста)', text: 'If you want to see it when it\'s ready: koru-seo.com' }] },
+            { id: '041', title: '041. Настя: Weekly review Week 2', description: 'Зачем: Метрики.', steps: ['Target: 120-180 total', 'Engagement stats', 'Groups статусы'], subtasks: [{ id: '041-st1', text: '120-180 total' }], assignee: 'Настя', estimate: '30 мин', priority: 'high', tags: ['review'] }
         ],
-        keyMetric: 'Week 2: 120-180 profiles, 3-5 beta DMs sent, engagement active (15-25 comments), email capture started'
+        keyMetric: 'Week 2: 120-180 profiles, 3-5 beta testers, engagement active, email capture started'
     },
 
+    // ==========================================
+    // WEEK 3 — BUILDING IN PUBLIC (5 дней)
+    // ==========================================
     {
         dayIndex: 13, phase: 'Week 3', dayLabel: 'Week 3, Понедельник',
-        title: 'HEADLINE CHANGE + ПОСТ 7 "Building a keyword engine"',
-        summary: 'Headline меняется! Пост 7 = первый Building in Public. Показываем ЧТО строим.',
+        title: 'HEADLINE CHANGE + ПОСТ 7',
+        summary: 'Headline → stealth mode. Первый Building in Public пост.',
         tasks: [
-            {
-                id: '042',
-                title: '042. Кира: Сменить LinkedIn headline на stealth mode',
-                description: 'Зачем: Переход к фазе Building in Public. Headline теперь говорит про продукт (без бренда). Смена headline создаёт "career update" notification у всех connections — бесплатная волна внимания!',
-                steps: [
-                    'LinkedIn → Edit Profile',
-                    'Headline: "Building a tool that turns a URL into a keyword strategy in 5 minutes | In stealth"',
-                    'Featured section: добавить link на koru-seo.com',
-                    'НЕ менять Experience (KORU будет добавлен позже)'
-                ],
-                subtasks: [
-                    { id: '042-st1', text: 'Headline обновлён' },
-                    { id: '042-st2', text: 'Featured: landing link' }
-                ],
-                assignee: 'Кира', estimate: '10 мин', priority: 'high', tags: ['branding'],
-                tip: 'Career update notification = бесплатный reach! Все connections увидят "Кира обновила headline".'
-            },
-            {
-                id: '043',
-                title: '043. Кира: Опубликовать Пост 7 + 2ч engagement + DMs',
-                description: 'Зачем: Первый Building in Public пост. Показываем pipeline: URL → clusters → mapping.',
-                steps: [
-                    'Пост 7 на LinkedIn + Twitter',
-                    'Landing link в первом комментарии',
-                    '2ч engagement',
-                    'DMs к 2-3 новым тёплым людям (из свежих комментариев)'
-                ],
-                subtasks: [
-                    { id: '043-st1', text: 'Пост 7 published' },
-                    { id: '043-st2', text: 'Landing link' },
-                    { id: '043-st3', text: '2ч engagement' },
-                    { id: '043-st4', text: '2-3 DMs' }
-                ],
-                assignee: 'Кира', estimate: '3 часа', priority: 'high', tags: ['content', 'outreach'],
-                copyBlocks: [
-                    {
-                        label: 'Пост 7 для LinkedIn (copy-paste)',
-                        text: 'What if there was a keyword engine that works like this:\n\n1. You paste a URL\n2. It crawls your site automatically\n3. It extracts seed keywords from your content\n4. It expands them into hundreds of related terms\n5. It classifies each keyword by search intent\n6. It filters out irrelevant noise\n7. It clusters everything into topic groups\n8. It maps clusters to your existing pages\n9. It identifies the gaps\n10. It gives you a prioritized action plan\n\nAll in one pipeline. Automatically. In minutes.\n\nNo spreadsheets. No copy-pasting between tools. No manual clustering.\n\nWe\'re building exactly this. No name yet. But it works.\n\nAnd yes -- it handles step 7 (clustering) automatically. That\'s the part everyone still does by hand.\n\n#BuildInPublic #SEO #KeywordResearch'
-                    },
-                    {
-                        label: 'Первый комментарий (landing link)',
-                        text: 'Want early access? koru-seo.com'
-                    },
-                    {
-                        label: 'DM Template: beta invite (заменить [Name], [topic])',
-                        text: 'Hey [Name],\n\nYour comment on my post about [topic] was spot on. I\'m actually building the exact tool I described -- keyword research from URL to strategy in minutes.\n\nWould love to get your take on it. Can I give you early access? 15 minutes of your time, and I\'d genuinely value your feedback.\n\nNo pressure either way!'
-                    }
-                ]
-            },
-            {
-                id: '044',
-                title: '044. Настя: G2/Capterra reviewers research + engagement',
-                description: 'Зачем: Люди которые оставляют reviews на Ahrefs/SEMrush = proven buyers SEO tools. Самые качественные leads.',
-                steps: [
-                    'G2.com: страницы Ahrefs, SEMrush, Screaming Frog, Surfer SEO, Sitebulb',
-                    'Для каждого: посмотреть recent reviews (6 мес) → кликнуть на reviewer → LinkedIn → Sheets',
-                    'Notes: "Reviewed [Tool] on G2"',
-                    'Capterra: тот же процесс',
-                    'Engagement: 3-5 комментариев к постам Priority A'
-                ],
-                subtasks: [
-                    { id: '044-st1', text: 'G2/Capterra: 5 tools' },
-                    { id: '044-st2', text: 'Engagement: 3-5 comments' }
-                ],
-                assignee: 'Настя', estimate: '3 часа', priority: 'high', tags: ['research', 'engagement']
-            }
+            { id: '042', title: '042. Кира: Сменить headline + Featured', description: 'Зачем: Переход к Building in Public. Career update notification = бесплатный reach!', steps: ['Headline: "Building a tool that turns a URL into a keyword strategy in 5 minutes | In stealth"', 'Featured: link на koru-seo.com'], subtasks: [{ id: '042-st1', text: 'Headline' }, { id: '042-st2', text: 'Featured' }], assignee: 'Кира', estimate: '10 мин', priority: 'high', tags: ['branding'] },
+            { id: '043', title: '043. Кира: Пост 7 + 2ч engagement + DMs', description: 'Зачем: "Building a keyword engine" — показываем ЧТО строим.', steps: ['Пост 7 LinkedIn + Twitter', 'Landing link в комменте', '2ч engagement', '2-3 DMs'], subtasks: [{ id: '043-st1', text: 'Пост 7' }, { id: '043-st2', text: 'Engagement' }], assignee: 'Кира', estimate: '3 часа', priority: 'high', tags: ['content', 'outreach'], copyBlocks: [{ label: 'Пост 7 LinkedIn (copy-paste)', text: 'What if there was a keyword engine that works like this:\n\n1. You paste a URL\n2. It crawls your site automatically\n3. It extracts seed keywords from your content\n4. It expands them into hundreds of related terms\n5. It classifies each keyword by search intent\n6. It filters out irrelevant noise\n7. It clusters everything into topic groups\n8. It maps clusters to your existing pages\n9. It identifies the gaps\n10. It gives you a prioritized action plan\n\nAll in one pipeline. Automatically. In minutes.\n\nNo spreadsheets. No copy-pasting between tools. No manual clustering.\n\nWe\'re building exactly this. No name yet. But it works.\n\n#BuildInPublic #SEO #KeywordResearch' }, { label: 'Первый комментарий', text: 'Want early access? koru-seo.com' }] },
+            { id: '044', title: '044. Настя: SEO blog contributors + engagement', description: 'Зачем: Blog contributors = уважаемые практики.', steps: ['Search Engine Journal, Search Engine Land, Moz Blog, Ahrefs Blog', 'Contributors → LinkedIn → Sheets', 'Engagement: 3-5 comments'], subtasks: [{ id: '044-st1', text: 'Blog contributors' }, { id: '044-st2', text: 'Engagement' }], assignee: 'Настя', estimate: '3 часа', priority: 'high', tags: ['research', 'engagement'] }
         ]
     },
-
+    {
+        dayIndex: 14, phase: 'Week 3', dayLabel: 'Week 3, Вторник',
+        title: 'Blog contributors (ч.2) + engagement',
+        summary: 'Настя: оставшиеся blogs. Кира: DM follow-ups + beta demos.',
+        tasks: [
+            { id: '045', title: '045. Настя: Blogs finish + engagement', description: 'Зачем: Doделать sources.', steps: ['Backlinko, Semrush Blog, Search Engine Watch', 'Engagement: 3-5 comments'], subtasks: [{ id: '045-st1', text: 'Blogs done' }, { id: '045-st2', text: 'Engagement' }], assignee: 'Настя', estimate: '2 часа', priority: 'medium', tags: ['research', 'engagement'] },
+            { id: '046', title: '046. Кира: Beta demos + DM follow-ups', description: 'Зачем: Конвертировать interested → actual beta testers.', steps: ['Провести demo (15 мин) с согласившимися', 'Собрать feedback', 'Follow up с остальными DMs'], subtasks: [{ id: '046-st1', text: 'Demo(s)' }, { id: '046-st2', text: 'Follow-ups' }], assignee: 'Кира', estimate: '1.5 часа', priority: 'high', tags: ['outreach'] }
+        ]
+    },
+    {
+        dayIndex: 15, phase: 'Week 3', dayLabel: 'Week 3, Среда',
+        title: 'ПОСТ 8 + categorization start',
+        summary: 'Пост 8 "Topic clusters > keyword lists". Настя начинает финальную категоризацию.',
+        tasks: [
+            { id: '047', title: '047. Кира: Пост 8 + 2ч engagement', description: 'Зачем: Визуальный пост — показать кластеры. Если есть скриншот из KORU — приложить.', steps: ['Пост 8 LinkedIn + landing link', '2ч engagement'], subtasks: [{ id: '047-st1', text: 'Пост 8 + engagement' }], assignee: 'Кира', estimate: '2.5 часа', priority: 'high', tags: ['content', 'engagement'], copyBlocks: [{ label: 'Пост 8 LinkedIn (copy-paste)', text: 'This is what keyword research looks like today:\n\nA flat list. 200 keywords. Sorted by volume. Good luck figuring out which ones to target.\n\nThis is what it should look like:\n\n-> Cluster: "SEO audit tools" (8 keywords, avg. difficulty 32)\n  Covered by /blog/best-seo-tools (position 15)\n  Gap: "free seo audit tool" — needs new page\n\n-> Cluster: "technical SEO" (12 keywords, avg. difficulty 45)\n  Partially covered by /services/technical-seo\n  Gap: "core web vitals audit" — expand existing page\n\n-> Cluster: "keyword research process" (6 keywords, avg. difficulty 28)\n  Not covered at all — create new content\n\nThat\'s not a list. That\'s a strategy. Clustered. Mapped. Prioritized.\n\nWe\'re making this automatic.\n\n#SEO #KeywordStrategy #BuildInPublic' }] },
+            { id: '048', title: '048. Настя: Categorization start + engagement', description: 'Зачем: Перед outreach — все профили consistent.', steps: ['Пройти все профили: A/B/C consistent?', 'Спорные → для Киры', 'Engagement: 3-5 comments'], subtasks: [{ id: '048-st1', text: 'Categorization started' }, { id: '048-st2', text: 'Engagement' }], assignee: 'Настя', estimate: '2.5 часа', priority: 'high', tags: ['review', 'engagement'] }
+        ]
+    },
+    {
+        dayIndex: 16, phase: 'Week 3', dayLabel: 'Week 3, Четверг',
+        title: 'Categorization finish + engagement',
+        summary: 'Настя финализирует. Кира — спорные cases + beta.',
+        tasks: [
+            { id: '049a', title: '049a. Настя: Categorization finish + engagement', description: 'Зачем: Всё должно быть ready к пятничному review.', steps: ['Все профили: Source, Activity Level, Notes заполнены', 'Engagement: 3-5 comments'], subtasks: [{ id: '049a-st1', text: 'Cleanup done' }, { id: '049a-st2', text: 'Engagement' }], assignee: 'Настя', estimate: '2 часа', priority: 'high', tags: ['review', 'engagement'] },
+            { id: '049b', title: '049b. Кира: Спорные cases + beta feedback', description: 'Зачем: Решить спорные Priority. Собрать feedback от beta.', steps: ['Review спорных cases из Sheets', 'Собрать feedback от beta testers'], subtasks: [{ id: '049b-st1', text: 'Cases решены' }, { id: '049b-st2', text: 'Beta feedback' }], assignee: 'Кира', estimate: '1 час', priority: 'high', tags: ['review'] }
+        ]
+    },
     {
         dayIndex: 17, phase: 'Week 3', dayLabel: 'Week 3, Пятница',
-        title: 'ПОСТ 9 + final review Priority A + prepare outreach',
-        summary: 'Пост 9 (pipeline post). Кира лично ревьюит КАЖДЫЙ Priority A. Подготовка к Week 4 outreach.',
+        title: 'ПОСТ 9 + final review Priority A + templates',
+        summary: 'Pipeline пост. Кира ревьюит ВСЕ Priority A. Настя готовит connection templates.',
         tasks: [
-            {
-                id: '050',
-                title: '050. Кира: Пост 9 + engagement',
-                description: 'Зачем: Последний Building in Public пост перед reveal. Показываем масштаб: audit → keywords → brief → task.',
-                steps: ['Пост 9 на LinkedIn + Twitter', 'Landing link', '2ч engagement', 'DMs к hot leads'],
-                subtasks: [{ id: '050-st1', text: 'Пост 9 + engagement + DMs' }],
-                assignee: 'Кира', estimate: '3 часа', priority: 'high', tags: ['content', 'outreach']
-            },
-            {
-                id: '051',
-                title: '051. Кира: Final review ВСЕХ Priority A профилей',
-                description: 'Зачем: На следующей неделе Настя начнёт отправлять connection requests этим людям. Кира должна ЛИЧНО подтвердить каждого. Ошибка тут = впустую потраченные requests.',
-                steps: [
-                    'Sheets → фильтр Priority A',
-                    'Для каждого профиля:\n  — Открыть LinkedIn\n  — Подтвердить или изменить Priority\n  — Записать: чем персонализировать connection request? (recent post, conference, group, etc.)',
-                    'Финал: 40-60 Priority A подтверждено',
-                    'Feedback Насте по ошибкам'
-                ],
-                subtasks: [
-                    { id: '051-st1', text: 'Все Priority A проверены' },
-                    { id: '051-st2', text: '40-60 подтверждено' },
-                    { id: '051-st3', text: 'Personalization notes для каждого' }
-                ],
-                assignee: 'Кира', estimate: '2 часа', priority: 'high', tags: ['review']
-            },
-            {
-                id: '052',
-                title: '052. Настя: Weekly review + подготовить connection templates',
-                description: 'Зачем: На Week 4 начинаем outreach. Templates должны быть готовы ЗАРАНЕЕ.',
-                steps: [
-                    'Metrics: target 200-300 total, 40-60 A, 80-120 B',
-                    'Подготовить 3 connection request templates (< 300 символов каждый):\n  Template 1 (для тех кто комментировал): "Hi [Name], your post about [topic] resonated with me. I\'m building [tool name when revealed] — turns a URL into a full keyword strategy. Would love to connect."\n  Template 2 (для agency owners): "Hi [Name], I\'ve been following [Agency]. We\'re building something to cut keyword research from hours to minutes. Would be great to connect."\n  Template 3 (для conference speakers): "Hi [Name], your talk at [Conference] on [topic] was excellent. Working in the same space — would love to connect."',
-                    'Engagement: 3-5 comments'
-                ],
-                subtasks: [
-                    { id: '052-st1', text: 'Metrics: 200-300 total' },
-                    { id: '052-st2', text: '3 templates готовы' },
-                    { id: '052-st3', text: 'Engagement done' }
-                ],
-                assignee: 'Настя', estimate: '1.5 часа', priority: 'high', tags: ['review', 'outreach']
-            }
+            { id: '050', title: '050. Кира: Пост 9 + 2ч engagement', description: 'Зачем: "From research to action" — масштаб pipeline.', steps: ['Пост 9 LinkedIn + Twitter + landing link', '2ч engagement + DMs'], subtasks: [{ id: '050-st1', text: 'Пост 9 + engagement' }], assignee: 'Кира', estimate: '3 часа', priority: 'high', tags: ['content', 'outreach'], copyBlocks: [{ label: 'Пост 9 LinkedIn (copy-paste)', text: 'Here\'s what we\'re connecting into one platform:\n\nAudit -> finds technical issues on your site\n|\nKeywords -> discovers topic opportunities you\'re missing\n|\nBriefs -> generates content plans for each opportunity\n|\nTasks -> creates actionable items for your team\n\nOne pipeline. Every step feeds the next.\n\nYour audit finds a missing H1.\nYour keyword analysis finds "seo audit tool" is a top opportunity.\nYour brief generator creates an outline.\nYour task board shows "Write: SEO Audit Tool comparison — outline ready."\n\nNo switching between four tools. No copy-pasting.\n\nFrom problem -> to plan -> to action. In one place.\n\nWe\'re close. Really close.\n\n#SEO #BuildInPublic' }] },
+            { id: '051', title: '051. Кира: Final review ВСЕ Priority A', description: 'Зачем: Это люди которые получат connection requests. Лично проверить каждого.', steps: ['Sheets → фильтр Priority A', 'Каждый: открыть LinkedIn, подтвердить, записать чем персонализировать', 'Target: 40-60 Priority A'], subtasks: [{ id: '051-st1', text: '40-60 Priority A confirmed' }, { id: '051-st2', text: 'Personalization notes' }], assignee: 'Кира', estimate: '2 часа', priority: 'high', tags: ['review'] },
+            { id: '052', title: '052. Настя: Weekly review + connection templates', description: 'Зачем: Metrics + templates для Week 4.', steps: ['Metrics: target 200-300', 'Подготовить 3 connection templates'], subtasks: [{ id: '052-st1', text: '200-300 total' }, { id: '052-st2', text: 'Templates ready' }], assignee: 'Настя', estimate: '1.5 часа', priority: 'high', tags: ['review', 'outreach'] }
         ],
-        keyMetric: 'Week 3: 200-300 profiles, 40-60 Priority A confirmed, beta testers using product, templates ready'
+        keyMetric: 'Week 3: 200-300 profiles, 40-60 Priority A, beta testers active, templates ready'
     },
 
+    // ==========================================
+    // WEEK 4 — REVEAL + OUTREACH (5 дней)
+    // ==========================================
     {
         dayIndex: 18, phase: 'Week 4', dayLabel: 'Week 4, Понедельник',
-        title: 'REVEAL KORU + ПОСТ 10 + OUTREACH START',
-        summary: 'Бренд KORU раскрыт! Headline финальный. Пост 10 "Meet KORU". Настя начинает connection requests.',
+        title: 'REVEAL KORU + ПОСТ 10 + outreach start',
+        summary: 'Бренд KORU раскрыт! Headline финальный. Настя начинает connection requests.',
         tasks: [
-            {
-                id: '053',
-                title: '053. Кира: Финальный headline + Experience update',
-                description: 'Зачем: REVEAL. Бренд KORU теперь публичный. Headline = финальный positioning.',
-                steps: [
-                    'Headline: "Founder & CEO at KORU | From URL to SEO strategy in 5 minutes"',
-                    'Experience: добавить "CEO at KORU" как current position',
-                    'Company Page KORU: обновить About с полным positioning'
-                ],
-                subtasks: [{ id: '053-st1', text: 'Headline final' }, { id: '053-st2', text: 'Experience updated' }],
-                assignee: 'Кира', estimate: '15 мин', priority: 'high', tags: ['branding']
-            },
-            {
-                id: '054',
-                title: '054. Кира: Пост 10 "Meet KORU" + engagement + DMs',
-                description: 'Зачем: Самый важный пост до launch. Раскрываем ЧТО, для КОГО, КАК работает. Ссылка на landing.',
-                steps: ['Пост 10 LinkedIn + Twitter', 'Landing link', '2ч engagement', 'DMs к hot leads'],
-                subtasks: [{ id: '054-st1', text: 'Reveal post published' }, { id: '054-st2', text: 'Engagement + DMs' }],
-                assignee: 'Кира', estimate: '3 часа', priority: 'high', tags: ['content', 'outreach'],
-                copyBlocks: [
-                    {
-                        label: 'Пост 10 "Meet KORU" для LinkedIn (copy-paste)',
-                        text: 'It\'s time.\n\nFor the last three months, we\'ve been building a tool for SEO freelancers and small agencies who are tired of spending hours on keyword research.\n\nIt\'s called KORU.\n\nHere\'s what it does:\n\n-> Paste any URL\n-> Get topic clusters automatically (not keyword lists -- clusters)\n-> See which pages already cover each topic\n-> See the gaps -- where you need new content\n-> Generate content briefs in one click\n-> Turn everything into tasks for your team\n\nFrom URL to keyword strategy in 5 minutes. Not 4 hours.\n\nWe built this because every SEO professional we talked to said the same thing: "The tools give me data. I need strategy."\n\nKORU gives you strategy.\n\nEarly access is open: koru-seo.com\n\n#KORU #SEO #KeywordResearch #LaunchingSoon'
-                    },
-                    {
-                        label: 'Первый комментарий',
-                        text: 'Try it free: koru-seo.com'
-                    },
-                    {
-                        label: 'Пост 10 для Twitter (copy-paste)',
-                        text: 'Meet KORU.\n\nPaste a URL. Get topic clusters, page mapping, content briefs. Automatically.\n\nFrom URL to keyword strategy in 5 minutes.\n\nBuilt for SEO freelancers and small agencies who are tired of spending hours on keyword research.\n\nEarly access: koru-seo.com\n\n#KORU #SEO'
-                    }
-                ]
-            },
-            {
-                id: '055',
-                title: '055. Настя: ПЕРВЫЕ connection requests (8-10 штук)',
-                description: 'Зачем: Начинаем строить network. 8-10 в день (реалистично, качественно). КАЖДЫЙ request персонализирован — reference что-то конкретное о человеке.',
-                steps: [
-                    'Выбрать 8-10 Priority A с: highest Activity Level + те кто получил engagement от нас',
-                    'Для каждого:\n  1. Открыть профиль (30 сек)\n  2. Посмотреть recent post или bio\n  3. Выбрать template 1/2/3\n  4. Персонализировать (заменить [Name], [topic], [specific detail])\n  5. Отправить\n  6. Записать: Date | Name | Template | Status',
-                    'КРИТИЧНО: НЕ generic! "I\'d like to add you to my network" = мусор. Reference что-то конкретное.',
-                    'Engagement: 3-5 comments к постам'
-                ],
-                subtasks: [
-                    { id: '055-st1', text: '8-10 requests отправлены' },
-                    { id: '055-st2', text: 'Каждый персонализирован' },
-                    { id: '055-st3', text: 'Tracking обновлён' },
-                    { id: '055-st4', text: 'Engagement: 3-5 comments' }
-                ],
-                assignee: 'Настя', estimate: '2 часа', priority: 'high', tags: ['outreach', 'engagement'],
-                warning: '30 секунд на профиль ПЕРЕД отправкой. Без этого = generic spam = low acceptance rate.',
-                copyBlocks: [
-                    {
-                        label: 'Connection Request: для тех кто получил engagement (заменить [Name], [topic])',
-                        text: 'Hi [Name], your recent post about [specific topic] really hit home. I\'m building KORU -- turns a URL into a full keyword strategy automatically. Would love to connect and share what we\'re doing.'
-                    },
-                    {
-                        label: 'Connection Request: для agency owners (заменить [Name], [Agency], [specific])',
-                        text: 'Hi [Name], I\'ve been following [Agency Name]\'s work -- impressed by your approach to [something specific]. We\'re building KORU to cut keyword research from hours to minutes. Would be great to connect.'
-                    },
-                    {
-                        label: 'Connection Request: для conference speakers (заменить [Name], [Conference], [topic], [detail])',
-                        text: 'Hi [Name], your talk at [Conference] about [topic] was excellent -- especially [specific detail]. Building in the same space. Would love to connect.'
-                    }
-                ]
-            }
+            { id: '053', title: '053. Кира: Final headline + Experience', description: 'Зачем: REVEAL.', steps: ['Headline: "Founder & CEO at KORU | From URL to SEO strategy in 5 minutes"', 'Experience: CEO at KORU', 'Company Page: обновить About'], subtasks: [{ id: '053-st1', text: 'Headline' }, { id: '053-st2', text: 'Experience' }], assignee: 'Кира', estimate: '15 мин', priority: 'high', tags: ['branding'] },
+            { id: '054', title: '054. Кира: Пост 10 "Meet KORU" + 2ч engagement + DMs', description: 'Зачем: Самый важный пост до launch.', steps: ['Пост 10 LinkedIn + Twitter', 'Landing link', '2ч engagement', 'DMs к hot leads'], subtasks: [{ id: '054-st1', text: 'Reveal post' }, { id: '054-st2', text: 'Engagement + DMs' }], assignee: 'Кира', estimate: '3 часа', priority: 'high', tags: ['content', 'outreach'], copyBlocks: [{ label: 'Пост 10 LinkedIn (copy-paste)', text: 'It\'s time.\n\nFor the last three months, we\'ve been building a tool for SEO freelancers and small agencies who are tired of spending hours on keyword research.\n\nIt\'s called KORU.\n\nHere\'s what it does:\n\n-> Paste any URL\n-> Get topic clusters automatically (not keyword lists — clusters)\n-> See which pages already cover each topic\n-> See the gaps — where you need new content\n-> Generate content briefs in one click\n-> Turn everything into tasks for your team\n\nFrom URL to keyword strategy in 5 minutes. Not 4 hours.\n\nWe built this because every SEO professional we talked to said the same thing: "The tools give me data. I need strategy."\n\nKORU gives you strategy.\n\nEarly access is open: koru-seo.com\n\n#KORU #SEO #KeywordResearch #LaunchingSoon' }] },
+            { id: '055', title: '055. Настя: ПЕРВЫЕ connection requests (8-10)', description: 'Зачем: Строим network. 8-10/день, качественно, персонализированно.', steps: ['8-10 Priority A с highest Activity', 'ПЕРСОНАЛИЗИРОВАТЬ каждый (30 сек на профиль)', 'Tracking', 'Engagement: 3-5 comments'], subtasks: [{ id: '055-st1', text: '8-10 requests' }, { id: '055-st2', text: 'Engagement' }], assignee: 'Настя', estimate: '2 часа', priority: 'high', tags: ['outreach', 'engagement'], copyBlocks: [{ label: 'CR: engagement-based (заменить [Name], [topic])', text: 'Hi [Name], your recent post about [specific topic] really hit home. I\'m building KORU — turns a URL into a full keyword strategy automatically. Would love to connect and share what we\'re doing.' }, { label: 'CR: agency owners (заменить [Name], [Agency], [specific])', text: 'Hi [Name], I\'ve been following [Agency Name]\'s work — impressed by your approach to [something specific]. We\'re building KORU to cut keyword research from hours to minutes. Would be great to connect.' }, { label: 'CR: speakers (заменить [Name], [Conference], [topic])', text: 'Hi [Name], your talk at [Conference] about [topic] was excellent — especially [specific detail]. Building in the same space. Would love to connect.' }] }
         ]
     },
-
+    {
+        dayIndex: 19, phase: 'Week 4', dayLabel: 'Week 4, Вторник',
+        title: 'Outreach + monitoring + beta testimonials',
+        summary: 'Продолжаем outreach. Мониторим acceptance. Собираем testimonials.',
+        tasks: [
+            { id: '056', title: '056. Настя: Outreach (8-10) + monitoring + engagement', description: 'Зачем: Consistency.', steps: ['8-10 requests', 'Проверить acceptances вчерашних', 'Engagement: 3-5 comments'], subtasks: [{ id: '056-st1', text: '8-10 requests' }, { id: '056-st2', text: 'Acceptance check' }], assignee: 'Настя', estimate: '2 часа', priority: 'high', tags: ['outreach', 'monitoring'] },
+            { id: '057', title: '057. Кира: Testimonial requests + new connection engagement', description: 'Зачем: Testimonials к launch post.', steps: ['Beta testers: попросить 2-3 sentence quote', 'Новые connections: comment на их пост (НЕ pitch сразу)', 'Twitter engagement'], subtasks: [{ id: '057-st1', text: 'Testimonial requests' }, { id: '057-st2', text: 'Connection engagement' }], assignee: 'Кира', estimate: '1 час', priority: 'high', tags: ['outreach', 'engagement'], copyBlocks: [{ label: 'Testimonial request DM (заменить [Name], [thing])', text: 'Hey [Name],\n\nThanks so much for testing KORU — your feedback on [specific thing] was really valuable.\n\nQuick favor: would you be ok sharing a sentence or two about your experience? Something genuine, in your own words.\n\nWe\'re gearing up for launch and a few real voices would mean a lot.\n\nNo pressure at all!' }] }
+        ]
+    },
+    {
+        dayIndex: 20, phase: 'Week 4', dayLabel: 'Week 4, Среда',
+        title: 'ПОСТ 11 + outreach',
+        summary: 'Пост 11 "Beta testers saying". Outreach продолжается.',
+        tasks: [
+            { id: '058', title: '058. Кира: Пост 11 + 2ч engagement', description: 'Зачем: Social proof.', steps: ['Пост 11: beta quotes или research quotes', 'Landing link', '2ч engagement'], subtasks: [{ id: '058-st1', text: 'Пост 11 + engagement' }], assignee: 'Кира', estimate: '2.5 часа', priority: 'high', tags: ['content', 'engagement'] },
+            { id: '059', title: '059. Настя: Outreach (8-10) + engagement', description: 'Зачем: Consistency.', steps: ['8-10 requests + monitoring + 3-5 comments'], subtasks: [{ id: '059-st1', text: 'Outreach + engagement' }], assignee: 'Настя', estimate: '2 часа', priority: 'high', tags: ['outreach', 'engagement'] }
+        ]
+    },
+    {
+        dayIndex: 21, phase: 'Week 4', dayLabel: 'Week 4, Четверг',
+        title: 'Outreach + demo recording',
+        summary: 'Настя: outreach. Кира: записать demo GIF.',
+        tasks: [
+            { id: '059b', title: '059b. Настя: Outreach (8-10) + engagement', description: 'Зачем: Добиваем Priority A.', steps: ['8-10 requests + 3-5 comments'], subtasks: [{ id: '059b-st1', text: 'Outreach + engagement' }], assignee: 'Настя', estimate: '2 часа', priority: 'high', tags: ['outreach'] },
+            { id: '060', title: '060. Кира: Записать demo GIF/video (30 сек)', description: 'Зачем: Для поста 12 и launch post. Самый мощный content asset.', steps: ['Открыть KORU', 'Записать: URL paste → analysis → clusters → brief', '30 сек GIF + MP4'], subtasks: [{ id: '060-st1', text: 'Demo записан' }], assignee: 'Кира', estimate: '1 час', priority: 'high', tags: ['content'] }
+        ]
+    },
     {
         dayIndex: 22, phase: 'Week 4', dayLabel: 'Week 4, Пятница',
-        title: 'ПОСТ 12 (demo!) + GO/NO-GO review',
-        summary: 'Пост с demo GIF. Критический review: acceptance rate определяет Week 5.',
+        title: 'ПОСТ 12 (demo!) + GO/NO-GO',
+        summary: 'Demo post. Критический review: acceptance rate.',
         tasks: [
-            {
-                id: '060',
-                title: '060. Кира: Записать demo GIF/video (30 сек)',
-                description: 'Зачем: Показать продукт в действии. 30 секунд: вставить URL → keywords появляются → clusters → brief. Это самый мощный content asset кампании.',
-                steps: [
-                    'Открыть KORU (production или demo env)',
-                    'Записать screen recording: URL paste → analysis → clusters → brief',
-                    'Обрезать до 30 сек. Без звука. Subtitle если нужно.',
-                    'Формат: GIF (для LinkedIn/Twitter) + MP4 (backup)'
-                ],
-                subtasks: [{ id: '060-st1', text: 'Demo записан (30 сек GIF)' }],
-                assignee: 'Кира', estimate: '1 час', priority: 'high', tags: ['content']
-            },
-            {
-                id: '061',
-                title: '061. Кира: Пост 12 "Live demo" + engagement',
-                description: 'Зачем: Пост с demo = highest engagement потенциал. Люди видят реальный продукт.',
-                steps: ['Пост 12 + demo GIF + landing link', '2ч engagement', 'DMs к тем кто пишет "How do I try this?"'],
-                subtasks: [{ id: '061-st1', text: 'Demo post + engagement' }],
-                assignee: 'Кира', estimate: '2.5 часа', priority: 'high', tags: ['content', 'outreach']
-            },
-            {
-                id: '062',
-                title: '062. Кира + Настя: GO/NO-GO review для Week 5',
-                description: 'Зачем: Acceptance rate определяет продолжаем ли outreach или fix approach.',
-                steps: [
-                    'Total Priority A requests: target 30-40',
-                    'Acceptance rate:\n  50%+ = отлично\n  30-50% = хорошо, continue\n  20-30% = review templates\n  <20% = STOP outreach, fix everything',
-                    'Beta testers: сколько пользуются? Есть testimonials?',
-                    'Email signups: сколько?',
-                    'Ретро: какие templates работают лучше?'
-                ],
-                subtasks: [
-                    { id: '062-st1', text: '30-40 requests sent' },
-                    { id: '062-st2', text: 'Acceptance >= 25%' },
-                    { id: '062-st3', text: '2+ testimonials' }
-                ],
-                assignee: 'Кира + Настя', estimate: '1 час', priority: 'high', tags: ['review'],
-                warning: 'Acceptance < 20% = STOP. Не переходить к Week 5.'
-            }
+            { id: '061', title: '061. Кира: Пост 12 demo + 2ч engagement', description: 'Зачем: Люди видят реальный продукт.', steps: ['Пост 12 + GIF + landing link', '2ч engagement'], subtasks: [{ id: '061-st1', text: 'Demo post + engagement' }], assignee: 'Кира', estimate: '2.5 часа', priority: 'high', tags: ['content', 'engagement'], copyBlocks: [{ label: 'Пост 12 LinkedIn (copy-paste + приложить GIF)', text: 'People kept asking: "What does it actually look like?"\n\nSo here\'s a 30-second demo.\n\n1. I paste a URL\n2. KORU crawls the site\n3. Keywords are discovered and classified\n4. They\'re automatically clustered by topic\n5. Each cluster is mapped to existing pages\n6. Gaps identified. Priorities set.\n7. One click -> full content brief\n\nURL to strategy. 5 minutes.\n\nTry it: koru-seo.com\n\n[ATTACH GIF]\n\n#KORU #SEO #ProductDemo' }] },
+            { id: '062', title: '062. Кира + Настя: GO/NO-GO review', description: 'Зачем: Acceptance rate определяет Week 5.', steps: ['Total Priority A: target 30-40', 'Acceptance: >=25% → GO. <20% → STOP', 'Beta testimonials: 2+?', 'Email signups?'], subtasks: [{ id: '062-st1', text: '30-40 sent' }, { id: '062-st2', text: 'Acceptance >=25%' }, { id: '062-st3', text: '2+ testimonials' }], assignee: 'Кира + Настя', estimate: '1 час', priority: 'high', tags: ['review'], warning: 'Acceptance <20% = STOP Week 5 outreach.' }
         ],
-        keyMetric: 'Week 4: 30-40 Priority A requests, acceptance >= 25%, demo published, 2+ testimonials'
+        keyMetric: 'Week 4: 30-40 Priority A, acceptance >=25%, demo published, 2+ testimonials'
     },
 
+    // ==========================================
+    // WEEK 5 — PRIORITY B + PRE-LAUNCH (5 дней)
+    // ==========================================
+    {
+        dayIndex: 23, phase: 'Week 5', dayLabel: 'Week 5, Понедельник',
+        title: 'Priority B outreach start + launch post draft',
+        summary: 'Расширяем на Priority B. Кира пишет launch post.',
+        tasks: [
+            { id: '063', title: '063. Настя: Priority B outreach (12-15) + engagement', description: 'Зачем: Масштабируем. Priority B = in-house managers, content strategists.', steps: ['12-15 requests/день', 'Engagement: 5-7 comments (усиливаем перед launch)'], subtasks: [{ id: '063-st1', text: '12-15 requests' }, { id: '063-st2', text: 'Engagement' }], assignee: 'Настя', estimate: '3 часа', priority: 'high', tags: ['outreach', 'engagement'] },
+            { id: '064', title: '064. Кира: Написать launch post + launch plan', description: 'Зачем: THE launch post. Спланировать launch day.', steps: ['Launch post: hook → problem → solution → social proof → demo → CTA', 'Launch day plan: time, beta testers, email, Twitter'], subtasks: [{ id: '064-st1', text: 'Launch post written' }, { id: '064-st2', text: 'Launch plan ready' }], assignee: 'Кира', estimate: '3 часа', priority: 'high', tags: ['content', 'planning'] }
+        ]
+    },
+    {
+        dayIndex: 24, phase: 'Week 5', dayLabel: 'Week 5, Вторник',
+        title: 'Outreach + launch post review',
+        summary: 'Настя: outreach. Кира: review launch post.',
+        tasks: [
+            { id: '065', title: '065. Настя: Priority B outreach (12-15) + engagement', description: 'Зачем: Consistency.', steps: ['12-15 requests + 5-7 comments'], subtasks: [{ id: '065-st1', text: 'Outreach + engagement' }], assignee: 'Настя', estimate: '3 часа', priority: 'high', tags: ['outreach'] },
+            { id: '066', title: '066. Кира: Review launch post + DMs + Twitter', description: 'Зачем: Finalize post. Continue engagement.', steps: ['Re-read launch post. Edit.', 'DMs к interested people', 'Twitter engagement'], subtasks: [{ id: '066-st1', text: 'Post reviewed' }, { id: '066-st2', text: 'DMs + Twitter' }], assignee: 'Кира', estimate: '1.5 часа', priority: 'medium', tags: ['content', 'outreach'] }
+        ]
+    },
+    {
+        dayIndex: 25, phase: 'Week 5', dayLabel: 'Week 5, Среда',
+        title: 'Outreach continue',
+        summary: 'Настя: outreach. Кира: engagement + beta follow-ups.',
+        tasks: [
+            { id: '067', title: '067. Настя: Priority B outreach (12-15) + engagement', description: 'Зачем: Добиваем.', steps: ['12-15 requests + 5-7 comments'], subtasks: [{ id: '067-st1', text: 'Outreach + engagement' }], assignee: 'Настя', estimate: '3 часа', priority: 'high', tags: ['outreach'] },
+            { id: '068', title: '068. Кира: Beta final feedback + testimonials check', description: 'Зачем: Убедиться что testimonials ready для launch post.', steps: ['Check: все testimonials получены?', 'If missing: gentle reminder DM', 'Insert quotes into launch post'], subtasks: [{ id: '068-st1', text: 'Testimonials in launch post' }], assignee: 'Кира', estimate: '1 час', priority: 'high', tags: ['outreach'] }
+        ]
+    },
+    {
+        dayIndex: 26, phase: 'Week 5', dayLabel: 'Week 5, Четверг',
+        title: 'Outreach + email draft',
+        summary: 'Настя: outreach. Кира: email waitlist draft.',
+        tasks: [
+            { id: '069a', title: '069a. Настя: Priority B outreach (12-15) + engagement', description: 'Зачем: Финальный push перед launch.', steps: ['12-15 requests + 5-7 comments'], subtasks: [{ id: '069a-st1', text: 'Outreach + engagement' }], assignee: 'Настя', estimate: '3 часа', priority: 'high', tags: ['outreach'] },
+            { id: '069b', title: '069b. Кира: Draft "We launched" email', description: 'Зачем: Email к waitlist в launch day.', steps: ['Subject: "KORU is live — try it free"', 'Short body + signup link'], subtasks: [{ id: '069b-st1', text: 'Email drafted' }], assignee: 'Кира', estimate: '30 мин', priority: 'high', tags: ['content'], copyBlocks: [{ label: 'Launch email (copy-paste в Mailchimp/ConvertKit)', text: 'Subject: KORU is live — try it free\n\nHey,\n\nIt\'s here.\n\nKORU is live. You signed up for early access, and now it\'s ready.\n\nWhat it does:\n-> Paste any URL\n-> Get topic clusters (not keyword lists)\n-> See coverage gaps\n-> Generate content briefs in one click\n-> Turn everything into tasks\n\nFrom URL to keyword strategy in 5 minutes.\n\nTry it free: [koru-seo.com/signup]\n\nIf you have questions, just reply — I read every one.\n\nKira\nFounder, KORU' }] }
+        ]
+    },
     {
         dayIndex: 27, phase: 'Week 5', dayLabel: 'Week 5, Пятница',
         title: 'Pre-launch FINAL check',
-        summary: 'Всё проверяем. Launch через выходные.',
+        summary: 'ВСЁ проверяем. Launch через выходные.',
         tasks: [
-            {
-                id: '070',
-                title: '070. Кира: Pre-launch checklist — КАЖДЫЙ пункт',
-                description: 'Зачем: Launch = один шанс. Checklist = ничего не забыть.',
-                steps: [
-                    'Launch post: написан? reviewed? demo GIF вставлен?',
-                    'Beta tester testimonials: 2-3 готовы? (copy-pasted в пост)',
-                    'Landing page: работает? email capture OK?',
-                    'Email waitlist draft: "We launched!" email написан?',
-                    'Beta testers notified: "We launch Tuesday — comment in first 30 min please"?',
-                    'Product: stable? demo-ready? (Макс подтвердил)',
-                    'Twitter: launch post адаптирован?',
-                    'Team sync: Настя знает что делать в launch day?'
-                ],
-                subtasks: [
-                    { id: '070-st1', text: 'Launch post final' },
-                    { id: '070-st2', text: 'Testimonials ready' },
-                    { id: '070-st3', text: 'Landing OK' },
-                    { id: '070-st4', text: 'Email draft ready' },
-                    { id: '070-st5', text: 'Beta testers notified' },
-                    { id: '070-st6', text: 'Product stable (Макс ОК)' },
-                    { id: '070-st7', text: 'ALL SYSTEMS GO' }
-                ],
-                assignee: 'Кира', estimate: '2 часа', priority: 'high', tags: ['planning']
-            }
+            { id: '070', title: '070. Кира + Настя: Pre-launch checklist', description: 'Зачем: Один шанс. Ничего не забыть.', steps: ['Launch post: ready + demo GIF?', 'Testimonials: 2-3 вставлены?', 'Landing: working?', 'Email: drafted?', 'Beta testers: notified? ("comment in first 30 min")', 'Product: stable? (Макс ОК)', 'Twitter launch post adapted?'], subtasks: [{ id: '070-st1', text: 'Launch post final' }, { id: '070-st2', text: 'Testimonials ready' }, { id: '070-st3', text: 'Landing OK' }, { id: '070-st4', text: 'Email ready' }, { id: '070-st5', text: 'Beta testers notified' }, { id: '070-st6', text: 'Product stable' }, { id: '070-st7', text: 'ALL SYSTEMS GO' }], assignee: 'Кира + Настя', estimate: '2 часа', priority: 'high', tags: ['planning'] }
         ],
-        keyMetric: 'Everything ready. No last-minute surprises.'
+        keyMetric: 'Week 5: 60-80 Priority B, testimonials ready, launch post final, ALL GO'
     },
 
+    // ==========================================
+    // WEEK 6 — LAUNCH (5 дней)
+    // ==========================================
+    {
+        dayIndex: 28, phase: 'Week 6', dayLabel: 'Week 6, Понедельник',
+        title: 'Teaser day',
+        summary: '"Tomorrow." Финальные проверки.',
+        tasks: [
+            { id: '071', title: '071. Кира: Teaser post + final checks', description: 'Зачем: Build anticipation.', steps: ['LinkedIn + Twitter: "Tomorrow."', 'Final check: всё работает?', 'Remind beta testers: "Tomorrow morning"'], subtasks: [{ id: '071-st1', text: 'Teaser posted' }, { id: '071-st2', text: 'All checked' }], assignee: 'Кира', estimate: '1 час', priority: 'high', tags: ['content'] }
+        ]
+    },
     {
         dayIndex: 29, phase: 'Week 6', dayLabel: 'Week 6, Вторник',
         title: 'LAUNCH DAY!',
-        summary: 'THE DAY. 9:00 AM пост. Beta testers комментируют первые. Кира online весь день.',
+        summary: '9:00 AM пост. Beta testers comment first. Кира online весь день.',
         tasks: [
-            {
-                id: '075',
-                title: '075. Кира: 9:00 AM — Опубликовать launch post на LinkedIn',
-                description: 'Зачем: LAUNCH. Пост должен быть опубликован утром (9 AM EST = peak LinkedIn). Структура: hook → problem → solution → social proof → demo → CTA.',
-                steps: [
-                    'РОВНО в 9:00 AM EST опубликовать launch post:',
-                    'Hook: "4 hours → 5 minutes" (callback к Посту 1 из Week 1)',
-                    'Problem: "Keyword research is broken. Tools give lists, not strategies."',
-                    'Solution: "KORU: paste a URL, get topic clusters, page mapping, content briefs. Automatically."',
-                    'Social proof: 2-3 beta tester quotes',
-                    'Demo: вставить GIF (30 сек)',
-                    'CTA: "Try it free at koru-seo.com"',
-                    'Landing link в первом комментарии (как обычно)'
-                ],
-                subtasks: [{ id: '075-st1', text: 'Launch post live на LinkedIn' }],
-                assignee: 'Кира', estimate: '5 мин', priority: 'high', tags: ['content'],
-                copyBlocks: [
-                    {
-                        label: 'LAUNCH POST для LinkedIn (copy-paste) — ЗАМЕНИТЬ [quotes] и приложить GIF',
-                        text: 'Remember when I asked how long keyword research takes?\n\nThe answer was 3-4 hours per client. 40 hours a month. Spreadsheets. Manual clustering. Copy-pasting between four tools.\n\nToday, that changes.\n\nMeet KORU.\n\nPaste a URL. Get:\n-> Topic clusters (not keyword lists -- actual clusters)\n-> Page mapping (which pages cover what)\n-> Content gaps (what\'s missing)\n-> Content briefs (one click)\n-> Tasks for your team (another click)\n\nFrom URL to keyword strategy in 5 minutes.\n\nHere\'s what beta testers said:\n\n"[QUOTE 1 -- replace with real beta tester quote]"\n-- [Name], [Role]\n\n"[QUOTE 2 -- replace]"\n-- [Name], [Role]\n\n[ATTACH DEMO GIF HERE]\n\nWe built this because every SEO professional told us: "The tools give me data. I need strategy."\n\nKORU gives you strategy.\n\nTry it free: koru-seo.com\n\n#KORU #SEO #KeywordResearch #Launch'
-                    },
-                    {
-                        label: 'Первый комментарий',
-                        text: 'Try it free: koru-seo.com\n\nHappy to answer any questions below!'
-                    }
-                ]
-            },
-            {
-                id: '076',
-                title: '076. Кира: 9:05 AM — Опубликовать launch post на Twitter',
-                description: 'Зачем: Twitter mirror. Другая аудитория.',
-                steps: ['Скопировать текст ниже → опубликовать как thread'],
-                subtasks: [{ id: '076-st1', text: 'Twitter launch live' }],
-                assignee: 'Кира', estimate: '5 мин', priority: 'high', tags: ['content'],
-                copyBlocks: [{
-                    label: 'Launch Twitter thread (copy-paste)',
-                    text: '1/ We launched KORU today.\n\nPaste a URL. Get a keyword strategy in 5 minutes.\n\nNot a keyword list. A strategy: topic clusters, page mapping, content gaps, briefs.\n\n2/ We built this because every SEO professional we talked to said the same thing:\n\n"I spend 3-4 hours on keyword research per client. The tools give data, not strategy."\n\n3/ KORU does what you do manually:\n- Clusters keywords by topic\n- Maps them to your existing pages\n- Identifies gaps\n- Generates content briefs\n- Creates tasks\n\nAutomatically. In minutes.\n\n4/ Try it free: koru-seo.com\n\n#KORU #SEO #Launch'
-                }]
-            },
-            {
-                id: '077',
-                title: '077. Кира: 9:00-11:00 — 2 ЧАСА отвечать на КАЖДЫЙ комментарий',
-                description: 'Зачем: Алгоритм LinkedIn решает в первые 2 часа. Beta testers комментируют в первые 30 мин (pre-arranged). Каждый ответ Киры = signal алгоритму + social proof. Это САМЫЕ важные 2 часа кампании.',
-                steps: [
-                    'Быть на LinkedIn и Twitter одновременно',
-                    'КАЖДЫЙ комментарий = ответ. Content-rich, не "Thanks!"',
-                    'Лайкать каждый комментарий',
-                    'Записать кто комментирует — обновить Status в Sheets',
-                    'Если кто-то спрашивает "How?" — отправить DM с landing link'
-                ],
-                subtasks: [
-                    { id: '077-st1', text: '2 часа non-stop engagement' },
-                    { id: '077-st2', text: 'Все комментарии отвечены' }
-                ],
-                assignee: 'Кира', estimate: '2 часа', priority: 'high', tags: ['engagement'],
-                warning: 'ЭТО САМЫЕ ВАЖНЫЕ 2 ЧАСА ВСЕЙ КАМПАНИИ. Телефон в silent. Никаких отвлечений.'
-            },
-            {
-                id: '078',
-                title: '078. Кира: 10:00 AM — Отправить email waitlist "We launched!"',
-                description: 'Зачем: Люди которые подписались на landing page ждут этот email. Отправляем через 1 час после поста — чтобы пост уже набрал momentum.',
-                steps: [
-                    'Зайти в email service (Mailchimp/ConvertKit)',
-                    'Отправить заготовленный email:\n  Subject: "KORU is live — try it free"\n  Body: короткое описание + link на signup/landing'
-                ],
-                subtasks: [{ id: '078-st1', text: 'Email отправлен' }],
-                assignee: 'Кира', estimate: '5 мин', priority: 'high', tags: ['outreach']
-            },
-            {
-                id: '079',
-                title: '079. Настя: Track reactions + update Sheets',
-                description: 'Зачем: Знать кто из нашей базы реагирует на launch.',
-                steps: [
-                    'Мониторить весь день: кто из Sheets лайкнул / прокомментировал / зашёл на landing',
-                    'Обновить Status: Researched → Engaged',
-                    '5-7 комментариев к постам connections (amplify)',
-                    'Записать все метрики: impressions, likes, comments, shares'
-                ],
-                subtasks: [
-                    { id: '079-st1', text: 'Reactions tracked' },
-                    { id: '079-st2', text: 'Sheets updated' },
-                    { id: '079-st3', text: 'Metrics записаны' }
-                ],
-                assignee: 'Настя', estimate: '2 часа', priority: 'high', tags: ['monitoring']
-            }
+            { id: '075', title: '075. Кира: 9:00 — Launch post LinkedIn', description: 'Зачем: THE moment.', steps: ['9:00 AM EST → опубликовать'], subtasks: [{ id: '075-st1', text: 'LinkedIn live' }], assignee: 'Кира', estimate: '5 мин', priority: 'high', tags: ['content'], copyBlocks: [{ label: 'LAUNCH POST LinkedIn (заменить [QUOTE], приложить GIF)', text: 'Remember when I asked how long keyword research takes?\n\nThe answer was 3-4 hours per client. 40 hours a month. Spreadsheets. Manual clustering. Copy-pasting between four tools.\n\nToday, that changes.\n\nMeet KORU.\n\nPaste a URL. Get:\n-> Topic clusters (not keyword lists — actual clusters)\n-> Page mapping (which pages cover what)\n-> Content gaps (what\'s missing)\n-> Content briefs (one click)\n-> Tasks for your team (another click)\n\nFrom URL to keyword strategy in 5 minutes.\n\nHere\'s what beta testers said:\n\n"[QUOTE 1]" — [Name], [Role]\n"[QUOTE 2]" — [Name], [Role]\n\n[ATTACH DEMO GIF]\n\nTry it free: koru-seo.com\n\n#KORU #SEO #KeywordResearch #Launch' }, { label: 'Первый комментарий', text: 'Try it free: koru-seo.com\n\nHappy to answer any questions below!' }] },
+            { id: '076', title: '076. Кира: 9:05 — Twitter launch thread', description: 'Зачем: Second channel.', steps: ['Thread'], subtasks: [{ id: '076-st1', text: 'Twitter live' }], assignee: 'Кира', estimate: '5 мин', priority: 'high', tags: ['content'], copyBlocks: [{ label: 'Twitter thread (copy-paste)', text: '1/ We launched KORU today.\n\nPaste a URL. Get a keyword strategy in 5 minutes.\nNot a list. A strategy: topic clusters, page mapping, content gaps, briefs.\n\n2/ We built this because every SEO pro said: "I spend 3-4 hours on keyword research per client. The tools give data, not strategy."\n\n3/ KORU automates: clustering, page mapping, gap identification, brief generation, task creation.\nIn minutes.\n\n4/ Try it free: koru-seo.com\n\n#KORU #SEO #Launch' }] },
+            { id: '077', title: '077. Кира: 9:00-11:00 — 2 ЧАСА engagement', description: 'Зачем: САМЫЕ ВАЖНЫЕ 2 ЧАСА КАМПАНИИ.', steps: ['Каждый коммент = ответ', 'Beta testers comment в первые 30 мин', 'Лайкать всё'], subtasks: [{ id: '077-st1', text: '2ч engagement' }], assignee: 'Кира', estimate: '2 часа', priority: 'high', tags: ['engagement'], warning: 'ТЕЛЕФОН В SILENT. НИКАКИХ ОТВЛЕЧЕНИЙ. ЭТО ВСЁ РЕШАЕТ.' },
+            { id: '078', title: '078. Кира: 10:00 — Email waitlist', description: 'Зачем: Через 1 час после поста.', steps: ['Отправить email в Mailchimp/ConvertKit'], subtasks: [{ id: '078-st1', text: 'Email sent' }], assignee: 'Кира', estimate: '5 мин', priority: 'high', tags: ['outreach'] },
+            { id: '079', title: '079. Настя: Track reactions + amplify', description: 'Зачем: Знать кто реагирует.', steps: ['Мониторить кто лайкнул/commented', 'Update Status в Sheets → "Engaged"', '5-7 comments к connections'], subtasks: [{ id: '079-st1', text: 'Reactions tracked' }, { id: '079-st2', text: 'Amplification' }], assignee: 'Настя', estimate: '2 часа', priority: 'high', tags: ['monitoring', 'engagement'] }
         ]
     },
-
+    {
+        dayIndex: 30, phase: 'Week 6', dayLabel: 'Week 6, Среда',
+        title: 'Post-launch day 1',
+        summary: 'Continue engagement. DMs to interested.',
+        tasks: [
+            { id: '080', title: '080. Кира: Post-launch engagement + conversion DMs', description: 'Зачем: Convert interest → signups.', steps: ['Answer all comments', 'DMs to interested: "Happy to do a walkthrough"', 'Track signups'], subtasks: [{ id: '080-st1', text: 'Comments + DMs' }], assignee: 'Кира', estimate: '2 часа', priority: 'high', tags: ['engagement', 'outreach'], copyBlocks: [{ label: 'DM post-launch (copy-paste, заменить [Name])', text: 'Hey [Name],\n\nThanks for the kind words on the launch post! Really appreciate it.\n\nHappy to do a quick 15-minute walkthrough if you want to see KORU in action with your own site. No pitch — just a demo.\n\nWant me to send a calendar link?' }] },
+            { id: '081', title: '081. Настя: Track + amplify + engagement', description: 'Зачем: Мониторинг.', steps: ['Continue tracking reactions', '5-7 comments'], subtasks: [{ id: '081-st1', text: 'Track + engage' }], assignee: 'Настя', estimate: '1.5 часа', priority: 'high', tags: ['monitoring', 'engagement'] }
+        ]
+    },
+    {
+        dayIndex: 31, phase: 'Week 6', dayLabel: 'Week 6, Четверг',
+        title: 'Post-launch day 2',
+        summary: 'Follow-up. Demo calls.',
+        tasks: [
+            { id: '082', title: '082. Кира: Follow-up engagement + demo calls', description: 'Зачем: Convert.', steps: ['Answer comments', 'Demo calls с interested', 'Twitter engagement'], subtasks: [{ id: '082-st1', text: 'Follow-up done' }], assignee: 'Кира', estimate: '2 часа', priority: 'high', tags: ['engagement', 'outreach'] },
+            { id: '083', title: '083. Настя: Engagement + ongoing tracking', description: 'Зачем: Keep momentum.', steps: ['5-7 comments', 'Track new reactions'], subtasks: [{ id: '083-st1', text: 'Engagement + tracking' }], assignee: 'Настя', estimate: '1 час', priority: 'medium', tags: ['engagement', 'monitoring'] }
+        ]
+    },
     {
         dayIndex: 32, phase: 'Week 6', dayLabel: 'Week 6, Пятница',
         title: 'Launch week review',
-        summary: 'Полный обзор. Метрики. Ретроспектива. Plan Week 7+.',
+        summary: 'Полный обзор. Метрики. Retro. Week 7+ plan.',
         tasks: [
-            {
-                id: '085',
-                title: '085. Кира + Настя: Launch Week Review',
-                description: 'Зачем: Понять результаты. Что сработало. Что дальше.',
-                steps: [
-                    'Собрать ВСЕ метрики:\n  — Launch post: impressions, likes, comments, shares\n  — Profile views за неделю\n  — Email signups total\n  — Landing visits\n  — Product signups\n  — DM conversations\n  — Demo calls booked',
-                    'Ретро:\n  — Что дало больше всего signups? (пост? DMs? email?)\n  — Какие connection requests сработали лучше?\n  — Что бы сделали по-другому?',
-                    'Week 7+ план:\n  — Priority C outreach (Настя)\n  — Convert engaged → users (Кира)\n  — Regular content 2 поста/неделю\n  — Demo calls с interested leads'
-                ],
-                subtasks: [
-                    { id: '085-st1', text: 'All metrics compiled' },
-                    { id: '085-st2', text: 'Retro done' },
-                    { id: '085-st3', text: 'Week 7+ plan' }
-                ],
-                assignee: 'Кира + Настя', estimate: '1.5 часа', priority: 'high', tags: ['review']
-            }
+            { id: '085', title: '085. Кира + Настя: Launch Week Review', description: 'Зачем: Понять результаты.', steps: ['ALL metrics: impressions, likes, comments, shares, profile views, email signups, landing visits, product signups, DMs, demo calls', 'Retro: что сработало, что нет', 'Week 7+ plan: Priority C + regular content + convert'], subtasks: [{ id: '085-st1', text: 'Metrics compiled' }, { id: '085-st2', text: 'Retro' }, { id: '085-st3', text: 'Week 7+ plan' }], assignee: 'Кира + Настя', estimate: '1.5 часа', priority: 'high', tags: ['review'] }
         ],
-        keyMetric: 'THE metrics: signups, demo calls, paying users. Everything else is vanity.'
+        keyMetric: 'THE metrics: signups, demo calls, paying users'
     },
 
+    // ==========================================
+    // WEEK 7+ — POST-LAUNCH
+    // ==========================================
     {
         dayIndex: 33, phase: 'Week 7+', dayLabel: 'Week 7+',
-        title: 'Post-launch: convert engagement → users',
-        summary: 'Настя: Priority C outreach. Кира: convert engaged connections into paying users.',
+        title: 'Post-launch: convert → users',
+        summary: 'Priority C outreach. Convert engaged → paying users. Regular content.',
         tasks: [
-            {
-                id: '090',
-                title: '090. Настя: Priority C outreach (10-15/день) + ongoing engagement',
-                description: 'Зачем: Social proof после launch. Outreach теперь проще — есть product, есть testimonials.',
-                steps: [
-                    '10-15 requests в день. Templates: mention launch, link to demo post.',
-                    'Ongoing: 5-7 comments в день',
-                    'Track acceptance + signups from new connections'
-                ],
-                subtasks: [{ id: '090-st1', text: 'Priority C active' }],
-                assignee: 'Настя', estimate: '2 часа/день', priority: 'medium', tags: ['outreach']
-            },
-            {
-                id: '091',
-                title: '091. Кира: DMs к ВСЕМ "Engaged" + demo calls + regular content',
-                description: 'Зачем: Engagement без конверсии = vanity metrics. Каждый "Engaged" в Sheets = потенциальный paying user.',
-                steps: [
-                    'Sheets → фильтр Status = "Engaged"',
-                    'Каждому DM: "Thanks for checking out KORU! Happy to do a quick walkthrough if you want to see it in action — just let me know."',
-                    'Demo calls: 15-20 мин каждый. Show pipeline. Answer questions.',
-                    'Content: 2 поста в неделю:\n  — User stories (когда появятся)\n  — Product updates\n  — SEO insights (использовать данные KORU)',
-                    'Twitter: продолжать engagement + cross-post'
-                ],
-                subtasks: [
-                    { id: '091-st1', text: 'DMs to all Engaged' },
-                    { id: '091-st2', text: 'Demo calls scheduled' },
-                    { id: '091-st3', text: 'Regular content started' }
-                ],
-                assignee: 'Кира', estimate: '2-3 часа/день', priority: 'high', tags: ['outreach', 'content']
-            }
+            { id: '090', title: '090. Настя: Priority C outreach (10-15/день) + engagement', description: 'Зачем: Social proof есть. Outreach easier.', steps: ['10-15 requests/день', '5-7 comments/день'], subtasks: [{ id: '090-st1', text: 'Priority C active' }], assignee: 'Настя', estimate: '2 часа/день', priority: 'medium', tags: ['outreach'] },
+            { id: '091', title: '091. Кира: DMs to Engaged + demos + content', description: 'Зачем: Revenue starts here.', steps: ['DMs to ALL "Engaged" → demo offer', 'Demo calls', 'Content: 2 posts/week (user stories, updates, insights)', 'Twitter: continue'], subtasks: [{ id: '091-st1', text: 'DMs to engaged' }, { id: '091-st2', text: 'Regular content' }], assignee: 'Кира', estimate: '2-3 часа/день', priority: 'high', tags: ['outreach', 'content'] }
         ],
-        keyMetric: 'Week 7+: convert engagement → signups → paying users. Revenue starts here.'
+        keyMetric: 'Convert engagement → signups → paying users.'
     }
 ]
 

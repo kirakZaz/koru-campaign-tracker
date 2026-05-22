@@ -5,6 +5,8 @@ import TextField from '@mui/material/TextField'
 import Chip from '@mui/material/Chip'
 import InputAdornment from '@mui/material/InputAdornment'
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded'
+import WarningAmberRoundedIcon from '@mui/icons-material/WarningAmberRounded'
+import Button from '@mui/material/Button'
 import PhaseChip from '@/components/atoms/PhaseChip/PhaseChip'
 import TaskCard from '@/components/molecules/TaskCard/TaskCard'
 import type { Assignee } from '@/data/campaignData.types'
@@ -19,7 +21,9 @@ const DayView = React.memo(function DayView({
     onToggleTask,
     onEditTask,
     note,
-    onNoteChange
+    onNoteChange,
+    overdueDays,
+    onGoToDay
 }: DayViewProps) {
     const debounceRef = React.useRef<ReturnType<typeof setTimeout> | null>(null)
     const [searchQuery, setSearchQuery] = React.useState('')
@@ -91,6 +95,42 @@ const DayView = React.memo(function DayView({
                     </Box>
                 )}
             </Box>
+
+            {overdueDays.length > 0 && (
+                <Box sx={{
+                    mb: 2,
+                    p: 2,
+                    borderRadius: 2,
+                    backgroundColor: '#f8514911',
+                    border: '1px solid #f8514933'
+                }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                        <WarningAmberRoundedIcon sx={{ fontSize: '1rem', color: '#f85149' }} />
+                        <Typography sx={{ fontWeight: 700, fontSize: '0.85rem', color: '#f85149' }}>
+                            Незавершённые задачи за прошлые дни
+                        </Typography>
+                    </Box>
+                    {overdueDays.map((od) => (
+                        <Box key={od.dayIndex} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', py: 0.5 }}>
+                            <Typography sx={{ fontSize: '0.8rem', color: 'text.secondary' }}>
+                                {od.dayLabel}: {od.unfinishedCount} незавершённых
+                                {od.highPriorityCount > 0 && (
+                                    <Typography component="span" sx={{ color: '#f85149', fontWeight: 700, fontSize: '0.8rem', ml: 0.5 }}>
+                                        ({od.highPriorityCount} critical)
+                                    </Typography>
+                                )}
+                            </Typography>
+                            <Button
+                                size="small"
+                                onClick={() => onGoToDay(od.dayIndex)}
+                                sx={{ fontSize: '0.7rem', fontWeight: 600, minWidth: 0, px: 1 }}
+                            >
+                                Открыть
+                            </Button>
+                        </Box>
+                    ))}
+                </Box>
+            )}
 
             {day.tasks.length > 2 && (
                 <Box sx={{ display: 'flex', gap: 1, mb: 2, flexWrap: 'wrap', alignItems: 'center' }}>

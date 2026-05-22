@@ -10,6 +10,7 @@ import useMediaQuery from '@mui/material/useMediaQuery'
 import { useTheme } from '@mui/material/styles'
 import { CAMPAIGN_DAYS, TOTAL_CAMPAIGN_DAYS } from '@/data/campaignData'
 import type { CampaignTask, CampaignDay, TaskOverride } from '@/data/campaignData.types'
+import type { OverdueDay } from '@/components/organisms/DayView/DayView.types'
 import { useProgress } from '@/hooks/useProgress'
 import { getTodayDayIndex } from '@/utils/dateUtils'
 import Sidebar from '@/components/organisms/Sidebar/Sidebar'
@@ -51,6 +52,31 @@ function App() {
             tasks: day.tasks.map((task) => applyOverride(task, getTaskOverride(task.id)))
         }))
     }, [getTaskOverride])
+
+    const overdueDays = React.useMemo((): OverdueDay[] => {
+        if (!progress.startDate) {
+            return []
+        }
+        const todayIdx = getTodayDayIndex(progress.startDate, TOTAL_CAMPAIGN_DAYS)
+        const result: OverdueDay[] = []
+        for (const day of mergedDays) {
+            if (day.dayIndex >= todayIdx) {
+                break
+            }
+            const unfinished = day.tasks.filter((t) => !isTaskCompleted(t.id))
+            if (unfinished.length === 0) {
+                continue
+            }
+            const highPriority = unfinished.filter((t) => t.priority === 'high')
+            result.push({
+                dayIndex: day.dayIndex,
+                dayLabel: day.dayLabel,
+                unfinishedCount: unfinished.length,
+                highPriorityCount: highPriority.length
+            })
+        }
+        return result
+    }, [mergedDays, isTaskCompleted, progress.startDate])
 
     React.useEffect(() => {
         if (!isLoading && progress.startDate) {
@@ -183,6 +209,8 @@ function App() {
                     onEditTask={handleEditTask}
                     note={progress.notes[currentDayIndex] ?? ''}
                     onNoteChange={handleNoteChange}
+                    overdueDays={overdueDays}
+                    onGoToDay={setCurrentDayIndex}
                 />
             </Box>
 

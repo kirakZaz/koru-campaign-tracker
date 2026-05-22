@@ -1,5 +1,12 @@
 import type { CampaignDay, CampaignTask } from '@/data/campaignData.types'
 
+export interface OverdueDay {
+    dayIndex: number
+    dayLabel: string
+    unfinishedCount: number
+    highPriorityCount: number
+}
+
 export interface DayViewProps {
     day: CampaignDay
     startDate: string | null
@@ -8,4 +15,6 @@ export interface DayViewProps {
     onEditTask: (task: CampaignTask) => void
     note: string
     onNoteChange: (note: string) => void
+    overdueDays: OverdueDay[]
+    onGoToDay: (dayIndex: number) => void
 }

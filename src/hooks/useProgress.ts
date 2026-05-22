@@ -123,6 +123,12 @@ export function useProgress() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ action: 'set-team', team })
             })
+            // Schedule reminders via QStash
+            await fetch('/api/schedule-reminders', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ team })
+            })
         } catch {
             setProgress(progress)
         }
