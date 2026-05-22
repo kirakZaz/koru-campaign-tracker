@@ -76,15 +76,9 @@ function getCurrentTimeInTimezone(tz: string): { hours: number, minutes: number 
 }
 
 function shouldSendNow(member: TeamMember): boolean {
-    if (!member.remindersEnabled || !member.email) {
-        return false
-    }
-    const { hours, minutes } = getCurrentTimeInTimezone(member.timezone)
-    const [targetH, targetM] = member.reminderTime.split(':').map(Number)
-    // Send if within 30-minute window of target time (cron runs every 30 min)
-    const currentMin = (hours ?? 0) * 60 + (minutes ?? 0)
-    const targetMin = (targetH ?? 9) * 60 + (targetM ?? 0)
-    return currentMin >= targetMin && currentMin < targetMin + 30
+    // Hobby plan: cron runs once daily at 6 UTC (weekdays only)
+    // Send to everyone who has reminders enabled and email configured
+    return member.remindersEnabled && member.email.length > 0
 }
 
 function getTasksForMember(day: CampaignDay, member: TeamMember, completedTasks: Record<string, boolean>): CampaignTask[] {
