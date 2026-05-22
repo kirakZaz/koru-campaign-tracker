@@ -7,4 +7,6 @@ export interface SidebarProps {
     isTaskCompleted: (taskId: string) => boolean
     onDaySelect: (dayIndex: number) => void
     onOpenSettings: () => void
+    globalAssigneeFilter: string | null
+    onGlobalAssigneeFilterChange: (assignee: string | null) => void
 }

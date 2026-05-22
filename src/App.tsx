@@ -42,6 +42,7 @@ function App() {
     const [settingsOpen, setSettingsOpen] = React.useState(false)
     const [mobileDrawerOpen, setMobileDrawerOpen] = React.useState(false)
     const [editingTask, setEditingTask] = React.useState<CampaignTask | null>(null)
+    const [globalAssigneeFilter, setGlobalAssigneeFilter] = React.useState<string | null>(null)
 
     const muiTheme = useTheme()
     const isMobile = useMediaQuery(muiTheme.breakpoints.down('md'))
@@ -158,14 +159,26 @@ function App() {
         return null
     }
 
+    // Filter days to only show those with tasks for selected assignee
+    const filteredDays = React.useMemo(() => {
+        if (!globalAssigneeFilter) {
+            return mergedDays
+        }
+        return mergedDays.filter((day) =>
+            day.tasks.some((t) => t.assignee.includes(globalAssigneeFilter))
+        )
+    }, [mergedDays, globalAssigneeFilter])
+
     const sidebarContent = (
         <Sidebar
-            days={mergedDays}
+            days={filteredDays}
             currentDayIndex={currentDayIndex}
             startDate={progress.startDate}
             isTaskCompleted={isTaskCompleted}
             onDaySelect={handleDaySelect}
             onOpenSettings={handleOpenSettings}
+            globalAssigneeFilter={globalAssigneeFilter}
+            onGlobalAssigneeFilterChange={setGlobalAssigneeFilter}
         />
     )
 

@@ -8,6 +8,7 @@ import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded'
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded'
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded'
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded'
+import Chip from '@mui/material/Chip'
 import { getCampaignDate, formatShortDate } from '@/utils/dateUtils'
 import ProgressBar from '@/components/molecules/ProgressBar/ProgressBar'
 import type { SidebarProps } from './Sidebar.types'
@@ -19,7 +20,9 @@ const Sidebar = React.memo(function Sidebar({
     startDate,
     isTaskCompleted,
     onDaySelect,
-    onOpenSettings
+    onOpenSettings,
+    globalAssigneeFilter,
+    onGlobalAssigneeFilterChange
 }: SidebarProps) {
     const activeRef = React.useRef<HTMLDivElement>(null)
     const [globalSearch, setGlobalSearch] = React.useState('')
@@ -118,6 +121,19 @@ const Sidebar = React.memo(function Sidebar({
                         ) : null
                     }}
                 />
+                <Box sx={{ display: 'flex', gap: 0.5, mb: 1.5, flexWrap: 'wrap' }}>
+                    {['Кира', 'Настя', 'Макс'].map((name) => (
+                        <Chip
+                            key={name}
+                            label={name}
+                            size="small"
+                            onClick={() => onGlobalAssigneeFilterChange(globalAssigneeFilter === name ? null : name)}
+                            variant={globalAssigneeFilter === name ? 'filled' : 'outlined'}
+                            color={globalAssigneeFilter === name ? 'primary' : 'default'}
+                            sx={{ fontSize: '0.7rem', fontWeight: 600, height: 24 }}
+                        />
+                    ))}
+                </Box>
                 <ProgressBar days={days} isTaskCompleted={isTaskCompleted} />
             </Box>
 
