@@ -16,9 +16,8 @@ function getQStash() {
     })
 }
 
-function toUtcCron(localTime: string, timezone: string): string {
-    // Convert local time + timezone to UTC cron expression
-    // QStash supports IANA timezone directly, so we use that
+function toUtcCron(localTime: string, _timezone: string): string {
+    // QStash supports IANA timezone directly via schedule headers
     const [h, m] = localTime.split(':').map(Number)
     return `${m} ${h} * * 1-5`
 }
