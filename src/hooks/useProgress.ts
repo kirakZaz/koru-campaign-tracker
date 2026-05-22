@@ -1,7 +1,36 @@
 import * as React from 'react'
 import type { ProgressData, TaskOverride, TeamMember } from '@/data/campaignData.types'
+import { CAMPAIGN_DAYS } from '@/data/campaignData'
 
 const API_URL = '/api/progress'
+
+function buildTaskMap() {
+    const assigneeMap: Record<string, number[]> = {}
+    const tasksByDay: Record<number, string[]> = {}
+
+    for (const day of CAMPAIGN_DAYS) {
+        const taskIds: string[] = []
+        for (const task of day.tasks) {
+            taskIds.push(task.id)
+            // Match composite assignees (e.g. "Кира + Настя" → both)
+            const names = ['Кира', 'Настя', 'Макс']
+            for (const name of names) {
+                if (task.assignee.includes(name)) {
+                    if (!assigneeMap[name]) {
+                        assigneeMap[name] = []
+                    }
+                    if (!assigneeMap[name]!.includes(day.dayIndex)) {
+                        assigneeMap[name]!.push(day.dayIndex)
+                    }
+                }
+            }
+        }
+        if (taskIds.length > 0) {
+            tasksByDay[day.dayIndex] = taskIds
+        }
+    }
+    return { assigneeMap, tasksByDay }
+}
 
 const DEFAULT_PROGRESS: ProgressData = {
     completedTasks: {},
@@ -122,6 +151,12 @@ export function useProgress() {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ action: 'set-team', team })
+            })
+            // Sync task map for smart reminders
+            await fetch('/api/sync-task-map', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(buildTaskMap())
             })
             // Schedule reminders via QStash
             await fetch('/api/schedule-reminders', {
