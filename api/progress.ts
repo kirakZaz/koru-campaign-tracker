@@ -10,14 +10,21 @@ function getRedis() {
     })
 }
 
-const DEFAULT_DATA: Record<string, unknown> = { completedTasks: {}, startDate: null, notes: {}, taskOverrides: {} }
+interface ProgressData {
+    completedTasks: Record<string, boolean>
+    startDate: string | null
+    notes: Record<string, string>
+    taskOverrides: Record<string, unknown>
+}
+
+const DEFAULT_DATA: ProgressData = { completedTasks: {}, startDate: null, notes: {}, taskOverrides: {} }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
     const redis = getRedis()
 
     if (req.method === 'GET') {
         try {
-            const data = await redis.get(PROGRESS_KEY)
+            const data = await redis.get<ProgressData>(PROGRESS_KEY)
             res.json(data ?? DEFAULT_DATA)
         } catch {
             res.status(500).json({ error: 'Failed to read progress' })
@@ -37,23 +44,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     if (req.method === 'PATCH') {
         try {
-            const data = (await redis.get<typeof DEFAULT_DATA>(PROGRESS_KEY)) ?? { ...DEFAULT_DATA }
-            const { action } = req.body
+            const data: ProgressData = (await redis.get<ProgressData>(PROGRESS_KEY)) ?? { ...DEFAULT_DATA }
+            const { action } = req.body as { action: string, [key: string]: unknown }
 
             if (action === 'toggle-task') {
-                data.completedTasks[req.body.taskId as string] = req.body.completed
+                data.completedTasks[req.body.taskId as string] = req.body.completed as boolean
             } else if (action === 'set-start-date') {
-                data.startDate = req.body.startDate
+                data.startDate = req.body.startDate as string
             } else if (action === 'set-note') {
-                if (!data.notes) {
-                    data.notes = {}
-                }
-                (data.notes as Record<string, string>)[req.body.dayIndex as string] = req.body.note
+                data.notes[req.body.dayIndex as string] = req.body.note as string
             } else if (action === 'set-task-override') {
-                if (!data.taskOverrides) {
-                    data.taskOverrides = {}
-                }
-                (data.taskOverrides as Record<string, unknown>)[req.body.taskId as string] = req.body.override
+                data.taskOverrides[req.body.taskId as string] = req.body.override
             }
 
             await redis.set(PROGRESS_KEY, data)
