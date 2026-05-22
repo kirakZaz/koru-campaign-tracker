@@ -134,6 +134,16 @@ function App() {
         void saveTaskOverride(taskId, override)
     }, [saveTaskOverride])
 
+    // Filter days to only show those with tasks for selected assignee
+    const filteredDays = React.useMemo(() => {
+        if (!globalAssigneeFilter) {
+            return mergedDays
+        }
+        return mergedDays.filter((day) =>
+            day.tasks.some((t) => t.assignee.includes(globalAssigneeFilter))
+        )
+    }, [mergedDays, globalAssigneeFilter])
+
     const currentDay = mergedDays[currentDayIndex]
 
     if (isLoading) {
@@ -158,16 +168,6 @@ function App() {
     if (!currentDay) {
         return null
     }
-
-    // Filter days to only show those with tasks for selected assignee
-    const filteredDays = React.useMemo(() => {
-        if (!globalAssigneeFilter) {
-            return mergedDays
-        }
-        return mergedDays.filter((day) =>
-            day.tasks.some((t) => t.assignee.includes(globalAssigneeFilter))
-        )
-    }, [mergedDays, globalAssigneeFilter])
 
     const sidebarContent = (
         <Sidebar
