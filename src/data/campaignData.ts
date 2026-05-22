@@ -306,14 +306,22 @@ export const CAMPAIGN_DAYS: CampaignDay[] = [
     // ==========================================
     {
         dayIndex: 25, phase: 'Week 6', dayLabel: 'Week 6, Понедельник',
-        title: 'Teaser day',
-        summary: '"Tomorrow." Финальные проверки.',
+        title: 'Настя: pre-launch amplification (Кира — учёба)',
+        summary: 'Понедельник = Кира учёба. Настя усиливает engagement перед launch.',
         tasks: [
-            { id: '071', title: '071. Кира: Teaser post + final checks', description: 'Зачем: Build anticipation.', steps: ['LinkedIn + Twitter: "Tomorrow."', 'Final check: всё работает?', 'Remind beta testers: "Tomorrow morning"'], subtasks: [{ id: '071-st1', text: 'Teaser posted' }, { id: '071-st2', text: 'All checked' }], assignee: 'Кира', estimate: '1 час', priority: 'high', tags: ['content'] }
+            { id: '071a', title: '071a. Настя: Pre-launch engagement boost', description: 'Зачем: Последний день engagement перед launch. Максимальная видимость.', steps: ['7-10 комментариев к постам connections', 'Share/like recent posts от Priority A connections', 'Проверить что все "Engaged" в Sheets актуальны'], subtasks: [{ id: '071a-st1', text: 'Engagement boost' }], assignee: 'Настя', estimate: '1.5 часа', priority: 'high', tags: ['engagement'] }
         ]
     },
     {
         dayIndex: 26, phase: 'Week 6', dayLabel: 'Week 6, Вторник',
+        title: 'TEASER + final checks',
+        summary: 'Teaser "Tomorrow." Финальные проверки. Launch завтра.',
+        tasks: [
+            { id: '071', title: '071. Кира: Teaser post + final checks', description: 'Зачем: Build anticipation. Launch завтра.', steps: ['LinkedIn + Twitter: "Tomorrow."', 'Final check: всё работает?', 'Remind beta testers: "Tomorrow morning — comment in first 30 min"'], subtasks: [{ id: '071-st1', text: 'Teaser posted' }, { id: '071-st2', text: 'Beta testers reminded' }, { id: '071-st3', text: 'All checked' }], assignee: 'Кира', estimate: '1 час', priority: 'high', tags: ['content'] }
+        ]
+    },
+    {
+        dayIndex: 27, phase: 'Week 6', dayLabel: 'Week 6, Среда',
         title: 'LAUNCH DAY!',
         summary: '9:00 AM пост. Beta testers comment first. Кира online весь день.',
         tasks: [
@@ -325,7 +333,7 @@ export const CAMPAIGN_DAYS: CampaignDay[] = [
         ]
     },
     {
-        dayIndex: 27, phase: 'Week 6', dayLabel: 'Week 6, Среда',
+        dayIndex: 28, phase: 'Week 6', dayLabel: 'Week 6, Четверг',
         title: 'Post-launch day 1',
         summary: 'Continue engagement. DMs to interested.',
         tasks: [
@@ -334,20 +342,13 @@ export const CAMPAIGN_DAYS: CampaignDay[] = [
         ]
     },
     {
-        dayIndex: 28, phase: 'Week 6', dayLabel: 'Week 6, Четверг',
-        title: 'Post-launch day 2',
+        dayIndex: 29, phase: 'Week 6', dayLabel: 'Week 6, Пятница',
+        title: 'Post-launch day 2 + Launch week review',
         summary: 'Follow-up. Demo calls.',
         tasks: [
             { id: '082', title: '082. Кира: Follow-up engagement + demo calls', description: 'Зачем: Convert.', steps: ['Answer comments', 'Demo calls с interested', 'Twitter engagement'], subtasks: [{ id: '082-st1', text: 'Follow-up done' }], assignee: 'Кира', estimate: '2 часа', priority: 'high', tags: ['engagement', 'outreach'] },
-            { id: '083', title: '083. Настя: Engagement + ongoing tracking', description: 'Зачем: Keep momentum.', steps: ['5-7 comments', 'Track new reactions'], subtasks: [{ id: '083-st1', text: 'Engagement + tracking' }], assignee: 'Настя', estimate: '1 час', priority: 'medium', tags: ['engagement', 'monitoring'] }
-        ]
-    },
-    {
-        dayIndex: 29, phase: 'Week 6', dayLabel: 'Week 6, Пятница',
-        title: 'Launch week review',
-        summary: 'Полный обзор. Метрики. Retro. Week 7+ plan.',
-        tasks: [
-            { id: '085', title: '085. Кира + Настя: Launch Week Review', description: 'Зачем: Понять результаты.', steps: ['ALL metrics: impressions, likes, comments, shares, profile views, email signups, landing visits, product signups, DMs, demo calls', 'Retro: что сработало, что нет', 'Week 7+ plan: Priority C + regular content + convert'], subtasks: [{ id: '085-st1', text: 'Metrics compiled' }, { id: '085-st2', text: 'Retro' }, { id: '085-st3', text: 'Week 7+ plan' }], assignee: 'Кира + Настя', estimate: '1.5 часа', priority: 'high', tags: ['review'] }
+            { id: '083', title: '083. Настя: Engagement + ongoing tracking', description: 'Зачем: Keep momentum.', steps: ['5-7 comments', 'Track new reactions'], subtasks: [{ id: '083-st1', text: 'Engagement + tracking' }], assignee: 'Настя', estimate: '1 час', priority: 'medium', tags: ['engagement', 'monitoring'] },
+            { id: '085', title: '085. Кира + Настя: Launch Week Review', description: 'Зачем: Понять результаты. Спланировать Week 7+.', steps: ['ALL metrics: impressions, likes, comments, shares, profile views, email signups, product signups, DMs, demo calls', 'Retro: что сработало, что нет', 'Week 7+ plan: Priority C + regular content + convert'], subtasks: [{ id: '085-st1', text: 'Metrics compiled' }, { id: '085-st2', text: 'Retro' }, { id: '085-st3', text: 'Week 7+ plan' }], assignee: 'Кира + Настя', estimate: '1.5 часа', priority: 'high', tags: ['review'] }
         ],
         keyMetric: 'THE metrics: signups, demo calls, paying users'
     },
