@@ -58,8 +58,7 @@ function App() {
         if (!progress.startDate) {
             return []
         }
-        const todayArrayIdx = getTodayDayIndex(progress.startDate, mergedDays)
-        const todayDayIndex = mergedDays[todayArrayIdx]?.dayIndex ?? 0
+        const todayDayIndex = getTodayDayIndex(progress.startDate, mergedDays)
         const result: OverdueDay[] = []
         for (const day of mergedDays) {
             if (day.dayIndex >= todayDayIndex) {
