@@ -9,6 +9,8 @@ import SearchRoundedIcon from '@mui/icons-material/SearchRounded'
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded'
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded'
 import Chip from '@mui/material/Chip'
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
+import { OVERVIEW_INDEX } from '@/App'
 import { getCampaignDate, formatShortDate } from '@/utils/dateUtils'
 import ProgressBar from '@/components/molecules/ProgressBar/ProgressBar'
 import type { SidebarProps } from './Sidebar.types'
@@ -137,6 +139,18 @@ const Sidebar = React.memo(function Sidebar({
                 <ProgressBar days={days} isTaskCompleted={isTaskCompleted} />
             </Box>
 
+            {!searchResults && (
+                <Box
+                    sx={styles.dayItem(currentDayIndex === OVERVIEW_INDEX, false)}
+                    onClick={() => onDaySelect(OVERVIEW_INDEX)}
+                >
+                    <InfoOutlinedIcon sx={{ fontSize: '0.9rem', color: currentDayIndex === OVERVIEW_INDEX ? 'primary.main' : 'text.secondary' }} />
+                    <Typography sx={styles.dayTitle(currentDayIndex === OVERVIEW_INDEX)}>
+                        Overview
+                    </Typography>
+                </Box>
+            )}
+
             {searchResults ? (
                 <Box sx={styles.daysList}>
                     <Typography sx={{ ...styles.phaseHeader, color: 'primary.main' }}>
@@ -192,18 +206,13 @@ const Sidebar = React.memo(function Sidebar({
                                             <CheckCircleRoundedIcon sx={{ fontSize: '0.9rem', color: 'success.main' }} />
                                         ) : (
                                             <Typography sx={styles.dayNumber}>
-                                                {day.dayIndex + 1}
+                                                {startDate ? formatShortDate(getCampaignDate(startDate, day.dayIndex)) : day.dayIndex + 1}
                                             </Typography>
                                         )}
                                         <Box sx={{ flex: 1, minWidth: 0 }}>
                                             <Typography sx={styles.dayTitle(isActive)}>
                                                 {day.title}
                                             </Typography>
-                                            {startDate && (
-                                                <Typography sx={styles.dateLabel}>
-                                                    {formatShortDate(getCampaignDate(startDate, day.dayIndex))}
-                                                </Typography>
-                                            )}
                                         </Box>
                                         <Typography sx={styles.dayProgress}>
                                             {completedCount}/{totalCount}

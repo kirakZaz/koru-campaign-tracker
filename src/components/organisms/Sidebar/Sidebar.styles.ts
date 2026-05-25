@@ -65,11 +65,12 @@ export const styles = {
         }
     }),
     dayNumber: {
-        fontSize: '0.7rem',
+        fontSize: '0.6rem',
         fontWeight: 700,
         color: 'text.secondary',
-        width: 20,
-        textAlign: 'center' as const
+        minWidth: 38,
+        textAlign: 'center' as const,
+        lineHeight: 1.2
     },
     dayTitle: (isActive: boolean) => ({
         fontSize: '0.8rem',
@@ -85,10 +86,5 @@ export const styles = {
         fontWeight: 600,
         color: 'text.secondary',
         whiteSpace: 'nowrap' as const
-    },
-    dateLabel: {
-        fontSize: '0.65rem',
-        color: 'text.secondary',
-        fontWeight: 500
     }
 }

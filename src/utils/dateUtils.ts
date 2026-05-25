@@ -23,7 +23,7 @@ export function formatCampaignDate(date: Date): string {
 }
 
 export function formatShortDate(date: Date): string {
-    return format(date, 'd MMM', { locale: ru })
+    return format(date, 'dd MMM')
 }
 
 export function getTodayDayIndex(startDate: string, days: CampaignDay[]): number {

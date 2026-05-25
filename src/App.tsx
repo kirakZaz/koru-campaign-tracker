@@ -18,6 +18,9 @@ import DayView from '@/components/organisms/DayView/DayView'
 import DayNavigation from '@/components/molecules/DayNavigation/DayNavigation'
 import SettingsDialog from '@/components/organisms/SettingsDialog/SettingsDialog'
 import EditTaskDialog from '@/components/organisms/EditTaskDialog/EditTaskDialog'
+import OverviewView from '@/components/organisms/OverviewView/OverviewView'
+
+export const OVERVIEW_INDEX = -100
 
 function applyOverride(task: CampaignTask, override: TaskOverride | undefined): CampaignTask {
     if (!override) {
@@ -197,34 +200,48 @@ function App() {
             )}
 
             <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-                <Box sx={{ px: { xs: 2, md: 4 }, pt: 2, display: 'flex', alignItems: 'center', gap: 1, borderBottom: (t) => `1px solid ${t.palette.divider}` }}>
-                    {isMobile && (
-                        <IconButton onClick={handleToggleDrawer} size="small">
-                            <MenuRoundedIcon />
-                        </IconButton>
-                    )}
-                    <Box sx={{ flex: 1 }}>
-                        <DayNavigation
-                            currentDayIndex={currentDayIndex}
-                            allDayIndexes={mergedDays.map((d) => d.dayIndex)}
-                            startDate={progress.startDate}
-                            onDayChange={setCurrentDayIndex}
-                            onGoToToday={handleGoToToday}
-                        />
+                {currentDayIndex === OVERVIEW_INDEX ? (
+                    isMobile ? (
+                        <Box sx={{ px: 2, pt: 2, borderBottom: (t: any) => `1px solid ${t.palette.divider}` }}>
+                            <IconButton onClick={handleToggleDrawer} size="small">
+                                <MenuRoundedIcon />
+                            </IconButton>
+                        </Box>
+                    ) : null
+                ) : (
+                    <Box sx={{ px: { xs: 2, md: 4 }, pt: 2, display: 'flex', alignItems: 'center', gap: 1, borderBottom: (t: any) => `1px solid ${t.palette.divider}` }}>
+                        {isMobile && (
+                            <IconButton onClick={handleToggleDrawer} size="small">
+                                <MenuRoundedIcon />
+                            </IconButton>
+                        )}
+                        <Box sx={{ flex: 1 }}>
+                            <DayNavigation
+                                currentDayIndex={currentDayIndex}
+                                allDayIndexes={mergedDays.map((d) => d.dayIndex)}
+                                startDate={progress.startDate}
+                                onDayChange={setCurrentDayIndex}
+                                onGoToToday={handleGoToToday}
+                            />
+                        </Box>
                     </Box>
-                </Box>
+                )}
 
-                <DayView
-                    day={currentDay}
-                    startDate={progress.startDate}
-                    isTaskCompleted={isTaskCompleted}
-                    onToggleTask={toggleTask}
-                    onEditTask={handleEditTask}
-                    note={progress.notes[currentDayIndex] ?? ''}
-                    onNoteChange={handleNoteChange}
-                    overdueDays={overdueDays}
-                    onGoToDay={setCurrentDayIndex}
-                />
+                {currentDayIndex === OVERVIEW_INDEX ? (
+                    <OverviewView />
+                ) : (
+                    <DayView
+                        day={currentDay}
+                        startDate={progress.startDate}
+                        isTaskCompleted={isTaskCompleted}
+                        onToggleTask={toggleTask}
+                        onEditTask={handleEditTask}
+                        note={progress.notes[currentDayIndex] ?? ''}
+                        onNoteChange={handleNoteChange}
+                        overdueDays={overdueDays}
+                        onGoToDay={setCurrentDayIndex}
+                    />
+                )}
             </Box>
 
             <SettingsDialog
