@@ -67,4 +67,5 @@ export interface ProgressData {
     notes: Record<string, string>
     taskOverrides?: Record<string, TaskOverride>
     team?: TeamMember[]
+    overviewOverrides?: Record<string, { en: string, ru: string }>
 }

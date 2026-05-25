@@ -142,6 +142,25 @@ export function useProgress() {
         return progress.taskOverrides?.[taskId]
     }, [progress.taskOverrides])
 
+    const saveOverviewSection = React.useCallback(async (sectionKey: string, value: { en: string, ru: string }) => {
+        const overrides = progress.overviewOverrides ?? {}
+        const updated = {
+            ...progress,
+            overviewOverrides: { ...overrides, [sectionKey]: value }
+        }
+        setProgress(updated)
+
+        try {
+            await fetch(API_URL, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'set-overview-section', sectionKey, value })
+            })
+        } catch {
+            setProgress(progress)
+        }
+    }, [progress])
+
     const saveTeam = React.useCallback(async (team: TeamMember[]) => {
         const updated = { ...progress, team }
         setProgress(updated)
@@ -180,6 +199,8 @@ export function useProgress() {
         saveTaskOverride,
         getTaskOverride,
         saveTeam,
+        saveOverviewSection,
+        overviewOverrides: progress.overviewOverrides ?? {},
         refetch: fetchProgress
     }
 }
