@@ -1,10 +1,10 @@
-export type Assignee = 'Кира' | 'Настя' | 'Макс' | 'Кира + Настя' | 'Кира + Макс' | 'Настя → Кира'
+export type Assignee = 'Кира' | 'Настя' | 'Макс' | 'Кира + Настя' | 'Кира + Макс' | 'Кира + Настя + Макс' | 'Настя → Кира'
 
 export type Phase = 'Story 0' | 'Week 1' | 'Week 2' | 'Week 3' | 'Week 4' | 'Week 5' | 'Week 6' | 'Week 7+'
 
 export type Priority = 'high' | 'medium' | 'low'
 
-export type TaskTag = 'setup' | 'linkedin' | 'research' | 'outreach' | 'content' | 'engagement' | 'review' | 'planning' | 'onboarding' | 'landing' | 'branding' | 'monitoring'
+export type TaskTag = 'setup' | 'linkedin' | 'research' | 'outreach' | 'content' | 'engagement' | 'review' | 'planning' | 'onboarding' | 'landing' | 'branding' | 'monitoring' | 'pricing' | 'launch' | 'product-hunt'
 
 export interface Subtask {
     id: string
