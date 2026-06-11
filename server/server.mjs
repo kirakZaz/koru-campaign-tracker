@@ -64,6 +64,11 @@ app.patch('/api/progress', (req, res) => {
             data.taskOverrides[req.body.taskId] = req.body.override
         } else if (action === 'set-team') {
             data.team = req.body.team
+        } else if (action === 'set-overview-section') {
+            if (!data.overviewOverrides) {
+                data.overviewOverrides = {}
+            }
+            data.overviewOverrides[req.body.sectionKey] = req.body.value
         }
 
         saveProgress(data)

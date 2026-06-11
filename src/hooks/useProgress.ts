@@ -64,12 +64,11 @@ export function useProgress() {
     }, [fetchProgress])
 
     const toggleTask = React.useCallback(async (taskId: string) => {
-        const newCompleted = !progress.completedTasks[taskId]
-        const updated = {
-            ...progress,
-            completedTasks: { ...progress.completedTasks, [taskId]: newCompleted }
-        }
-        setProgress(updated)
+        let newCompleted = false
+        setProgress(prev => {
+            newCompleted = !prev.completedTasks[taskId]
+            return { ...prev, completedTasks: { ...prev.completedTasks, [taskId]: newCompleted } }
+        })
 
         try {
             await fetch(API_URL, {
@@ -78,13 +77,12 @@ export function useProgress() {
                 body: JSON.stringify({ action: 'toggle-task', taskId, completed: newCompleted })
             })
         } catch {
-            setProgress(progress)
+            setProgress(prev => ({ ...prev, completedTasks: { ...prev.completedTasks, [taskId]: !newCompleted } }))
         }
-    }, [progress])
+    }, [])
 
     const setStartDate = React.useCallback(async (date: string) => {
-        const updated = { ...progress, startDate: date }
-        setProgress(updated)
+        setProgress(prev => ({ ...prev, startDate: date }))
 
         try {
             await fetch(API_URL, {
@@ -93,16 +91,12 @@ export function useProgress() {
                 body: JSON.stringify({ action: 'set-start-date', startDate: date })
             })
         } catch {
-            setProgress(progress)
+            setProgress(prev => ({ ...prev, startDate: progress.startDate }))
         }
-    }, [progress])
+    }, [progress.startDate])
 
     const setNote = React.useCallback(async (dayIndex: number, note: string) => {
-        const updated = {
-            ...progress,
-            notes: { ...progress.notes, [dayIndex]: note }
-        }
-        setProgress(updated)
+        setProgress(prev => ({ ...prev, notes: { ...prev.notes, [dayIndex]: note } }))
 
         try {
             await fetch(API_URL, {
@@ -111,21 +105,23 @@ export function useProgress() {
                 body: JSON.stringify({ action: 'set-note', dayIndex: String(dayIndex), note })
             })
         } catch {
-            setProgress(progress)
+            setProgress(prev => {
+                const notes = { ...prev.notes }
+                delete notes[dayIndex]
+                return { ...prev, notes }
+            })
         }
-    }, [progress])
+    }, [])
 
     const isTaskCompleted = React.useCallback((taskId: string): boolean => {
         return progress.completedTasks[taskId] === true
     }, [progress.completedTasks])
 
     const saveTaskOverride = React.useCallback(async (taskId: string, override: TaskOverride) => {
-        const overrides = progress.taskOverrides ?? {}
-        const updated = {
-            ...progress,
-            taskOverrides: { ...overrides, [taskId]: override }
-        }
-        setProgress(updated)
+        setProgress(prev => ({
+            ...prev,
+            taskOverrides: { ...(prev.taskOverrides ?? {}), [taskId]: override }
+        }))
 
         try {
             await fetch(API_URL, {
@@ -134,21 +130,23 @@ export function useProgress() {
                 body: JSON.stringify({ action: 'set-task-override', taskId, override })
             })
         } catch {
-            setProgress(progress)
+            setProgress(prev => {
+                const overrides = { ...(prev.taskOverrides ?? {}) }
+                delete overrides[taskId]
+                return { ...prev, taskOverrides: overrides }
+            })
         }
-    }, [progress])
+    }, [])
 
     const getTaskOverride = React.useCallback((taskId: string): TaskOverride | undefined => {
         return progress.taskOverrides?.[taskId]
     }, [progress.taskOverrides])
 
     const saveOverviewSection = React.useCallback(async (sectionKey: string, value: { en: string, ru: string }) => {
-        const overrides = progress.overviewOverrides ?? {}
-        const updated = {
-            ...progress,
-            overviewOverrides: { ...overrides, [sectionKey]: value }
-        }
-        setProgress(updated)
+        setProgress(prev => ({
+            ...prev,
+            overviewOverrides: { ...(prev.overviewOverrides ?? {}), [sectionKey]: value }
+        }))
 
         try {
             await fetch(API_URL, {
@@ -157,13 +155,16 @@ export function useProgress() {
                 body: JSON.stringify({ action: 'set-overview-section', sectionKey, value })
             })
         } catch {
-            setProgress(progress)
+            setProgress(prev => {
+                const overrides = { ...(prev.overviewOverrides ?? {}) }
+                delete overrides[sectionKey]
+                return { ...prev, overviewOverrides: overrides }
+            })
         }
-    }, [progress])
+    }, [])
 
     const saveTeam = React.useCallback(async (team: TeamMember[]) => {
-        const updated = { ...progress, team }
-        setProgress(updated)
+        setProgress(prev => ({ ...prev, team }))
 
         try {
             await fetch(API_URL, {
@@ -184,9 +185,9 @@ export function useProgress() {
                 body: JSON.stringify({ team })
             })
         } catch {
-            setProgress(progress)
+            setProgress(prev => ({ ...prev, team: progress.team ?? [] }))
         }
-    }, [progress])
+    }, [progress.team])
 
     return {
         progress,
