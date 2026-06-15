@@ -438,7 +438,7 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                                         <TableCell sx={cellSx}><InlineInput value={p.notes} onChange={v => updatePerson(p.id, { notes: v })} placeholder="..." /></TableCell>
                                         <TableCell sx={cellSx}>
                                             <Box sx={{ display: 'flex', gap: 0.25 }}>
-                                                <IconButton size="small" onClick={() => addPersonToShortlist(p)} sx={{ color: 'text.secondary', '&:hover': { color: 'warning.main' } }} title="В Топ-5">
+                                                <IconButton size="small" onClick={() => addPersonToShortlist(p)} sx={{ color: local.shortlist.some(s => s.linkedinUrl && s.linkedinUrl === p.linkedinUrl || s.name === p.name) ? 'warning.main' : 'text.secondary', '&:hover': { color: 'warning.main' } }} title="В Топ-5">
                                                     <StarRoundedIcon sx={{ fontSize: '0.9rem' }} />
                                                 </IconButton>
                                                 <IconButton size="small" onClick={() => setDeleteConfirm({ id: p.id, name: p.name || 'без имени', type: 'person' })} sx={{ color: 'text.secondary', '&:hover': { color: 'error.main' } }}>
