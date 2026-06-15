@@ -117,6 +117,21 @@ function SortHeader({ label, field, activeField, direction, onSort, children }: 
     )
 }
 
+function FilterSelect({ label, value, options, onChange }: { label: string, value: string, options: string[], onChange: (v: string) => void }) {
+    return (
+        <Select
+            size="small"
+            value={value}
+            onChange={e => onChange(e.target.value)}
+            displayEmpty
+            sx={{ fontSize: '0.75rem', minWidth: 90, height: 28, '& .MuiSelect-select': { py: 0.25, px: 1 }, '& .MuiOutlinedInput-notchedOutline': { borderColor: value ? 'primary.main' : 'divider' } }}
+        >
+            <MenuItem value="" sx={{ fontSize: '0.75rem' }}>{label}: все</MenuItem>
+            {options.map(o => <MenuItem key={o} value={o} sx={{ fontSize: '0.75rem' }}>{o}</MenuItem>)}
+        </Select>
+    )
+}
+
 const DEFAULT_COUNTRIES = ['US', 'UK', 'Israel', 'Канада', 'Австралия', 'Германия', 'Индия', 'Нидерланды']
 
 export default function SourcesView({ sources, onSaveSources }: SourcesViewProps) {
@@ -148,8 +163,40 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
         })
     }
 
-    // Reset sort when switching tabs
-    React.useEffect(() => { setSortKey(''); setSortDir('asc') }, [tab])
+    // Filters
+    const [filters, setFilters] = React.useState<Record<string, string>>({})
+    const setFilter = (key: string, value: string) => {
+        setFilters(prev => {
+            if (!value) {
+                const next = { ...prev }
+                delete next[key]
+                return next
+            }
+            return { ...prev, [key]: value }
+        })
+    }
+    const clearFilters = () => setFilters({})
+
+    function filtered<T extends Record<string, any>>(items: T[]): T[] {
+        let result = items
+        for (const [key, val] of Object.entries(filters)) {
+            if (val) result = result.filter(item => String(item[key] ?? '') === val)
+        }
+        return result
+    }
+
+    // Collect unique values for filter dropdowns
+    function uniqueVals<T extends Record<string, any>>(items: T[], key: string): string[] {
+        const set = new Set<string>()
+        for (const item of items) {
+            const v = item[key]
+            if (v !== undefined && v !== null && v !== '') set.add(String(v))
+        }
+        return Array.from(set).sort()
+    }
+
+    // Reset sort and filters when switching tabs
+    React.useEffect(() => { setSortKey(''); setSortDir('asc'); setFilters({}) }, [tab])
 
     const countries = (local.countries && local.countries.length > 0) ? local.countries : DEFAULT_COUNTRIES
 
@@ -277,7 +324,17 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
 
             {tab === 0 && (
                 <Box>
-                    <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 1 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1, flexWrap: 'wrap' }}>
+                        <FilterSelect label="Страна" value={filters.country || ''} options={uniqueVals(local.people, 'country')} onChange={v => setFilter('country', v)} />
+                        <FilterSelect label="ICP" value={filters.icpSegment || ''} options={Object.keys(ICP_LABELS)} onChange={v => setFilter('icpSegment', v)} />
+                        <FilterSelect label="Priority" value={filters.priority || ''} options={['A', 'B', 'C']} onChange={v => setFilter('priority', v)} />
+                        <FilterSelect label="Activity" value={filters.activityLevel || ''} options={['high', 'medium', 'low']} onChange={v => setFilter('activityLevel', v)} />
+                        <FilterSelect label="Статус" value={filters.status || ''} options={uniqueVals(local.people, 'status')} onChange={v => setFilter('status', v)} />
+                        <FilterSelect label="Источник" value={filters.source || ''} options={uniqueVals(local.people, 'source')} onChange={v => setFilter('source', v)} />
+                        {Object.keys(filters).length > 0 && (
+                            <Chip label="Сбросить" size="small" onDelete={clearFilters} onClick={clearFilters} sx={{ fontSize: '0.7rem', height: 24 }} />
+                        )}
+                        <Box sx={{ flex: 1 }} />
                         <Button size="small" startIcon={<AddRoundedIcon />} onClick={addPerson} variant="outlined" sx={{ textTransform: 'none', fontSize: '0.8rem' }}>
                             Добавить
                         </Button>
@@ -310,7 +367,7 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                                         </TableCell>
                                     </TableRow>
                                 )}
-                                {sorted(local.people).map((p) => (
+                                {sorted(filtered(local.people)).map((p) => (
                                     <TableRow key={p.id} sx={{ '&:hover': { backgroundColor: '#ffffff04' } }}>
                                         <TableCell sx={cellSx}><InlineInput value={p.name} onChange={v => updatePerson(p.id, { name: v })} placeholder="Имя" /></TableCell>
                                         <TableCell sx={cellSx}><InlineInput value={p.linkedinUrl} onChange={v => updatePerson(p.id, { linkedinUrl: v })} placeholder="URL" /></TableCell>
@@ -369,7 +426,14 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
 
             {tab === 1 && (
                 <Box>
-                    <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 1 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1, flexWrap: 'wrap' }}>
+                        <FilterSelect label="Платформа" value={filters.platform || ''} options={uniqueVals(local.groups, 'platform')} onChange={v => setFilter('platform', v)} />
+                        <FilterSelect label="Аккаунт" value={filters.account || ''} options={['Кира', 'Настя']} onChange={v => setFilter('account', v)} />
+                        <FilterSelect label="Статус" value={filters.status || ''} options={['pending', 'approved', 'rejected']} onChange={v => setFilter('status', v)} />
+                        {Object.keys(filters).length > 0 && (
+                            <Chip label="Сбросить" size="small" onDelete={clearFilters} onClick={clearFilters} sx={{ fontSize: '0.7rem', height: 24 }} />
+                        )}
+                        <Box sx={{ flex: 1 }} />
                         <Button size="small" startIcon={<AddRoundedIcon />} onClick={addGroup} variant="outlined" sx={{ textTransform: 'none', fontSize: '0.8rem' }}>
                             Добавить
                         </Button>
@@ -396,7 +460,7 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                                         </TableCell>
                                     </TableRow>
                                 )}
-                                {sorted(local.groups).map((g) => (
+                                {sorted(filtered(local.groups)).map((g) => (
                                     <TableRow key={g.id} sx={{ '&:hover': { backgroundColor: '#ffffff04' } }}>
                                         <TableCell sx={cellSx}><InlineInput value={g.name} onChange={v => updateGroup(g.id, { name: v })} placeholder="SEO Professionals" /></TableCell>
                                         <TableCell sx={cellSx}>
@@ -547,7 +611,13 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
 
             {tab === 2 && (
                 <Box>
-                    <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 1 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1, flexWrap: 'wrap' }}>
+                        <FilterSelect label="Сегмент" value={filters.segment || ''} options={Object.keys(ICP_LABELS)} onChange={v => setFilter('segment', v)} />
+                        <FilterSelect label="Статус" value={filters.status || ''} options={['research', 'contacted', 'in_talks', 'partner', 'declined']} onChange={v => setFilter('status', v)} />
+                        {Object.keys(filters).length > 0 && (
+                            <Chip label="Сбросить" size="small" onDelete={clearFilters} onClick={clearFilters} sx={{ fontSize: '0.7rem', height: 24 }} />
+                        )}
+                        <Box sx={{ flex: 1 }} />
                         <Button size="small" startIcon={<AddRoundedIcon />} onClick={addCompany} variant="outlined" sx={{ textTransform: 'none', fontSize: '0.8rem' }}>
                             Добавить
                         </Button>
@@ -574,7 +644,7 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                                         </TableCell>
                                     </TableRow>
                                 )}
-                                {sorted(local.companies).map((c) => (
+                                {sorted(filtered(local.companies)).map((c) => (
                                     <TableRow key={c.id} sx={{ '&:hover': { backgroundColor: '#ffffff04' } }}>
                                         <TableCell sx={cellSx}><InlineInput value={c.name} onChange={v => updateCompany(c.id, { name: v })} placeholder="Agency X" /></TableCell>
                                         <TableCell sx={cellSx}><InlineInput value={c.website} onChange={v => updateCompany(c.id, { website: v })} placeholder="https://..." /></TableCell>
