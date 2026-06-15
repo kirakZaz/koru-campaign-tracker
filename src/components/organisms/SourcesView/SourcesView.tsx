@@ -103,7 +103,7 @@ const DEFAULT_COUNTRIES = ['US', 'UK', 'Israel', 'Канада', 'Австрал
 
 export default function SourcesView({ sources, onSaveSources }: SourcesViewProps) {
     const [tab, setTab] = React.useState(0)
-    const [local, setLocal] = React.useState(sources)
+    const [local, setLocal] = React.useState({ people: sources.people || [], groups: sources.groups || [], companies: sources.companies || [], shortlist: sources.shortlist || [], countries: sources.countries || [] })
     const saveTimerRef = React.useRef<ReturnType<typeof setTimeout>>()
     const [countriesDialogOpen, setCountriesDialogOpen] = React.useState(false)
     const [newCountry, setNewCountry] = React.useState('')
@@ -124,7 +124,13 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
     }
 
     React.useEffect(() => {
-        setLocal(sources)
+        setLocal({
+            people: sources.people || [],
+            groups: sources.groups || [],
+            companies: sources.companies || [],
+            shortlist: sources.shortlist || [],
+            countries: sources.countries || []
+        })
     }, [sources])
 
     const save = React.useCallback((next: typeof local) => {
