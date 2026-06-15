@@ -1,0 +1,395 @@
+import * as React from 'react'
+import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
+import Tabs from '@mui/material/Tabs'
+import Tab from '@mui/material/Tab'
+import Table from '@mui/material/Table'
+import TableBody from '@mui/material/TableBody'
+import TableCell from '@mui/material/TableCell'
+import TableContainer from '@mui/material/TableContainer'
+import TableHead from '@mui/material/TableHead'
+import TableRow from '@mui/material/TableRow'
+import IconButton from '@mui/material/IconButton'
+import Button from '@mui/material/Button'
+import TextField from '@mui/material/TextField'
+import Select from '@mui/material/Select'
+import MenuItem from '@mui/material/MenuItem'
+import Chip from '@mui/material/Chip'
+import AddRoundedIcon from '@mui/icons-material/AddRounded'
+import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded'
+import PeopleRoundedIcon from '@mui/icons-material/PeopleRounded'
+import GroupsRoundedIcon from '@mui/icons-material/GroupsRounded'
+import BusinessRoundedIcon from '@mui/icons-material/BusinessRounded'
+import type {
+    SourcesViewProps,
+    SourcePerson,
+    SourceGroup,
+    SourceCompany,
+    PersonStatus,
+    GroupStatus,
+    CompanyStatus,
+    IcpSegment,
+    IcpPriority,
+    AccountName
+} from './SourcesView.types'
+
+const PERSON_STATUS_LABELS: Record<PersonStatus, { label: string, color: string }> = {
+    new: { label: 'New', color: '#8b949e' },
+    connected: { label: 'Connected', color: '#6c8eff' },
+    dm_sent: { label: 'DM sent', color: '#d29922' },
+    replied: { label: 'Replied', color: '#3fb68e' },
+    demo: { label: 'Demo', color: '#a371f7' },
+    beta: { label: 'Beta', color: '#3fb68e' },
+    client: { label: 'Client', color: '#3fb68e' },
+    declined: { label: 'Declined', color: '#f85149' }
+}
+
+const GROUP_STATUS_LABELS: Record<GroupStatus, { label: string, color: string }> = {
+    pending: { label: 'Pending', color: '#d29922' },
+    approved: { label: 'Approved', color: '#3fb68e' },
+    rejected: { label: 'Rejected', color: '#f85149' }
+}
+
+const COMPANY_STATUS_LABELS: Record<CompanyStatus, { label: string, color: string }> = {
+    research: { label: 'Research', color: '#8b949e' },
+    contacted: { label: 'Contacted', color: '#d29922' },
+    in_talks: { label: 'In talks', color: '#6c8eff' },
+    partner: { label: 'Partner', color: '#3fb68e' },
+    declined: { label: 'Declined', color: '#f85149' }
+}
+
+const ICP_LABELS: Record<IcpSegment, string> = {
+    freelancer: 'Freelancer',
+    small_agency: 'Small Agency',
+    in_house: 'In-House',
+    other: 'Other'
+}
+
+const cellSx = { fontSize: '0.8rem', py: 0.75, px: 1, borderColor: 'divider' }
+const headCellSx = { ...cellSx, fontWeight: 700, color: 'text.secondary', fontSize: '0.7rem', textTransform: 'uppercase' as const, whiteSpace: 'nowrap' as const }
+const inputSx = { '& .MuiInputBase-input': { fontSize: '0.8rem', py: 0.5, px: 0.75 }, '& .MuiOutlinedInput-notchedOutline': { borderColor: 'transparent' }, '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: 'divider' }, '& .Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: 'primary.main' } }
+const selectSx = { fontSize: '0.8rem', '& .MuiSelect-select': { py: 0.5, px: 0.75 }, '& .MuiOutlinedInput-notchedOutline': { borderColor: 'transparent' }, '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: 'divider' } }
+
+function generateId() {
+    return Date.now().toString(36) + Math.random().toString(36).slice(2, 7)
+}
+
+function InlineInput({ value, onChange, placeholder }: { value: string, onChange: (v: string) => void, placeholder?: string }) {
+    return (
+        <TextField
+            size="small"
+            fullWidth
+            variant="outlined"
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            placeholder={placeholder}
+            sx={inputSx}
+        />
+    )
+}
+
+function StatusChip({ label, color }: { label: string, color: string }) {
+    return <Chip label={label} size="small" sx={{ fontSize: '0.7rem', height: 22, fontWeight: 600, backgroundColor: color + '22', color, border: `1px solid ${color}44` }} />
+}
+
+export default function SourcesView({ sources, onSaveSources }: SourcesViewProps) {
+    const [tab, setTab] = React.useState(0)
+    const [local, setLocal] = React.useState(sources)
+    const saveTimerRef = React.useRef<ReturnType<typeof setTimeout>>()
+
+    React.useEffect(() => {
+        setLocal(sources)
+    }, [sources])
+
+    const save = React.useCallback((next: typeof local) => {
+        setLocal(next)
+        clearTimeout(saveTimerRef.current)
+        saveTimerRef.current = setTimeout(() => {
+            onSaveSources(next)
+        }, 800)
+    }, [onSaveSources])
+
+    // --- People ---
+    const addPerson = () => {
+        const next = { ...local, people: [...local.people, { id: generateId(), name: '', linkedinUrl: '', icpSegment: 'freelancer' as IcpSegment, priority: 'B' as IcpPriority, activityLevel: 'medium' as const, source: '', status: 'new' as PersonStatus, notes: '' }] }
+        save(next)
+    }
+    const updatePerson = (id: string, patch: Partial<SourcePerson>) => {
+        const next = { ...local, people: local.people.map(p => p.id === id ? { ...p, ...patch } : p) }
+        save(next)
+    }
+    const deletePerson = (id: string) => {
+        const next = { ...local, people: local.people.filter(p => p.id !== id) }
+        save(next)
+    }
+
+    // --- Groups ---
+    const addGroup = () => {
+        const next = { ...local, groups: [...local.groups, { id: generateId(), name: '', platform: 'LinkedIn', members: '', account: 'Кира' as AccountName, status: 'pending' as GroupStatus, notes: '' }] }
+        save(next)
+    }
+    const updateGroup = (id: string, patch: Partial<SourceGroup>) => {
+        const next = { ...local, groups: local.groups.map(g => g.id === id ? { ...g, ...patch } : g) }
+        save(next)
+    }
+    const deleteGroup = (id: string) => {
+        const next = { ...local, groups: local.groups.filter(g => g.id !== id) }
+        save(next)
+    }
+
+    // --- Companies ---
+    const addCompany = () => {
+        const next = { ...local, companies: [...local.companies, { id: generateId(), name: '', website: '', segment: 'small_agency' as IcpSegment, size: '', contactPerson: '', status: 'research' as CompanyStatus, notes: '' }] }
+        save(next)
+    }
+    const updateCompany = (id: string, patch: Partial<SourceCompany>) => {
+        const next = { ...local, companies: local.companies.map(c => c.id === id ? { ...c, ...patch } : c) }
+        save(next)
+    }
+    const deleteCompany = (id: string) => {
+        const next = { ...local, companies: local.companies.filter(c => c.id !== id) }
+        save(next)
+    }
+
+    return (
+        <Box sx={{ flex: 1, overflow: 'auto', px: { xs: 2, md: 4 }, py: 3 }}>
+            <Typography variant="h5" sx={{ fontWeight: 700, mb: 0.5 }}>Sources</Typography>
+            <Typography sx={{ color: 'text.secondary', fontSize: '0.85rem', mb: 2.5 }}>
+                Все контакты, группы и компании в одном месте. Вместо отдельных логов.
+            </Typography>
+
+            <Tabs
+                value={tab}
+                onChange={(_, v) => setTab(v)}
+                sx={{ mb: 2, '& .MuiTab-root': { textTransform: 'none', fontWeight: 600, fontSize: '0.85rem', minHeight: 40 } }}
+            >
+                <Tab icon={<PeopleRoundedIcon sx={{ fontSize: '1rem' }} />} iconPosition="start" label={`Люди (${local.people.length})`} />
+                <Tab icon={<GroupsRoundedIcon sx={{ fontSize: '1rem' }} />} iconPosition="start" label={`Группы (${local.groups.length})`} />
+                <Tab icon={<BusinessRoundedIcon sx={{ fontSize: '1rem' }} />} iconPosition="start" label={`Компании (${local.companies.length})`} />
+            </Tabs>
+
+            {tab === 0 && (
+                <Box>
+                    <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 1 }}>
+                        <Button size="small" startIcon={<AddRoundedIcon />} onClick={addPerson} variant="outlined" sx={{ textTransform: 'none', fontSize: '0.8rem' }}>
+                            Добавить
+                        </Button>
+                    </Box>
+                    <TableContainer sx={{ border: '1px solid', borderColor: 'divider', borderRadius: 1 }}>
+                        <Table size="small">
+                            <TableHead>
+                                <TableRow sx={{ backgroundColor: '#ffffff06' }}>
+                                    <TableCell sx={headCellSx}>Имя</TableCell>
+                                    <TableCell sx={headCellSx}>LinkedIn</TableCell>
+                                    <TableCell sx={headCellSx}>ICP</TableCell>
+                                    <TableCell sx={headCellSx}>Priority</TableCell>
+                                    <TableCell sx={headCellSx}>Activity</TableCell>
+                                    <TableCell sx={headCellSx}>Источник</TableCell>
+                                    <TableCell sx={headCellSx}>Статус</TableCell>
+                                    <TableCell sx={headCellSx}>Заметки</TableCell>
+                                    <TableCell sx={{ ...headCellSx, width: 40 }} />
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {local.people.length === 0 && (
+                                    <TableRow>
+                                        <TableCell colSpan={9} sx={{ ...cellSx, textAlign: 'center', color: 'text.secondary', py: 4 }}>
+                                            Пока пусто. Нажми "Добавить" чтобы внести первый контакт.
+                                        </TableCell>
+                                    </TableRow>
+                                )}
+                                {local.people.map((p) => (
+                                    <TableRow key={p.id} sx={{ '&:hover': { backgroundColor: '#ffffff04' } }}>
+                                        <TableCell sx={cellSx}><InlineInput value={p.name} onChange={v => updatePerson(p.id, { name: v })} placeholder="Имя" /></TableCell>
+                                        <TableCell sx={cellSx}><InlineInput value={p.linkedinUrl} onChange={v => updatePerson(p.id, { linkedinUrl: v })} placeholder="URL" /></TableCell>
+                                        <TableCell sx={cellSx}>
+                                            <Select size="small" value={p.icpSegment} onChange={e => updatePerson(p.id, { icpSegment: e.target.value as IcpSegment })} sx={selectSx}>
+                                                {Object.entries(ICP_LABELS).map(([k, v]) => <MenuItem key={k} value={k} sx={{ fontSize: '0.8rem' }}>{v}</MenuItem>)}
+                                            </Select>
+                                        </TableCell>
+                                        <TableCell sx={cellSx}>
+                                            <Select size="small" value={p.priority} onChange={e => updatePerson(p.id, { priority: e.target.value as IcpPriority })} sx={selectSx}>
+                                                {(['A', 'B', 'C'] as IcpPriority[]).map(v => (
+                                                    <MenuItem key={v} value={v} sx={{ fontSize: '0.8rem', fontWeight: 700, color: v === 'A' ? '#3fb68e' : v === 'B' ? '#d29922' : '#8b949e' }}>{v}</MenuItem>
+                                                ))}
+                                            </Select>
+                                        </TableCell>
+                                        <TableCell sx={cellSx}>
+                                            <Select size="small" value={p.activityLevel} onChange={e => updatePerson(p.id, { activityLevel: e.target.value as 'high' | 'medium' | 'low' })} sx={selectSx}>
+                                                <MenuItem value="high" sx={{ fontSize: '0.8rem' }}>High</MenuItem>
+                                                <MenuItem value="medium" sx={{ fontSize: '0.8rem' }}>Medium</MenuItem>
+                                                <MenuItem value="low" sx={{ fontSize: '0.8rem' }}>Low</MenuItem>
+                                            </Select>
+                                        </TableCell>
+                                        <TableCell sx={cellSx}><InlineInput value={p.source} onChange={v => updatePerson(p.id, { source: v })} placeholder="Группа, поиск..." /></TableCell>
+                                        <TableCell sx={cellSx}>
+                                            <Select
+                                                size="small"
+                                                value={p.status}
+                                                onChange={e => updatePerson(p.id, { status: e.target.value as PersonStatus })}
+                                                sx={selectSx}
+                                                renderValue={(val) => <StatusChip {...PERSON_STATUS_LABELS[val as PersonStatus]} />}
+                                            >
+                                                {Object.entries(PERSON_STATUS_LABELS).map(([k, v]) => (
+                                                    <MenuItem key={k} value={k} sx={{ fontSize: '0.8rem' }}><StatusChip {...v} /></MenuItem>
+                                                ))}
+                                            </Select>
+                                        </TableCell>
+                                        <TableCell sx={cellSx}><InlineInput value={p.notes} onChange={v => updatePerson(p.id, { notes: v })} placeholder="..." /></TableCell>
+                                        <TableCell sx={cellSx}>
+                                            <IconButton size="small" onClick={() => deletePerson(p.id)} sx={{ color: 'text.secondary', '&:hover': { color: 'error.main' } }}>
+                                                <DeleteRoundedIcon sx={{ fontSize: '0.9rem' }} />
+                                            </IconButton>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                </Box>
+            )}
+
+            {tab === 1 && (
+                <Box>
+                    <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 1 }}>
+                        <Button size="small" startIcon={<AddRoundedIcon />} onClick={addGroup} variant="outlined" sx={{ textTransform: 'none', fontSize: '0.8rem' }}>
+                            Добавить
+                        </Button>
+                    </Box>
+                    <TableContainer sx={{ border: '1px solid', borderColor: 'divider', borderRadius: 1 }}>
+                        <Table size="small">
+                            <TableHead>
+                                <TableRow sx={{ backgroundColor: '#ffffff06' }}>
+                                    <TableCell sx={headCellSx}>Название</TableCell>
+                                    <TableCell sx={headCellSx}>Платформа</TableCell>
+                                    <TableCell sx={headCellSx}>Участников</TableCell>
+                                    <TableCell sx={headCellSx}>Аккаунт</TableCell>
+                                    <TableCell sx={headCellSx}>Статус</TableCell>
+                                    <TableCell sx={headCellSx}>Заметки</TableCell>
+                                    <TableCell sx={{ ...headCellSx, width: 40 }} />
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {local.groups.length === 0 && (
+                                    <TableRow>
+                                        <TableCell colSpan={7} sx={{ ...cellSx, textAlign: 'center', color: 'text.secondary', py: 4 }}>
+                                            Пока пусто. Нажми "Добавить" чтобы внести группу.
+                                        </TableCell>
+                                    </TableRow>
+                                )}
+                                {local.groups.map((g) => (
+                                    <TableRow key={g.id} sx={{ '&:hover': { backgroundColor: '#ffffff04' } }}>
+                                        <TableCell sx={cellSx}><InlineInput value={g.name} onChange={v => updateGroup(g.id, { name: v })} placeholder="SEO Professionals" /></TableCell>
+                                        <TableCell sx={cellSx}>
+                                            <Select size="small" value={g.platform} onChange={e => updateGroup(g.id, { platform: e.target.value })} sx={selectSx}>
+                                                <MenuItem value="LinkedIn" sx={{ fontSize: '0.8rem' }}>LinkedIn</MenuItem>
+                                                <MenuItem value="Facebook" sx={{ fontSize: '0.8rem' }}>Facebook</MenuItem>
+                                                <MenuItem value="Slack" sx={{ fontSize: '0.8rem' }}>Slack</MenuItem>
+                                                <MenuItem value="Discord" sx={{ fontSize: '0.8rem' }}>Discord</MenuItem>
+                                                <MenuItem value="Reddit" sx={{ fontSize: '0.8rem' }}>Reddit</MenuItem>
+                                                <MenuItem value="Other" sx={{ fontSize: '0.8rem' }}>Other</MenuItem>
+                                            </Select>
+                                        </TableCell>
+                                        <TableCell sx={cellSx}><InlineInput value={g.members} onChange={v => updateGroup(g.id, { members: v })} placeholder="10k" /></TableCell>
+                                        <TableCell sx={cellSx}>
+                                            <Select size="small" value={g.account} onChange={e => updateGroup(g.id, { account: e.target.value as AccountName })} sx={selectSx}>
+                                                <MenuItem value="Кира" sx={{ fontSize: '0.8rem' }}>Кира</MenuItem>
+                                                <MenuItem value="Настя" sx={{ fontSize: '0.8rem' }}>Настя</MenuItem>
+                                            </Select>
+                                        </TableCell>
+                                        <TableCell sx={cellSx}>
+                                            <Select
+                                                size="small"
+                                                value={g.status}
+                                                onChange={e => updateGroup(g.id, { status: e.target.value as GroupStatus })}
+                                                sx={selectSx}
+                                                renderValue={(val) => <StatusChip {...GROUP_STATUS_LABELS[val as GroupStatus]} />}
+                                            >
+                                                {Object.entries(GROUP_STATUS_LABELS).map(([k, v]) => (
+                                                    <MenuItem key={k} value={k} sx={{ fontSize: '0.8rem' }}><StatusChip {...v} /></MenuItem>
+                                                ))}
+                                            </Select>
+                                        </TableCell>
+                                        <TableCell sx={cellSx}><InlineInput value={g.notes} onChange={v => updateGroup(g.id, { notes: v })} placeholder="..." /></TableCell>
+                                        <TableCell sx={cellSx}>
+                                            <IconButton size="small" onClick={() => deleteGroup(g.id)} sx={{ color: 'text.secondary', '&:hover': { color: 'error.main' } }}>
+                                                <DeleteRoundedIcon sx={{ fontSize: '0.9rem' }} />
+                                            </IconButton>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                </Box>
+            )}
+
+            {tab === 2 && (
+                <Box>
+                    <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 1 }}>
+                        <Button size="small" startIcon={<AddRoundedIcon />} onClick={addCompany} variant="outlined" sx={{ textTransform: 'none', fontSize: '0.8rem' }}>
+                            Добавить
+                        </Button>
+                    </Box>
+                    <TableContainer sx={{ border: '1px solid', borderColor: 'divider', borderRadius: 1 }}>
+                        <Table size="small">
+                            <TableHead>
+                                <TableRow sx={{ backgroundColor: '#ffffff06' }}>
+                                    <TableCell sx={headCellSx}>Название</TableCell>
+                                    <TableCell sx={headCellSx}>Сайт</TableCell>
+                                    <TableCell sx={headCellSx}>Сегмент</TableCell>
+                                    <TableCell sx={headCellSx}>Размер</TableCell>
+                                    <TableCell sx={headCellSx}>Контакт</TableCell>
+                                    <TableCell sx={headCellSx}>Статус</TableCell>
+                                    <TableCell sx={headCellSx}>Заметки</TableCell>
+                                    <TableCell sx={{ ...headCellSx, width: 40 }} />
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {local.companies.length === 0 && (
+                                    <TableRow>
+                                        <TableCell colSpan={8} sx={{ ...cellSx, textAlign: 'center', color: 'text.secondary', py: 4 }}>
+                                            Пока пусто. Нажми "Добавить" чтобы внести компанию.
+                                        </TableCell>
+                                    </TableRow>
+                                )}
+                                {local.companies.map((c) => (
+                                    <TableRow key={c.id} sx={{ '&:hover': { backgroundColor: '#ffffff04' } }}>
+                                        <TableCell sx={cellSx}><InlineInput value={c.name} onChange={v => updateCompany(c.id, { name: v })} placeholder="Agency X" /></TableCell>
+                                        <TableCell sx={cellSx}><InlineInput value={c.website} onChange={v => updateCompany(c.id, { website: v })} placeholder="https://..." /></TableCell>
+                                        <TableCell sx={cellSx}>
+                                            <Select size="small" value={c.segment} onChange={e => updateCompany(c.id, { segment: e.target.value as IcpSegment })} sx={selectSx}>
+                                                {Object.entries(ICP_LABELS).map(([k, v]) => <MenuItem key={k} value={k} sx={{ fontSize: '0.8rem' }}>{v}</MenuItem>)}
+                                            </Select>
+                                        </TableCell>
+                                        <TableCell sx={cellSx}><InlineInput value={c.size} onChange={v => updateCompany(c.id, { size: v })} placeholder="3-15" /></TableCell>
+                                        <TableCell sx={cellSx}><InlineInput value={c.contactPerson} onChange={v => updateCompany(c.id, { contactPerson: v })} placeholder="Имя" /></TableCell>
+                                        <TableCell sx={cellSx}>
+                                            <Select
+                                                size="small"
+                                                value={c.status}
+                                                onChange={e => updateCompany(c.id, { status: e.target.value as CompanyStatus })}
+                                                sx={selectSx}
+                                                renderValue={(val) => <StatusChip {...COMPANY_STATUS_LABELS[val as CompanyStatus]} />}
+                                            >
+                                                {Object.entries(COMPANY_STATUS_LABELS).map(([k, v]) => (
+                                                    <MenuItem key={k} value={k} sx={{ fontSize: '0.8rem' }}><StatusChip {...v} /></MenuItem>
+                                                ))}
+                                            </Select>
+                                        </TableCell>
+                                        <TableCell sx={cellSx}><InlineInput value={c.notes} onChange={v => updateCompany(c.id, { notes: v })} placeholder="..." /></TableCell>
+                                        <TableCell sx={cellSx}>
+                                            <IconButton size="small" onClick={() => deleteCompany(c.id)} sx={{ color: 'text.secondary', '&:hover': { color: 'error.main' } }}>
+                                                <DeleteRoundedIcon sx={{ fontSize: '0.9rem' }} />
+                                            </IconButton>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                </Box>
+            )}
+        </Box>
+    )
+}

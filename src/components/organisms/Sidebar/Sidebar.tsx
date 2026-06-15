@@ -10,7 +10,8 @@ import CloseRoundedIcon from '@mui/icons-material/CloseRounded'
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded'
 import Chip from '@mui/material/Chip'
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
-import { OVERVIEW_INDEX } from '@/App'
+import TableChartRoundedIcon from '@mui/icons-material/TableChartRounded'
+import { OVERVIEW_INDEX, SOURCES_INDEX } from '@/App'
 import { getCampaignDate, formatShortDate } from '@/utils/dateUtils'
 import ProgressBar from '@/components/molecules/ProgressBar/ProgressBar'
 import type { SidebarProps } from './Sidebar.types'
@@ -140,15 +141,26 @@ const Sidebar = React.memo(function Sidebar({
             </Box>
 
             {!searchResults && (
-                <Box
-                    sx={styles.dayItem(currentDayIndex === OVERVIEW_INDEX, false)}
-                    onClick={() => onDaySelect(OVERVIEW_INDEX)}
-                >
-                    <InfoOutlinedIcon sx={{ fontSize: '0.9rem', color: currentDayIndex === OVERVIEW_INDEX ? 'primary.main' : 'text.secondary' }} />
-                    <Typography sx={styles.dayTitle(currentDayIndex === OVERVIEW_INDEX)}>
-                        Overview
-                    </Typography>
-                </Box>
+                <>
+                    <Box
+                        sx={styles.dayItem(currentDayIndex === OVERVIEW_INDEX, false)}
+                        onClick={() => onDaySelect(OVERVIEW_INDEX)}
+                    >
+                        <InfoOutlinedIcon sx={{ fontSize: '0.9rem', color: currentDayIndex === OVERVIEW_INDEX ? 'primary.main' : 'text.secondary' }} />
+                        <Typography sx={styles.dayTitle(currentDayIndex === OVERVIEW_INDEX)}>
+                            Overview
+                        </Typography>
+                    </Box>
+                    <Box
+                        sx={styles.dayItem(currentDayIndex === SOURCES_INDEX, false)}
+                        onClick={() => onDaySelect(SOURCES_INDEX)}
+                    >
+                        <TableChartRoundedIcon sx={{ fontSize: '0.9rem', color: currentDayIndex === SOURCES_INDEX ? 'primary.main' : 'text.secondary' }} />
+                        <Typography sx={styles.dayTitle(currentDayIndex === SOURCES_INDEX)}>
+                            Sources
+                        </Typography>
+                    </Box>
+                </>
             )}
 
             {searchResults ? (

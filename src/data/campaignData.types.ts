@@ -61,6 +61,12 @@ export interface TeamMember {
     remindersEnabled: boolean
 }
 
+export interface SourcesData {
+    people: unknown[]
+    groups: unknown[]
+    companies: unknown[]
+}
+
 export interface ProgressData {
     completedTasks: Record<string, boolean>
     startDate: string | null
@@ -68,4 +74,5 @@ export interface ProgressData {
     taskOverrides?: Record<string, TaskOverride>
     team?: TeamMember[]
     overviewOverrides?: Record<string, { en: string, ru: string }>
+    sources?: SourcesData
 }

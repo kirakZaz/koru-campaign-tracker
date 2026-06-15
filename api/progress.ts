@@ -17,9 +17,10 @@ interface ProgressData {
     taskOverrides: Record<string, unknown>
     team: unknown[]
     overviewOverrides: Record<string, { en: string, ru: string }>
+    sources: { people: unknown[], groups: unknown[], companies: unknown[] }
 }
 
-const DEFAULT_DATA: ProgressData = { completedTasks: {}, startDate: null, notes: {}, taskOverrides: {}, team: [], overviewOverrides: {} }
+const DEFAULT_DATA: ProgressData = { completedTasks: {}, startDate: null, notes: {}, taskOverrides: {}, team: [], overviewOverrides: {}, sources: { people: [], groups: [], companies: [] } }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
     const redis = getRedis()
@@ -62,6 +63,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             } else if (action === 'set-overview-section') {
                 if (!data.overviewOverrides) data.overviewOverrides = {}
                 data.overviewOverrides[req.body.sectionKey as string] = req.body.value as { en: string, ru: string }
+            } else if (action === 'set-sources') {
+                data.sources = req.body.sources as ProgressData['sources']
             }
 
             await redis.set(PROGRESS_KEY, data)

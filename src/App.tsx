@@ -19,8 +19,11 @@ import DayNavigation from '@/components/molecules/DayNavigation/DayNavigation'
 import SettingsDialog from '@/components/organisms/SettingsDialog/SettingsDialog'
 import EditTaskDialog from '@/components/organisms/EditTaskDialog/EditTaskDialog'
 import OverviewView from '@/components/organisms/OverviewView/OverviewView'
+import SourcesView from '@/components/organisms/SourcesView/SourcesView'
+import type { SourcesData } from '@/components/organisms/SourcesView/SourcesView.types'
 
 export const OVERVIEW_INDEX = -100
+export const SOURCES_INDEX = -200
 
 function applyOverride(task: CampaignTask, override: TaskOverride | undefined): CampaignTask {
     if (!override) {
@@ -40,7 +43,7 @@ function applyOverride(task: CampaignTask, override: TaskOverride | undefined): 
 }
 
 function App() {
-    const { progress, isLoading, error, toggleTask, setStartDate, setNote, isTaskCompleted, saveTaskOverride, getTaskOverride, saveTeam, saveOverviewSection, overviewOverrides } = useProgress()
+    const { progress, isLoading, error, toggleTask, setStartDate, setNote, isTaskCompleted, saveTaskOverride, getTaskOverride, saveTeam, saveSources, saveOverviewSection, overviewOverrides, sources } = useProgress()
     const [currentDayIndex, setCurrentDayIndex] = React.useState(0)
     const [settingsOpen, setSettingsOpen] = React.useState(false)
     const [mobileDrawerOpen, setMobileDrawerOpen] = React.useState(false)
@@ -200,7 +203,7 @@ function App() {
             )}
 
             <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-                {currentDayIndex === OVERVIEW_INDEX ? (
+                {currentDayIndex === OVERVIEW_INDEX || currentDayIndex === SOURCES_INDEX ? (
                     isMobile ? (
                         <Box sx={{ px: 2, pt: 2, borderBottom: (t: any) => `1px solid ${t.palette.divider}` }}>
                             <IconButton onClick={handleToggleDrawer} size="small">
@@ -227,7 +230,12 @@ function App() {
                     </Box>
                 )}
 
-                {currentDayIndex === OVERVIEW_INDEX ? (
+                {currentDayIndex === SOURCES_INDEX ? (
+                    <SourcesView
+                        sources={sources as SourcesData}
+                        onSaveSources={saveSources}
+                    />
+                ) : currentDayIndex === OVERVIEW_INDEX ? (
                     <OverviewView
                         overrides={overviewOverrides}
                         onSaveSection={saveOverviewSection}
