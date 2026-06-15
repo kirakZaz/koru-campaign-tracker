@@ -66,6 +66,7 @@ export interface SourcesData {
     groups: unknown[]
     companies: unknown[]
     shortlist: unknown[]
+    countries: string[]
 }
 
 export interface ProgressData {

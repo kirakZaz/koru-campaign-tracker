@@ -217,7 +217,7 @@ export function useProgress() {
         saveSources,
         saveOverviewSection,
         overviewOverrides: progress.overviewOverrides ?? {},
-        sources: { people: [], groups: [], companies: [], shortlist: [], ...(progress.sources ?? {}) },
+        sources: { people: [], groups: [], companies: [], shortlist: [], countries: ['US', 'UK', 'Israel', 'Канада', 'Австралия', 'Германия', 'Индия', 'Нидерланды'], ...(progress.sources ?? {}) },
         refetch: fetchProgress
     }
 }

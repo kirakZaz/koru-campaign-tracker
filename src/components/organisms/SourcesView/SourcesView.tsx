@@ -21,6 +21,11 @@ import PeopleRoundedIcon from '@mui/icons-material/PeopleRounded'
 import GroupsRoundedIcon from '@mui/icons-material/GroupsRounded'
 import BusinessRoundedIcon from '@mui/icons-material/BusinessRounded'
 import StarRoundedIcon from '@mui/icons-material/StarRounded'
+import EditRoundedIcon from '@mui/icons-material/EditRounded'
+import Dialog from '@mui/material/Dialog'
+import DialogTitle from '@mui/material/DialogTitle'
+import DialogContent from '@mui/material/DialogContent'
+import DialogActions from '@mui/material/DialogActions'
 import type {
     SourcesViewProps,
     SourcePerson,
@@ -94,10 +99,29 @@ function StatusChip({ label, color }: { label: string, color: string }) {
     return <Chip label={label} size="small" sx={{ fontSize: '0.7rem', height: 22, fontWeight: 600, backgroundColor: color + '22', color, border: `1px solid ${color}44` }} />
 }
 
+const DEFAULT_COUNTRIES = ['US', 'UK', 'Israel', 'Канада', 'Австралия', 'Германия', 'Индия', 'Нидерланды']
+
 export default function SourcesView({ sources, onSaveSources }: SourcesViewProps) {
     const [tab, setTab] = React.useState(0)
     const [local, setLocal] = React.useState(sources)
     const saveTimerRef = React.useRef<ReturnType<typeof setTimeout>>()
+    const [countriesDialogOpen, setCountriesDialogOpen] = React.useState(false)
+    const [newCountry, setNewCountry] = React.useState('')
+
+    const countries = (local.countries && local.countries.length > 0) ? local.countries : DEFAULT_COUNTRIES
+
+    const addCountry = () => {
+        const trimmed = newCountry.trim()
+        if (trimmed && !countries.includes(trimmed)) {
+            const next = { ...local, countries: [...countries, trimmed] }
+            save(next)
+        }
+        setNewCountry('')
+    }
+    const removeCountry = (c: string) => {
+        const next = { ...local, countries: countries.filter(x => x !== c) }
+        save(next)
+    }
 
     React.useEffect(() => {
         setLocal(sources)
@@ -113,7 +137,7 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
 
     // --- People ---
     const addPerson = () => {
-        const next = { ...local, people: [...local.people, { id: generateId(), name: '', linkedinUrl: '', icpSegment: 'freelancer' as IcpSegment, priority: 'B' as IcpPriority, activityLevel: 'medium' as const, source: '', status: 'new' as PersonStatus, notes: '' }] }
+        const next = { ...local, people: [...local.people, { id: generateId(), name: '', linkedinUrl: '', country: '', icpSegment: 'freelancer' as IcpSegment, priority: 'B' as IcpPriority, activityLevel: 'medium' as const, source: '', status: 'new' as PersonStatus, notes: '' }] }
         save(next)
     }
     const updatePerson = (id: string, patch: Partial<SourcePerson>) => {
@@ -215,6 +239,14 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                                 <TableRow sx={{ backgroundColor: '#ffffff06' }}>
                                     <TableCell sx={headCellSx}>Имя</TableCell>
                                     <TableCell sx={headCellSx}>LinkedIn</TableCell>
+                                    <TableCell sx={headCellSx}>
+                                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                                            Страна
+                                            <IconButton size="small" onClick={() => setCountriesDialogOpen(true)} sx={{ color: 'text.secondary', p: 0 }}>
+                                                <EditRoundedIcon sx={{ fontSize: '0.7rem' }} />
+                                            </IconButton>
+                                        </Box>
+                                    </TableCell>
                                     <TableCell sx={headCellSx}>ICP</TableCell>
                                     <TableCell sx={headCellSx}>Priority</TableCell>
                                     <TableCell sx={headCellSx}>Activity</TableCell>
@@ -227,7 +259,7 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                             <TableBody>
                                 {local.people.length === 0 && (
                                     <TableRow>
-                                        <TableCell colSpan={9} sx={{ ...cellSx, textAlign: 'center', color: 'text.secondary', py: 4 }}>
+                                        <TableCell colSpan={10} sx={{ ...cellSx, textAlign: 'center', color: 'text.secondary', py: 4 }}>
                                             Пока пусто. Нажми "Добавить" чтобы внести первый контакт.
                                         </TableCell>
                                     </TableRow>
@@ -236,6 +268,12 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                                     <TableRow key={p.id} sx={{ '&:hover': { backgroundColor: '#ffffff04' } }}>
                                         <TableCell sx={cellSx}><InlineInput value={p.name} onChange={v => updatePerson(p.id, { name: v })} placeholder="Имя" /></TableCell>
                                         <TableCell sx={cellSx}><InlineInput value={p.linkedinUrl} onChange={v => updatePerson(p.id, { linkedinUrl: v })} placeholder="URL" /></TableCell>
+                                        <TableCell sx={cellSx}>
+                                            <Select size="small" value={p.country || ''} onChange={e => updatePerson(p.id, { country: e.target.value })} sx={selectSx} displayEmpty>
+                                                <MenuItem value="" sx={{ fontSize: '0.8rem', color: '#8b949e' }}>—</MenuItem>
+                                                {countries.map(c => <MenuItem key={c} value={c} sx={{ fontSize: '0.8rem' }}>{c}</MenuItem>)}
+                                            </Select>
+                                        </TableCell>
                                         <TableCell sx={cellSx}>
                                             <Select size="small" value={p.icpSegment} onChange={e => updatePerson(p.id, { icpSegment: e.target.value as IcpSegment })} sx={selectSx}>
                                                 {Object.entries(ICP_LABELS).map(([k, v]) => <MenuItem key={k} value={k} sx={{ fontSize: '0.8rem' }}>{v}</MenuItem>)}
@@ -527,6 +565,39 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                     </TableContainer>
                 </Box>
             )}
+
+            <Dialog open={countriesDialogOpen} onClose={() => setCountriesDialogOpen(false)} PaperProps={{ sx: { backgroundColor: 'background.paper', minWidth: 320 } }}>
+                <DialogTitle sx={{ fontSize: '1rem', fontWeight: 700 }}>Управление странами</DialogTitle>
+                <DialogContent>
+                    <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
+                        <TextField
+                            size="small"
+                            value={newCountry}
+                            onChange={e => setNewCountry(e.target.value)}
+                            placeholder="Новая страна..."
+                            onKeyDown={e => { if (e.key === 'Enter') addCountry() }}
+                            sx={{ flex: 1, '& .MuiInputBase-input': { fontSize: '0.85rem' } }}
+                        />
+                        <Button size="small" variant="outlined" onClick={addCountry} sx={{ textTransform: 'none', fontSize: '0.8rem' }}>
+                            Добавить
+                        </Button>
+                    </Box>
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.75 }}>
+                        {countries.map(c => (
+                            <Chip
+                                key={c}
+                                label={c}
+                                size="small"
+                                onDelete={() => removeCountry(c)}
+                                sx={{ fontSize: '0.8rem' }}
+                            />
+                        ))}
+                    </Box>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setCountriesDialogOpen(false)} sx={{ textTransform: 'none' }}>Закрыть</Button>
+                </DialogActions>
+            </Dialog>
         </Box>
     )
 }

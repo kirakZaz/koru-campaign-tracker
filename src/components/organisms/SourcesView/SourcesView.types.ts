@@ -9,6 +9,7 @@ export interface SourcePerson {
     id: string
     name: string
     linkedinUrl: string
+    country: string
     icpSegment: IcpSegment
     priority: IcpPriority
     activityLevel: 'high' | 'medium' | 'low'
@@ -54,6 +55,7 @@ export interface SourcesData {
     groups: SourceGroup[]
     companies: SourceCompany[]
     shortlist: ShortlistPerson[]
+    countries: string[]
 }
 
 export interface SourcesViewProps {
