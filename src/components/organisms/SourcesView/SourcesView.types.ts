@@ -24,6 +24,7 @@ export interface SourceGroup {
     members: string
     account: AccountName
     status: GroupStatus
+    activeMembers: string[]
     notes: string
 }
 

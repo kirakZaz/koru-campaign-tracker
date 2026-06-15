@@ -127,7 +127,7 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
 
     // --- Groups ---
     const addGroup = () => {
-        const next = { ...local, groups: [...local.groups, { id: generateId(), name: '', platform: 'LinkedIn', members: '', account: 'Кира' as AccountName, status: 'pending' as GroupStatus, notes: '' }] }
+        const next = { ...local, groups: [...local.groups, { id: generateId(), name: '', platform: 'LinkedIn', members: '', account: 'Кира' as AccountName, status: 'pending' as GroupStatus, activeMembers: ['', '', '', '', ''], notes: '' }] }
         save(next)
     }
     const updateGroup = (id: string, patch: Partial<SourceGroup>) => {
@@ -299,6 +299,7 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                                     <TableCell sx={headCellSx}>Участников</TableCell>
                                     <TableCell sx={headCellSx}>Аккаунт</TableCell>
                                     <TableCell sx={headCellSx}>Статус</TableCell>
+                                    <TableCell sx={headCellSx}>Активные (5)</TableCell>
                                     <TableCell sx={headCellSx}>Заметки</TableCell>
                                     <TableCell sx={{ ...headCellSx, width: 40 }} />
                                 </TableRow>
@@ -306,7 +307,7 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                             <TableBody>
                                 {local.groups.length === 0 && (
                                     <TableRow>
-                                        <TableCell colSpan={7} sx={{ ...cellSx, textAlign: 'center', color: 'text.secondary', py: 4 }}>
+                                        <TableCell colSpan={8} sx={{ ...cellSx, textAlign: 'center', color: 'text.secondary', py: 4 }}>
                                             Пока пусто. Нажми "Добавить" чтобы внести группу.
                                         </TableCell>
                                     </TableRow>
@@ -343,6 +344,26 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                                                     <MenuItem key={k} value={k} sx={{ fontSize: '0.8rem' }}><StatusChip {...v} /></MenuItem>
                                                 ))}
                                             </Select>
+                                        </TableCell>
+                                        <TableCell sx={{ ...cellSx, minWidth: 160 }}>
+                                            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.25 }}>
+                                                {(g.activeMembers || ['', '', '', '', '']).map((m: string, i: number) => (
+                                                    <TextField
+                                                        key={i}
+                                                        size="small"
+                                                        fullWidth
+                                                        variant="outlined"
+                                                        value={m}
+                                                        onChange={(e) => {
+                                                            const arr = [...(g.activeMembers || ['', '', '', '', ''])]
+                                                            arr[i] = e.target.value
+                                                            updateGroup(g.id, { activeMembers: arr })
+                                                        }}
+                                                        placeholder={`${i + 1}.`}
+                                                        sx={{ ...inputSx, '& .MuiInputBase-input': { fontSize: '0.75rem', py: 0.25, px: 0.5 } }}
+                                                    />
+                                                ))}
+                                            </Box>
                                         </TableCell>
                                         <TableCell sx={cellSx}><InlineInput value={g.notes} onChange={v => updateGroup(g.id, { notes: v })} placeholder="..." /></TableCell>
                                         <TableCell sx={cellSx}>
