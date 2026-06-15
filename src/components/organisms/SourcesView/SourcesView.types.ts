@@ -21,6 +21,7 @@ export interface SourcePerson {
 export interface SourceGroup {
     id: string
     name: string
+    url: string
     platform: string
     members: string
     account: AccountName

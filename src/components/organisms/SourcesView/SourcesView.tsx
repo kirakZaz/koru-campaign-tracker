@@ -24,6 +24,8 @@ import StarRoundedIcon from '@mui/icons-material/StarRounded'
 import EditRoundedIcon from '@mui/icons-material/EditRounded'
 import ArrowUpwardRoundedIcon from '@mui/icons-material/ArrowUpwardRounded'
 import ArrowDownwardRoundedIcon from '@mui/icons-material/ArrowDownwardRounded'
+import OpenInNewRoundedIcon from '@mui/icons-material/OpenInNewRounded'
+import FilterAltOffRoundedIcon from '@mui/icons-material/FilterAltOffRounded'
 import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
@@ -247,7 +249,7 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
 
     // --- Groups ---
     const addGroup = () => {
-        const next = { ...local, groups: [...local.groups, { id: generateId(), name: '', platform: 'LinkedIn', members: '', account: 'Кира' as AccountName, status: 'pending' as GroupStatus, activeMembers: ['', '', '', '', ''], notes: '' }] }
+        const next = { ...local, groups: [...local.groups, { id: generateId(), name: '', url: '', platform: 'LinkedIn', members: '', account: 'Кира' as AccountName, status: 'pending' as GroupStatus, activeMembers: ['', '', '', '', ''], notes: '' }] }
         save(next)
     }
     const updateGroup = (id: string, patch: Partial<SourceGroup>) => {
@@ -332,7 +334,9 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                         <FilterSelect label="Статус" value={filters.status || ''} options={uniqueVals(local.people, 'status')} onChange={v => setFilter('status', v)} />
                         <FilterSelect label="Источник" value={filters.source || ''} options={uniqueVals(local.people, 'source')} onChange={v => setFilter('source', v)} />
                         {Object.keys(filters).length > 0 && (
-                            <Chip label="Сбросить" size="small" onDelete={clearFilters} onClick={clearFilters} sx={{ fontSize: '0.7rem', height: 24 }} />
+                            <IconButton size="small" onClick={clearFilters} sx={{ color: 'text.secondary', '&:hover': { color: 'error.main' } }} title="Сбросить все фильтры">
+                                <FilterAltOffRoundedIcon sx={{ fontSize: '1rem' }} />
+                            </IconButton>
                         )}
                         <Box sx={{ flex: 1 }} />
                         <Button size="small" startIcon={<AddRoundedIcon />} onClick={addPerson} variant="outlined" sx={{ textTransform: 'none', fontSize: '0.8rem' }}>
@@ -431,7 +435,9 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                         <FilterSelect label="Аккаунт" value={filters.account || ''} options={['Кира', 'Настя']} onChange={v => setFilter('account', v)} />
                         <FilterSelect label="Статус" value={filters.status || ''} options={['pending', 'approved', 'rejected']} onChange={v => setFilter('status', v)} />
                         {Object.keys(filters).length > 0 && (
-                            <Chip label="Сбросить" size="small" onDelete={clearFilters} onClick={clearFilters} sx={{ fontSize: '0.7rem', height: 24 }} />
+                            <IconButton size="small" onClick={clearFilters} sx={{ color: 'text.secondary', '&:hover': { color: 'error.main' } }} title="Сбросить все фильтры">
+                                <FilterAltOffRoundedIcon sx={{ fontSize: '1rem' }} />
+                            </IconButton>
                         )}
                         <Box sx={{ flex: 1 }} />
                         <Button size="small" startIcon={<AddRoundedIcon />} onClick={addGroup} variant="outlined" sx={{ textTransform: 'none', fontSize: '0.8rem' }}>
@@ -443,6 +449,7 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                             <TableHead>
                                 <TableRow sx={{ backgroundColor: '#ffffff06' }}>
                                     <SortHeader label="Название" field="name" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
+                                    <TableCell sx={headCellSx}>Ссылка</TableCell>
                                     <SortHeader label="Платформа" field="platform" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
                                     <TableCell sx={headCellSx}>Участников</TableCell>
                                     <SortHeader label="Аккаунт" field="account" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
@@ -455,7 +462,7 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                             <TableBody>
                                 {local.groups.length === 0 && (
                                     <TableRow>
-                                        <TableCell colSpan={8} sx={{ ...cellSx, textAlign: 'center', color: 'text.secondary', py: 4 }}>
+                                        <TableCell colSpan={9} sx={{ ...cellSx, textAlign: 'center', color: 'text.secondary', py: 4 }}>
                                             Пока пусто. Нажми "Добавить" чтобы внести группу.
                                         </TableCell>
                                     </TableRow>
@@ -463,6 +470,16 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                                 {sorted(filtered(local.groups)).map((g) => (
                                     <TableRow key={g.id} sx={{ '&:hover': { backgroundColor: '#ffffff04' } }}>
                                         <TableCell sx={cellSx}><InlineInput value={g.name} onChange={v => updateGroup(g.id, { name: v })} placeholder="SEO Professionals" /></TableCell>
+                                        <TableCell sx={cellSx}>
+                                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.25 }}>
+                                                <TextField size="small" fullWidth variant="outlined" value={g.url || ''} onChange={e => updateGroup(g.id, { url: e.target.value })} placeholder="URL" sx={{ ...inputSx, '& .MuiInputBase-input': { fontSize: '0.7rem', py: 0.25, px: 0.5 } }} />
+                                                {(g.url || '') && (
+                                                    <IconButton size="small" onClick={() => window.open(g.url.startsWith('http') ? g.url : `https://${g.url}`, '_blank')} sx={{ color: 'primary.main', p: 0.25 }}>
+                                                        <OpenInNewRoundedIcon sx={{ fontSize: '0.85rem' }} />
+                                                    </IconButton>
+                                                )}
+                                            </Box>
+                                        </TableCell>
                                         <TableCell sx={cellSx}>
                                             <Select size="small" value={g.platform} onChange={e => updateGroup(g.id, { platform: e.target.value })} sx={selectSx}>
                                                 <MenuItem value="LinkedIn" sx={{ fontSize: '0.8rem' }}>LinkedIn</MenuItem>
@@ -493,25 +510,20 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                                                 ))}
                                             </Select>
                                         </TableCell>
-                                        <TableCell sx={{ ...cellSx, minWidth: 160 }}>
-                                            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.25 }}>
-                                                {(g.activeMembers || ['', '', '', '', '']).map((m: string, i: number) => (
-                                                    <TextField
-                                                        key={i}
-                                                        size="small"
-                                                        fullWidth
-                                                        variant="outlined"
-                                                        value={m}
-                                                        onChange={(e) => {
-                                                            const arr = [...(g.activeMembers || ['', '', '', '', ''])]
-                                                            arr[i] = e.target.value
-                                                            updateGroup(g.id, { activeMembers: arr })
-                                                        }}
-                                                        placeholder={`${i + 1}.`}
-                                                        sx={{ ...inputSx, '& .MuiInputBase-input': { fontSize: '0.75rem', py: 0.25, px: 0.5 } }}
-                                                    />
-                                                ))}
-                                            </Box>
+                                        <TableCell sx={cellSx}>
+                                            <TextField
+                                                size="small"
+                                                fullWidth
+                                                variant="outlined"
+                                                value={(g.activeMembers || []).filter(Boolean).join(', ')}
+                                                onChange={(e) => {
+                                                    const parts = e.target.value.split(',').map(s => s.trim()).slice(0, 5)
+                                                    const arr = [...parts, ...Array(5 - parts.length).fill('')]
+                                                    updateGroup(g.id, { activeMembers: arr.slice(0, 5) })
+                                                }}
+                                                placeholder="Имя1, Имя2, ..."
+                                                sx={{ ...inputSx, '& .MuiInputBase-input': { fontSize: '0.75rem', py: 0.25, px: 0.5 } }}
+                                            />
                                         </TableCell>
                                         <TableCell sx={cellSx}><InlineInput value={g.notes} onChange={v => updateGroup(g.id, { notes: v })} placeholder="..." /></TableCell>
                                         <TableCell sx={cellSx}>
@@ -615,7 +627,9 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                         <FilterSelect label="Сегмент" value={filters.segment || ''} options={Object.keys(ICP_LABELS)} onChange={v => setFilter('segment', v)} />
                         <FilterSelect label="Статус" value={filters.status || ''} options={['research', 'contacted', 'in_talks', 'partner', 'declined']} onChange={v => setFilter('status', v)} />
                         {Object.keys(filters).length > 0 && (
-                            <Chip label="Сбросить" size="small" onDelete={clearFilters} onClick={clearFilters} sx={{ fontSize: '0.7rem', height: 24 }} />
+                            <IconButton size="small" onClick={clearFilters} sx={{ color: 'text.secondary', '&:hover': { color: 'error.main' } }} title="Сбросить все фильтры">
+                                <FilterAltOffRoundedIcon sx={{ fontSize: '1rem' }} />
+                            </IconButton>
                         )}
                         <Box sx={{ flex: 1 }} />
                         <Button size="small" startIcon={<AddRoundedIcon />} onClick={addCompany} variant="outlined" sx={{ textTransform: 'none', fontSize: '0.8rem' }}>
