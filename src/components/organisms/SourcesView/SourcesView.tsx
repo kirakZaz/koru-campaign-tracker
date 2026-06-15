@@ -22,6 +22,8 @@ import GroupsRoundedIcon from '@mui/icons-material/GroupsRounded'
 import BusinessRoundedIcon from '@mui/icons-material/BusinessRounded'
 import StarRoundedIcon from '@mui/icons-material/StarRounded'
 import EditRoundedIcon from '@mui/icons-material/EditRounded'
+import ArrowUpwardRoundedIcon from '@mui/icons-material/ArrowUpwardRounded'
+import ArrowDownwardRoundedIcon from '@mui/icons-material/ArrowDownwardRounded'
 import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
@@ -99,6 +101,22 @@ function StatusChip({ label, color }: { label: string, color: string }) {
     return <Chip label={label} size="small" sx={{ fontSize: '0.7rem', height: 22, fontWeight: 600, backgroundColor: color + '22', color, border: `1px solid ${color}44` }} />
 }
 
+function SortHeader({ label, field, activeField, direction, onSort, children }: { label: string, field: string, activeField: string, direction: 'asc' | 'desc', onSort: (f: string) => void, children?: React.ReactNode }) {
+    const active = activeField === field
+    return (
+        <TableCell sx={headCellSx}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, cursor: 'pointer', userSelect: 'none', '&:hover': { color: 'text.primary' } }} onClick={() => onSort(field)}>
+                {label}
+                {children}
+                {active && (direction === 'asc'
+                    ? <ArrowUpwardRoundedIcon sx={{ fontSize: '0.65rem' }} />
+                    : <ArrowDownwardRoundedIcon sx={{ fontSize: '0.65rem' }} />
+                )}
+            </Box>
+        </TableCell>
+    )
+}
+
 const DEFAULT_COUNTRIES = ['US', 'UK', 'Israel', 'Канада', 'Австралия', 'Германия', 'Индия', 'Нидерланды']
 
 export default function SourcesView({ sources, onSaveSources }: SourcesViewProps) {
@@ -107,6 +125,31 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
     const saveTimerRef = React.useRef<ReturnType<typeof setTimeout>>()
     const [countriesDialogOpen, setCountriesDialogOpen] = React.useState(false)
     const [newCountry, setNewCountry] = React.useState('')
+
+    const [sortKey, setSortKey] = React.useState<string>('')
+    const [sortDir, setSortDir] = React.useState<'asc' | 'desc'>('asc')
+
+    const toggleSort = React.useCallback((key: string) => {
+        if (sortKey === key) {
+            setSortDir(prev => prev === 'asc' ? 'desc' : 'asc')
+        } else {
+            setSortKey(key)
+            setSortDir('asc')
+        }
+    }, [sortKey])
+
+    function sorted<T extends Record<string, any>>(items: T[]): T[] {
+        if (!sortKey) return items
+        return [...items].sort((a, b) => {
+            const va = (a[sortKey] ?? '') as string
+            const vb = (b[sortKey] ?? '') as string
+            const cmp = String(va).localeCompare(String(vb), undefined, { sensitivity: 'base' })
+            return sortDir === 'asc' ? cmp : -cmp
+        })
+    }
+
+    // Reset sort when switching tabs
+    React.useEffect(() => { setSortKey(''); setSortDir('asc') }, [tab])
 
     const countries = (local.countries && local.countries.length > 0) ? local.countries : DEFAULT_COUNTRIES
 
@@ -243,21 +286,18 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                         <Table size="small">
                             <TableHead>
                                 <TableRow sx={{ backgroundColor: '#ffffff06' }}>
-                                    <TableCell sx={headCellSx}>Имя</TableCell>
+                                    <SortHeader label="Имя" field="name" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
                                     <TableCell sx={headCellSx}>LinkedIn</TableCell>
-                                    <TableCell sx={headCellSx}>
-                                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                                            Страна
-                                            <IconButton size="small" onClick={() => setCountriesDialogOpen(true)} sx={{ color: 'text.secondary', p: 0 }}>
-                                                <EditRoundedIcon sx={{ fontSize: '0.7rem' }} />
-                                            </IconButton>
-                                        </Box>
-                                    </TableCell>
-                                    <TableCell sx={headCellSx}>ICP</TableCell>
-                                    <TableCell sx={headCellSx}>Priority</TableCell>
-                                    <TableCell sx={headCellSx}>Activity</TableCell>
-                                    <TableCell sx={headCellSx}>Источник</TableCell>
-                                    <TableCell sx={headCellSx}>Статус</TableCell>
+                                    <SortHeader label="Страна" field="country" activeField={sortKey} direction={sortDir} onSort={toggleSort}>
+                                        <IconButton size="small" onClick={(e) => { e.stopPropagation(); setCountriesDialogOpen(true) }} sx={{ color: 'text.secondary', p: 0 }}>
+                                            <EditRoundedIcon sx={{ fontSize: '0.7rem' }} />
+                                        </IconButton>
+                                    </SortHeader>
+                                    <SortHeader label="ICP" field="icpSegment" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
+                                    <SortHeader label="Priority" field="priority" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
+                                    <SortHeader label="Activity" field="activityLevel" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
+                                    <SortHeader label="Источник" field="source" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
+                                    <SortHeader label="Статус" field="status" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
                                     <TableCell sx={headCellSx}>Заметки</TableCell>
                                     <TableCell sx={{ ...headCellSx, width: 40 }} />
                                 </TableRow>
@@ -270,7 +310,7 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                                         </TableCell>
                                     </TableRow>
                                 )}
-                                {local.people.map((p) => (
+                                {sorted(local.people).map((p) => (
                                     <TableRow key={p.id} sx={{ '&:hover': { backgroundColor: '#ffffff04' } }}>
                                         <TableCell sx={cellSx}><InlineInput value={p.name} onChange={v => updatePerson(p.id, { name: v })} placeholder="Имя" /></TableCell>
                                         <TableCell sx={cellSx}><InlineInput value={p.linkedinUrl} onChange={v => updatePerson(p.id, { linkedinUrl: v })} placeholder="URL" /></TableCell>
@@ -338,11 +378,11 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                         <Table size="small">
                             <TableHead>
                                 <TableRow sx={{ backgroundColor: '#ffffff06' }}>
-                                    <TableCell sx={headCellSx}>Название</TableCell>
-                                    <TableCell sx={headCellSx}>Платформа</TableCell>
+                                    <SortHeader label="Название" field="name" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
+                                    <SortHeader label="Платформа" field="platform" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
                                     <TableCell sx={headCellSx}>Участников</TableCell>
-                                    <TableCell sx={headCellSx}>Аккаунт</TableCell>
-                                    <TableCell sx={headCellSx}>Статус</TableCell>
+                                    <SortHeader label="Аккаунт" field="account" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
+                                    <SortHeader label="Статус" field="status" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
                                     <TableCell sx={headCellSx}>Активные (5)</TableCell>
                                     <TableCell sx={headCellSx}>Заметки</TableCell>
                                     <TableCell sx={{ ...headCellSx, width: 40 }} />
@@ -356,7 +396,7 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                                         </TableCell>
                                     </TableRow>
                                 )}
-                                {local.groups.map((g) => (
+                                {sorted(local.groups).map((g) => (
                                     <TableRow key={g.id} sx={{ '&:hover': { backgroundColor: '#ffffff04' } }}>
                                         <TableCell sx={cellSx}><InlineInput value={g.name} onChange={v => updateGroup(g.id, { name: v })} placeholder="SEO Professionals" /></TableCell>
                                         <TableCell sx={cellSx}>
@@ -516,12 +556,12 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                         <Table size="small">
                             <TableHead>
                                 <TableRow sx={{ backgroundColor: '#ffffff06' }}>
-                                    <TableCell sx={headCellSx}>Название</TableCell>
+                                    <SortHeader label="Название" field="name" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
                                     <TableCell sx={headCellSx}>Сайт</TableCell>
-                                    <TableCell sx={headCellSx}>Сегмент</TableCell>
+                                    <SortHeader label="Сегмент" field="segment" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
                                     <TableCell sx={headCellSx}>Размер</TableCell>
-                                    <TableCell sx={headCellSx}>Контакт</TableCell>
-                                    <TableCell sx={headCellSx}>Статус</TableCell>
+                                    <SortHeader label="Контакт" field="contactPerson" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
+                                    <SortHeader label="Статус" field="status" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
                                     <TableCell sx={headCellSx}>Заметки</TableCell>
                                     <TableCell sx={{ ...headCellSx, width: 40 }} />
                                 </TableRow>
@@ -534,7 +574,7 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                                         </TableCell>
                                     </TableRow>
                                 )}
-                                {local.companies.map((c) => (
+                                {sorted(local.companies).map((c) => (
                                     <TableRow key={c.id} sx={{ '&:hover': { backgroundColor: '#ffffff04' } }}>
                                         <TableCell sx={cellSx}><InlineInput value={c.name} onChange={v => updateCompany(c.id, { name: v })} placeholder="Agency X" /></TableCell>
                                         <TableCell sx={cellSx}><InlineInput value={c.website} onChange={v => updateCompany(c.id, { website: v })} placeholder="https://..." /></TableCell>
