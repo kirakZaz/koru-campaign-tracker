@@ -26,6 +26,7 @@ import ArrowUpwardRoundedIcon from '@mui/icons-material/ArrowUpwardRounded'
 import ArrowDownwardRoundedIcon from '@mui/icons-material/ArrowDownwardRounded'
 import OpenInNewRoundedIcon from '@mui/icons-material/OpenInNewRounded'
 import FilterAltOffRoundedIcon from '@mui/icons-material/FilterAltOffRounded'
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded'
 import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
@@ -126,7 +127,12 @@ function FilterSelect({ label, value, options, onChange }: { label: string, valu
             value={value}
             onChange={e => onChange(e.target.value)}
             displayEmpty
-            sx={{ fontSize: '0.75rem', minWidth: 90, height: 28, '& .MuiSelect-select': { py: 0.25, px: 1 }, '& .MuiOutlinedInput-notchedOutline': { borderColor: value ? 'primary.main' : 'divider' } }}
+            endAdornment={value ? (
+                <IconButton size="small" onClick={(e) => { e.stopPropagation(); onChange('') }} sx={{ p: 0, mr: 1.5, color: 'text.secondary', '&:hover': { color: 'error.main' } }}>
+                    <CloseRoundedIcon sx={{ fontSize: '0.75rem' }} />
+                </IconButton>
+            ) : null}
+            sx={{ fontSize: '0.75rem', minWidth: 90, height: 28, '& .MuiSelect-select': { py: 0.25, px: 1, pr: value ? '32px !important' : undefined }, '& .MuiOutlinedInput-notchedOutline': { borderColor: value ? 'primary.main' : 'divider' } }}
         >
             <MenuItem value="" sx={{ fontSize: '0.75rem' }}>{label}: все</MenuItem>
             {options.map(o => <MenuItem key={o} value={o} sx={{ fontSize: '0.75rem' }}>{o}</MenuItem>)}
@@ -142,6 +148,17 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
     const saveTimerRef = React.useRef<ReturnType<typeof setTimeout>>()
     const [countriesDialogOpen, setCountriesDialogOpen] = React.useState(false)
     const [newCountry, setNewCountry] = React.useState('')
+    const [deleteConfirm, setDeleteConfirm] = React.useState<{ id: string, name: string, type: 'person' | 'group' | 'company' | 'shortlist' } | null>(null)
+
+    const confirmDelete = () => {
+        if (!deleteConfirm) return
+        const { id, type } = deleteConfirm
+        if (type === 'person') deletePerson(id)
+        else if (type === 'group') deleteGroup(id)
+        else if (type === 'company') deleteCompany(id)
+        else if (type === 'shortlist') deleteShortlistPerson(id)
+        setDeleteConfirm(null)
+    }
 
     const [sortKey, setSortKey] = React.useState<string>('')
     const [sortDir, setSortDir] = React.useState<'asc' | 'desc'>('asc')
@@ -269,6 +286,10 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
         return currentBatchCount >= 5 ? String(max + 1) : String(Math.max(max, 1))
     }, [local.shortlist])
 
+    const addPersonToShortlist = (person: SourcePerson) => {
+        const next = { ...local, shortlist: [...local.shortlist, { id: generateId(), batch: nextBatch, name: person.name, linkedinUrl: person.linkedinUrl, source: person.source, status: person.status, notes: person.notes }] }
+        save(next)
+    }
     const addShortlistPerson = () => {
         const next = { ...local, shortlist: [...local.shortlist, { id: generateId(), batch: nextBatch, name: '', linkedinUrl: '', source: '', status: 'new' as PersonStatus, notes: '' }] }
         save(next)
@@ -416,9 +437,14 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                                         </TableCell>
                                         <TableCell sx={cellSx}><InlineInput value={p.notes} onChange={v => updatePerson(p.id, { notes: v })} placeholder="..." /></TableCell>
                                         <TableCell sx={cellSx}>
-                                            <IconButton size="small" onClick={() => deletePerson(p.id)} sx={{ color: 'text.secondary', '&:hover': { color: 'error.main' } }}>
-                                                <DeleteRoundedIcon sx={{ fontSize: '0.9rem' }} />
-                                            </IconButton>
+                                            <Box sx={{ display: 'flex', gap: 0.25 }}>
+                                                <IconButton size="small" onClick={() => addPersonToShortlist(p)} sx={{ color: 'text.secondary', '&:hover': { color: 'warning.main' } }} title="В Топ-5">
+                                                    <StarRoundedIcon sx={{ fontSize: '0.9rem' }} />
+                                                </IconButton>
+                                                <IconButton size="small" onClick={() => setDeleteConfirm({ id: p.id, name: p.name || 'без имени', type: 'person' })} sx={{ color: 'text.secondary', '&:hover': { color: 'error.main' } }}>
+                                                    <DeleteRoundedIcon sx={{ fontSize: '0.9rem' }} />
+                                                </IconButton>
+                                            </Box>
                                         </TableCell>
                                     </TableRow>
                                 ))}
@@ -527,7 +553,7 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                                         </TableCell>
                                         <TableCell sx={cellSx}><InlineInput value={g.notes} onChange={v => updateGroup(g.id, { notes: v })} placeholder="..." /></TableCell>
                                         <TableCell sx={cellSx}>
-                                            <IconButton size="small" onClick={() => deleteGroup(g.id)} sx={{ color: 'text.secondary', '&:hover': { color: 'error.main' } }}>
+                                            <IconButton size="small" onClick={() => setDeleteConfirm({ id: g.id, name: g.name || 'без названия', type: 'group' })} sx={{ color: 'text.secondary', '&:hover': { color: 'error.main' } }}>
                                                 <DeleteRoundedIcon sx={{ fontSize: '0.9rem' }} />
                                             </IconButton>
                                         </TableCell>
@@ -606,7 +632,7 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                                                     </TableCell>
                                                     <TableCell sx={cellSx}><InlineInput value={s.notes} onChange={v => updateShortlistPerson(s.id, { notes: v })} placeholder="..." /></TableCell>
                                                     <TableCell sx={cellSx}>
-                                                        <IconButton size="small" onClick={() => deleteShortlistPerson(s.id)} sx={{ color: 'text.secondary', '&:hover': { color: 'error.main' } }}>
+                                                        <IconButton size="small" onClick={() => setDeleteConfirm({ id: s.id, name: s.name || 'без имени', type: 'shortlist' })} sx={{ color: 'text.secondary', '&:hover': { color: 'error.main' } }}>
                                                             <DeleteRoundedIcon sx={{ fontSize: '0.9rem' }} />
                                                         </IconButton>
                                                     </TableCell>
@@ -684,7 +710,7 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                                         </TableCell>
                                         <TableCell sx={cellSx}><InlineInput value={c.notes} onChange={v => updateCompany(c.id, { notes: v })} placeholder="..." /></TableCell>
                                         <TableCell sx={cellSx}>
-                                            <IconButton size="small" onClick={() => deleteCompany(c.id)} sx={{ color: 'text.secondary', '&:hover': { color: 'error.main' } }}>
+                                            <IconButton size="small" onClick={() => setDeleteConfirm({ id: c.id, name: c.name || 'без названия', type: 'company' })} sx={{ color: 'text.secondary', '&:hover': { color: 'error.main' } }}>
                                                 <DeleteRoundedIcon sx={{ fontSize: '0.9rem' }} />
                                             </IconButton>
                                         </TableCell>
@@ -695,6 +721,19 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                     </TableContainer>
                 </Box>
             )}
+
+            <Dialog open={!!deleteConfirm} onClose={() => setDeleteConfirm(null)} PaperProps={{ sx: { backgroundColor: 'background.paper', minWidth: 300 } }}>
+                <DialogTitle sx={{ fontSize: '0.95rem', fontWeight: 700 }}>Удалить?</DialogTitle>
+                <DialogContent>
+                    <Typography sx={{ fontSize: '0.85rem', color: 'text.secondary' }}>
+                        {deleteConfirm?.name}
+                    </Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setDeleteConfirm(null)} sx={{ textTransform: 'none' }}>Отмена</Button>
+                    <Button onClick={confirmDelete} color="error" variant="contained" sx={{ textTransform: 'none' }}>Удалить</Button>
+                </DialogActions>
+            </Dialog>
 
             <Dialog open={countriesDialogOpen} onClose={() => setCountriesDialogOpen(false)} PaperProps={{ sx: { backgroundColor: 'background.paper', minWidth: 320 } }}>
                 <DialogTitle sx={{ fontSize: '1rem', fontWeight: 700 }}>Управление странами</DialogTitle>
