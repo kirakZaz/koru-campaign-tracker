@@ -17,10 +17,10 @@ interface ProgressData {
     taskOverrides: Record<string, unknown>
     team: unknown[]
     overviewOverrides: Record<string, { en: string, ru: string }>
-    sources: { people: unknown[], groups: unknown[], companies: unknown[] }
+    sources: { people: unknown[], groups: unknown[], companies: unknown[], shortlist: unknown[] }
 }
 
-const DEFAULT_DATA: ProgressData = { completedTasks: {}, startDate: null, notes: {}, taskOverrides: {}, team: [], overviewOverrides: {}, sources: { people: [], groups: [], companies: [] } }
+const DEFAULT_DATA: ProgressData = { completedTasks: {}, startDate: null, notes: {}, taskOverrides: {}, team: [], overviewOverrides: {}, sources: { people: [], groups: [], companies: [], shortlist: [] } }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
     const redis = getRedis()

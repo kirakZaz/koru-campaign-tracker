@@ -20,11 +20,13 @@ import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded'
 import PeopleRoundedIcon from '@mui/icons-material/PeopleRounded'
 import GroupsRoundedIcon from '@mui/icons-material/GroupsRounded'
 import BusinessRoundedIcon from '@mui/icons-material/BusinessRounded'
+import StarRoundedIcon from '@mui/icons-material/StarRounded'
 import type {
     SourcesViewProps,
     SourcePerson,
     SourceGroup,
     SourceCompany,
+    ShortlistPerson,
     PersonStatus,
     GroupStatus,
     CompanyStatus,
@@ -137,6 +139,37 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
         save(next)
     }
 
+    // --- Shortlist ---
+    const nextBatch = React.useMemo(() => {
+        const batches = local.shortlist.map(s => parseInt(s.batch) || 0)
+        const max = batches.length > 0 ? Math.max(...batches) : 0
+        const currentBatchCount = local.shortlist.filter(s => s.batch === String(max)).length
+        return currentBatchCount >= 5 ? String(max + 1) : String(Math.max(max, 1))
+    }, [local.shortlist])
+
+    const addShortlistPerson = () => {
+        const next = { ...local, shortlist: [...local.shortlist, { id: generateId(), batch: nextBatch, name: '', linkedinUrl: '', source: '', status: 'new' as PersonStatus, notes: '' }] }
+        save(next)
+    }
+    const updateShortlistPerson = (id: string, patch: Partial<ShortlistPerson>) => {
+        const next = { ...local, shortlist: local.shortlist.map(s => s.id === id ? { ...s, ...patch } : s) }
+        save(next)
+    }
+    const deleteShortlistPerson = (id: string) => {
+        const next = { ...local, shortlist: local.shortlist.filter(s => s.id !== id) }
+        save(next)
+    }
+
+    const shortlistByBatch = React.useMemo(() => {
+        const map: Record<string, typeof local.shortlist> = {}
+        for (const s of local.shortlist) {
+            const b = s.batch || '1'
+            if (!map[b]) map[b] = []
+            map[b].push(s)
+        }
+        return Object.entries(map).sort(([a], [b]) => (parseInt(a) || 0) - (parseInt(b) || 0))
+    }, [local.shortlist])
+
     // --- Companies ---
     const addCompany = () => {
         const next = { ...local, companies: [...local.companies, { id: generateId(), name: '', website: '', segment: 'small_agency' as IcpSegment, size: '', contactPerson: '', status: 'research' as CompanyStatus, notes: '' }] }
@@ -166,6 +199,7 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                 <Tab icon={<PeopleRoundedIcon sx={{ fontSize: '1rem' }} />} iconPosition="start" label={`Люди (${local.people.length})`} />
                 <Tab icon={<GroupsRoundedIcon sx={{ fontSize: '1rem' }} />} iconPosition="start" label={`Группы (${local.groups.length})`} />
                 <Tab icon={<BusinessRoundedIcon sx={{ fontSize: '1rem' }} />} iconPosition="start" label={`Компании (${local.companies.length})`} />
+                <Tab icon={<StarRoundedIcon sx={{ fontSize: '1rem' }} />} iconPosition="start" label={`Топ-5 (${local.shortlist.length})`} />
             </Tabs>
 
             {tab === 0 && (
@@ -321,6 +355,88 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                             </TableBody>
                         </Table>
                     </TableContainer>
+                </Box>
+            )}
+
+            {tab === 3 && (
+                <Box>
+                    <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 1 }}>
+                        <Button size="small" startIcon={<AddRoundedIcon />} onClick={addShortlistPerson} variant="outlined" sx={{ textTransform: 'none', fontSize: '0.8rem' }}>
+                            Добавить
+                        </Button>
+                    </Box>
+                    {local.shortlist.length === 0 ? (
+                        <Box sx={{ border: '1px solid', borderColor: 'divider', borderRadius: 1, py: 4, textAlign: 'center' }}>
+                            <Typography sx={{ color: 'text.secondary', fontSize: '0.85rem' }}>
+                                Пока пусто. Добавляй лучших людей — они автоматически группируются по 5.
+                            </Typography>
+                        </Box>
+                    ) : (
+                        shortlistByBatch.map(([batch, people]) => (
+                            <Box key={batch} sx={{ mb: 3 }}>
+                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
+                                    <Chip
+                                        label={`Группа ${batch}`}
+                                        size="small"
+                                        sx={{ fontWeight: 700, fontSize: '0.75rem', backgroundColor: '#3fb68e22', color: '#3fb68e', border: '1px solid #3fb68e44' }}
+                                    />
+                                    <Typography sx={{ fontSize: '0.75rem', color: 'text.secondary' }}>
+                                        {people.length}/5
+                                    </Typography>
+                                </Box>
+                                <TableContainer sx={{ border: '1px solid', borderColor: 'divider', borderRadius: 1 }}>
+                                    <Table size="small">
+                                        <TableHead>
+                                            <TableRow sx={{ backgroundColor: '#ffffff06' }}>
+                                                <TableCell sx={{ ...headCellSx, width: 60 }}>Группа</TableCell>
+                                                <TableCell sx={headCellSx}>Имя</TableCell>
+                                                <TableCell sx={headCellSx}>LinkedIn</TableCell>
+                                                <TableCell sx={headCellSx}>Источник</TableCell>
+                                                <TableCell sx={headCellSx}>Статус</TableCell>
+                                                <TableCell sx={headCellSx}>Заметки</TableCell>
+                                                <TableCell sx={{ ...headCellSx, width: 40 }} />
+                                            </TableRow>
+                                        </TableHead>
+                                        <TableBody>
+                                            {people.map((s) => (
+                                                <TableRow key={s.id} sx={{ '&:hover': { backgroundColor: '#ffffff04' } }}>
+                                                    <TableCell sx={cellSx}>
+                                                        <Select size="small" value={s.batch} onChange={e => updateShortlistPerson(s.id, { batch: e.target.value })} sx={{ ...selectSx, minWidth: 50 }}>
+                                                            {Array.from({ length: 20 }, (_, i) => String(i + 1)).map(v => (
+                                                                <MenuItem key={v} value={v} sx={{ fontSize: '0.8rem' }}>{v}</MenuItem>
+                                                            ))}
+                                                        </Select>
+                                                    </TableCell>
+                                                    <TableCell sx={cellSx}><InlineInput value={s.name} onChange={v => updateShortlistPerson(s.id, { name: v })} placeholder="Имя" /></TableCell>
+                                                    <TableCell sx={cellSx}><InlineInput value={s.linkedinUrl} onChange={v => updateShortlistPerson(s.id, { linkedinUrl: v })} placeholder="URL" /></TableCell>
+                                                    <TableCell sx={cellSx}><InlineInput value={s.source} onChange={v => updateShortlistPerson(s.id, { source: v })} placeholder="Откуда" /></TableCell>
+                                                    <TableCell sx={cellSx}>
+                                                        <Select
+                                                            size="small"
+                                                            value={s.status}
+                                                            onChange={e => updateShortlistPerson(s.id, { status: e.target.value as PersonStatus })}
+                                                            sx={selectSx}
+                                                            renderValue={(val) => <StatusChip {...PERSON_STATUS_LABELS[val as PersonStatus]} />}
+                                                        >
+                                                            {Object.entries(PERSON_STATUS_LABELS).map(([k, v]) => (
+                                                                <MenuItem key={k} value={k} sx={{ fontSize: '0.8rem' }}><StatusChip {...v} /></MenuItem>
+                                                            ))}
+                                                        </Select>
+                                                    </TableCell>
+                                                    <TableCell sx={cellSx}><InlineInput value={s.notes} onChange={v => updateShortlistPerson(s.id, { notes: v })} placeholder="..." /></TableCell>
+                                                    <TableCell sx={cellSx}>
+                                                        <IconButton size="small" onClick={() => deleteShortlistPerson(s.id)} sx={{ color: 'text.secondary', '&:hover': { color: 'error.main' } }}>
+                                                            <DeleteRoundedIcon sx={{ fontSize: '0.9rem' }} />
+                                                        </IconButton>
+                                                    </TableCell>
+                                                </TableRow>
+                                            ))}
+                                        </TableBody>
+                                    </Table>
+                                </TableContainer>
+                            </Box>
+                        ))
+                    )}
                 </Box>
             )}
 

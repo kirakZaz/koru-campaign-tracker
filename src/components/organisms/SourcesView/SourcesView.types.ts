@@ -38,10 +38,21 @@ export interface SourceCompany {
     notes: string
 }
 
+export interface ShortlistPerson {
+    id: string
+    batch: string
+    name: string
+    linkedinUrl: string
+    source: string
+    status: PersonStatus
+    notes: string
+}
+
 export interface SourcesData {
     people: SourcePerson[]
     groups: SourceGroup[]
     companies: SourceCompany[]
+    shortlist: ShortlistPerson[]
 }
 
 export interface SourcesViewProps {

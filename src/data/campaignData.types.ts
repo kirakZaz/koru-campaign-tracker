@@ -65,6 +65,7 @@ export interface SourcesData {
     people: unknown[]
     groups: unknown[]
     companies: unknown[]
+    shortlist: unknown[]
 }
 
 export interface ProgressData {
