@@ -401,7 +401,16 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                                 {sorted(filtered(local.people)).map((p) => (
                                     <TableRow key={p.id} sx={{ '&:hover': { backgroundColor: '#ffffff04' } }}>
                                         <TableCell sx={cellSx}><InlineInput value={p.name} onChange={v => updatePerson(p.id, { name: v })} placeholder="Имя" /></TableCell>
-                                        <TableCell sx={cellSx}><InlineInput value={p.linkedinUrl} onChange={v => updatePerson(p.id, { linkedinUrl: v })} placeholder="URL" /></TableCell>
+                                        <TableCell sx={cellSx}>
+                                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.25 }}>
+                                                <InlineInput value={p.linkedinUrl} onChange={v => updatePerson(p.id, { linkedinUrl: v })} placeholder="URL" />
+                                                {p.linkedinUrl && (
+                                                    <IconButton size="small" onClick={() => window.open(p.linkedinUrl.startsWith('http') ? p.linkedinUrl : `https://${p.linkedinUrl}`, '_blank')} sx={{ color: 'primary.main', p: 0.25 }}>
+                                                        <OpenInNewRoundedIcon sx={{ fontSize: '0.85rem' }} />
+                                                    </IconButton>
+                                                )}
+                                            </Box>
+                                        </TableCell>
                                         <TableCell sx={cellSx}>
                                             <Select size="small" value={p.country || ''} onChange={e => updatePerson(p.id, { country: e.target.value })} sx={selectSx} displayEmpty>
                                                 <MenuItem value="" sx={{ fontSize: '0.8rem', color: '#8b949e' }}>—</MenuItem>
