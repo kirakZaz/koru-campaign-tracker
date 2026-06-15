@@ -11,6 +11,7 @@ import ContentCopyRoundedIcon from '@mui/icons-material/ContentCopyRounded'
 import CheckRoundedIcon from '@mui/icons-material/CheckRounded'
 import LightbulbOutlinedIcon from '@mui/icons-material/LightbulbOutlined'
 import WarningAmberRoundedIcon from '@mui/icons-material/WarningAmberRounded'
+import ChatBubbleOutlineRoundedIcon from '@mui/icons-material/ChatBubbleOutlineRounded'
 import Paper from '@mui/material/Paper'
 import AssigneeChip from '@/components/atoms/AssigneeChip/AssigneeChip'
 import type { TaskCardProps } from './TaskCard.types'
@@ -107,6 +108,9 @@ const TaskCard = React.memo(function TaskCard({ task, isTaskCompleted, onToggleT
                             <Box component="span" sx={styles.progressText}>
                                 {completedSubtasks}/{totalSubtasks}
                             </Box>
+                        )}
+                        {!expanded && (task.tip || task.warning) && (
+                            <ChatBubbleOutlineRoundedIcon sx={{ fontSize: '0.85rem', color: task.warning ? 'warning.main' : 'info.main', ml: 0.5 }} />
                         )}
                     </Box>
                 </Box>
