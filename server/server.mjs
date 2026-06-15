@@ -69,6 +69,8 @@ app.patch('/api/progress', (req, res) => {
                 data.overviewOverrides = {}
             }
             data.overviewOverrides[req.body.sectionKey] = req.body.value
+        } else if (action === 'set-sources') {
+            data.sources = req.body.sources
         }
 
         saveProgress(data)
