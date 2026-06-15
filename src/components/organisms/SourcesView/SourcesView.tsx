@@ -286,7 +286,9 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
         return currentBatchCount >= 5 ? String(max + 1) : String(Math.max(max, 1))
     }, [local.shortlist])
 
+    const isInShortlist = (person: SourcePerson) => local.shortlist.some(s => (s.linkedinUrl && s.linkedinUrl === person.linkedinUrl) || (s.name && s.name === person.name))
     const addPersonToShortlist = (person: SourcePerson) => {
+        if (isInShortlist(person)) return
         const next = { ...local, shortlist: [...local.shortlist, { id: generateId(), batch: nextBatch, name: person.name, linkedinUrl: person.linkedinUrl, source: person.source, status: person.status, notes: person.notes }] }
         save(next)
     }
@@ -438,7 +440,7 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                                         <TableCell sx={cellSx}><InlineInput value={p.notes} onChange={v => updatePerson(p.id, { notes: v })} placeholder="..." /></TableCell>
                                         <TableCell sx={cellSx}>
                                             <Box sx={{ display: 'flex', gap: 0.25 }}>
-                                                <IconButton size="small" onClick={() => addPersonToShortlist(p)} sx={{ color: local.shortlist.some(s => s.linkedinUrl && s.linkedinUrl === p.linkedinUrl || s.name === p.name) ? 'warning.main' : 'text.secondary', '&:hover': { color: 'warning.main' } }} title="В Топ-5">
+                                                <IconButton size="small" onClick={() => addPersonToShortlist(p)} sx={{ color: isInShortlist(p) ? 'warning.main' : 'text.secondary', '&:hover': { color: 'warning.main' } }} title="В Топ-5">
                                                     <StarRoundedIcon sx={{ fontSize: '0.9rem' }} />
                                                 </IconButton>
                                                 <IconButton size="small" onClick={() => setDeleteConfirm({ id: p.id, name: p.name || 'без имени', type: 'person' })} sx={{ color: 'text.secondary', '&:hover': { color: 'error.main' } }}>
