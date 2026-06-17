@@ -42,8 +42,24 @@ import type {
     CompanyStatus,
     IcpSegment,
     IcpPriority,
-    AccountName
+    AccountName,
+    DmStatus,
+    ConnectionStatus
 } from './SourcesView.types'
+
+const DM_STATUS_LABELS: Record<DmStatus, { label: string, color: string }> = {
+    not_sent: { label: '--', color: '#8b949e' },
+    sent: { label: 'Sent', color: '#d29922' },
+    replied: { label: 'Replied', color: '#3fb68e' },
+    no_reply: { label: 'No reply', color: '#f85149' }
+}
+
+const CONNECTION_STATUS_LABELS: Record<ConnectionStatus, { label: string, color: string }> = {
+    not_sent: { label: '--', color: '#8b949e' },
+    sent: { label: 'Sent', color: '#d29922' },
+    accepted: { label: 'Accepted', color: '#3fb68e' },
+    declined: { label: 'Declined', color: '#f85149' }
+}
 
 const PERSON_STATUS_LABELS: Record<PersonStatus, { label: string, color: string }> = {
     new: { label: 'New', color: '#8b949e' },
@@ -292,12 +308,12 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
             const next = { ...local, shortlist: local.shortlist.filter(s => !((s.linkedinUrl && s.linkedinUrl === person.linkedinUrl) || (s.name && s.name === person.name))) }
             save(next)
         } else {
-            const next = { ...local, shortlist: [...local.shortlist, { id: generateId(), batch: nextBatch, name: person.name, linkedinUrl: person.linkedinUrl, priority: person.priority, source: person.source, status: person.status, notes: person.notes }] }
+            const next = { ...local, shortlist: [...local.shortlist, { id: generateId(), batch: nextBatch, name: person.name, linkedinUrl: person.linkedinUrl, priority: person.priority, dmStatus: 'not_sent' as DmStatus, connectionStatus: 'not_sent' as ConnectionStatus, source: person.source, status: person.status, notes: person.notes }] }
             save(next)
         }
     }
     const addShortlistPerson = () => {
-        const next = { ...local, shortlist: [...local.shortlist, { id: generateId(), batch: nextBatch, name: '', linkedinUrl: '', priority: 'B' as IcpPriority, source: '', status: 'new' as PersonStatus, notes: '' }] }
+        const next = { ...local, shortlist: [...local.shortlist, { id: generateId(), batch: nextBatch, name: '', linkedinUrl: '', priority: 'B' as IcpPriority, dmStatus: 'not_sent' as DmStatus, connectionStatus: 'not_sent' as ConnectionStatus, source: '', status: 'new' as PersonStatus, notes: '' }] }
         save(next)
     }
     const updateShortlistPerson = (id: string, patch: Partial<ShortlistPerson>) => {
@@ -614,6 +630,8 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                                                 <TableCell sx={headCellSx}>Имя</TableCell>
                                                 <TableCell sx={headCellSx}>LinkedIn</TableCell>
                                                 <TableCell sx={headCellSx}>Priority</TableCell>
+                                                <TableCell sx={headCellSx}>DM</TableCell>
+                                                <TableCell sx={headCellSx}>Запрос</TableCell>
                                                 <TableCell sx={headCellSx}>Источник</TableCell>
                                                 <TableCell sx={headCellSx}>Статус</TableCell>
                                                 <TableCell sx={headCellSx}>Заметки</TableCell>
@@ -636,6 +654,32 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                                                         <Select size="small" value={s.priority || 'B'} onChange={e => updateShortlistPerson(s.id, { priority: e.target.value as IcpPriority })} sx={selectSx}>
                                                             {(['A', 'B', 'C'] as IcpPriority[]).map(v => (
                                                                 <MenuItem key={v} value={v} sx={{ fontSize: '0.8rem', fontWeight: 700, color: v === 'A' ? '#3fb68e' : v === 'B' ? '#d29922' : '#8b949e' }}>{v}</MenuItem>
+                                                            ))}
+                                                        </Select>
+                                                    </TableCell>
+                                                    <TableCell sx={cellSx}>
+                                                        <Select
+                                                            size="small"
+                                                            value={s.dmStatus || 'not_sent'}
+                                                            onChange={e => updateShortlistPerson(s.id, { dmStatus: e.target.value as DmStatus })}
+                                                            sx={selectSx}
+                                                            renderValue={(val) => <StatusChip {...DM_STATUS_LABELS[val as DmStatus]} />}
+                                                        >
+                                                            {Object.entries(DM_STATUS_LABELS).map(([k, v]) => (
+                                                                <MenuItem key={k} value={k} sx={{ fontSize: '0.8rem' }}><StatusChip {...v} /></MenuItem>
+                                                            ))}
+                                                        </Select>
+                                                    </TableCell>
+                                                    <TableCell sx={cellSx}>
+                                                        <Select
+                                                            size="small"
+                                                            value={s.connectionStatus || 'not_sent'}
+                                                            onChange={e => updateShortlistPerson(s.id, { connectionStatus: e.target.value as ConnectionStatus })}
+                                                            sx={selectSx}
+                                                            renderValue={(val) => <StatusChip {...CONNECTION_STATUS_LABELS[val as ConnectionStatus]} />}
+                                                        >
+                                                            {Object.entries(CONNECTION_STATUS_LABELS).map(([k, v]) => (
+                                                                <MenuItem key={k} value={k} sx={{ fontSize: '0.8rem' }}><StatusChip {...v} /></MenuItem>
                                                             ))}
                                                         </Select>
                                                     </TableCell>

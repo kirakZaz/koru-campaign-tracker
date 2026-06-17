@@ -41,12 +41,17 @@ export interface SourceCompany {
     notes: string
 }
 
+export type DmStatus = 'not_sent' | 'sent' | 'replied' | 'no_reply'
+export type ConnectionStatus = 'not_sent' | 'sent' | 'accepted' | 'declined'
+
 export interface ShortlistPerson {
     id: string
     batch: string
     name: string
     linkedinUrl: string
     priority: IcpPriority
+    dmStatus: DmStatus
+    connectionStatus: ConnectionStatus
     source: string
     status: PersonStatus
     notes: string
