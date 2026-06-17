@@ -46,6 +46,7 @@ export interface ShortlistPerson {
     batch: string
     name: string
     linkedinUrl: string
+    priority: IcpPriority
     source: string
     status: PersonStatus
     notes: string

@@ -292,12 +292,12 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
             const next = { ...local, shortlist: local.shortlist.filter(s => !((s.linkedinUrl && s.linkedinUrl === person.linkedinUrl) || (s.name && s.name === person.name))) }
             save(next)
         } else {
-            const next = { ...local, shortlist: [...local.shortlist, { id: generateId(), batch: nextBatch, name: person.name, linkedinUrl: person.linkedinUrl, source: person.source, status: person.status, notes: person.notes }] }
+            const next = { ...local, shortlist: [...local.shortlist, { id: generateId(), batch: nextBatch, name: person.name, linkedinUrl: person.linkedinUrl, priority: person.priority, source: person.source, status: person.status, notes: person.notes }] }
             save(next)
         }
     }
     const addShortlistPerson = () => {
-        const next = { ...local, shortlist: [...local.shortlist, { id: generateId(), batch: nextBatch, name: '', linkedinUrl: '', source: '', status: 'new' as PersonStatus, notes: '' }] }
+        const next = { ...local, shortlist: [...local.shortlist, { id: generateId(), batch: nextBatch, name: '', linkedinUrl: '', priority: 'B' as IcpPriority, source: '', status: 'new' as PersonStatus, notes: '' }] }
         save(next)
     }
     const updateShortlistPerson = (id: string, patch: Partial<ShortlistPerson>) => {
@@ -613,6 +613,7 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                                                 <TableCell sx={{ ...headCellSx, width: 60 }}>Группа</TableCell>
                                                 <TableCell sx={headCellSx}>Имя</TableCell>
                                                 <TableCell sx={headCellSx}>LinkedIn</TableCell>
+                                                <TableCell sx={headCellSx}>Priority</TableCell>
                                                 <TableCell sx={headCellSx}>Источник</TableCell>
                                                 <TableCell sx={headCellSx}>Статус</TableCell>
                                                 <TableCell sx={headCellSx}>Заметки</TableCell>
@@ -631,6 +632,13 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                                                     </TableCell>
                                                     <TableCell sx={cellSx}><InlineInput value={s.name} onChange={v => updateShortlistPerson(s.id, { name: v })} placeholder="Имя" /></TableCell>
                                                     <TableCell sx={cellSx}><InlineInput value={s.linkedinUrl} onChange={v => updateShortlistPerson(s.id, { linkedinUrl: v })} placeholder="URL" /></TableCell>
+                                                    <TableCell sx={cellSx}>
+                                                        <Select size="small" value={s.priority || 'B'} onChange={e => updateShortlistPerson(s.id, { priority: e.target.value as IcpPriority })} sx={selectSx}>
+                                                            {(['A', 'B', 'C'] as IcpPriority[]).map(v => (
+                                                                <MenuItem key={v} value={v} sx={{ fontSize: '0.8rem', fontWeight: 700, color: v === 'A' ? '#3fb68e' : v === 'B' ? '#d29922' : '#8b949e' }}>{v}</MenuItem>
+                                                            ))}
+                                                        </Select>
+                                                    </TableCell>
                                                     <TableCell sx={cellSx}><InlineInput value={s.source} onChange={v => updateShortlistPerson(s.id, { source: v })} placeholder="Откуда" /></TableCell>
                                                     <TableCell sx={cellSx}>
                                                         <Select
