@@ -21,18 +21,22 @@ import type { SettingsDialogProps } from './SettingsDialog.types'
 import { styles } from './SettingsDialog.styles'
 
 const TIMEZONES = [
-    { value: 'Europe/Moscow', label: 'Москва (UTC+3)' },
-    { value: 'Europe/Kiev', label: 'Киев (UTC+3)' },
-    { value: 'Europe/Berlin', label: 'Берлин (UTC+2)' },
-    { value: 'Europe/London', label: 'Лондон (UTC+1)' },
-    { value: 'Europe/Istanbul', label: 'Стамбул (UTC+3)' },
-    { value: 'America/New_York', label: 'Нью-Йорк (UTC-4)' },
-    { value: 'America/Los_Angeles', label: 'Лос-Анджелес (UTC-7)' },
-    { value: 'Asia/Dubai', label: 'Дубай (UTC+4)' },
-    { value: 'Asia/Jerusalem', label: 'Иерусалим (UTC+3)' },
-    { value: 'Asia/Bangkok', label: 'Бангкок (UTC+7)' },
-    { value: 'Asia/Tokyo', label: 'Токио (UTC+9)' },
-    { value: 'Australia/Sydney', label: 'Сидней (UTC+10)' },
+    { value: 'Europe/Lisbon', label: 'Лиссабон (WET, UTC+0 / +1 летом)' },
+    { value: 'Europe/London', label: 'Лондон (GMT, UTC+0 / +1 летом)' },
+    { value: 'Europe/Berlin', label: 'Берлин (CET, UTC+1 / +2 летом)' },
+    { value: 'Europe/Paris', label: 'Париж (CET, UTC+1 / +2 летом)' },
+    { value: 'Europe/Kiev', label: 'Киев (EET, UTC+2 / +3 летом)' },
+    { value: 'Europe/Moscow', label: 'Москва (MSK, UTC+3)' },
+    { value: 'Europe/Istanbul', label: 'Стамбул (TRT, UTC+3)' },
+    { value: 'Asia/Jerusalem', label: 'Иерусалим (IST, UTC+2 / +3 летом)' },
+    { value: 'Asia/Dubai', label: 'Дубай (GST, UTC+4)' },
+    { value: 'Asia/Kolkata', label: 'Индия (IST, UTC+5:30)' },
+    { value: 'Asia/Bangkok', label: 'Бангкок (ICT, UTC+7)' },
+    { value: 'Asia/Tokyo', label: 'Токио (JST, UTC+9)' },
+    { value: 'Australia/Sydney', label: 'Сидней (AEST, UTC+10 / +11 летом)' },
+    { value: 'America/New_York', label: 'Нью-Йорк (EST, UTC-5 / -4 летом)' },
+    { value: 'America/Chicago', label: 'Чикаго (CST, UTC-6 / -5 летом)' },
+    { value: 'America/Los_Angeles', label: 'Лос-Анджелес (PST, UTC-8 / -7 летом)' },
 ]
 
 const REMINDER_TIMES = [
@@ -41,9 +45,9 @@ const REMINDER_TIMES = [
 ]
 
 const DEFAULT_TEAM: TeamMember[] = [
-    { name: 'Кира', assigneeKey: 'Кира' as Assignee, email: '', timezone: 'Europe/Moscow', reminderTime: '09:00', remindersEnabled: false },
-    { name: 'Настя', assigneeKey: 'Настя' as Assignee, email: '', timezone: 'Europe/Moscow', reminderTime: '09:00', remindersEnabled: false },
-    { name: 'Макс', assigneeKey: 'Макс' as Assignee, email: '', timezone: 'Europe/Moscow', reminderTime: '09:00', remindersEnabled: false },
+    { name: 'Кира', assigneeKey: 'Кира' as Assignee, email: '', timezone: 'Europe/Lisbon', reminderTime: '09:00', remindersEnabled: false },
+    { name: 'Настя', assigneeKey: 'Настя' as Assignee, email: '', timezone: 'Europe/Lisbon', reminderTime: '09:00', remindersEnabled: false },
+    { name: 'Макс', assigneeKey: 'Макс' as Assignee, email: '', timezone: 'Asia/Kolkata', reminderTime: '09:00', remindersEnabled: false },
 ]
 
 const SettingsDialog = React.memo(function SettingsDialog({
