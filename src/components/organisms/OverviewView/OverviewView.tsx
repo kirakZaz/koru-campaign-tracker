@@ -13,7 +13,7 @@ const content = {
         subtitle: 'What we do, who we\'re for, how to talk about it. Keep it open.',
         whatIs: {
             heading: 'KORU in one sentence',
-            text: 'You paste a URL. KORU audits the site, finds keywords, clusters them, spots gaps, writes briefs, and turns it all into tasks. One tool instead of four. Five minutes instead of four hours.'
+            text: 'You paste a URL. KORU audits the site, then lets you check your GEO score (how citable each page is to AI engines), monitor AI brand visibility across OpenAI and Gemini, run an agent readiness check, find keyword opportunities with intent classification, generate content briefs and drafts, and turn every finding into a task. One platform for SEO in the age of AI search.'
         },
         whoFor: {
             heading: 'Who we\'re building for',
@@ -30,71 +30,77 @@ const content = {
                 'You get 2,000 keywords from a tool. Now what? Open a spreadsheet, spend 3 hours grouping them by hand. Then open another app to write briefs. Then another for tasks.',
                 'Three subscriptions that don\'t know about each other. $250/mo for data silos.',
                 'You run an audit. 47 issues. What\'s the priority? Which ones actually matter? Export to CSV, figure it out yourself.',
-                'The gap isn\'t data. Everyone has data. The gap is: what do I do with it? That step is still manual everywhere.'
+                'The gap isn\'t data. Everyone has data. The gap is: what do I do with it? That step is still manual everywhere.',
+                'Even after all that work — 48% of Google searches now show an AI Overview above the #1 organic result. Organic CTR drops 34.5% when AI Overview appears. Only 38% of AI-cited pages overlap with the traditional top-10. You can rank first and be invisible to the AI answer sitting above you. The question isn\'t just "where do I rank?" anymore. It\'s "am I even in the AI answer?"'
             ]
         },
         how: {
             heading: 'What happens when you paste a URL',
             steps: [
-                { step: 'Site audit', desc: 'We crawl the pages, check titles, metas, headings, speed, mobile, Core Web Vitals. Quick health check.' },
-                { step: 'AI reads it', desc: 'No more scrolling through error tables. AI says: "Your main problem is X. Fix Y first. Here\'s why."' },
-                { step: 'Keyword discovery', desc: 'Pulls hundreds of keywords with volume, difficulty, and intent. Automatically.' },
-                { step: 'Clustering', desc: 'Groups keywords into topics. Not a flat list — actual clusters you can act on.' },
-                { step: 'Gap analysis', desc: 'Maps clusters to your pages. Shows what\'s covered, what\'s missing, where to write.' },
-                { step: 'Briefs', desc: 'One click → brief based on real top-5 Google results for that keyword. Not generic AI filler.' },
-                { step: 'Tasks', desc: 'Every finding becomes a task. With a link to where it came from. Assign, track, done.' }
+                { step: 'Site audit', desc: 'We crawl the pages, check titles, metas, headings, speed, mobile, Core Web Vitals. AI summarizes what matters and what to fix first.' },
+                { step: 'GEO score', desc: 'Check any page\'s AI-citation readiness: 14 rules covering FAQ schema, inverted pyramid lead, citation-worthy claims, entity density, AI crawler access. Score 0-100 with evidence per rule.' },
+                { step: 'AI Brand Visibility', desc: 'Does OpenAI or Gemini mention your brand? Per-provider trend charts, competitor detection, actionable recommendations that convert to tasks.' },
+                { step: 'Keyword discovery', desc: 'AI reads your site content first, then pulls keywords with volume, difficulty, and intent. Relevance gate filters out off-topic noise. Semantic clustering by meaning, not word overlap.' },
+                { step: 'Gap analysis', desc: 'Maps clusters to your pages. Shows what\'s covered, what\'s missing, where to write. Decision engine: OPTIMIZE, EXPAND, or CREATE.' },
+                { step: 'Briefs & drafts', desc: 'Brief based on real top-5 Google results. Full content draft via Claude AI — a working draft for editing, not a published article.' },
+                { step: 'Tasks', desc: 'Every finding becomes a task — from audit issues, keywords, backlinks, rank drops, AI brand recommendations. 9 source types. Assign, track, done.' }
             ]
         },
         keyFeatures: {
             heading: 'Why us (honestly)',
             subtitle: 'We checked. Here\'s what\'s actually true.',
             features: [
-                { name: 'Everything connects', desc: 'Audit finds a problem → keyword analysis finds the opportunity → brief gets written → task gets created. One flow. Other platforms have some of these features but in separate tabs you switch between manually. Here, diagnosis leads straight to action.' },
-                { name: 'AI does the grunt work', desc: 'Intent classification, clustering, prioritization, brief writing — all automated. You skip the spreadsheet phase entirely. Other tools give you data and say "good luck." We give you a plan.' },
-                { name: '$19 for the full thing', desc: 'Comparable setups elsewhere run $300+/mo. Our full platform starts at $19. We didn\'t strip features to get there — we just built for freelancers, not enterprises.' }
+                { name: 'Built for 2026 search', desc: 'GEO score measures how citable each page is to AI engines — 14 rules (FAQ schema, inverted pyramid, citation-worthy claims, entity density, AI crawler access). AI Brand Visibility tracks whether OpenAI and Gemini recommend your brand — per-provider trends, competitor detection, recommendations that convert to tasks. Agent Readiness checks if AI agents can discover your site (llms.txt, markdown negotiation, Content-Signal, JSON-LD). No other platform in this price range offers any of this.' },
+                { name: 'AI handles the analysis', desc: 'Intent classification, semantic clustering, relevance scoring, content briefs, content drafts — all through Claude AI. You skip the spreadsheet stage. Other tools give you data and say "figure it out." We give you a plan.' },
+                { name: '$0 for GEO + AI visibility. $19 for keywords.', desc: 'GEO score and AI Brand Visibility start at $0. Full keyword stack, rank tracking, and content briefs from $19. Comparable capability elsewhere runs $300+/mo across multiple subscriptions. We built for freelancers, not enterprises.' }
             ]
         },
         alsoIncludes: {
             heading: 'What else is in there',
             items: [
-                'Rank tracking — positions, SERP features (snippets, PAA), desktop + mobile, by country',
-                'Competitor gaps — show me keywords they rank for and I don\'t',
-                'Backlinks — who links to you, domain authority, which links you lost',
-                'AI brand monitoring — are you mentioned in ChatGPT/Gemini answers? (others offer this too — not unique to us, but it\'s included)',
-                'Google Search Console sync — pull your real click data',
-                'Agency kit — white-label PDFs, client portal, team roles',
-                'Agent readiness check — is your site ready for AI bots? (new space, few tools do this yet)'
+                'Rank tracking — daily checks, history graphs, SERP features, desktop + mobile, by country',
+                'AI Mode Rank Tracking — does Google AI Mode cite your domain for a tracked keyword? Per-keyword opt-in (PRO+)',
+                'Competitor gaps — keywords they rank for and you don\'t',
+                'Backlinks — new/lost links, domain authority, change timeline',
+                'Content drafts — full article drafts generated from keyword + brief via Claude AI (working drafts for editing, not final copy)',
+                'Google Search Console sync — real click data, impressions, CTR',
+                'Agency kit — white-label PDFs, client portal, team seats',
+                'Agent readiness — llms.txt check, markdown content negotiation, Content-Signal directives, JSON-LD coverage',
+                'llms.txt generator — AI generates a spec-compliant llms.txt for your site so AI agents can discover it'
             ]
         },
         strength: {
             heading: 'What to say and what NOT to say',
             points: [
-                'Don\'t say "best audit tool." Dedicated crawlers run 300+ checks. We run ~20. Ours is a health check, not a deep scan. That\'s fine — our users don\'t need 300 checks.',
-                'Do say "the tool that tells you what to do after the audit." That\'s the gap. Everyone has audits. Nobody connects them to action.',
+                'Don\'t say "best audit tool." Dedicated crawlers run 300+ checks. We run ~20 + AI analysis. That\'s fine — our users need clarity, not 300 checks.',
+                'Do say "the only platform in this price range that measures AI-citation readiness." That\'s the gap. Everyone audits for Google. Nobody measures whether AI engines can cite your pages. We do — 14 rules, per page, with evidence.',
                 'Do say "built for freelancers, not enterprises." That\'s not a weakness. That\'s a choice.',
-                'Do say "$19 for what costs $300 elsewhere." That\'s real.'
+                'Do say "$0 for GEO score + AI visibility. $19 for the full keyword stack." That\'s real.',
+                'Don\'t say "automatic GEO audit on every page." GEO Score is a separate check you run per page — not embedded in the base crawl.',
+                'Don\'t say "published articles" or "ready-to-publish." We generate content drafts — working material for editing, not final copy.',
+                'Don\'t say "Perplexity." That provider is not active yet. Say "OpenAI and Gemini" or "major AI engines."'
             ]
         },
         positioning: {
             heading: 'The pitch (memorize this)',
-            statement: 'SEO freelancers run an audit in one tool, research keywords in another, cluster them in a spreadsheet, write briefs in Google Docs, and track tasks in Asana. Five tools, nothing connected. KORU does it all in one place — audit to tasks — with AI handling the busywork. Starting at $19.',
-            tagline: 'From URL to keyword strategy in 5 minutes.',
+            statement: 'SEO freelancers optimize for Google rankings. But 48% of searches now show an AI answer first — and most SEO tools don\'t measure that at all. KORU is the SEO platform that audits for both. GEO score for AI-citation readiness. AI brand visibility across major engines. Agent readiness checks. Intent-first keywords. Content briefs and drafts. Everything connected — from finding to task. GEO score and AI monitoring start free. Full keyword stack from $19.',
+            tagline: 'Rank in Google. Get cited by AI.',
             notSaying: [
-                'Not a replacement for standalone data tools. Different thing. We connect the workflow.',
-                'Not the deepest audit on the market. The most connected one.',
-                'Not for Fortune 500. For the freelancer who\'s tired of spreadsheets.',
-                'AI brand visibility isn\'t our invention. But it\'s included in the platform, not a separate bill.'
+                'Not a replacement for standalone data tools. Different thing. We connect the workflow and add the AI-search layer nobody else has at this price.',
+                'Not the deepest audit on the market. The one that measures both Google readiness and AI-citation readiness.',
+                'Not for Fortune 500. For the freelancer who needs to answer "am I visible in AI search?" and doesn\'t have $300/mo for it.',
+                'GEO score is an on-demand check per page, not an automatic part of every crawl. Be honest about this.'
             ]
         },
         tone: {
             heading: 'How we sound',
             points: [
                 'Like a smart colleague, not a brochure. "Here\'s what I found" not "Unlock the power of..."',
-                'Numbers, always. "3-4 hours" hits harder than "a lot of time."',
-                'Industry words, not buzzwords. Say "clusters" and "briefs." Never say "leverage" or "synergy."',
-                'Ask questions in posts. "How long does yours take?" gets more replies than "Our tool saves time."',
-                'In comments: add something useful. A stat. A question. Never "Great post! Check out KORU."',
-                'About competitors: be straight. "They have more data. We have a better workflow." People respect that.'
+                'Numbers, always. "48% of searches show AI Overviews" hits harder than "AI is changing search."',
+                'Industry words, not buzzwords. Say "GEO score," "intent classification," "citation-worthy claims." Never say "leverage" or "synergy."',
+                'Ask questions in posts. "Do you know if AI engines cite your content?" gets more replies than "Our tool monitors AI."',
+                'In comments: add something useful. A stat about AI Overviews. A question about their workflow. Never "Great post! Check out KORU."',
+                'About competitors: be straight. "They have more data on classical SEO. We measure AI-citation readiness too — and they don\'t." People respect that.'
             ]
         },
     },
@@ -103,7 +109,7 @@ const content = {
         subtitle: 'Что делаем, для кого, как об этом говорить. Держи открытой.',
         whatIs: {
             heading: 'KORU в одном предложении',
-            text: 'Вставляешь URL. KORU проверяет сайт, находит ключевые слова, группирует их, показывает пробелы, пишет бриефы и превращает всё в задачи. Один инструмент вместо четырёх. Пять минут вместо четырёх часов.'
+            text: 'Вставляешь URL. KORU проверяет сайт, потом можно запустить GEO score (насколько страница цитируема AI-движками), мониторинг AI brand visibility через OpenAI и Gemini, проверку agent readiness, найти ключевые слова с классификацией по intent, сгенерировать брифы и черновики контента, и превратить каждую находку в задачу. Одна платформа для SEO в эпоху AI-поиска.'
         },
         whoFor: {
             heading: 'Для кого строим',
@@ -120,71 +126,77 @@ const content = {
                 'Получаешь 2,000 ключевиков. И что дальше? Открываешь таблицу, 3 часа группируешь руками. Потом в другой программе пишешь бриефы. Потом в третьей ведёшь задачи.',
                 'Три подписки, которые друг о друге не знают. $250/мес за разрозненные данные.',
                 'Запустил аудит. 47 проблем. Что из этого важно? Какой приоритет? Экспортируй в CSV, разбирайся сам.',
-                'Проблема не в данных. Данные есть у всех. Проблема: что с ними делать? Этот шаг везде ручной.'
+                'Проблема не в данных. Данные есть у всех. Проблема: что с ними делать? Этот шаг везде ручной.',
+                'И даже после всей этой работы — 48% поисков в Google теперь показывают AI Overview над первым органическим результатом. CTR первого результата падает на 34.5% когда появляется AI Overview. Только 38% страниц, которые цитирует AI, совпадают с классическим топ-10. Можно быть первым и быть невидимым для ответа, который висит над тобой. Вопрос уже не «где я в выдаче», а «я вообще в AI-ответе?»'
             ]
         },
         how: {
             heading: 'Что происходит, когда вставляешь URL',
             steps: [
-                { step: 'Аудит сайта', desc: 'Проходим по страницам — заголовки, мета, скорость, мобилка, Core Web Vitals. Быстрый чекап.' },
-                { step: 'AI разбирает результат', desc: 'Не надо листать таблицу ошибок. AI говорит: "Главная проблема — X. Начни с Y. Вот почему."' },
-                { step: 'Поиск keywords', desc: 'Сотни ключевых слов с объёмом, сложностью и типом запроса. Автоматически.' },
-                { step: 'Кластеризация', desc: 'Слова группируются по темам. Не плоский список — готовые кластеры, с которыми можно работать.' },
-                { step: 'Анализ пробелов', desc: 'Сопоставляем кластеры со страницами. Видно что покрыто, что нет, где нужен контент.' },
-                { step: 'Бриефы', desc: 'Один клик — бриф на основе реальных топ-5 Google по этому запросу. Не шаблонный текст от AI.' },
-                { step: 'Задачи', desc: 'Каждая находка = задача. Со ссылкой на источник. Назначил, трекаешь, закрыл.' }
+                { step: 'Аудит сайта', desc: 'Проходим по страницам — заголовки, мета, скорость, мобилка, Core Web Vitals. AI резюмирует что важно и что чинить первым.' },
+                { step: 'GEO score', desc: 'Проверка AI-цитируемости любой страницы: 14 правил — FAQ schema, inverted pyramid lead, citation-worthy claims, entity density, AI crawler access. Оценка 0-100 с evidence по каждому правилу.' },
+                { step: 'AI Brand Visibility', desc: 'Упоминает ли OpenAI или Gemini твой бренд? Тренд по провайдерам, обнаружение конкурентов, рекомендации с конвертацией в задачи.' },
+                { step: 'Поиск keywords', desc: 'AI сначала читает контент сайта, потом тянет ключевики с объёмом, сложностью и intent. Relevance gate фильтрует мусор. Семантическая кластеризация по смыслу, не по совпадению слов.' },
+                { step: 'Анализ пробелов', desc: 'Сопоставляем кластеры со страницами. Видно что покрыто, что нет, где нужен контент. Decision engine: OPTIMIZE, EXPAND или CREATE.' },
+                { step: 'Бриефы и драфты', desc: 'Бриф на основе реальных топ-5 Google. Полный черновик статьи через Claude AI — рабочий драфт для редактуры, не финальная публикация.' },
+                { step: 'Задачи', desc: 'Каждая находка = задача — из аудита, ключевиков, бэклинков, rank drops, AI brand рекомендаций. 9 типов источников. Назначил, трекаешь, закрыл.' }
             ]
         },
         keyFeatures: {
             heading: 'Почему мы (честно)',
             subtitle: 'Мы проверили. Вот что правда.',
             features: [
-                { name: 'Всё связано в одну цепочку', desc: 'Аудит нашёл проблему → анализ нашёл возможность → бриф написан → задача создана. Один поток. В других платформах эти фичи разбросаны по отдельным вкладкам. У нас диагноз ведёт напрямую к действию.' },
-                { name: 'AI берёт рутину на себя', desc: 'Классификация запросов, кластеризация, расстановка приоритетов, написание бриефов — автоматом. Этап с таблицей просто пропускается. Другие дают данные и говорят "разбирайся." Мы даём план.' },
-                { name: '$19 за всё', desc: 'Сопоставимый набор в других местах — от $300/мес. Наша полная платформа — от $19. Мы не урезали фичи. Мы просто строили для фрилансеров, а не для корпораций.' }
+                { name: 'Построено для поиска 2026', desc: 'GEO score измеряет цитируемость каждой страницы AI-движками — 14 правил (FAQ schema, inverted pyramid, citation-worthy claims, entity density, AI crawler access). AI Brand Visibility следит, рекомендуют ли OpenAI и Gemini твой бренд — тренды по провайдерам, обнаружение конкурентов, рекомендации с конвертацией в задачи. Agent Readiness проверяет, могут ли AI-агенты найти твой сайт (llms.txt, markdown negotiation, Content-Signal, JSON-LD). Ни одна другая платформа в этом ценовом диапазоне ничего из этого не предлагает.' },
+                { name: 'AI берёт анализ на себя', desc: 'Классификация intent, семантическая кластеризация, оценка релевантности, контент-бриефы, черновики контента — всё через Claude AI. Этап с таблицей пропускается. Другие дают данные и говорят «разбирайся.» Мы даём план.' },
+                { name: '$0 за GEO + AI visibility. $19 за ключевики.', desc: 'GEO score и AI Brand Visibility начинаются с $0. Полный keyword stack, rank tracking и контент-бриефы — от $19. Сопоставимые возможности в других местах — от $300/мес через несколько подписок. Мы строили для фрилансеров, не для корпораций.' }
             ]
         },
         alsoIncludes: {
             heading: 'Что ещё внутри',
             items: [
-                'Позиции в поиске — трекинг, SERP-фичи (сниппеты, PAA), десктоп + мобайл, по странам',
-                'Анализ конкурентов — покажи, по каким словам они в топе, а я нет',
-                'Бэклинки — кто ссылается, авторитет домена, какие ссылки потерялись',
-                'AI-мониторинг бренда — упоминает ли тебя ChatGPT/Gemini? (другие тоже это делают — не уникально, но у нас включено)',
-                'Google Search Console — подключение и реальные данные по кликам',
-                'Для агентств — white-label PDF, портал для клиентов, роли в команде',
-                'Проверка готовности к AI-агентам — насколько сайт подходит для ботов (тема новая, мало кто делает)'
+                'Позиции в поиске — ежедневные проверки, графики истории, SERP-фичи, десктоп + мобайл, по странам',
+                'AI Mode Rank Tracking — цитирует ли Google AI Mode твой домен по отслеживаемому запросу? Per-keyword opt-in (PRO+)',
+                'Анализ конкурентов — по каким словам они в топе, а ты нет',
+                'Бэклинки — новые/потерянные ссылки, авторитет домена, таймлайн изменений',
+                'Черновики контента — полные черновики статей через Claude AI из ключевика + бриф (рабочие драфты для редактуры, не финальный контент)',
+                'Google Search Console — реальные данные по кликам, показам, CTR',
+                'Для агентств — white-label PDF, портал для клиентов, командные роли',
+                'Agent readiness — проверка llms.txt, markdown content negotiation, Content-Signal directives, JSON-LD coverage',
+                'Генератор llms.txt — AI создаёт spec-compliant llms.txt для твоего сайта, чтобы AI-агенты могли его обнаружить'
             ]
         },
         strength: {
             heading: 'Что говорить, а что нет',
             points: [
-                'Не говори "лучший аудит." Узкоспециализированные краулеры проверяют 300+ правил. Мы — примерно 20. У нас чекап, не глубокое сканирование. И это нормально — нашим юзерам 300 проверок не нужны.',
-                'Говори "инструмент, который говорит что делать после аудита." Вот где дыра. Аудиты есть у всех. Связать их с действием — ни у кого.',
-                'Говори "сделано для фрилансеров, не для корпораций." Это не слабость. Это выбор.',
-                'Говори "$19 за то, что в другом месте стоит $300." Это факт.'
+                'Не говори «лучший аудит.» Узкоспециализированные краулеры проверяют 300+ правил. Мы — ~20 + AI-анализ. И это нормально — нашим юзерам нужна ясность, не 300 проверок.',
+                'Говори «единственная платформа в этом ценовом диапазоне, которая измеряет AI-цитируемость.» Вот где дыра. Все аудитят для Google. Никто не измеряет, может ли AI процитировать твои страницы. Мы — можем. 14 правил, per page, с evidence.',
+                'Говори «сделано для фрилансеров, не для корпораций.» Это не слабость. Это выбор.',
+                'Говори «$0 за GEO score + AI visibility. $19 за полный keyword stack.» Это факт.',
+                'Не говори «автоматический GEO-аудит каждой страницы.» GEO Score — отдельная проверка per page, не встроена в базовый crawl.',
+                'Не говори «готовые статьи» или «ready-to-publish.» Мы генерируем контент-драфты — рабочий материал для редактуры, не финальный контент.',
+                'Не говори «Perplexity.» Этот провайдер пока не активен. Говори «OpenAI и Gemini» или «основные AI-движки.»'
             ]
         },
         positioning: {
             heading: 'Питч (запомни)',
-            statement: 'SEO-фрилансер запускает аудит в одном инструменте, ищет ключевики в другом, кластеризует в таблице, пишет бриефы в Google Docs, ведёт задачи в Asana. Пять инструментов, ничего не связано. KORU делает всё это в одном месте — от аудита до задач — и AI берёт на себя рутину. От $19.',
-            tagline: 'From URL to keyword strategy in 5 minutes.',
+            statement: 'SEO-фрилансеры оптимизируют для позиций в Google. Но 48% поисков теперь показывают AI-ответ первым — и большинство SEO-инструментов это вообще не измеряют. KORU — SEO-платформа, которая аудитит для обоих. GEO score для AI-цитируемости. AI brand visibility через основные AI-движки. Проверки agent readiness. Intent-first ключевики. Контент-бриефы и драфты. Всё связано — от находки до задачи. GEO score и AI-мониторинг начинаются бесплатно. Полный keyword stack от $19.',
+            tagline: 'Rank in Google. Get cited by AI.',
             notSaying: [
-                'Не замена для data-инструментов. Другая задача. Мы связываем workflow.',
-                'Не самый глубокий аудит. Самый связный.',
-                'Не для Fortune 500. Для фрилансера, которому надоели таблицы.',
-                'AI-мониторинг бренда — не наше изобретение. Но включён в платформу, а не за отдельные деньги.'
+                'Не замена для data-инструментов. Другая задача. Мы связываем workflow и добавляем AI-search слой, которого ни у кого нет за эту цену.',
+                'Не самый глубокий аудит. Тот, который измеряет и Google-готовность, и AI-цитируемость.',
+                'Не для Fortune 500. Для фрилансера, которому нужно ответить «видим ли я в AI-поиске?» и у которого нет $300/мес на это.',
+                'GEO score — это проверка per page по запросу, не автоматическая часть каждого crawl. Будь честен.'
             ]
         },
         tone: {
             heading: 'Как мы звучим',
             points: [
-                'Как умный коллега, а не рекламный буклет. "Вот что я нашёл" — не "Раскройте потенциал..."',
-                'Цифры — всегда. "3-4 часа" бьёт сильнее, чем "много времени."',
-                'Слова из индустрии, не из маркетинга. "Кластеры" и "бриефы" — да. "Синергия" — нет.',
-                'В постах задавай вопросы. "Сколько у тебя уходит?" цепляет больше, чем "Наш инструмент экономит время."',
-                'В комментариях — дай что-то полезное. Факт. Статистику. Вопрос. Никогда "Классный пост! Попробуй KORU."',
-                'Про конкурентов — прямо. "У них больше данных. У нас лучше workflow." Люди это уважают.'
+                'Как умный коллега, а не рекламный буклет. «Вот что я нашёл» — не «Раскройте потенциал...»',
+                'Цифры — всегда. «48% поисков показывают AI Overview» бьёт сильнее, чем «AI меняет поиск.»',
+                'Слова из индустрии, не из маркетинга. «GEO score,» «intent classification,» «citation-worthy claims.» Никогда «синергия.»',
+                'В постах задавай вопросы. «Знаете ли вы, цитирует ли AI ваш контент?» цепляет больше, чем «Наш инструмент мониторит AI.»',
+                'В комментариях — дай что-то полезное. Факт про AI Overviews. Вопрос про их workflow. Никогда «Классный пост! Попробуй KORU.»',
+                'Про конкурентов — прямо. «У них больше данных по классическому SEO. Мы ещё измеряем AI-цитируемость — а они нет.» Люди это уважают.'
             ]
         },
     }
