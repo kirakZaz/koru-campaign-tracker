@@ -149,38 +149,6 @@ const Sidebar = React.memo(function Sidebar({
                 <ProgressBar days={days} isTaskCompleted={isTaskCompleted} />
             </Box>}
 
-            {!searchResults && (
-                <>
-                    <Box
-                        sx={styles.dayItem(currentDayIndex === OVERVIEW_INDEX, false)}
-                        onClick={() => onDaySelect(OVERVIEW_INDEX)}
-                    >
-                        <InfoOutlinedIcon sx={{ fontSize: '0.9rem', color: currentDayIndex === OVERVIEW_INDEX ? 'primary.main' : 'text.secondary' }} />
-                        <Typography sx={styles.dayTitle(currentDayIndex === OVERVIEW_INDEX)}>
-                            Overview
-                        </Typography>
-                    </Box>
-                    <Box
-                        sx={styles.dayItem(currentDayIndex === SOURCES_INDEX, false)}
-                        onClick={() => onDaySelect(SOURCES_INDEX)}
-                    >
-                        <TableChartRoundedIcon sx={{ fontSize: '0.9rem', color: currentDayIndex === SOURCES_INDEX ? 'primary.main' : 'text.secondary' }} />
-                        <Typography sx={styles.dayTitle(currentDayIndex === SOURCES_INDEX)}>
-                            Sources
-                        </Typography>
-                    </Box>
-                    <Box
-                        sx={styles.dayItem(currentDayIndex === CREATIVES_INDEX, false)}
-                        onClick={() => onDaySelect(CREATIVES_INDEX)}
-                    >
-                        <BrushRoundedIcon sx={{ fontSize: '0.9rem', color: currentDayIndex === CREATIVES_INDEX ? 'primary.main' : 'text.secondary' }} />
-                        <Typography sx={styles.dayTitle(currentDayIndex === CREATIVES_INDEX)}>
-                            Creatives
-                        </Typography>
-                    </Box>
-                </>
-            )}
-
             {searchResults ? (
                 <Box sx={styles.daysList}>
                     <Typography sx={{ ...styles.phaseHeader, color: 'primary.main' }}>
@@ -214,6 +182,33 @@ const Sidebar = React.memo(function Sidebar({
                 </Box>
             ) : (
                 <Box sx={styles.daysList}>
+                    <Box
+                        sx={styles.dayItem(currentDayIndex === OVERVIEW_INDEX, false)}
+                        onClick={() => onDaySelect(OVERVIEW_INDEX)}
+                    >
+                        <InfoOutlinedIcon sx={{ fontSize: '0.9rem', color: currentDayIndex === OVERVIEW_INDEX ? 'primary.main' : 'text.secondary' }} />
+                        <Typography sx={styles.dayTitle(currentDayIndex === OVERVIEW_INDEX)}>
+                            Overview
+                        </Typography>
+                    </Box>
+                    <Box
+                        sx={styles.dayItem(currentDayIndex === SOURCES_INDEX, false)}
+                        onClick={() => onDaySelect(SOURCES_INDEX)}
+                    >
+                        <TableChartRoundedIcon sx={{ fontSize: '0.9rem', color: currentDayIndex === SOURCES_INDEX ? 'primary.main' : 'text.secondary' }} />
+                        <Typography sx={styles.dayTitle(currentDayIndex === SOURCES_INDEX)}>
+                            Sources
+                        </Typography>
+                    </Box>
+                    <Box
+                        sx={styles.dayItem(currentDayIndex === CREATIVES_INDEX, false)}
+                        onClick={() => onDaySelect(CREATIVES_INDEX)}
+                    >
+                        <BrushRoundedIcon sx={{ fontSize: '0.9rem', color: currentDayIndex === CREATIVES_INDEX ? 'primary.main' : 'text.secondary' }} />
+                        <Typography sx={styles.dayTitle(currentDayIndex === CREATIVES_INDEX)}>
+                            Creatives
+                        </Typography>
+                    </Box>
                     {daysByPhase.map((group) => (
                         <React.Fragment key={group.phase}>
                             <Typography sx={styles.phaseHeader}>
