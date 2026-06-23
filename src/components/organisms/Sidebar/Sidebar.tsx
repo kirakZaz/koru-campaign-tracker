@@ -29,27 +29,8 @@ const Sidebar = React.memo(function Sidebar({
     onGlobalAssigneeFilterChange
 }: SidebarProps) {
     const activeRef = React.useRef<HTMLDivElement>(null)
-    const headerRef = React.useRef<HTMLDivElement>(null)
-    const listRef = React.useRef<HTMLDivElement>(null)
-    const lastScrollTop = React.useRef(0)
     const [headerCollapsed, setHeaderCollapsed] = React.useState(false)
     const [globalSearch, setGlobalSearch] = React.useState('')
-
-    React.useEffect(() => {
-        const list = listRef.current
-        if (!list) return
-        const onScroll = () => {
-            const st = list.scrollTop
-            if (st > 60 && st > lastScrollTop.current) {
-                setHeaderCollapsed(true)
-            } else if (st < lastScrollTop.current || st <= 10) {
-                setHeaderCollapsed(false)
-            }
-            lastScrollTop.current = st
-        }
-        list.addEventListener('scroll', onScroll, { passive: true })
-        return () => list.removeEventListener('scroll', onScroll)
-    }, [])
 
     React.useEffect(() => {
         if (activeRef.current && !globalSearch) {
@@ -112,17 +93,20 @@ const Sidebar = React.memo(function Sidebar({
 
     return (
         <Box sx={styles.root}>
-            <Box ref={headerRef} sx={{ ...styles.header, transition: 'all 250ms ease', ...(headerCollapsed ? { maxHeight: 0, py: 0, overflow: 'hidden', borderBottom: 'none' } : { maxHeight: 80 }) }}>
+            <Box
+                sx={{ ...styles.header, cursor: 'pointer', userSelect: 'none' }}
+                onClick={() => setHeaderCollapsed(c => !c)}
+            >
                 <Box>
                     <Typography sx={styles.logo}>KORU</Typography>
-                    <Typography sx={styles.subtitle}>Campaign Tracker</Typography>
+                    {!headerCollapsed && <Typography sx={styles.subtitle}>Campaign Tracker</Typography>}
                 </Box>
-                <IconButton onClick={onOpenSettings} size="small" sx={{ color: 'text.secondary' }}>
+                <IconButton onClick={(e) => { e.stopPropagation(); onOpenSettings() }} size="small" sx={{ color: 'text.secondary' }}>
                     <SettingsRoundedIcon />
                 </IconButton>
             </Box>
 
-            <Box sx={{ px: 2, pt: headerCollapsed ? 1 : 2, transition: 'padding 250ms ease' }}>
+            <Box sx={{ px: 2, pt: 1, overflow: 'hidden', transition: 'max-height 250ms ease, opacity 200ms ease', maxHeight: headerCollapsed ? 0 : 200, opacity: headerCollapsed ? 0 : 1 }}>
                 <TextField
                     size="small"
                     fullWidth
@@ -225,7 +209,7 @@ const Sidebar = React.memo(function Sidebar({
                     ))}
                 </Box>
             ) : (
-                <Box ref={listRef} sx={styles.daysList}>
+                <Box sx={styles.daysList}>
                     {daysByPhase.map((group) => (
                         <React.Fragment key={group.phase}>
                             <Typography sx={styles.phaseHeader}>
