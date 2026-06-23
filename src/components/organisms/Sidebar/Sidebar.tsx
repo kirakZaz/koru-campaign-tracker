@@ -10,6 +10,8 @@ import CloseRoundedIcon from '@mui/icons-material/CloseRounded'
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded'
 import Chip from '@mui/material/Chip'
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
+import ExpandLessRoundedIcon from '@mui/icons-material/ExpandLessRounded'
+import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded'
 import TableChartRoundedIcon from '@mui/icons-material/TableChartRounded'
 import BrushRoundedIcon from '@mui/icons-material/BrushRounded'
 import { OVERVIEW_INDEX, SOURCES_INDEX, CREATIVES_INDEX } from '@/App'
@@ -93,20 +95,22 @@ const Sidebar = React.memo(function Sidebar({
 
     return (
         <Box sx={styles.root}>
-            <Box
-                sx={{ ...styles.header, cursor: 'pointer', userSelect: 'none' }}
-                onClick={() => setHeaderCollapsed(c => !c)}
-            >
+            <Box sx={styles.header}>
                 <Box>
                     <Typography sx={styles.logo}>KORU</Typography>
-                    {!headerCollapsed && <Typography sx={styles.subtitle}>Campaign Tracker</Typography>}
+                    <Typography sx={styles.subtitle}>Campaign Tracker</Typography>
                 </Box>
-                <IconButton onClick={(e) => { e.stopPropagation(); onOpenSettings() }} size="small" sx={{ color: 'text.secondary' }}>
-                    <SettingsRoundedIcon />
-                </IconButton>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                    <IconButton size="small" onClick={() => setHeaderCollapsed(c => !c)} sx={{ color: 'text.secondary' }}>
+                        {headerCollapsed ? <ExpandMoreRoundedIcon fontSize="small" /> : <ExpandLessRoundedIcon fontSize="small" />}
+                    </IconButton>
+                    <IconButton onClick={onOpenSettings} size="small" sx={{ color: 'text.secondary' }}>
+                        <SettingsRoundedIcon />
+                    </IconButton>
+                </Box>
             </Box>
 
-            <Box sx={{ px: 2, pt: 1, display: headerCollapsed ? 'none' : 'block' }}>
+            {!headerCollapsed && <Box sx={{ px: 2, pt: 1 }}>
                 <TextField
                     size="small"
                     fullWidth
@@ -143,7 +147,7 @@ const Sidebar = React.memo(function Sidebar({
                     ))}
                 </Box>
                 <ProgressBar days={days} isTaskCompleted={isTaskCompleted} />
-            </Box>
+            </Box>}
 
             {!searchResults && (
                 <>
