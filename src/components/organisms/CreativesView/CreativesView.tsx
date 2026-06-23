@@ -95,6 +95,7 @@ interface PostVisual {
     id: string
     postNumber: number
     title: string
+    tall?: boolean
     card: React.ReactNode
 }
 
@@ -122,6 +123,7 @@ const POST_VISUALS: PostVisual[] = [
         id: 'post2',
         postNumber: 2,
         title: 'Checklist — AI-citation readiness',
+        tall: true,
         card: (
             <div id="card-post2" style={tallCardBase}>
                 <div style={{ textAlign: 'center', marginBottom: 28 }}>
@@ -182,6 +184,7 @@ const POST_VISUALS: PostVisual[] = [
         id: 'post4',
         postNumber: 4,
         title: 'GEO Score — 14 rules breakdown',
+        tall: true,
         card: (
             <div id="card-post4" style={tallCardBase}>
                 <div style={{ textAlign: 'center', marginBottom: 20 }}>
@@ -267,6 +270,7 @@ const POST_VISUALS: PostVisual[] = [
         id: 'post7',
         postNumber: 7,
         title: '14 GEO Rules — full checklist',
+        tall: true,
         card: (
             <div id="card-post7" style={tallCardBase}>
                 <div style={{ textAlign: 'center', marginBottom: 16 }}>
@@ -332,6 +336,7 @@ const POST_VISUALS: PostVisual[] = [
         id: 'post9',
         postNumber: 9,
         title: 'KORU Pipeline — full flow',
+        tall: true,
         card: (
             <div id="card-post9" style={tallCardBase}>
                 <div style={{ textAlign: 'center', marginBottom: 20 }}>
@@ -452,9 +457,37 @@ const POST_VISUALS: PostVisual[] = [
     },
 ]
 
+function CardWrapper({ children, tall }: { children: React.ReactNode, tall?: boolean }) {
+    const outerRef = React.useRef<HTMLDivElement>(null)
+    const innerRef = React.useRef<HTMLDivElement>(null)
+    const [scale, setScale] = React.useState(1)
+    const origH = tall ? 750 : 600
+
+    React.useEffect(() => {
+        const el = outerRef.current
+        if (!el) return
+        const update = () => {
+            const w = el.clientWidth
+            setScale(w >= 600 ? 1 : w / 600)
+        }
+        update()
+        const ro = new ResizeObserver(update)
+        ro.observe(el)
+        return () => ro.disconnect()
+    }, [])
+
+    return (
+        <Box ref={outerRef} sx={{ width: '100%', maxWidth: 600, border: '1px solid', borderColor: 'divider', borderRadius: 2, overflow: 'hidden', height: origH * scale }}>
+            <div ref={innerRef} style={{ transform: `scale(${scale})`, transformOrigin: 'top left', width: 600 }}>
+                {children}
+            </div>
+        </Box>
+    )
+}
+
 export default function CreativesView() {
     return (
-        <Box sx={{ flex: 1, overflow: 'auto', px: { xs: 2, md: 4 }, py: 3 }}>
+        <Box sx={{ flex: 1, overflow: 'auto', px: { xs: 1, md: 4 }, py: 3 }}>
             <Typography variant="h5" sx={{ fontWeight: 800, mb: 0.5 }}>
                 Creatives
             </Typography>
@@ -490,9 +523,9 @@ export default function CreativesView() {
                             <DownloadRoundedIcon sx={{ fontSize: '1rem' }} />
                         </IconButton>
                     </Box>
-                    <Box sx={{ border: '1px solid', borderColor: 'divider', borderRadius: 2, display: 'inline-block', overflow: 'hidden' }}>
+                    <CardWrapper tall={pv.tall}>
                         {pv.card}
-                    </Box>
+                    </CardWrapper>
                 </Box>
             ))}
 
