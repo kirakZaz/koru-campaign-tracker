@@ -106,7 +106,7 @@ const Sidebar = React.memo(function Sidebar({
                 </IconButton>
             </Box>
 
-            <Box sx={{ px: 2, pt: 1, overflow: 'hidden', transition: 'max-height 250ms ease, opacity 200ms ease', maxHeight: headerCollapsed ? 0 : 200, opacity: headerCollapsed ? 0 : 1 }}>
+            <Box sx={{ px: 2, pt: 1, display: headerCollapsed ? 'none' : 'block' }}>
                 <TextField
                     size="small"
                     fullWidth
