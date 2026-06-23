@@ -247,6 +247,193 @@ const POST_VISUALS: PostVisual[] = [
             </div>
         ),
     },
+    {
+        id: 'post7',
+        postNumber: 7,
+        title: '14 GEO Rules — full checklist',
+        card: (
+            <div id="card-post7" style={tallCardBase}>
+                <div style={{ textAlign: 'center', marginBottom: 16 }}>
+                    <div style={{ fontSize: 20, fontWeight: 800, color: '#e6edf3' }}>GEO Score: 14 Rules</div>
+                    <div style={{ fontSize: 13, color: '#8b949e', marginTop: 4 }}>AI-Citation Readiness Checklist</div>
+                </div>
+                {[
+                    { rule: 'FAQ / HowTo schema', pts: 15 },
+                    { rule: 'Inverted pyramid lead', pts: 10 },
+                    { rule: 'Definition / answer pattern', pts: 10 },
+                    { rule: 'Citation-worthy claims', pts: 8 },
+                    { rule: 'Article / Product schema', pts: 8 },
+                    { rule: 'Author attribution', pts: 8 },
+                    { rule: 'Heading hierarchy', pts: 8 },
+                    { rule: 'AI crawler access', pts: 6 },
+                    { rule: 'Meta description', pts: 5 },
+                    { rule: 'Entity density', pts: 5 },
+                    { rule: 'Date markup', pts: 5 },
+                    { rule: 'No paywall / JS blockers', pts: 5 },
+                    { rule: 'Content freshness', pts: 4 },
+                    { rule: 'Canonical URL', pts: 3 },
+                ].map((r, i) => (
+                    <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', marginBottom: 5, padding: '5px 10px', backgroundColor: '#161b22', borderRadius: 5 }}>
+                        <div style={{ fontSize: 12, color: '#e6edf3', fontWeight: 500 }}>{i + 1}. {r.rule}</div>
+                        <div style={{ fontSize: 12, color: '#3fb68e', fontWeight: 700 }}>{r.pts} pts</div>
+                    </div>
+                ))}
+                <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'space-between', width: '100%', paddingTop: 8 }}>
+                    <div style={{ fontSize: 12, color: '#8b949e' }}>Total: 100 points</div>
+                    <div style={{ fontSize: 12, color: '#f85149' }}>Most sites: 25-45</div>
+                </div>
+            </div>
+        ),
+    },
+    {
+        id: 'post8',
+        postNumber: 8,
+        title: 'AI Brand Visibility — ChatGPT vs Gemini',
+        card: (
+            <div id="card-post8" style={cardBase}>
+                <div style={{ textAlign: 'center', marginBottom: 28 }}>
+                    <div style={{ fontSize: 20, fontWeight: 800, color: '#e6edf3' }}>Is AI recommending your brand?</div>
+                </div>
+                <div style={{ width: '100%', marginBottom: 16, padding: '14px 16px', backgroundColor: '#161b22', borderRadius: 8, border: '1px solid #3fb68e33' }}>
+                    <div style={{ fontSize: 12, color: '#8b949e', marginBottom: 6, fontWeight: 600 }}>ChatGPT: "Best SEO tool for freelancers?"</div>
+                    {['1. Ahrefs', '2. Semrush', '3. Surfer SEO', '4. SE Ranking', '5. Mangools'].map((item, i) => (
+                        <div key={i} style={{ fontSize: 13, color: '#e6edf3', lineHeight: 1.6, paddingLeft: 8 }}>{item}</div>
+                    ))}
+                    <div style={{ fontSize: 13, color: '#f85149', marginTop: 8, fontWeight: 600 }}>Your brand: not listed</div>
+                </div>
+                <div style={{ width: '100%', padding: '14px 16px', backgroundColor: '#161b22', borderRadius: 8, border: '1px solid #6c8eff33' }}>
+                    <div style={{ fontSize: 12, color: '#8b949e', marginBottom: 6, fontWeight: 600 }}>Gemini: same question</div>
+                    {['1. Semrush', '2. Ahrefs', '3. Moz', '4. Ubersuggest', '5. Surfer SEO'].map((item, i) => (
+                        <div key={i} style={{ fontSize: 13, color: '#e6edf3', lineHeight: 1.6, paddingLeft: 8 }}>{item}</div>
+                    ))}
+                    <div style={{ fontSize: 13, color: '#f85149', marginTop: 8, fontWeight: 600 }}>Your brand: not listed</div>
+                </div>
+                <div style={{ marginTop: 20, fontSize: 14, color: '#d29922', fontWeight: 600, textAlign: 'center' }}>You can't fix what you can't see.</div>
+            </div>
+        ),
+    },
+    {
+        id: 'post9',
+        postNumber: 9,
+        title: 'KORU Pipeline — full flow',
+        card: (
+            <div id="card-post9" style={tallCardBase}>
+                <div style={{ textAlign: 'center', marginBottom: 20 }}>
+                    <div style={{ fontSize: 18, fontWeight: 800, color: '#e6edf3' }}>The KORU Pipeline</div>
+                    <div style={{ fontSize: 13, color: '#8b949e', marginTop: 2 }}>Classical SEO + AI Search. Connected.</div>
+                </div>
+                {[
+                    { step: 'Site Audit', desc: 'Crawl + AI summary', color: '#3fb68e' },
+                    { step: 'GEO Score', desc: '14 rules, per page', color: '#3fb68e' },
+                    { step: 'AI Brand Visibility', desc: 'OpenAI + Gemini tracking', color: '#6c8eff' },
+                    { step: 'Keywords', desc: 'Intent classification + relevance gate', color: '#d29922' },
+                    { step: 'Semantic Clustering', desc: 'By meaning, not word overlap', color: '#d29922' },
+                    { step: 'Briefs + Drafts', desc: 'From top-5 Google results', color: '#a371f7' },
+                    { step: 'Tasks', desc: '9 source types → action', color: '#a371f7' },
+                    { step: 'Agent Readiness', desc: 'llms.txt, JSON-LD, Content-Signal', color: '#6c8eff' },
+                ].map((item, i) => (
+                    <div key={i} style={{ width: '100%', marginBottom: 2 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 12px', backgroundColor: '#161b22', borderRadius: 6, border: `1px solid ${item.color}22` }}>
+                            <div style={{ width: 24, height: 24, borderRadius: 6, backgroundColor: item.color + '22', color: item.color, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 11, flexShrink: 0 }}>{i + 1}</div>
+                            <div>
+                                <div style={{ fontSize: 13, fontWeight: 700, color: '#e6edf3' }}>{item.step}</div>
+                                <div style={{ fontSize: 11, color: '#8b949e' }}>{item.desc}</div>
+                            </div>
+                        </div>
+                        {i < 7 && <div style={{ width: 2, height: 8, backgroundColor: item.color + '33', marginLeft: 22 }} />}
+                    </div>
+                ))}
+            </div>
+        ),
+    },
+    {
+        id: 'post10',
+        postNumber: 10,
+        title: 'Meet KORU — reveal card',
+        card: (
+            <div id="card-post10" style={cardBase}>
+                <div style={{ textAlign: 'center' }}>
+                    <div style={{ fontSize: 42, fontWeight: 900, color: '#3fb68e', letterSpacing: 6, lineHeight: 1 }}>KORU</div>
+                    <div style={{ fontSize: 15, color: '#e6edf3', marginTop: 12, fontWeight: 500 }}>Rank in Google. Get cited by AI.</div>
+                    <div style={{ width: 60, height: 2, backgroundColor: '#3fb68e33', margin: '20px auto' }} />
+                    <div style={{ fontSize: 13, color: '#8b949e', lineHeight: 1.8, marginTop: 8 }}>
+                        GEO Score — 14-rule AI-citation readiness<br />
+                        AI Brand Visibility — OpenAI + Gemini tracking<br />
+                        Agent Readiness — llms.txt, JSON-LD<br />
+                        Intent-first keywords + briefs + tasks
+                    </div>
+                    <div style={{ marginTop: 24, padding: '10px 24px', backgroundColor: '#3fb68e', borderRadius: 8, display: 'inline-block' }}>
+                        <div style={{ fontSize: 14, fontWeight: 700, color: '#0d1117' }}>GEO score starts free</div>
+                    </div>
+                    <div style={{ marginTop: 12, fontSize: 12, color: '#8b949e' }}>koru-seo.com</div>
+                </div>
+            </div>
+        ),
+    },
+    {
+        id: 'post11',
+        postNumber: 11,
+        title: '4 out of 50 — AI readiness data',
+        card: (
+            <div id="card-post11" style={cardBase}>
+                <div style={{ textAlign: 'center' }}>
+                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'baseline', gap: 8 }}>
+                        <div style={{ fontSize: 96, fontWeight: 900, color: '#f85149', lineHeight: 1 }}>4</div>
+                        <div style={{ fontSize: 32, fontWeight: 600, color: '#8b949e' }}>/</div>
+                        <div style={{ fontSize: 96, fontWeight: 900, color: '#8b949e44', lineHeight: 1 }}>50</div>
+                    </div>
+                    <div style={{ fontSize: 16, color: '#e6edf3', marginTop: 8, fontWeight: 600 }}>SEO agency sites ready for AI crawlers</div>
+                    <div style={{ width: 60, height: 2, backgroundColor: '#f8514933', margin: '20px auto' }} />
+                    <div style={{ textAlign: 'left', maxWidth: 380, margin: '0 auto' }}>
+                        {[
+                            { check: 'llms.txt', result: '0 / 50', color: '#f85149' },
+                            { check: 'Markdown negotiation', result: '3 / 50', color: '#f85149' },
+                            { check: 'robots.txt AI directives', result: '8 / 50', color: '#d29922' },
+                            { check: 'HTTP Link headers', result: '1 / 50', color: '#f85149' },
+                        ].map((item, i) => (
+                            <div key={i} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 14, lineHeight: 2.2, color: '#e6edf3' }}>
+                                <span>{item.check}</span>
+                                <span style={{ color: item.color, fontWeight: 700 }}>{item.result}</span>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        ),
+    },
+    {
+        id: 'post12',
+        postNumber: 12,
+        title: 'Demo — product screenshot',
+        card: (
+            <div id="card-post12" style={cardBase}>
+                <div style={{ textAlign: 'center' }}>
+                    <div style={{ fontSize: 42, fontWeight: 900, color: '#3fb68e', letterSpacing: 6, lineHeight: 1 }}>KORU</div>
+                    <div style={{ fontSize: 16, color: '#e6edf3', marginTop: 16, fontWeight: 600 }}>30-second demo</div>
+                    <div style={{ width: 60, height: 2, backgroundColor: '#3fb68e33', margin: '20px auto' }} />
+                    <div style={{ textAlign: 'left', maxWidth: 380, margin: '0 auto' }}>
+                        {[
+                            'Paste URL',
+                            'Audit + AI summary',
+                            'GEO score — 14 rules',
+                            'AI Brand check — OpenAI + Gemini',
+                            'Keywords + intent + clusters',
+                            'Brief + content draft',
+                            'Every finding → task',
+                        ].map((step, i) => (
+                            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 14, color: '#e6edf3', lineHeight: 2.2 }}>
+                                <div style={{ width: 22, height: 22, borderRadius: 6, backgroundColor: '#3fb68e22', color: '#3fb68e', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 11, flexShrink: 0 }}>{i + 1}</div>
+                                {step}
+                            </div>
+                        ))}
+                    </div>
+                    <div style={{ marginTop: 20, padding: '8px 20px', backgroundColor: '#3fb68e22', borderRadius: 6, display: 'inline-block', border: '1px solid #3fb68e44' }}>
+                        <div style={{ fontSize: 13, fontWeight: 600, color: '#3fb68e' }}>Attach demo GIF from task 060</div>
+                    </div>
+                </div>
+            </div>
+        ),
+    },
 ]
 
 export default function CreativesView() {
