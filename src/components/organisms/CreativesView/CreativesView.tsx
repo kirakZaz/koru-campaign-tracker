@@ -55,7 +55,7 @@ function downloadCard(id: string, _filename: string) {
 const cardBase: React.CSSProperties = {
     width: 600,
     height: 600,
-    backgroundColor: '#0d1117',
+    backgroundColor: '#1c2333',
     borderRadius: 12,
     display: 'flex',
     flexDirection: 'column',
