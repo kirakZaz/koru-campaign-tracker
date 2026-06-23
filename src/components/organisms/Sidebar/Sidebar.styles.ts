@@ -32,7 +32,7 @@ export const styles = {
     daysList: {
         flex: 1,
         overflow: 'auto',
-        py: 1
+        py: 0.5
     },
     phaseHeader: {
         px: 2,
@@ -42,7 +42,7 @@ export const styles = {
         color: 'text.secondary',
         letterSpacing: '0.1em',
         textTransform: 'uppercase' as const,
-        mt: 1,
+        mt: 0.5,
         position: 'sticky' as const,
         top: 0,
         backgroundColor: 'background.default',
