@@ -26,6 +26,7 @@ import ArrowUpwardRoundedIcon from '@mui/icons-material/ArrowUpwardRounded'
 import ArrowDownwardRoundedIcon from '@mui/icons-material/ArrowDownwardRounded'
 import OpenInNewRoundedIcon from '@mui/icons-material/OpenInNewRounded'
 import FilterAltOffRoundedIcon from '@mui/icons-material/FilterAltOffRounded'
+import BarChartRoundedIcon from '@mui/icons-material/BarChartRounded'
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded'
 import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
@@ -365,6 +366,7 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                 <Tab icon={<GroupsRoundedIcon sx={{ fontSize: '1rem' }} />} iconPosition="start" label={`Группы (${local.groups.length})`} />
                 <Tab icon={<BusinessRoundedIcon sx={{ fontSize: '1rem' }} />} iconPosition="start" label={`Компании (${local.companies.length})`} />
                 <Tab icon={<StarRoundedIcon sx={{ fontSize: '1rem' }} />} iconPosition="start" label={`Топ-5 (${local.shortlist.length})`} />
+                <Tab icon={<BarChartRoundedIcon sx={{ fontSize: '1rem' }} />} iconPosition="start" label="Dashboard" />
             </Tabs>
 
             {tab === 0 && (
@@ -788,6 +790,158 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                     </TableContainer>
                 </Box>
             )}
+
+            {tab === 4 && (() => {
+                const totalPeople = local.people.length
+                const priorityA = local.people.filter(p => p.priority === 'A').length
+                const priorityB = local.people.filter(p => p.priority === 'B').length
+                const priorityC = local.people.filter(p => p.priority === 'C').length
+                const bySegment = {
+                    freelancer: local.people.filter(p => p.icpSegment === 'freelancer').length,
+                    small_agency: local.people.filter(p => p.icpSegment === 'small_agency').length,
+                    in_house: local.people.filter(p => p.icpSegment === 'in_house').length,
+                    other: local.people.filter(p => p.icpSegment === 'other').length,
+                }
+                const byActivity = {
+                    high: local.people.filter(p => p.activityLevel === 'high').length,
+                    medium: local.people.filter(p => p.activityLevel === 'medium').length,
+                    low: local.people.filter(p => p.activityLevel === 'low').length,
+                }
+                const byStatus = {
+                    new: local.people.filter(p => p.status === 'new').length,
+                    connected: local.people.filter(p => p.status === 'connected').length,
+                    dm_sent: local.people.filter(p => p.status === 'dm_sent').length,
+                    replied: local.people.filter(p => p.status === 'replied').length,
+                    demo: local.people.filter(p => p.status === 'demo').length,
+                    beta: local.people.filter(p => p.status === 'beta').length,
+                    client: local.people.filter(p => p.status === 'client').length,
+                    declined: local.people.filter(p => p.status === 'declined').length,
+                }
+                const groupsApproved = local.groups.filter(g => g.status === 'approved').length
+                const groupsPending = local.groups.filter(g => g.status === 'pending').length
+                const groupsRejected = local.groups.filter(g => g.status === 'rejected').length
+                const shortlistTotal = local.shortlist.length
+                const crSent = local.shortlist.filter(s => s.connectionStatus === 'sent').length
+                const crAccepted = local.shortlist.filter(s => s.connectionStatus === 'accepted').length
+                const crDeclined = local.shortlist.filter(s => s.connectionStatus === 'declined').length
+                const dmSent = local.shortlist.filter(s => s.dmStatus === 'sent').length
+                const dmReplied = local.shortlist.filter(s => s.dmStatus === 'replied').length
+                const dmNoReply = local.shortlist.filter(s => s.dmStatus === 'no_reply').length
+                const countryCounts: Record<string, number> = {}
+                for (const p of local.people) { if (p.country) countryCounts[p.country] = (countryCounts[p.country] || 0) + 1 }
+                const topCountries = Object.entries(countryCounts).sort((a, b) => b[1] - a[1]).slice(0, 8)
+
+                const statBox = { p: 2, borderRadius: 2, backgroundColor: '#ffffff05', border: '1px solid', borderColor: 'divider' }
+                const statNum = { fontSize: '1.8rem', fontWeight: 800, color: 'primary.main', lineHeight: 1 }
+                const statLabel = { fontSize: '0.7rem', color: 'text.secondary', textTransform: 'uppercase' as const, fontWeight: 600, mt: 0.5 }
+                const barSx = (color: string, pct: number) => ({ height: 6, borderRadius: 3, backgroundColor: color + '22', position: 'relative' as const, overflow: 'hidden', '&::after': { content: '""', position: 'absolute', left: 0, top: 0, height: '100%', width: `${Math.min(pct, 100)}%`, backgroundColor: color, borderRadius: 3 } })
+
+                return (
+                    <Box>
+                        <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 1.5, mb: 3 }}>
+                            <Box sx={statBox}><Typography sx={statNum}>{totalPeople}</Typography><Typography sx={statLabel}>People total</Typography></Box>
+                            <Box sx={statBox}><Typography sx={{ ...statNum, color: '#3fb68e' }}>{priorityA}</Typography><Typography sx={statLabel}>Priority A</Typography></Box>
+                            <Box sx={statBox}><Typography sx={{ ...statNum, color: '#d29922' }}>{priorityB}</Typography><Typography sx={statLabel}>Priority B</Typography></Box>
+                            <Box sx={statBox}><Typography sx={{ ...statNum, color: '#8b949e' }}>{priorityC}</Typography><Typography sx={statLabel}>Priority C</Typography></Box>
+                            <Box sx={statBox}><Typography sx={{ ...statNum, color: '#6c8eff' }}>{shortlistTotal}</Typography><Typography sx={statLabel}>Top-5 shortlist</Typography></Box>
+                            <Box sx={statBox}><Typography sx={{ ...statNum, color: '#a371f7' }}>{local.groups.length}</Typography><Typography sx={statLabel}>Groups total</Typography></Box>
+                        </Box>
+
+                        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2, mb: 3 }}>
+                            <Box sx={statBox}>
+                                <Typography sx={{ fontSize: '0.8rem', fontWeight: 700, mb: 1.5 }}>Pipeline (People)</Typography>
+                                {[
+                                    { label: 'New', count: byStatus.new, color: '#8b949e' },
+                                    { label: 'Connected', count: byStatus.connected, color: '#6c8eff' },
+                                    { label: 'DM sent', count: byStatus.dm_sent, color: '#d29922' },
+                                    { label: 'Replied', count: byStatus.replied, color: '#3fb68e' },
+                                    { label: 'Demo', count: byStatus.demo, color: '#a371f7' },
+                                    { label: 'Beta', count: byStatus.beta, color: '#3fb68e' },
+                                    { label: 'Client', count: byStatus.client, color: '#3fb68e' },
+                                    { label: 'Declined', count: byStatus.declined, color: '#f85149' },
+                                ].filter(r => r.count > 0).map(r => (
+                                    <Box key={r.label} sx={{ mb: 1 }}>
+                                        <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.3 }}>
+                                            <Typography sx={{ fontSize: '0.75rem', color: 'text.secondary' }}>{r.label}</Typography>
+                                            <Typography sx={{ fontSize: '0.75rem', fontWeight: 700, color: r.color }}>{r.count}</Typography>
+                                        </Box>
+                                        <Box sx={barSx(r.color, totalPeople > 0 ? (r.count / totalPeople) * 100 : 0)} />
+                                    </Box>
+                                ))}
+                            </Box>
+
+                            <Box sx={statBox}>
+                                <Typography sx={{ fontSize: '0.8rem', fontWeight: 700, mb: 1.5 }}>ICP Segments</Typography>
+                                {[
+                                    { label: 'Freelancer', count: bySegment.freelancer, color: '#3fb68e' },
+                                    { label: 'Small Agency', count: bySegment.small_agency, color: '#6c8eff' },
+                                    { label: 'In-House', count: bySegment.in_house, color: '#d29922' },
+                                    { label: 'Other', count: bySegment.other, color: '#8b949e' },
+                                ].filter(r => r.count > 0).map(r => (
+                                    <Box key={r.label} sx={{ mb: 1 }}>
+                                        <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.3 }}>
+                                            <Typography sx={{ fontSize: '0.75rem', color: 'text.secondary' }}>{r.label}</Typography>
+                                            <Typography sx={{ fontSize: '0.75rem', fontWeight: 700, color: r.color }}>{r.count}</Typography>
+                                        </Box>
+                                        <Box sx={barSx(r.color, totalPeople > 0 ? (r.count / totalPeople) * 100 : 0)} />
+                                    </Box>
+                                ))}
+                            </Box>
+                        </Box>
+
+                        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr 1fr' }, gap: 2 }}>
+                            <Box sx={statBox}>
+                                <Typography sx={{ fontSize: '0.8rem', fontWeight: 700, mb: 1.5 }}>Groups</Typography>
+                                <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                                    <Chip label={`Approved ${groupsApproved}`} size="small" sx={{ fontSize: '0.7rem', backgroundColor: '#3fb68e22', color: '#3fb68e' }} />
+                                    <Chip label={`Pending ${groupsPending}`} size="small" sx={{ fontSize: '0.7rem', backgroundColor: '#d2992222', color: '#d29922' }} />
+                                    {groupsRejected > 0 && <Chip label={`Rejected ${groupsRejected}`} size="small" sx={{ fontSize: '0.7rem', backgroundColor: '#f8514922', color: '#f85149' }} />}
+                                </Box>
+                            </Box>
+
+                            <Box sx={statBox}>
+                                <Typography sx={{ fontSize: '0.8rem', fontWeight: 700, mb: 1.5 }}>Connection Requests (Top-5)</Typography>
+                                <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                                    <Chip label={`Sent ${crSent}`} size="small" sx={{ fontSize: '0.7rem', backgroundColor: '#d2992222', color: '#d29922' }} />
+                                    <Chip label={`Accepted ${crAccepted}`} size="small" sx={{ fontSize: '0.7rem', backgroundColor: '#3fb68e22', color: '#3fb68e' }} />
+                                    {crDeclined > 0 && <Chip label={`Declined ${crDeclined}`} size="small" sx={{ fontSize: '0.7rem', backgroundColor: '#f8514922', color: '#f85149' }} />}
+                                </Box>
+                                {crSent + crAccepted > 0 && <Typography sx={{ fontSize: '0.7rem', color: 'text.secondary', mt: 1 }}>Accept rate: {crAccepted + crSent > 0 ? Math.round((crAccepted / (crAccepted + crSent + crDeclined)) * 100) : 0}%</Typography>}
+                            </Box>
+
+                            <Box sx={statBox}>
+                                <Typography sx={{ fontSize: '0.8rem', fontWeight: 700, mb: 1.5 }}>DMs (Top-5)</Typography>
+                                <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                                    <Chip label={`Sent ${dmSent}`} size="small" sx={{ fontSize: '0.7rem', backgroundColor: '#d2992222', color: '#d29922' }} />
+                                    <Chip label={`Replied ${dmReplied}`} size="small" sx={{ fontSize: '0.7rem', backgroundColor: '#3fb68e22', color: '#3fb68e' }} />
+                                    {dmNoReply > 0 && <Chip label={`No reply ${dmNoReply}`} size="small" sx={{ fontSize: '0.7rem', backgroundColor: '#f8514922', color: '#f85149' }} />}
+                                </Box>
+                                {dmSent + dmReplied > 0 && <Typography sx={{ fontSize: '0.7rem', color: 'text.secondary', mt: 1 }}>Reply rate: {dmReplied + dmSent + dmNoReply > 0 ? Math.round((dmReplied / (dmReplied + dmSent + dmNoReply)) * 100) : 0}%</Typography>}
+                            </Box>
+                        </Box>
+
+                        {topCountries.length > 0 && (
+                            <Box sx={{ ...statBox, mt: 2 }}>
+                                <Typography sx={{ fontSize: '0.8rem', fontWeight: 700, mb: 1.5 }}>Top Countries</Typography>
+                                <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                                    {topCountries.map(([country, count]) => (
+                                        <Chip key={country} label={`${country} (${count})`} size="small" sx={{ fontSize: '0.7rem' }} />
+                                    ))}
+                                </Box>
+                            </Box>
+                        )}
+
+                        <Box sx={{ ...statBox, mt: 2 }}>
+                            <Typography sx={{ fontSize: '0.8rem', fontWeight: 700, mb: 1 }}>Activity Level</Typography>
+                            <Box sx={{ display: 'flex', gap: 2 }}>
+                                <Typography sx={{ fontSize: '0.75rem', color: '#3fb68e' }}>High: {byActivity.high}</Typography>
+                                <Typography sx={{ fontSize: '0.75rem', color: '#d29922' }}>Medium: {byActivity.medium}</Typography>
+                                <Typography sx={{ fontSize: '0.75rem', color: '#8b949e' }}>Low: {byActivity.low}</Typography>
+                            </Box>
+                        </Box>
+                    </Box>
+                )
+            })()}
 
             <Dialog open={!!deleteConfirm} onClose={() => setDeleteConfirm(null)} PaperProps={{ sx: { backgroundColor: 'background.paper', minWidth: 300 } }}>
                 <DialogTitle sx={{ fontSize: '0.95rem', fontWeight: 700 }}>Удалить?</DialogTitle>
