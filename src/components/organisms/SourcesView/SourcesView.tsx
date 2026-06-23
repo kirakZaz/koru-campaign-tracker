@@ -271,7 +271,7 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
 
     // --- People ---
     const addPerson = () => {
-        const next = { ...local, people: [...local.people, { id: generateId(), name: '', linkedinUrl: '', country: '', icpSegment: 'freelancer' as IcpSegment, priority: 'B' as IcpPriority, activityLevel: 'medium' as const, source: '', status: 'new' as PersonStatus, notes: '' }] }
+        const next = { ...local, people: [{ id: generateId(), name: '', linkedinUrl: '', country: '', icpSegment: 'freelancer' as IcpSegment, priority: 'B' as IcpPriority, activityLevel: 'medium' as const, source: '', status: 'new' as PersonStatus, notes: '' }, ...local.people] }
         save(next)
     }
     const updatePerson = (id: string, patch: Partial<SourcePerson>) => {
@@ -285,7 +285,7 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
 
     // --- Groups ---
     const addGroup = () => {
-        const next = { ...local, groups: [...local.groups, { id: generateId(), name: '', url: '', platform: 'LinkedIn', members: '', account: 'Кира' as AccountName, status: 'pending' as GroupStatus, priority: 0, activeMembers: ['', '', '', '', ''], notes: '' }] }
+        const next = { ...local, groups: [{ id: generateId(), name: '', url: '', platform: 'LinkedIn', members: '', account: 'Кира' as AccountName, status: 'pending' as GroupStatus, priority: 0, activeMembers: ['', '', '', '', ''], notes: '' }, ...local.groups] }
         save(next)
     }
     const updateGroup = (id: string, patch: Partial<SourceGroup>) => {
@@ -316,7 +316,7 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
         }
     }
     const addShortlistPerson = () => {
-        const next = { ...local, shortlist: [...local.shortlist, { id: generateId(), batch: nextBatch, name: '', linkedinUrl: '', priority: 'B' as IcpPriority, dmStatus: 'not_sent' as DmStatus, connectionStatus: 'not_sent' as ConnectionStatus, source: '', status: 'new' as PersonStatus, notes: '' }] }
+        const next = { ...local, shortlist: [{ id: generateId(), batch: nextBatch, name: '', linkedinUrl: '', priority: 'B' as IcpPriority, dmStatus: 'not_sent' as DmStatus, connectionStatus: 'not_sent' as ConnectionStatus, source: '', status: 'new' as PersonStatus, notes: '' }, ...local.shortlist] }
         save(next)
     }
     const updateShortlistPerson = (id: string, patch: Partial<ShortlistPerson>) => {
@@ -340,7 +340,7 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
 
     // --- Companies ---
     const addCompany = () => {
-        const next = { ...local, companies: [...local.companies, { id: generateId(), name: '', website: '', segment: 'small_agency' as IcpSegment, size: '', contactPerson: '', status: 'research' as CompanyStatus, notes: '' }] }
+        const next = { ...local, companies: [{ id: generateId(), name: '', website: '', segment: 'small_agency' as IcpSegment, size: '', contactPerson: '', status: 'research' as CompanyStatus, notes: '' }, ...local.companies] }
         save(next)
     }
     const updateCompany = (id: string, patch: Partial<SourceCompany>) => {
