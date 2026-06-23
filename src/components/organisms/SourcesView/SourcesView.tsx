@@ -192,9 +192,11 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
     function sorted<T extends Record<string, any>>(items: T[]): T[] {
         if (!sortKey) return items
         return [...items].sort((a, b) => {
-            const va = (a[sortKey] ?? '') as string
-            const vb = (b[sortKey] ?? '') as string
-            const cmp = String(va).localeCompare(String(vb), undefined, { sensitivity: 'base' })
+            const va = a[sortKey] ?? ''
+            const vb = b[sortKey] ?? ''
+            const cmp = typeof va === 'number' && typeof vb === 'number'
+                ? va - vb
+                : String(va).localeCompare(String(vb), undefined, { sensitivity: 'base' })
             return sortDir === 'asc' ? cmp : -cmp
         })
     }
@@ -283,7 +285,7 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
 
     // --- Groups ---
     const addGroup = () => {
-        const next = { ...local, groups: [...local.groups, { id: generateId(), name: '', url: '', platform: 'LinkedIn', members: '', account: 'Кира' as AccountName, status: 'pending' as GroupStatus, activeMembers: ['', '', '', '', ''], notes: '' }] }
+        const next = { ...local, groups: [...local.groups, { id: generateId(), name: '', url: '', platform: 'LinkedIn', members: '', account: 'Кира' as AccountName, status: 'pending' as GroupStatus, priority: 0, activeMembers: ['', '', '', '', ''], notes: '' }] }
         save(next)
     }
     const updateGroup = (id: string, patch: Partial<SourceGroup>) => {
@@ -507,6 +509,7 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                         <Table size="small">
                             <TableHead>
                                 <TableRow sx={{ backgroundColor: '#ffffff06' }}>
+                                    <SortHeader label="#" field="priority" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
                                     <SortHeader label="Название" field="name" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
                                     <TableCell sx={headCellSx}>Ссылка</TableCell>
                                     <SortHeader label="Платформа" field="platform" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
@@ -521,13 +524,16 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                             <TableBody>
                                 {local.groups.length === 0 && (
                                     <TableRow>
-                                        <TableCell colSpan={9} sx={{ ...cellSx, textAlign: 'center', color: 'text.secondary', py: 4 }}>
+                                        <TableCell colSpan={10} sx={{ ...cellSx, textAlign: 'center', color: 'text.secondary', py: 4 }}>
                                             Пока пусто. Нажми "Добавить" чтобы внести группу.
                                         </TableCell>
                                     </TableRow>
                                 )}
                                 {sorted(filtered(local.groups)).map((g) => (
                                     <TableRow key={g.id} sx={{ '&:hover': { backgroundColor: '#ffffff04' } }}>
+                                        <TableCell sx={{ ...cellSx, width: 50 }}>
+                                            <TextField size="small" type="number" variant="outlined" value={g.priority || 0} onChange={e => updateGroup(g.id, { priority: parseInt(e.target.value) || 0 })} sx={{ ...inputSx, width: 45, '& .MuiInputBase-input': { fontSize: '0.8rem', py: 0.25, px: 0.5, textAlign: 'center' } }} inputProps={{ min: 0, max: 99 }} />
+                                        </TableCell>
                                         <TableCell sx={cellSx}><InlineInput value={g.name} onChange={v => updateGroup(g.id, { name: v })} placeholder="SEO Professionals" /></TableCell>
                                         <TableCell sx={cellSx}>
                                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.25 }}>

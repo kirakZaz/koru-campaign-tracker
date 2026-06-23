@@ -26,6 +26,7 @@ export interface SourceGroup {
     members: string
     account: AccountName
     status: GroupStatus
+    priority: number
     activeMembers: string[]
     notes: string
 }
