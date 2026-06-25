@@ -76,7 +76,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                     cron,
                     body: JSON.stringify({ memberName: member.name }),
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'Upstash-Cron-Timezone': member.timezone
                     },
                     retries: 1
                 })
