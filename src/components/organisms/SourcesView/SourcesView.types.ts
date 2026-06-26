@@ -45,6 +45,17 @@ export interface SourceCompany {
 export type DmStatus = 'not_sent' | 'sent' | 'replied' | 'no_reply'
 export type ConnectionStatus = 'not_sent' | 'sent' | 'accepted' | 'declined'
 
+ export type ShortlistAction =
+    | 'comment_post'
+    | 'send_dm'
+    | 'send_cr'
+    | 'invite_demo'
+    | 'invite_beta'
+    | 'send_email'
+    | 'add_to_mailing'
+    | 'tweet_reply'
+    | 'mention_in_post'
+
 export interface ShortlistPerson {
     id: string
     batch: string
@@ -56,6 +67,7 @@ export interface ShortlistPerson {
     source: string
     status: PersonStatus
     notes: string
+    actions?: ShortlistAction[]
 }
 
 export interface SourcesData {

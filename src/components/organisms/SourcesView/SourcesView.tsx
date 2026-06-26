@@ -15,6 +15,8 @@ import TextField from '@mui/material/TextField'
 import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
 import Chip from '@mui/material/Chip'
+import Checkbox from '@mui/material/Checkbox'
+import ListItemText from '@mui/material/ListItemText'
 import AddRoundedIcon from '@mui/icons-material/AddRounded'
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded'
 import PeopleRoundedIcon from '@mui/icons-material/PeopleRounded'
@@ -45,7 +47,8 @@ import type {
     IcpPriority,
     AccountName,
     DmStatus,
-    ConnectionStatus
+    ConnectionStatus,
+    ShortlistAction
 } from './SourcesView.types'
 
 const DM_STATUS_LABELS: Record<DmStatus, { label: string, color: string }> = {
@@ -92,6 +95,18 @@ const ICP_LABELS: Record<IcpSegment, string> = {
     small_agency: 'Small Agency',
     in_house: 'In-House',
     other: 'Other'
+}
+
+const SHORTLIST_ACTION_LABELS: Record<ShortlistAction, string> = {
+    comment_post: 'Прокомментировать пост',
+    send_dm: 'Написать DM',
+    send_cr: 'Отправить CR',
+    invite_demo: 'Пригласить на демо',
+    invite_beta: 'Предложить бета-тест',
+    send_email: 'Отправить email',
+    add_to_mailing: 'Добавить в рассылку',
+    tweet_reply: 'Ответить в Twitter',
+    mention_in_post: 'Упомянуть в посте'
 }
 
 const cellSx = { fontSize: '0.8rem', py: 0.75, px: 1, borderColor: 'divider' }
@@ -311,12 +326,12 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
             const next = { ...local, shortlist: local.shortlist.filter(s => !((s.linkedinUrl && s.linkedinUrl === person.linkedinUrl) || (s.name && s.name === person.name))) }
             save(next)
         } else {
-            const next = { ...local, shortlist: [...local.shortlist, { id: generateId(), batch: nextBatch, name: person.name, linkedinUrl: person.linkedinUrl, priority: person.priority, dmStatus: 'not_sent' as DmStatus, connectionStatus: 'not_sent' as ConnectionStatus, source: person.source, status: person.status, notes: person.notes }] }
+            const next = { ...local, shortlist: [...local.shortlist, { id: generateId(), batch: nextBatch, name: person.name, linkedinUrl: person.linkedinUrl, priority: person.priority, dmStatus: 'not_sent' as DmStatus, connectionStatus: 'not_sent' as ConnectionStatus, source: person.source, status: person.status, notes: person.notes, actions: [] as ShortlistAction[] }] }
             save(next)
         }
     }
     const addShortlistPerson = () => {
-        const next = { ...local, shortlist: [{ id: generateId(), batch: nextBatch, name: '', linkedinUrl: '', priority: 'B' as IcpPriority, dmStatus: 'not_sent' as DmStatus, connectionStatus: 'not_sent' as ConnectionStatus, source: '', status: 'new' as PersonStatus, notes: '' }, ...local.shortlist] }
+        const next = { ...local, shortlist: [{ id: generateId(), batch: nextBatch, name: '', linkedinUrl: '', priority: 'B' as IcpPriority, dmStatus: 'not_sent' as DmStatus, connectionStatus: 'not_sent' as ConnectionStatus, source: '', status: 'new' as PersonStatus, notes: '', actions: [] as ShortlistAction[] }, ...local.shortlist] }
         save(next)
     }
     const updateShortlistPerson = (id: string, patch: Partial<ShortlistPerson>) => {
@@ -642,6 +657,7 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                                                 <TableCell sx={headCellSx}>Запрос</TableCell>
                                                 <TableCell sx={headCellSx}>Источник</TableCell>
                                                 <TableCell sx={headCellSx}>Статус</TableCell>
+                                                <TableCell sx={headCellSx}>Действия</TableCell>
                                                 <TableCell sx={headCellSx}>Заметки</TableCell>
                                                 <TableCell sx={{ ...headCellSx, width: 40 }} />
                                             </TableRow>
@@ -702,6 +718,30 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                                                         >
                                                             {Object.entries(PERSON_STATUS_LABELS).map(([k, v]) => (
                                                                 <MenuItem key={k} value={k} sx={{ fontSize: '0.8rem' }}><StatusChip {...v} /></MenuItem>
+                                                            ))}
+                                                        </Select>
+                                                    </TableCell>
+                                                    <TableCell sx={cellSx}>
+                                                        <Select
+                                                            size="small"
+                                                            multiple
+                                                            value={s.actions || []}
+                                                            onChange={e => updateShortlistPerson(s.id, { actions: e.target.value as ShortlistAction[] })}
+                                                            sx={{ ...selectSx, minWidth: 130 }}
+                                                            renderValue={(selected) => (selected as ShortlistAction[]).length === 0
+                                                                ? <Typography sx={{ fontSize: '0.75rem', color: 'text.secondary' }}>--</Typography>
+                                                                : <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.3 }}>
+                                                                    {(selected as ShortlistAction[]).map(a => (
+                                                                        <Chip key={a} label={SHORTLIST_ACTION_LABELS[a]} size="small" sx={{ fontSize: '0.65rem', height: 18, backgroundColor: '#3fb68e22', color: '#3fb68e', border: '1px solid #3fb68e44' }} />
+                                                                    ))}
+                                                                </Box>
+                                                            }
+                                                        >
+                                                            {(Object.entries(SHORTLIST_ACTION_LABELS) as [ShortlistAction, string][]).map(([key, label]) => (
+                                                                <MenuItem key={key} value={key} sx={{ fontSize: '0.8rem', py: 0.25 }}>
+                                                                    <Checkbox checked={(s.actions || []).includes(key)} size="small" sx={{ p: 0.25 }} />
+                                                                    <ListItemText primary={label} primaryTypographyProps={{ fontSize: '0.8rem', ml: 0.5 }} />
+                                                                </MenuItem>
                                                             ))}
                                                         </Select>
                                                     </TableCell>
