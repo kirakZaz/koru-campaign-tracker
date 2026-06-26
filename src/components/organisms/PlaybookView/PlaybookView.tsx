@@ -24,7 +24,7 @@ const tableHeadSx = { ...tableCellSx, fontWeight: 700, color: 'text.secondary', 
 
 export default function PlaybookView() {
     return (
-        <Box sx={{ flex: 1, overflow: 'auto', px: { xs: 2, md: 4 }, py: 3, maxWidth: 900 }}>
+        <Box sx={{ flex: 1, overflow: 'auto', px: { xs: 2, md: 4 }, py: 3 }}>
             <Typography sx={{ fontSize: '1.5rem', fontWeight: 800, color: 'text.primary', mb: 0.5 }}>
                 Playbook
             </Typography>
