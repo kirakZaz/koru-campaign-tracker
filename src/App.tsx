@@ -22,10 +22,12 @@ import OverviewView from '@/components/organisms/OverviewView/OverviewView'
 import SourcesView from '@/components/organisms/SourcesView/SourcesView'
 import type { SourcesData } from '@/components/organisms/SourcesView/SourcesView.types'
 import CreativesView from '@/components/organisms/CreativesView/CreativesView'
+import PlaybookView from '@/components/organisms/PlaybookView/PlaybookView'
 
 export const OVERVIEW_INDEX = -100
 export const SOURCES_INDEX = -200
 export const CREATIVES_INDEX = -300
+export const PLAYBOOK_INDEX = -400
 
 function applyOverride(task: CampaignTask, override: TaskOverride | undefined): CampaignTask {
     if (!override) {
@@ -205,7 +207,7 @@ function App() {
             )}
 
             <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-                {currentDayIndex === OVERVIEW_INDEX || currentDayIndex === SOURCES_INDEX || currentDayIndex === CREATIVES_INDEX ? (
+                {currentDayIndex === OVERVIEW_INDEX || currentDayIndex === SOURCES_INDEX || currentDayIndex === CREATIVES_INDEX || currentDayIndex === PLAYBOOK_INDEX ? (
                     isMobile ? (
                         <Box sx={{ px: 2, pt: 2, borderBottom: (t: any) => `1px solid ${t.palette.divider}` }}>
                             <IconButton onClick={handleToggleDrawer} size="small">
@@ -237,6 +239,8 @@ function App() {
                         sources={sources as SourcesData}
                         onSaveSources={saveSources}
                     />
+                ) : currentDayIndex === PLAYBOOK_INDEX ? (
+                    <PlaybookView />
                 ) : currentDayIndex === CREATIVES_INDEX ? (
                     <CreativesView />
                 ) : currentDayIndex === OVERVIEW_INDEX ? (
