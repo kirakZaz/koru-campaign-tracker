@@ -12,10 +12,19 @@ Campaign management app for KORU's LinkedIn/Twitter launch campaign. React + MUI
 
 **Tagline:** Rank in Google. Get cited by AI.
 
-**Pitch:** SEO freelancers optimize for Google rankings. But 48% of searches now show an AI answer first — and most SEO tools don't measure that at all. KORU is the SEO platform that audits for both. GEO score for AI-citation readiness. AI brand visibility across major engines. Agent readiness checks. Intent-first keywords. Content briefs and drafts. Everything connected — from finding to task. GEO score and AI monitoring start free. Full keyword stack from $19.
+**Competitive context:** The GEO market already exists. Profound ($120+/mo), Goodie AI ($495/mo), Bluefish, AirOps, Brandi AI — enterprise GEO platforms. SE Ranking, Semrush — hybrid SEO+GEO suites. Otterly ($39/mo) — lightweight monitor. KORU is NOT the first to do AI visibility. The market knows about GEO. Never position KORU as "nobody does this" — position as the accessible, per-page diagnostic + full pipeline tool.
+
+**Pitch:** GEO tools track whether AI mentions your brand. But they don't check WHY a specific page gets cited or skipped. KORU checks each page against 14 rules and tells you exactly what to fix. Enterprise GEO platforms start at $120/mo and only give you monitoring. KORU gives you per-page diagnosis, intent-first keywords, content briefs, and a task pipeline — starting free. Full stack from $19.
+
+**Positioning vs competitors:**
+- Enterprise GEO monitors (Profound, Goodie, Bluefish) = brand-level monitoring, $120-$500+/mo. For big teams.
+- KORU = per-page diagnosis + full workflow (audit → keywords → briefs → tasks). For freelancers and small agencies. Free entry.
+- Key differentiator: competitors ask "does AI mention your brand?" KORU asks "why doesn't AI cite THIS page, and what do you fix?"
+- Second differentiator: most GEO tools are monitors only. KORU connects finding → action (9 task source types).
+- Third differentiator: price. Free tier includes GEO Score + AI Brand Visibility. Starter $19. Closest competitor Otterly starts at $39 with less functionality.
 
 ## What to say
-- GEO Score: 14-rule per-page AI-citation readiness check (FAQ schema, inverted pyramid, citation-worthy claims, entity density, AI crawler access). Score 0-100 with evidence per rule.
+- GEO Score: 14-rule per-page AI-citation readiness check (FAQ schema, inverted pyramid, citation-worthy claims, entity density, AI crawler access). Score 0-100 with evidence per rule. This is PER PAGE diagnosis — not brand-level monitoring like most GEO tools.
 - AI Brand Visibility: monitors whether OpenAI and Gemini recommend your brand. Per-provider trend charts, competitor detection, recommendations that convert to tasks.
 - Agent Readiness: checks llms.txt, markdown content negotiation, Content-Signal directives, JSON-LD coverage.
 - Intent-first keyword pipeline: AI reads site content first (not start from head-term), then finds opportunities with intent classification, relevance gate (core/adjacent/off_topic), semantic clustering by meaning.
@@ -25,6 +34,8 @@ Campaign management app for KORU's LinkedIn/Twitter launch campaign. React + MUI
 - Pricing: Free ($0, includes GEO + AI Brand), Starter ($19), Pro ($59), Agency ($179).
 
 ## What NOT to say — guard rails
+- **Never say "nobody tracks AI visibility" or "most SEO tools don't measure this."** The GEO market exists (Profound, Goodie, SE Ranking, Semrush AI, Otterly, etc.). Saying "nobody does this" destroys credibility with anyone who knows the space.
+- **Never say "we're the first" or "we invented GEO."** GEO as a category is established. KORU's angle is per-page diagnosis + full pipeline + free entry — not "first mover."
 - **Never say "published articles" or "ready-to-publish."** KORU generates content drafts — working material for editing, not final copy.
 - **Never say "5 minutes."** Processing time depends on site size. Don't promise specific timing.
 - **Never say "Perplexity."** That provider is commented out in code (TODO). Say "OpenAI and Gemini" or "major AI engines."
