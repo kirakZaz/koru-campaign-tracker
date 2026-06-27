@@ -181,17 +181,42 @@ function FilterSelect({ label, value, options, onChange }: { label: string, valu
     )
 }
 
+const NEXT_ACTION_LABELS: Record<ShortlistAction, string> = {
+    comment_post: 'Коммент к посту',
+    send_cr: 'Отправить CR',
+    send_dm: 'Написать DM',
+    invite_demo: 'Пригласить на демо',
+    invite_beta: 'Предложить бета',
+    send_email: 'Отправить email',
+    add_to_mailing: 'В рассылку',
+    tweet_reply: 'Ответить в Twitter',
+    mention_in_post: 'Упомянуть в посте'
+}
+
 function getNextAction(s: ShortlistPerson): { label: string, color: string } {
-    if (s.status === 'demo' || s.status === 'beta' || s.status === 'client') return { label: '\u2713', color: '#3fb68e' }
-    if (s.status === 'declined') return { label: '\u2717', color: '#f85149' }
-    if (s.connectionStatus === 'not_sent') return { label: 'Отправить CR', color: '#6c8eff' }
+    // Terminal states
+    if (s.status === 'client') return { label: 'Клиент ✓', color: '#3fb68e' }
+    if (s.status === 'beta') return { label: 'В бете ✓', color: '#3fb68e' }
+    if (s.status === 'declined') return { label: 'Отказ', color: '#f85149' }
+
+    // Waiting states from funnel
     if (s.connectionStatus === 'sent') return { label: 'Ждём CR', color: '#d29922' }
-    if (s.connectionStatus === 'declined') return { label: 'CR отклонён', color: '#f85149' }
-    if (s.connectionStatus === 'accepted' && (s.dmStatus === 'not_sent')) return { label: 'Написать DM', color: '#a371f7' }
     if (s.dmStatus === 'sent') return { label: 'Ждём DM', color: '#d29922' }
-    if (s.dmStatus === 'no_reply') return { label: 'Follow up', color: '#f85149' }
+    if (s.dmStatus === 'no_reply') return { label: 'Follow up!', color: '#f85149' }
     if (s.dmStatus === 'replied') return { label: 'Назначить demo', color: '#3fb68e' }
-    return { label: '--', color: '#8b949e' }
+    if (s.status === 'demo') return { label: 'Провести demo', color: '#a371f7' }
+
+    // Next from checklist — first uncompleted planned action
+    const planned = s.actions || []
+    const completed = s.completedActions || []
+    const uncompleted = planned.filter(a => !completed.includes(a))
+    if (uncompleted.length > 0) return { label: NEXT_ACTION_LABELS[uncompleted[0]!] || uncompleted[0]!, color: '#6c8eff' }
+
+    // All planned done but funnel not started
+    if (planned.length > 0 && uncompleted.length === 0) return { label: 'Все сделано ✓', color: '#3fb68e' }
+
+    // Nothing planned yet
+    return { label: 'Запланировать', color: '#8b949e' }
 }
 
 function isWithinLastWeek(dateStr?: string): boolean {
@@ -439,15 +464,26 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
         setSelectedIds(new Set())
     }
 
-    // Candidates for Outreach (Priority A/B, not already in Outreach)
+    // Score and rank candidates for Outreach
+    function candidateScore(p: SourcePerson): number {
+        let score = 0
+        // Priority: A=30, B=15, C=0
+        score += p.priority === 'A' ? 30 : p.priority === 'B' ? 15 : 0
+        // Activity: high=20, medium=10, low=0
+        score += p.activityLevel === 'high' ? 20 : p.activityLevel === 'medium' ? 10 : 0
+        // Has notes (personalization possible): +15
+        if (p.notes && p.notes.trim().length > 10) score += 15
+        // Has LinkedIn URL: +10
+        if (p.linkedinUrl && p.linkedinUrl.includes('linkedin')) score += 10
+        // ICP segment filled: +5
+        if (p.icpSegment && p.icpSegment !== 'other') score += 5
+        return score
+    }
+
     const outreachCandidates = React.useMemo(() => {
         return local.people.filter(p =>
             !local.shortlist.some(s => (s.linkedinUrl && s.linkedinUrl === p.linkedinUrl) || (s.name && s.name === p.name))
-        ).sort((a, b) => {
-            const prio = { A: 0, B: 1, C: 2 }
-            const act = { high: 0, medium: 1, low: 2 }
-            return (prio[a.priority] - prio[b.priority]) || (act[a.activityLevel] - act[b.activityLevel])
-        })
+        ).sort((a, b) => candidateScore(b) - candidateScore(a))
     }, [local.people, local.shortlist])
 
     const addPeopleToOutreach = (people: SourcePerson[]) => {
@@ -1190,9 +1226,9 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                         )}
                         <Box sx={{ flex: 1 }} />
                         {outreachCandidates.length > 0 && (
-                            <Button size="small" variant="outlined" onClick={() => { setBestPickIds(new Set(outreachCandidates.filter(p => p.priority === 'A').map(p => p.id))); setAddBestDialogOpen(true) }}
+                            <Button size="small" variant="outlined" onClick={() => { setBestPickIds(new Set(outreachCandidates.filter(p => candidateScore(p) >= 50).map(p => p.id))); setAddBestDialogOpen(true) }}
                                 sx={{ textTransform: 'none', fontSize: '0.8rem', mr: 0.5, borderColor: '#3fb68e44', color: '#3fb68e', '&:hover': { borderColor: '#3fb68e', backgroundColor: '#3fb68e11' } }}>
-                                + Лучшие из People ({outreachCandidates.filter(p => p.priority === 'A').length} A)
+                                + Лучшие из People ({outreachCandidates.filter(p => candidateScore(p) >= 50).length})
                             </Button>
                         )}
                         <Button size="small" startIcon={<AddRoundedIcon />} onClick={addShortlistPerson} variant="outlined" sx={{ textTransform: 'none', fontSize: '0.8rem' }}>
@@ -1588,6 +1624,7 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                                 <Typography sx={{ fontSize: '0.8rem', fontWeight: 600, flex: 1 }}>{p.name || 'Без имени'}</Typography>
                                 <Typography sx={{ fontSize: '0.7rem', color: 'text.secondary' }}>{p.country}</Typography>
                                 <Typography sx={{ fontSize: '0.7rem', color: 'text.secondary' }}>{ICP_LABELS[p.icpSegment] || ''}</Typography>
+                                <Chip label={`${candidateScore(p)}pt`} size="small" sx={{ fontSize: '0.65rem', height: 18, minWidth: 36, color: candidateScore(p) >= 50 ? '#3fb68e' : '#8b949e', backgroundColor: candidateScore(p) >= 50 ? '#3fb68e22' : '#8b949e22' }} />
                             </Box>
                         ))}
                         {outreachCandidates.length === 0 && <Typography sx={{ fontSize: '0.85rem', color: 'text.secondary', py: 2, textAlign: 'center' }}>Все люди уже в Outreach!</Typography>}
