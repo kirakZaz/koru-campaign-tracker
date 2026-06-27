@@ -1271,6 +1271,22 @@ export default function SourcesView({ sources, onSaveSources, startDate }: Sourc
                             </>
                         )}
                         <Box sx={{ flex: 1 }} />
+                        <Button size="small" variant="outlined" onClick={() => {
+                            const now = new Date().toISOString().slice(0, 10)
+                            let updated = 0
+                            const nextShortlist = local.shortlist.map(s => {
+                                const newActions = getAutoActions(campaignWeek, s.priority)
+                                const existing = s.actions || []
+                                const toAdd = newActions.filter(a => !existing.includes(a))
+                                if (toAdd.length === 0) return s
+                                updated++
+                                return { ...s, actions: [...existing, ...toAdd], history: [...(s.history || []), { date: now, text: `Обновлено на W${campaignWeek}: +${toAdd.map(a => NEXT_ACTION_LABELS[a]).join(', ')}`, auto: true }] }
+                            })
+                            if (updated > 0) { save({ ...local, shortlist: nextShortlist }); setSnackbarMsg(`Обновлено: ${updated} человек (W${campaignWeek})`) }
+                            else setSnackbarMsg(`Все задачи актуальны (W${campaignWeek})`)
+                        }} sx={{ textTransform: 'none', fontSize: '0.75rem', height: 28, mr: 0.5, borderColor: '#6c8eff44', color: '#6c8eff', '&:hover': { borderColor: '#6c8eff', backgroundColor: '#6c8eff11' } }}>
+                            Обновить задачи (W{campaignWeek})
+                        </Button>
                         {outreachCandidates.length > 0 && (
                             <Button size="small" variant="outlined" onClick={() => { setBestPickIds(new Set(outreachCandidates.filter(p => candidateScore(p) >= 50).map(p => p.id))); setAddBestDialogOpen(true) }}
                                 sx={{ textTransform: 'none', fontSize: '0.8rem', mr: 0.5, borderColor: '#3fb68e44', color: '#3fb68e', '&:hover': { borderColor: '#3fb68e', backgroundColor: '#3fb68e11' } }}>
