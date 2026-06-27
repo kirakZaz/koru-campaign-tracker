@@ -527,6 +527,18 @@ export default function SourcesView({ sources, onSaveSources, startDate }: Sourc
     }, [local.people, local.shortlist])
 
     const campaignWeek = getCampaignWeek(startDate)
+    const WAVE_SIZE = 10
+
+    // Wave logic: people with uncompleted actions = active
+    const isPersonDone = (s: ShortlistPerson) => {
+        const planned = s.actions || []
+        const completed = s.completedActions || []
+        if (planned.length === 0) return false
+        return planned.every(a => completed.includes(a))
+    }
+    const activeInOutreach = local.shortlist.filter(s => !isPersonDone(s) && s.status !== 'declined' && s.status !== 'client')
+    const doneInOutreach = local.shortlist.filter(s => isPersonDone(s) || s.status === 'declined' || s.status === 'client')
+    const canAddNextWave = activeInOutreach.length <= 3 && outreachCandidates.length > 0
 
     const addPeopleToOutreach = (people: SourcePerson[]) => {
         const now = new Date().toISOString()
@@ -1288,15 +1300,34 @@ export default function SourcesView({ sources, onSaveSources, startDate }: Sourc
                             Обновить задачи (W{campaignWeek})
                         </Button>
                         {outreachCandidates.length > 0 && (
-                            <Button size="small" variant="outlined" onClick={() => { setBestPickIds(new Set(outreachCandidates.filter(p => candidateScore(p) >= 50).map(p => p.id))); setAddBestDialogOpen(true) }}
-                                sx={{ textTransform: 'none', fontSize: '0.8rem', mr: 0.5, borderColor: '#3fb68e44', color: '#3fb68e', '&:hover': { borderColor: '#3fb68e', backgroundColor: '#3fb68e11' } }}>
-                                + Лучшие из People ({outreachCandidates.filter(p => candidateScore(p) >= 50).length})
+                            <Button size="small" variant={canAddNextWave ? 'contained' : 'outlined'} onClick={() => {
+                                const top = outreachCandidates.slice(0, WAVE_SIZE)
+                                setBestPickIds(new Set(top.map(p => p.id)))
+                                setAddBestDialogOpen(true)
+                            }} sx={{ textTransform: 'none', fontSize: '0.8rem', mr: 0.5, ...(canAddNextWave ? { backgroundColor: '#3fb68e', '&:hover': { backgroundColor: '#2d9e72' } } : { borderColor: '#3fb68e44', color: '#3fb68e', '&:hover': { borderColor: '#3fb68e', backgroundColor: '#3fb68e11' } }) }}>
+                                {canAddNextWave ? `Следующая волна (${Math.min(WAVE_SIZE, outreachCandidates.length)})` : `+ Волна из People (${Math.min(WAVE_SIZE, outreachCandidates.length)})`}
                             </Button>
                         )}
                         <Button size="small" startIcon={<AddRoundedIcon />} onClick={addShortlistPerson} variant="outlined" sx={{ textTransform: 'none', fontSize: '0.8rem' }}>
                             Добавить
                         </Button>
                     </Box>
+                    {local.shortlist.length > 0 && (
+                        <Box sx={{ display: 'flex', gap: 2, mb: 1.5, px: 1 }}>
+                            <Typography sx={{ fontSize: '0.75rem', color: '#6c8eff' }}>
+                                Активных: <b>{activeInOutreach.length}</b>
+                            </Typography>
+                            <Typography sx={{ fontSize: '0.75rem', color: '#3fb68e' }}>
+                                Завершено: <b>{doneInOutreach.length}</b>
+                            </Typography>
+                            <Typography sx={{ fontSize: '0.75rem', color: '#8b949e' }}>
+                                Всего: <b>{local.shortlist.length}</b>
+                            </Typography>
+                            <Typography sx={{ fontSize: '0.75rem', color: '#8b949e' }}>
+                                W{campaignWeek}
+                            </Typography>
+                        </Box>
+                    )}
                     {displayShortlist.length === 0 ? (
                         <Box sx={{ border: '1px solid', borderColor: 'divider', borderRadius: 1, py: 4, textAlign: 'center' }}>
                             <Typography sx={{ color: 'text.secondary', fontSize: '0.85rem' }}>
@@ -1671,14 +1702,17 @@ export default function SourcesView({ sources, onSaveSources, startDate }: Sourc
 
             <Dialog open={addBestDialogOpen} onClose={() => setAddBestDialogOpen(false)} maxWidth="sm" fullWidth PaperProps={{ sx: { backgroundColor: 'background.paper' } }}>
                 <DialogTitle sx={{ fontSize: '1rem', fontWeight: 700 }}>
-                    Добавить в Outreach из People
+                    Следующая волна — топ {WAVE_SIZE}
                     <Typography sx={{ fontSize: '0.8rem', color: 'text.secondary', mt: 0.5 }}>
-                        {outreachCandidates.length} человек ещё не в Outreach. Отмечены Priority A.
+                        Активных сейчас: {activeInOutreach.length} · Завершено: {doneInOutreach.length} · В очереди: {outreachCandidates.length}
+                    </Typography>
+                    <Typography sx={{ fontSize: '0.75rem', color: '#6c8eff', mt: 0.25 }}>
+                        Неделя W{campaignWeek} · Задачи назначатся автоматически
                     </Typography>
                 </DialogTitle>
                 <DialogContent>
                     <Box sx={{ maxHeight: 400, overflow: 'auto' }}>
-                        {outreachCandidates.map(p => (
+                        {outreachCandidates.slice(0, WAVE_SIZE).map(p => (
                             <Box key={p.id} sx={{ display: 'flex', alignItems: 'center', gap: 1, py: 0.5, borderBottom: '1px solid', borderColor: 'divider' }}>
                                 <Checkbox size="small" sx={{ p: 0.25 }} checked={bestPickIds.has(p.id)}
                                     onChange={(_, checked) => setBestPickIds(prev => { const n = new Set(prev); checked ? n.add(p.id) : n.delete(p.id); return n })} />
@@ -1693,7 +1727,7 @@ export default function SourcesView({ sources, onSaveSources, startDate }: Sourc
                     </Box>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => { setBestPickIds(new Set(outreachCandidates.map(p => p.id))); }} sx={{ textTransform: 'none', fontSize: '0.8rem' }}>Выбрать всех ({outreachCandidates.length})</Button>
+                    <Button onClick={() => { setBestPickIds(new Set(outreachCandidates.slice(0, WAVE_SIZE).map(p => p.id))); }} sx={{ textTransform: 'none', fontSize: '0.8rem' }}>Выбрать всех ({Math.min(WAVE_SIZE, outreachCandidates.length)})</Button>
                     <Button onClick={() => setBestPickIds(new Set())} sx={{ textTransform: 'none', fontSize: '0.8rem', color: 'text.secondary' }}>Снять</Button>
                     <Box sx={{ flex: 1 }} />
                     <Button onClick={() => setAddBestDialogOpen(false)} sx={{ textTransform: 'none' }}>Отмена</Button>
