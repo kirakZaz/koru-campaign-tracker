@@ -229,7 +229,45 @@ function isWithinLastWeek(dateStr?: string): boolean {
 
 const DEFAULT_COUNTRIES = ['US', 'UK', 'Israel', 'Канада', 'Австралия', 'Германия', 'Индия', 'Нидерланды']
 
-export default function SourcesView({ sources, onSaveSources }: SourcesViewProps) {
+// Auto-assign actions based on campaign week + priority
+function getAutoActions(week: number, priority: IcpPriority): ShortlistAction[] {
+    if (week <= 2) {
+        // W1-W2: warm up — comment on their posts
+        return ['comment_post']
+    }
+    if (week === 3) {
+        // W3: building in public — comment + DM for A, comment for B
+        if (priority === 'A') return ['comment_post', 'send_dm']
+        return ['comment_post']
+    }
+    if (week === 4) {
+        // W4: reveal + outreach — CR + DM + demo for A, comment + CR for B
+        if (priority === 'A') return ['send_cr', 'send_dm', 'invite_demo']
+        if (priority === 'B') return ['comment_post', 'send_cr']
+        return ['comment_post']
+    }
+    if (week === 5) {
+        // W5: pre-launch — CR + DM + beta for A, CR + DM for B
+        if (priority === 'A') return ['send_cr', 'send_dm', 'invite_beta']
+        if (priority === 'B') return ['send_cr', 'send_dm']
+        return ['send_cr']
+    }
+    // W6+: launch — DM + demo for all
+    if (priority === 'A') return ['send_cr', 'send_dm', 'invite_demo', 'invite_beta']
+    if (priority === 'B') return ['send_cr', 'send_dm', 'invite_demo']
+    return ['send_cr', 'send_dm']
+}
+
+function getCampaignWeek(startDate: string | null | undefined): number {
+    if (!startDate) return 1
+    const start = new Date(startDate)
+    const now = new Date()
+    const diffMs = now.getTime() - start.getTime()
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24))
+    return Math.max(1, Math.ceil((diffDays + 1) / 7))
+}
+
+export default function SourcesView({ sources, onSaveSources, startDate }: SourcesViewProps) {
     const [tab, setTab] = React.useState(0)
     const [local, setLocal] = React.useState({ people: sources.people || [], groups: sources.groups || [], companies: sources.companies || [], shortlist: sources.shortlist || [], countries: sources.countries || [] })
     const saveTimerRef = React.useRef<ReturnType<typeof setTimeout>>()
@@ -406,7 +444,9 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
             const next = { ...local, shortlist: local.shortlist.filter(s => !((s.linkedinUrl && s.linkedinUrl === person.linkedinUrl) || (s.name && s.name === person.name))) }
             save(next)
         } else {
-            const next = { ...local, shortlist: [...local.shortlist, { id: generateId(), batch: nextBatch, name: person.name, linkedinUrl: person.linkedinUrl, priority: person.priority, dmStatus: 'not_sent' as DmStatus, connectionStatus: 'not_sent' as ConnectionStatus, source: person.source, status: person.status, notes: person.notes, actions: [] as ShortlistAction[], country: person.country, icpSegment: person.icpSegment, createdAt: new Date().toISOString() }] }
+            const autoActions = getAutoActions(campaignWeek, person.priority)
+            const now = new Date().toISOString()
+            const next = { ...local, shortlist: [...local.shortlist, { id: generateId(), batch: nextBatch, name: person.name, linkedinUrl: person.linkedinUrl, priority: person.priority, dmStatus: 'not_sent' as DmStatus, connectionStatus: 'not_sent' as ConnectionStatus, source: person.source, status: person.status, notes: person.notes, actions: autoActions, completedActions: [] as ShortlistAction[], country: person.country, icpSegment: person.icpSegment, createdAt: now, history: [{ date: now.slice(0, 10), text: `Добавлен в Outreach (W${campaignWeek})`, auto: true }] as HistoryEntry[] }] }
             save(next)
         }
     }
@@ -486,16 +526,22 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
         ).sort((a, b) => candidateScore(b) - candidateScore(a))
     }, [local.people, local.shortlist])
 
+    const campaignWeek = getCampaignWeek(startDate)
+
     const addPeopleToOutreach = (people: SourcePerson[]) => {
         const now = new Date().toISOString()
-        const newEntries: ShortlistPerson[] = people.map(p => ({
-            id: generateId(), batch: nextBatch, name: p.name, linkedinUrl: p.linkedinUrl,
-            country: p.country, icpSegment: p.icpSegment, priority: p.priority,
-            dmStatus: 'not_sent' as DmStatus, connectionStatus: 'not_sent' as ConnectionStatus,
-            source: p.source, status: p.status, notes: p.notes, actions: [], completedActions: [],
-            history: [{ date: now.slice(0, 10), text: 'Добавлен в Outreach', auto: true }],
-            createdAt: now
-        }))
+        const newEntries: ShortlistPerson[] = people.map(p => {
+            const autoActions = getAutoActions(campaignWeek, p.priority)
+            return {
+                id: generateId(), batch: nextBatch, name: p.name, linkedinUrl: p.linkedinUrl,
+                country: p.country, icpSegment: p.icpSegment, priority: p.priority,
+                dmStatus: 'not_sent' as DmStatus, connectionStatus: 'not_sent' as ConnectionStatus,
+                source: p.source, status: p.status, notes: p.notes,
+                actions: autoActions, completedActions: [],
+                history: [{ date: now.slice(0, 10), text: `Добавлен в Outreach (W${campaignWeek}). Авто-задачи: ${autoActions.map(a => NEXT_ACTION_LABELS[a]).join(', ')}`, auto: true }],
+                createdAt: now
+            }
+        })
         const next = { ...local, shortlist: [...local.shortlist, ...newEntries] }
         save(next)
     }
@@ -1328,12 +1374,6 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                                                             <ChevronRightRoundedIcon sx={{ fontSize: '1.1rem' }} />
                                                         </IconButton>
                                                     </Tooltip>
-                                                    <IconButton size="small"
-                                                        onClick={(e) => { e.stopPropagation(); setDeleteConfirm({ id: s.id, name: s.name || 'без имени', type: 'shortlist' }) }}
-                                                        sx={{ color: 'text.secondary', '&:hover': { color: 'error.main' } }}
-                                                    >
-                                                        <DeleteRoundedIcon sx={{ fontSize: '0.85rem' }} />
-                                                    </IconButton>
                                                 </TableCell>
                                             </TableRow>
                                         )

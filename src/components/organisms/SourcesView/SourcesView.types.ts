@@ -93,4 +93,5 @@ export interface SourcesData {
 export interface SourcesViewProps {
     sources: SourcesData
     onSaveSources: (sources: SourcesData) => void
+    startDate?: string | null
 }

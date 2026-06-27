@@ -238,6 +238,7 @@ function App() {
                     <SourcesView
                         sources={sources as SourcesData}
                         onSaveSources={saveSources}
+                        startDate={progress.startDate}
                     />
                 ) : currentDayIndex === PLAYBOOK_INDEX ? (
                     <PlaybookView />
