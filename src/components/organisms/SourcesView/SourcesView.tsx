@@ -77,7 +77,7 @@ const CONNECTION_STATUS_LABELS: Record<ConnectionStatus, { label: string, color:
 const PERSON_STATUS_LABELS: Record<PersonStatus, { label: string, color: string }> = {
     new: { label: 'New', color: '#8b949e' },
     connected: { label: 'Connected', color: '#6c8eff' },
-    dm_sent: { label: 'DM sent', color: '#d29922' },
+    dm_sent: { label: 'DM отпр.', color: '#d29922' },
     replied: { label: 'Replied', color: '#3fb68e' },
     demo: { label: 'Demo', color: '#a371f7' },
     beta: { label: 'Beta', color: '#3fb68e' },
@@ -109,7 +109,7 @@ const ICP_LABELS: Record<IcpSegment, string> = {
 const SHORTLIST_ACTION_LABELS: Record<ShortlistAction, string> = {
     comment_post: 'Прокомментировать пост',
     send_dm: 'Написать DM',
-    send_cr: 'Отправить CR',
+    send_cr: 'Отправить запрос',
     invite_demo: 'Пригласить на демо',
     invite_beta: 'Предложить бета-тест',
     send_email: 'Отправить email',
@@ -183,7 +183,7 @@ function FilterSelect({ label, value, options, onChange }: { label: string, valu
 
 const NEXT_ACTION_LABELS: Record<ShortlistAction, string> = {
     comment_post: 'Коммент к посту',
-    send_cr: 'Отправить CR',
+    send_cr: 'Отправить запрос',
     send_dm: 'Написать DM',
     invite_demo: 'Пригласить на демо',
     invite_beta: 'Предложить бета',
@@ -200,7 +200,7 @@ function getNextAction(s: ShortlistPerson): { label: string, color: string } {
     if (s.status === 'declined') return { label: 'Отказ', color: '#f85149' }
 
     // Waiting states from funnel
-    if (s.connectionStatus === 'sent') return { label: 'Ждём CR', color: '#d29922' }
+    if (s.connectionStatus === 'sent') return { label: 'Ждём ответ', color: '#d29922' }
     if (s.dmStatus === 'sent') return { label: 'Ждём DM', color: '#d29922' }
     if (s.dmStatus === 'no_reply') return { label: 'Follow up!', color: '#f85149' }
     if (s.dmStatus === 'replied') return { label: 'Назначить demo', color: '#3fb68e' }
@@ -439,7 +439,7 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
         const now = new Date().toISOString().slice(0, 10)
 
         if (patch.connectionStatus && patch.connectionStatus !== person.connectionStatus) {
-            const labels: Record<string, string> = { sent: 'CR отправлен', accepted: 'CR принят', declined: 'CR отклонён' }
+            const labels: Record<string, string> = { sent: 'Запрос отправлен', accepted: 'Запрос принят', declined: 'Запрос отклонён' }
             if (labels[patch.connectionStatus]) historyEntries.push({ date: now, text: labels[patch.connectionStatus]!, auto: true })
         }
         if (patch.dmStatus && patch.dmStatus !== person.dmStatus) {
@@ -591,7 +591,7 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
 
         const templates = [
             {
-                label: 'CR шаблон',
+                label: 'Шаблон запроса',
                 text: `Hi ${firstName}, ${person.notes ? person.notes + '.' : ''} I'm building KORU \u2014 an SEO platform that audits for both Google and AI search engines. GEO score, AI brand visibility, intent-first keywords. Would love to connect.`
             },
             {
@@ -682,14 +682,14 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                                     DM шаблон
                                 </Button>
                             )}
-                            {nextAction.label === 'Отправить CR' && (
+                            {nextAction.label === 'Отправить запрос' && (
                                 <Button
                                     size="small"
                                     startIcon={<ContentCopyRoundedIcon sx={{ fontSize: '0.7rem' }} />}
                                     onClick={() => copyToClipboard(templates[0]!.text)}
                                     sx={{ textTransform: 'none', fontSize: '0.7rem', height: 24, ml: 'auto' }}
                                 >
-                                    CR шаблон
+                                    Шаблон запроса
                                 </Button>
                             )}
                         </Box>
@@ -701,14 +701,14 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                     <Box sx={{ p: 2.5, pb: 1.5 }}>
                         <Typography sx={{ fontSize: '0.8rem', fontWeight: 700, mb: 1 }}>Воронка</Typography>
                         <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 0.75 }}>
-                            {funnelChip('CR отправлен', crDone, () => {
+                            {funnelChip('Запрос отправлен', crDone, () => {
                                 if (crDone && !crAccepted) {
                                     updateShortlistWithHistory(person.id, { connectionStatus: 'not_sent' })
                                 } else if (!crDone) {
                                     updateShortlistWithHistory(person.id, { connectionStatus: 'sent' })
                                 }
                             })}
-                            {funnelChip('CR принят', crAccepted, () => {
+                            {funnelChip('Запрос принят', crAccepted, () => {
                                 if (crAccepted) {
                                     updateShortlistWithHistory(person.id, { connectionStatus: 'sent' })
                                 } else {
@@ -1198,7 +1198,7 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                             Нужно действие
                         </Button>
                         <FilterSelect label="Priority" value={filters.priority || ''} options={['A', 'B', 'C']} onChange={v => setFilter('priority', v)} />
-                        <FilterSelect label="CR" value={filters.connectionStatus || ''} options={['not_sent', 'sent', 'accepted', 'declined']} onChange={v => setFilter('connectionStatus', v)} />
+                        <FilterSelect label="Запрос" value={filters.connectionStatus || ''} options={['not_sent', 'sent', 'accepted', 'declined']} onChange={v => setFilter('connectionStatus', v)} />
                         <FilterSelect label="DM" value={filters.dmStatus || ''} options={['not_sent', 'sent', 'replied', 'no_reply']} onChange={v => setFilter('dmStatus', v)} />
                         {Object.keys(filters).length > 0 && (
                             <IconButton size="small" onClick={clearFilters} sx={{ color: 'text.secondary', '&:hover': { color: 'error.main' } }} title="Сбросить все фильтры">
@@ -1208,16 +1208,16 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                         {selectedIds.size > 0 && (
                             <>
                                 <Button size="small" variant="outlined" onClick={() => bulkUpdate({ connectionStatus: 'sent' })} sx={{ textTransform: 'none', fontSize: '0.7rem', height: 26 }}>
-                                    CR sent ({selectedIds.size})
+                                    Запрос отпр. ({selectedIds.size})
                                 </Button>
                                 <Button size="small" variant="outlined" onClick={() => bulkUpdate({ connectionStatus: 'accepted' })} sx={{ textTransform: 'none', fontSize: '0.7rem', height: 26 }}>
-                                    CR accepted ({selectedIds.size})
+                                    Запрос принят ({selectedIds.size})
                                 </Button>
                                 <Button size="small" variant="outlined" onClick={() => bulkUpdate({ dmStatus: 'sent' })} sx={{ textTransform: 'none', fontSize: '0.7rem', height: 26 }}>
-                                    DM sent ({selectedIds.size})
+                                    DM отпр. ({selectedIds.size})
                                 </Button>
                                 <Button size="small" variant="outlined" onClick={() => bulkUpdate({ dmStatus: 'replied' })} sx={{ textTransform: 'none', fontSize: '0.7rem', height: 26 }}>
-                                    DM replied ({selectedIds.size})
+                                    DM ответил ({selectedIds.size})
                                 </Button>
                                 <Button size="small" variant="outlined" onClick={() => setSelectedIds(new Set())} sx={{ textTransform: 'none', fontSize: '0.7rem', height: 26, color: 'text.secondary' }}>
                                     Снять выбор
@@ -1265,7 +1265,7 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                                         </TableCell>
                                         <SortHeader label="Имя" field="name" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
                                         <SortHeader label="Priority" field="priority" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
-                                        <SortHeader label="CR" field="connectionStatus" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
+                                        <SortHeader label="Запрос" field="connectionStatus" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
                                         <SortHeader label="DM" field="dmStatus" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
                                         <TableCell sx={headCellSx}>Next</TableCell>
                                         <TableCell sx={{ ...headCellSx, width: 40 }} />
@@ -1328,6 +1328,12 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                                                             <ChevronRightRoundedIcon sx={{ fontSize: '1.1rem' }} />
                                                         </IconButton>
                                                     </Tooltip>
+                                                    <IconButton size="small"
+                                                        onClick={(e) => { e.stopPropagation(); setDeleteConfirm({ id: s.id, name: s.name || 'без имени', type: 'shortlist' }) }}
+                                                        sx={{ color: 'text.secondary', '&:hover': { color: 'error.main' } }}
+                                                    >
+                                                        <DeleteRoundedIcon sx={{ fontSize: '0.85rem' }} />
+                                                    </IconButton>
                                                 </TableCell>
                                             </TableRow>
                                         )
@@ -1470,10 +1476,10 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                                 <Typography sx={{ fontSize: '0.8rem', fontWeight: 700, mb: 1.5 }}>Outreach Funnel</Typography>
                                 {[
                                     { label: 'In Outreach', count: shortlistTotal, color: '#6c8eff' },
-                                    { label: 'CR sent', count: crSent, color: '#d29922' },
-                                    { label: `CR accepted${crSent + crAccepted + crDeclined > 0 ? ` (${Math.round((crAccepted / (crSent + crAccepted + crDeclined)) * 100)}%)` : ''}`, count: crAccepted, color: '#3fb68e' },
-                                    { label: 'DM sent', count: dmSent, color: '#a371f7' },
-                                    { label: `DM replied${dmSent + dmReplied + dmNoReply > 0 ? ` (${Math.round((dmReplied / (dmSent + dmReplied + dmNoReply)) * 100)}%)` : ''}`, count: dmReplied, color: '#3fb68e' },
+                                    { label: 'Запрос отпр.', count: crSent, color: '#d29922' },
+                                    { label: `Запрос принят${crSent + crAccepted + crDeclined > 0 ? ` (${Math.round((crAccepted / (crSent + crAccepted + crDeclined)) * 100)}%)` : ''}`, count: crAccepted, color: '#3fb68e' },
+                                    { label: 'DM отпр.', count: dmSent, color: '#a371f7' },
+                                    { label: `DM ответил${dmSent + dmReplied + dmNoReply > 0 ? ` (${Math.round((dmReplied / (dmSent + dmReplied + dmNoReply)) * 100)}%)` : ''}`, count: dmReplied, color: '#3fb68e' },
                                     { label: 'Demo', count: demoCount, color: '#a371f7' },
                                     { label: 'Beta', count: betaCount, color: '#3fb68e' },
                                     { label: 'Client', count: clientCount, color: '#3fb68e' },
@@ -1518,7 +1524,7 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                             </Box>
 
                             <Box sx={statBox}>
-                                <Typography sx={{ fontSize: '0.8rem', fontWeight: 700, mb: 1.5 }}>Connection Requests (Outreach)</Typography>
+                                <Typography sx={{ fontSize: '0.8rem', fontWeight: 700, mb: 1.5 }}>Запросы на связь (Outreach)</Typography>
                                 <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
                                     <Chip label={`Sent ${crSent}`} size="small" sx={{ fontSize: '0.7rem', backgroundColor: '#d2992222', color: '#d29922' }} />
                                     <Chip label={`Accepted ${crAccepted}`} size="small" sx={{ fontSize: '0.7rem', backgroundColor: '#3fb68e22', color: '#3fb68e' }} />
