@@ -541,8 +541,18 @@ export default function SourcesView({ sources, onSaveSources, startDate }: Sourc
     const canAddNextWave = activeInOutreach.length <= 3 && outreachCandidates.length > 0
 
     const addPeopleToOutreach = (people: SourcePerson[]) => {
+        // Deduplicate: skip people already in Outreach (by LinkedIn URL or name)
+        const filtered = people.filter(p =>
+            !local.shortlist.some(s =>
+                (s.linkedinUrl && p.linkedinUrl && s.linkedinUrl.replace(/\/$/, '').toLowerCase() === p.linkedinUrl.replace(/\/$/, '').toLowerCase()) ||
+                (s.name && p.name && s.name.toLowerCase() === p.name.toLowerCase())
+            )
+        )
+        if (filtered.length === 0) { setSnackbarMsg('Все уже в Outreach (дубликаты)'); return }
+        if (filtered.length < people.length) setSnackbarMsg(`Пропущено ${people.length - filtered.length} дубликатов`)
+
         const now = new Date().toISOString()
-        const newEntries: ShortlistPerson[] = people.map(p => {
+        const newEntries: ShortlistPerson[] = filtered.map(p => {
             const autoActions = getAutoActions(campaignWeek, p.priority)
             return {
                 id: generateId(), batch: nextBatch, name: p.name, linkedinUrl: p.linkedinUrl,
@@ -1007,6 +1017,32 @@ export default function SourcesView({ sources, onSaveSources, startDate }: Sourc
                                 В Outreach ({selectedPeopleIds.size})
                             </Button>
                         )}
+                        {(() => {
+                            const seen = new Set<string>()
+                            const dups = local.people.filter(p => {
+                                const key = (p.linkedinUrl || '').toLowerCase().replace(/\/$/, '')
+                                if (!key) return false
+                                if (seen.has(key)) return true
+                                seen.add(key)
+                                return false
+                            })
+                            return dups.length > 0 ? (
+                                <Button size="small" variant="outlined" onClick={() => {
+                                    const seen2 = new Set<string>()
+                                    const deduped = local.people.filter(p => {
+                                        const key = (p.linkedinUrl || '').toLowerCase().replace(/\/$/, '')
+                                        if (!key) return true
+                                        if (seen2.has(key)) return false
+                                        seen2.add(key)
+                                        return true
+                                    })
+                                    save({ ...local, people: deduped })
+                                    setSnackbarMsg(`Удалено ${local.people.length - deduped.length} дубликатов`)
+                                }} sx={{ textTransform: 'none', fontSize: '0.7rem', height: 26, mr: 0.5, borderColor: '#d2992244', color: '#d29922' }}>
+                                    Убрать дубликаты ({dups.length})
+                                </Button>
+                            ) : null
+                        })()}
                         <Button size="small" startIcon={<AddRoundedIcon />} onClick={addPerson} variant="outlined" sx={{ textTransform: 'none', fontSize: '0.8rem' }}>
                             Добавить
                         </Button>
@@ -1299,6 +1335,43 @@ export default function SourcesView({ sources, onSaveSources, startDate }: Sourc
                         }} sx={{ textTransform: 'none', fontSize: '0.75rem', height: 28, mr: 0.5, borderColor: '#6c8eff44', color: '#6c8eff', '&:hover': { borderColor: '#6c8eff', backgroundColor: '#6c8eff11' } }}>
                             Обновить задачи (W{campaignWeek})
                         </Button>
+                        {local.shortlist.length > 0 && (
+                            <Button size="small" variant="outlined" onClick={() => {
+                                if (window.confirm(`Удалить всех ${local.shortlist.length} человек из Outreach? Это не удалит их из People.`)) {
+                                    save({ ...local, shortlist: [] })
+                                    setSelectedIds(new Set())
+                                    setSnackbarMsg('Outreach очищен')
+                                }
+                            }} sx={{ textTransform: 'none', fontSize: '0.7rem', height: 26, mr: 0.5, borderColor: '#f8514944', color: '#f85149', '&:hover': { borderColor: '#f85149', backgroundColor: '#f8514911' } }}>
+                                Сбросить всё ({local.shortlist.length})
+                            </Button>
+                        )}
+                        {(() => {
+                            const seen = new Set<string>()
+                            const dups = local.shortlist.filter(s => {
+                                const key = (s.linkedinUrl || s.name || '').toLowerCase().replace(/\/$/, '')
+                                if (!key) return false
+                                if (seen.has(key)) return true
+                                seen.add(key)
+                                return false
+                            })
+                            return dups.length > 0 ? (
+                                <Button size="small" variant="outlined" onClick={() => {
+                                    const seen2 = new Set<string>()
+                                    const deduped = local.shortlist.filter(s => {
+                                        const key = (s.linkedinUrl || s.name || '').toLowerCase().replace(/\/$/, '')
+                                        if (!key) return true
+                                        if (seen2.has(key)) return false
+                                        seen2.add(key)
+                                        return true
+                                    })
+                                    save({ ...local, shortlist: deduped })
+                                    setSnackbarMsg(`Удалено ${local.shortlist.length - deduped.length} дубликатов`)
+                                }} sx={{ textTransform: 'none', fontSize: '0.7rem', height: 26, mr: 0.5, borderColor: '#d2992244', color: '#d29922' }}>
+                                    Убрать дубликаты ({dups.length})
+                                </Button>
+                            ) : null
+                        })()}
                         {outreachCandidates.length > 0 && (
                             <Button size="small" variant={canAddNextWave ? 'contained' : 'outlined'} onClick={() => {
                                 const top = outreachCandidates.slice(0, WAVE_SIZE)
