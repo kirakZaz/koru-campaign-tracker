@@ -16,8 +16,10 @@ import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
 import Chip from '@mui/material/Chip'
 import Checkbox from '@mui/material/Checkbox'
-import ListItemText from '@mui/material/ListItemText'
+// ListItemText kept available for future use
 import Badge from '@mui/material/Badge'
+import Tooltip from '@mui/material/Tooltip'
+import Snackbar from '@mui/material/Snackbar'
 import AddRoundedIcon from '@mui/icons-material/AddRounded'
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded'
 import PeopleRoundedIcon from '@mui/icons-material/PeopleRounded'
@@ -33,6 +35,7 @@ import FilterAltOffRoundedIcon from '@mui/icons-material/FilterAltOffRounded'
 import BarChartRoundedIcon from '@mui/icons-material/BarChartRounded'
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded'
 import ContentCopyRoundedIcon from '@mui/icons-material/ContentCopyRounded'
+import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded'
 import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
@@ -51,7 +54,8 @@ import type {
     AccountName,
     DmStatus,
     ConnectionStatus,
-    ShortlistAction
+    ShortlistAction,
+    HistoryEntry
 } from './SourcesView.types'
 
 const DM_STATUS_LABELS: Record<DmStatus, { label: string, color: string }> = {
@@ -176,8 +180,8 @@ function FilterSelect({ label, value, options, onChange }: { label: string, valu
 }
 
 function getNextAction(s: ShortlistPerson): { label: string, color: string } {
-    if (s.status === 'demo' || s.status === 'beta' || s.status === 'client') return { label: '✓', color: '#3fb68e' }
-    if (s.status === 'declined') return { label: '✗', color: '#f85149' }
+    if (s.status === 'demo' || s.status === 'beta' || s.status === 'client') return { label: '\u2713', color: '#3fb68e' }
+    if (s.status === 'declined') return { label: '\u2717', color: '#f85149' }
     if (s.connectionStatus === 'not_sent') return { label: 'Отправить CR', color: '#6c8eff' }
     if (s.connectionStatus === 'sent') return { label: 'Ждём CR', color: '#d29922' }
     if (s.connectionStatus === 'declined') return { label: 'CR отклонён', color: '#f85149' }
@@ -207,7 +211,10 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
     const [deleteConfirm, setDeleteConfirm] = React.useState<{ id: string, name: string, type: 'person' | 'group' | 'company' | 'shortlist' } | null>(null)
     const [selectedIds, setSelectedIds] = React.useState<Set<string>>(new Set())
     const [needsActionFilter, setNeedsActionFilter] = React.useState(false)
-    const [copiedId, setCopiedId] = React.useState<string | null>(null)
+    const [_copiedId, setCopiedId] = React.useState<string | null>(null)
+    const [modalPersonId, setModalPersonId] = React.useState<string | null>(null)
+    const [historyInput, setHistoryInput] = React.useState('')
+    const [snackbarMsg, setSnackbarMsg] = React.useState<string | null>(null)
 
     const confirmDelete = () => {
         if (!deleteConfirm) return
@@ -370,6 +377,40 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
         save(next)
     }
 
+    // --- History helpers ---
+    function addHistory(id: string, text: string, auto = true) {
+        const person = local.shortlist.find(s => s.id === id)
+        if (!person) return
+        const entry: HistoryEntry = { date: new Date().toISOString().slice(0, 10), text, auto }
+        const history = [...(person.history || []), entry]
+        updateShortlistPerson(id, { history })
+    }
+
+    function updateShortlistWithHistory(id: string, patch: Partial<ShortlistPerson>) {
+        const person = local.shortlist.find(s => s.id === id)
+        if (!person) return
+        const historyEntries: HistoryEntry[] = []
+        const now = new Date().toISOString().slice(0, 10)
+
+        if (patch.connectionStatus && patch.connectionStatus !== person.connectionStatus) {
+            const labels: Record<string, string> = { sent: 'CR отправлен', accepted: 'CR принят', declined: 'CR отклонён' }
+            if (labels[patch.connectionStatus]) historyEntries.push({ date: now, text: labels[patch.connectionStatus]!, auto: true })
+        }
+        if (patch.dmStatus && patch.dmStatus !== person.dmStatus) {
+            const labels: Record<string, string> = { sent: 'DM отправлен', replied: 'DM ответил', no_reply: 'DM без ответа' }
+            if (labels[patch.dmStatus]) historyEntries.push({ date: now, text: labels[patch.dmStatus]!, auto: true })
+        }
+        if (patch.status && patch.status !== person.status) {
+            const labels: Record<string, string> = { demo: 'Назначен demo', beta: 'Приглашён в beta', client: 'Стал клиентом', declined: 'Отказался' }
+            if (labels[patch.status]) historyEntries.push({ date: now, text: labels[patch.status]!, auto: true })
+        }
+
+        const fullPatch = historyEntries.length > 0
+            ? { ...patch, history: [...(person.history || []), ...historyEntries] }
+            : patch
+        updateShortlistPerson(id, fullPatch)
+    }
+
     // Bulk actions for Outreach
     const bulkUpdate = (patch: Partial<ShortlistPerson>) => {
         const next = { ...local, shortlist: local.shortlist.map(s => selectedIds.has(s.id) ? { ...s, ...patch } : s) }
@@ -385,33 +426,28 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
 
     // Filtered shortlist for display
     const displayShortlist = React.useMemo(() => {
-        if (!needsActionFilter) return local.shortlist
-        return local.shortlist.filter(needsAction)
-    }, [local.shortlist, needsActionFilter])
-
-    const displayShortlistByBatch = React.useMemo(() => {
-        const map: Record<string, ShortlistPerson[]> = {}
-        for (const s of displayShortlist) {
-            const b = s.batch || '1'
-            if (!map[b]) map[b] = []
-            map[b].push(s)
+        let result = local.shortlist
+        if (needsActionFilter) result = result.filter(needsAction)
+        // Apply filters
+        for (const [key, val] of Object.entries(filters)) {
+            if (val) result = result.filter(item => String((item as any)[key] ?? '') === val)
         }
-        return Object.entries(map).sort(([a], [b]) => (parseInt(a) || 0) - (parseInt(b) || 0))
-    }, [displayShortlist])
+        return result
+    }, [local.shortlist, needsActionFilter, filters])
 
     // All visible IDs for select-all checkbox
     const allVisibleIds = React.useMemo(() => displayShortlist.map(s => s.id), [displayShortlist])
     const allSelected = allVisibleIds.length > 0 && allVisibleIds.every(id => selectedIds.has(id))
     const someSelected = allVisibleIds.some(id => selectedIds.has(id))
 
-    // Copy CR template
-    const copyCrTemplate = (s: ShortlistPerson) => {
-        const firstName = s.name.split(' ')[0] || s.name
-        const notesPart = s.notes ? ` ${s.notes}.` : ''
-        const template = `Hi ${firstName},${notesPart} I'm building KORU — an SEO platform that audits for both Google and AI search engines. GEO score, AI brand visibility, intent-first keywords. Would love to connect.`
-        navigator.clipboard.writeText(template)
-        setCopiedId(s.id)
-        setTimeout(() => setCopiedId(null), 1500)
+    // Copy to clipboard helper
+    const copyToClipboard = (text: string, personId?: string) => {
+        navigator.clipboard.writeText(text)
+        if (personId) {
+            setCopiedId(personId)
+            setTimeout(() => setCopiedId(null), 1500)
+        }
+        setSnackbarMsg('Скопировано!')
     }
 
     // New people badge count (last 7 days)
@@ -429,6 +465,350 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
     const deleteCompany = (id: string) => {
         const next = { ...local, companies: local.companies.filter(c => c.id !== id) }
         save(next)
+    }
+
+    // --- Contact Modal ---
+    function renderContactModal() {
+        const person = local.shortlist.find(s => s.id === modalPersonId)
+        if (!person) return null
+
+        const nextAction = getNextAction(person)
+        const firstName = person.name.split(' ')[0] || person.name
+        const notesRef = person.notes ? person.notes.slice(0, 50) : 'your work'
+        const priorityColor = person.priority === 'A' ? '#3fb68e' : person.priority === 'B' ? '#d29922' : '#8b949e'
+
+        const crDone = person.connectionStatus === 'sent' || person.connectionStatus === 'accepted' || person.connectionStatus === 'declined'
+        const crAccepted = person.connectionStatus === 'accepted'
+        const dmDone = person.dmStatus === 'sent' || person.dmStatus === 'replied' || person.dmStatus === 'no_reply'
+        const dmReplied = person.dmStatus === 'replied'
+        const isDemo = person.status === 'demo' || person.status === 'beta' || person.status === 'client'
+        const isBeta = person.status === 'beta' || person.status === 'client'
+
+        const funnelChip = (label: string, done: boolean, onClick: () => void) => (
+            <Chip
+                label={label}
+                size="small"
+                onClick={onClick}
+                sx={{
+                    fontSize: '0.75rem',
+                    fontWeight: 600,
+                    height: 28,
+                    cursor: 'pointer',
+                    backgroundColor: done ? '#3fb68e22' : '#8b949e15',
+                    color: done ? '#3fb68e' : '#8b949e',
+                    border: `1px solid ${done ? '#3fb68e44' : '#8b949e33'}`,
+                    '&:hover': { backgroundColor: done ? '#3fb68e33' : '#8b949e25' }
+                }}
+            />
+        )
+
+        const templates = [
+            {
+                label: 'CR шаблон',
+                text: `Hi ${firstName}, ${person.notes ? person.notes + '.' : ''} I'm building KORU \u2014 an SEO platform that audits for both Google and AI search engines. GEO score, AI brand visibility, intent-first keywords. Would love to connect.`
+            },
+            {
+                label: 'DM first touch',
+                text: `Hey ${firstName},\n\nReally appreciated your content \u2014 especially ${notesRef}.\n\nQuick question \u2014 have you looked into how your clients' content performs in AI answers specifically?\n\nI've been building a tool that checks AI-citation readiness per page \u2014 14 rules, scored 0-100. Would love your take on it.\n\nHappy to share access if you're curious.`
+            },
+            {
+                label: 'DM follow-up',
+                text: `Hey ${firstName},\n\nFollowing up \u2014 did you get a chance to look at the GEO score concept?\n\nNo pressure at all. Just thought it might be relevant given your work in ${notesRef}.\n\nHappy to do a quick 15-min walkthrough if easier.`
+            },
+            {
+                label: 'Demo invite',
+                text: `Hey ${firstName},\n\nWould love to show you KORU in action \u2014 I can run it on your site so you see real results, not a generic demo.\n\n15 minutes, no pitch. Just want your honest feedback.\n\nWant me to send a calendar link?`
+            }
+        ]
+
+        const historyEntries = [...(person.history || [])].reverse()
+
+        return (
+            <Dialog
+                open={!!modalPersonId}
+                onClose={() => { setModalPersonId(null); setHistoryInput('') }}
+                maxWidth="sm"
+                fullWidth
+                PaperProps={{ sx: { backgroundColor: '#0d1117', border: '1px solid', borderColor: 'divider', maxHeight: '90vh' } }}
+            >
+                <DialogContent sx={{ p: 0 }}>
+                    {/* Close button */}
+                    <IconButton
+                        size="small"
+                        onClick={() => { setModalPersonId(null); setHistoryInput('') }}
+                        sx={{ position: 'absolute', top: 8, right: 8, color: 'text.secondary', zIndex: 1 }}
+                    >
+                        <CloseRoundedIcon sx={{ fontSize: '1.1rem' }} />
+                    </IconButton>
+
+                    {/* Header */}
+                    <Box sx={{ p: 2.5, pb: 1.5 }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                            <Typography sx={{ fontSize: '1.25rem', fontWeight: 800 }}>{person.name || 'Без имени'}</Typography>
+                            <Chip
+                                label={person.priority}
+                                size="small"
+                                sx={{ fontSize: '0.7rem', fontWeight: 800, height: 22, backgroundColor: priorityColor + '22', color: priorityColor, border: `1px solid ${priorityColor}44` }}
+                            />
+                        </Box>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap' }}>
+                            {person.linkedinUrl && (
+                                <Button
+                                    size="small"
+                                    startIcon={<OpenInNewRoundedIcon sx={{ fontSize: '0.8rem' }} />}
+                                    onClick={() => window.open(person.linkedinUrl.startsWith('http') ? person.linkedinUrl : `https://${person.linkedinUrl}`, '_blank')}
+                                    sx={{ textTransform: 'none', fontSize: '0.75rem', height: 26, color: '#6c8eff' }}
+                                >
+                                    LinkedIn
+                                </Button>
+                            )}
+                            {person.country && (
+                                <Chip label={person.country} size="small" sx={{ fontSize: '0.7rem', height: 22 }} />
+                            )}
+                            {person.icpSegment && (
+                                <Chip label={ICP_LABELS[person.icpSegment]} size="small" sx={{ fontSize: '0.7rem', height: 22, backgroundColor: '#6c8eff22', color: '#6c8eff' }} />
+                            )}
+                        </Box>
+                        {person.source && (
+                            <Typography sx={{ fontSize: '0.75rem', color: 'text.secondary', mt: 0.75 }}>
+                                Источник: {person.source}
+                            </Typography>
+                        )}
+                    </Box>
+
+                    {/* Next action block */}
+                    <Box sx={{ mx: 2.5, mb: 2, p: 1.5, borderRadius: 1.5, backgroundColor: nextAction.color + '15', border: `1px solid ${nextAction.color}33` }}>
+                        <Typography sx={{ fontSize: '0.65rem', color: 'text.secondary', textTransform: 'uppercase', fontWeight: 700, mb: 0.5 }}>
+                            Следующее действие
+                        </Typography>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                            <Typography sx={{ fontSize: '1rem', fontWeight: 700, color: nextAction.color }}>
+                                {nextAction.label}
+                            </Typography>
+                            {nextAction.label === 'Написать DM' && (
+                                <Button
+                                    size="small"
+                                    startIcon={<ContentCopyRoundedIcon sx={{ fontSize: '0.7rem' }} />}
+                                    onClick={() => copyToClipboard(templates[1]!.text)}
+                                    sx={{ textTransform: 'none', fontSize: '0.7rem', height: 24, ml: 'auto' }}
+                                >
+                                    DM шаблон
+                                </Button>
+                            )}
+                            {nextAction.label === 'Отправить CR' && (
+                                <Button
+                                    size="small"
+                                    startIcon={<ContentCopyRoundedIcon sx={{ fontSize: '0.7rem' }} />}
+                                    onClick={() => copyToClipboard(templates[0]!.text)}
+                                    sx={{ textTransform: 'none', fontSize: '0.7rem', height: 24, ml: 'auto' }}
+                                >
+                                    CR шаблон
+                                </Button>
+                            )}
+                        </Box>
+                    </Box>
+
+                    <Box sx={{ borderTop: '1px solid', borderColor: 'divider' }} />
+
+                    {/* Funnel section */}
+                    <Box sx={{ p: 2.5, pb: 1.5 }}>
+                        <Typography sx={{ fontSize: '0.8rem', fontWeight: 700, mb: 1 }}>Воронка</Typography>
+                        <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 0.75 }}>
+                            {funnelChip('CR отправлен', crDone, () => {
+                                if (crDone && !crAccepted) {
+                                    updateShortlistWithHistory(person.id, { connectionStatus: 'not_sent' })
+                                } else if (!crDone) {
+                                    updateShortlistWithHistory(person.id, { connectionStatus: 'sent' })
+                                }
+                            })}
+                            {funnelChip('CR принят', crAccepted, () => {
+                                if (crAccepted) {
+                                    updateShortlistWithHistory(person.id, { connectionStatus: 'sent' })
+                                } else {
+                                    updateShortlistWithHistory(person.id, { connectionStatus: 'accepted' })
+                                }
+                            })}
+                            {funnelChip('DM отправлен', dmDone, () => {
+                                if (dmDone && !dmReplied) {
+                                    updateShortlistWithHistory(person.id, { dmStatus: 'not_sent' })
+                                } else if (!dmDone) {
+                                    updateShortlistWithHistory(person.id, { dmStatus: 'sent' })
+                                }
+                            })}
+                            {funnelChip('DM ответил', dmReplied, () => {
+                                if (dmReplied) {
+                                    updateShortlistWithHistory(person.id, { dmStatus: 'sent' })
+                                } else {
+                                    updateShortlistWithHistory(person.id, { dmStatus: 'replied' })
+                                }
+                            })}
+                            {funnelChip('Demo', isDemo, () => {
+                                if (isDemo && person.status === 'demo') {
+                                    updateShortlistWithHistory(person.id, { status: 'new' })
+                                } else if (!isDemo) {
+                                    updateShortlistWithHistory(person.id, { status: 'demo' })
+                                }
+                            })}
+                            {funnelChip('Beta / Client', isBeta, () => {
+                                if (isBeta && person.status === 'beta') {
+                                    updateShortlistWithHistory(person.id, { status: 'demo' })
+                                } else if (!isBeta) {
+                                    updateShortlistWithHistory(person.id, { status: 'beta' })
+                                }
+                            })}
+                        </Box>
+                    </Box>
+
+                    <Box sx={{ borderTop: '1px solid', borderColor: 'divider' }} />
+
+                    {/* Checklist section */}
+                    <Box sx={{ p: 2.5, pb: 1.5 }}>
+                        <Typography sx={{ fontSize: '0.8rem', fontWeight: 700, mb: 1 }}>Чеклист</Typography>
+                        {(person.actions || []).length === 0 && (
+                            <Typography sx={{ fontSize: '0.75rem', color: 'text.secondary', mb: 1 }}>Нет действий. Добавьте ниже.</Typography>
+                        )}
+                        {(person.actions || []).map(action => {
+                            const completed = (person.completedActions || []).includes(action)
+                            return (
+                                <Box
+                                    key={action}
+                                    sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mb: 0.25, cursor: 'pointer', '&:hover': { backgroundColor: '#ffffff06' }, borderRadius: 0.5, px: 0.5 }}
+                                    onClick={() => {
+                                        const current = person.completedActions || []
+                                        const next = completed
+                                            ? current.filter(a => a !== action)
+                                            : [...current, action]
+                                        updateShortlistPerson(person.id, { completedActions: next })
+                                    }}
+                                >
+                                    <Checkbox
+                                        size="small"
+                                        checked={completed}
+                                        sx={{ p: 0.25, color: completed ? '#3fb68e' : '#8b949e', '&.Mui-checked': { color: '#3fb68e' } }}
+                                    />
+                                    <Typography sx={{ fontSize: '0.8rem', color: completed ? '#3fb68e' : 'text.primary', textDecoration: completed ? 'line-through' : 'none' }}>
+                                        {SHORTLIST_ACTION_LABELS[action]}
+                                    </Typography>
+                                </Box>
+                            )
+                        })}
+                        <Select
+                            size="small"
+                            value=""
+                            displayEmpty
+                            onChange={e => {
+                                const action = e.target.value as ShortlistAction
+                                if (action && !(person.actions || []).includes(action)) {
+                                    updateShortlistPerson(person.id, { actions: [...(person.actions || []), action] })
+                                }
+                            }}
+                            sx={{ fontSize: '0.75rem', mt: 0.5, height: 28, minWidth: 160, '& .MuiSelect-select': { py: 0.25, px: 1 }, '& .MuiOutlinedInput-notchedOutline': { borderColor: 'divider' } }}
+                        >
+                            <MenuItem value="" sx={{ fontSize: '0.75rem', color: '#8b949e' }}>+ Добавить действие</MenuItem>
+                            {(Object.entries(SHORTLIST_ACTION_LABELS) as [ShortlistAction, string][])
+                                .filter(([key]) => !(person.actions || []).includes(key))
+                                .map(([key, label]) => (
+                                    <MenuItem key={key} value={key} sx={{ fontSize: '0.75rem' }}>{label}</MenuItem>
+                                ))}
+                        </Select>
+                    </Box>
+
+                    <Box sx={{ borderTop: '1px solid', borderColor: 'divider' }} />
+
+                    {/* Notes section */}
+                    <Box sx={{ p: 2.5, pb: 1.5 }}>
+                        <Typography sx={{ fontSize: '0.8rem', fontWeight: 700, mb: 1 }}>Заметки</Typography>
+                        <TextField
+                            size="small"
+                            fullWidth
+                            multiline
+                            minRows={2}
+                            maxRows={5}
+                            variant="outlined"
+                            value={person.notes}
+                            onChange={e => updateShortlistPerson(person.id, { notes: e.target.value })}
+                            placeholder="Заметки о контакте..."
+                            sx={{ '& .MuiInputBase-input': { fontSize: '0.8rem' }, '& .MuiOutlinedInput-notchedOutline': { borderColor: 'divider' } }}
+                        />
+                    </Box>
+
+                    <Box sx={{ borderTop: '1px solid', borderColor: 'divider' }} />
+
+                    {/* Templates section */}
+                    <Box sx={{ p: 2.5, pb: 1.5 }}>
+                        <Typography sx={{ fontSize: '0.8rem', fontWeight: 700, mb: 1 }}>Шаблоны</Typography>
+                        <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 0.75 }}>
+                            {templates.map(t => (
+                                <Button
+                                    key={t.label}
+                                    size="small"
+                                    variant="outlined"
+                                    startIcon={<ContentCopyRoundedIcon sx={{ fontSize: '0.7rem' }} />}
+                                    onClick={() => copyToClipboard(t.text)}
+                                    sx={{ textTransform: 'none', fontSize: '0.72rem', justifyContent: 'flex-start', height: 32, borderColor: 'divider', color: 'text.secondary', '&:hover': { borderColor: 'primary.main', color: 'primary.main' } }}
+                                >
+                                    {t.label}
+                                </Button>
+                            ))}
+                        </Box>
+                    </Box>
+
+                    <Box sx={{ borderTop: '1px solid', borderColor: 'divider' }} />
+
+                    {/* History section */}
+                    <Box sx={{ p: 2.5, pb: 2.5 }}>
+                        <Typography sx={{ fontSize: '0.8rem', fontWeight: 700, mb: 1 }}>История</Typography>
+                        <Box sx={{ display: 'flex', gap: 0.75, mb: 1.5 }}>
+                            <TextField
+                                size="small"
+                                fullWidth
+                                variant="outlined"
+                                value={historyInput}
+                                onChange={e => setHistoryInput(e.target.value)}
+                                placeholder="Добавить запись..."
+                                onKeyDown={e => {
+                                    if (e.key === 'Enter' && historyInput.trim()) {
+                                        addHistory(person.id, historyInput.trim(), false)
+                                        setHistoryInput('')
+                                    }
+                                }}
+                                sx={{ '& .MuiInputBase-input': { fontSize: '0.8rem', py: 0.75 }, '& .MuiOutlinedInput-notchedOutline': { borderColor: 'divider' } }}
+                            />
+                            <Button
+                                size="small"
+                                variant="outlined"
+                                disabled={!historyInput.trim()}
+                                onClick={() => {
+                                    if (historyInput.trim()) {
+                                        addHistory(person.id, historyInput.trim(), false)
+                                        setHistoryInput('')
+                                    }
+                                }}
+                                sx={{ textTransform: 'none', fontSize: '0.75rem', whiteSpace: 'nowrap' }}
+                            >
+                                Добавить
+                            </Button>
+                        </Box>
+                        {historyEntries.length === 0 ? (
+                            <Typography sx={{ fontSize: '0.75rem', color: 'text.secondary' }}>Пока нет записей.</Typography>
+                        ) : (
+                            <Box sx={{ maxHeight: 200, overflow: 'auto' }}>
+                                {historyEntries.map((entry, i) => (
+                                    <Box key={i} sx={{ display: 'flex', gap: 1, mb: 0.5, alignItems: 'baseline' }}>
+                                        <Typography sx={{ fontSize: '0.7rem', color: 'text.secondary', whiteSpace: 'nowrap', fontFamily: 'monospace' }}>
+                                            {entry.date}
+                                        </Typography>
+                                        <Typography sx={{ fontSize: '0.75rem', color: entry.auto ? '#8b949e' : 'text.primary' }}>
+                                            {entry.text}
+                                        </Typography>
+                                    </Box>
+                                ))}
+                            </Box>
+                        )}
+                    </Box>
+                </DialogContent>
+            </Dialog>
+        )
     }
 
     return (
@@ -516,7 +896,7 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                                         </TableCell>
                                         <TableCell sx={cellSx}>
                                             <Select size="small" value={p.country || ''} onChange={e => updatePerson(p.id, { country: e.target.value })} sx={selectSx} displayEmpty>
-                                                <MenuItem value="" sx={{ fontSize: '0.8rem', color: '#8b949e' }}>—</MenuItem>
+                                                <MenuItem value="" sx={{ fontSize: '0.8rem', color: '#8b949e' }}>{'\u2014'}</MenuItem>
                                                 {countries.map(c => <MenuItem key={c} value={c} sx={{ fontSize: '0.8rem' }}>{c}</MenuItem>)}
                                             </Select>
                                         </TableCell>
@@ -698,6 +1078,14 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                         >
                             Нужно действие
                         </Button>
+                        <FilterSelect label="Priority" value={filters.priority || ''} options={['A', 'B', 'C']} onChange={v => setFilter('priority', v)} />
+                        <FilterSelect label="CR" value={filters.connectionStatus || ''} options={['not_sent', 'sent', 'accepted', 'declined']} onChange={v => setFilter('connectionStatus', v)} />
+                        <FilterSelect label="DM" value={filters.dmStatus || ''} options={['not_sent', 'sent', 'replied', 'no_reply']} onChange={v => setFilter('dmStatus', v)} />
+                        {Object.keys(filters).length > 0 && (
+                            <IconButton size="small" onClick={clearFilters} sx={{ color: 'text.secondary', '&:hover': { color: 'error.main' } }} title="Сбросить все фильтры">
+                                <FilterAltOffRoundedIcon sx={{ fontSize: '1rem' }} />
+                            </IconButton>
+                        )}
                         {selectedIds.size > 0 && (
                             <>
                                 <Button size="small" variant="outlined" onClick={() => bulkUpdate({ connectionStatus: 'sent' })} sx={{ textTransform: 'none', fontSize: '0.7rem', height: 26 }}>
@@ -727,178 +1115,101 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                             <Typography sx={{ color: 'text.secondary', fontSize: '0.85rem' }}>
                                 {needsActionFilter
                                     ? 'Нет людей, требующих действия.'
-                                    : 'Пока пусто. Добавляй лучших людей — они автоматически группируются по 5.'}
+                                    : 'Пока пусто. Добавляй лучших людей \u2014 они появятся здесь.'}
                             </Typography>
                         </Box>
                     ) : (
-                        displayShortlistByBatch.map(([batch, people]) => (
-                            <Box key={batch} sx={{ mb: 3 }}>
-                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
-                                    <Chip
-                                        label={`Группа ${batch}`}
-                                        size="small"
-                                        sx={{ fontWeight: 700, fontSize: '0.75rem', backgroundColor: '#3fb68e22', color: '#3fb68e', border: '1px solid #3fb68e44' }}
-                                    />
-                                    <Typography sx={{ fontSize: '0.75rem', color: 'text.secondary' }}>
-                                        {people.length}/5
-                                    </Typography>
-                                </Box>
-                                <TableContainer sx={{ border: '1px solid', borderColor: 'divider', borderRadius: 1 }}>
-                                    <Table size="small">
-                                        <TableHead>
-                                            <TableRow sx={{ backgroundColor: '#ffffff06' }}>
-                                                <TableCell sx={{ ...headCellSx, width: 36, px: 0.5 }}>
+                        <TableContainer sx={{ border: '1px solid', borderColor: 'divider', borderRadius: 1 }}>
+                            <Table size="small">
+                                <TableHead>
+                                    <TableRow sx={{ backgroundColor: '#ffffff06' }}>
+                                        <TableCell sx={{ ...headCellSx, width: 36, px: 0.5 }}>
+                                            <Checkbox
+                                                size="small"
+                                                checked={allSelected}
+                                                indeterminate={someSelected && !allSelected}
+                                                onChange={() => {
+                                                    if (allSelected) {
+                                                        setSelectedIds(new Set())
+                                                    } else {
+                                                        setSelectedIds(new Set(allVisibleIds))
+                                                    }
+                                                }}
+                                                sx={{ p: 0.25 }}
+                                            />
+                                        </TableCell>
+                                        <SortHeader label="Имя" field="name" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
+                                        <SortHeader label="Priority" field="priority" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
+                                        <SortHeader label="CR" field="connectionStatus" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
+                                        <SortHeader label="DM" field="dmStatus" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
+                                        <TableCell sx={headCellSx}>Next</TableCell>
+                                        <TableCell sx={{ ...headCellSx, width: 40 }} />
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {sorted(displayShortlist).map((s) => {
+                                        const nextAction = getNextAction(s)
+                                        const prColor = s.priority === 'A' ? '#3fb68e' : s.priority === 'B' ? '#d29922' : '#8b949e'
+                                        return (
+                                            <TableRow
+                                                key={s.id}
+                                                sx={{ '&:hover': { backgroundColor: '#ffffff04' }, backgroundColor: selectedIds.has(s.id) ? '#6c8eff08' : undefined, cursor: 'pointer' }}
+                                                onClick={(e) => {
+                                                    // Don't open modal when clicking on checkbox cell
+                                                    const target = e.target as HTMLElement
+                                                    if (target.closest('[data-checkbox-cell]')) return
+                                                    setModalPersonId(s.id)
+                                                }}
+                                            >
+                                                <TableCell sx={{ ...cellSx, px: 0.5 }} data-checkbox-cell>
                                                     <Checkbox
                                                         size="small"
-                                                        checked={allSelected}
-                                                        indeterminate={someSelected && !allSelected}
+                                                        checked={selectedIds.has(s.id)}
                                                         onChange={() => {
-                                                            if (allSelected) {
-                                                                setSelectedIds(new Set())
-                                                            } else {
-                                                                setSelectedIds(new Set(allVisibleIds))
-                                                            }
+                                                            setSelectedIds(prev => {
+                                                                const next = new Set(prev)
+                                                                if (next.has(s.id)) next.delete(s.id)
+                                                                else next.add(s.id)
+                                                                return next
+                                                            })
                                                         }}
                                                         sx={{ p: 0.25 }}
                                                     />
                                                 </TableCell>
-                                                <TableCell sx={{ ...headCellSx, width: 60 }}>Группа</TableCell>
-                                                <TableCell sx={headCellSx}>Имя</TableCell>
-                                                <TableCell sx={headCellSx}>LinkedIn</TableCell>
-                                                <TableCell sx={headCellSx}>Priority</TableCell>
-                                                <TableCell sx={headCellSx}>DM</TableCell>
-                                                <TableCell sx={headCellSx}>Запрос</TableCell>
-                                                <TableCell sx={headCellSx}>Источник</TableCell>
-                                                <TableCell sx={headCellSx}>Статус</TableCell>
-                                                <TableCell sx={headCellSx}>Действия</TableCell>
-                                                <TableCell sx={headCellSx}>Next</TableCell>
-                                                <TableCell sx={headCellSx}>Заметки</TableCell>
-                                                <TableCell sx={{ ...headCellSx, width: 60 }} />
+                                                <TableCell sx={{ ...cellSx, fontWeight: 600 }}>{s.name || '\u2014'}</TableCell>
+                                                <TableCell sx={cellSx}>
+                                                    <Chip
+                                                        label={s.priority || 'B'}
+                                                        size="small"
+                                                        sx={{ fontSize: '0.7rem', fontWeight: 800, height: 20, minWidth: 24, backgroundColor: prColor + '22', color: prColor, border: `1px solid ${prColor}44` }}
+                                                    />
+                                                </TableCell>
+                                                <TableCell sx={cellSx}>
+                                                    <StatusChip {...CONNECTION_STATUS_LABELS[s.connectionStatus || 'not_sent']} />
+                                                </TableCell>
+                                                <TableCell sx={cellSx}>
+                                                    <StatusChip {...DM_STATUS_LABELS[s.dmStatus || 'not_sent']} />
+                                                </TableCell>
+                                                <TableCell sx={cellSx}>
+                                                    <StatusChip label={nextAction.label} color={nextAction.color} />
+                                                </TableCell>
+                                                <TableCell sx={cellSx}>
+                                                    <Tooltip title="Открыть карточку">
+                                                        <IconButton
+                                                            size="small"
+                                                            onClick={(e) => { e.stopPropagation(); setModalPersonId(s.id) }}
+                                                            sx={{ color: 'text.secondary', '&:hover': { color: 'primary.main' } }}
+                                                        >
+                                                            <ChevronRightRoundedIcon sx={{ fontSize: '1.1rem' }} />
+                                                        </IconButton>
+                                                    </Tooltip>
+                                                </TableCell>
                                             </TableRow>
-                                        </TableHead>
-                                        <TableBody>
-                                            {people.map((s) => {
-                                                const nextAction = getNextAction(s)
-                                                return (
-                                                <TableRow key={s.id} sx={{ '&:hover': { backgroundColor: '#ffffff04' }, backgroundColor: selectedIds.has(s.id) ? '#6c8eff08' : undefined }}>
-                                                    <TableCell sx={{ ...cellSx, px: 0.5 }}>
-                                                        <Checkbox
-                                                            size="small"
-                                                            checked={selectedIds.has(s.id)}
-                                                            onChange={() => {
-                                                                setSelectedIds(prev => {
-                                                                    const next = new Set(prev)
-                                                                    if (next.has(s.id)) next.delete(s.id)
-                                                                    else next.add(s.id)
-                                                                    return next
-                                                                })
-                                                            }}
-                                                            sx={{ p: 0.25 }}
-                                                        />
-                                                    </TableCell>
-                                                    <TableCell sx={cellSx}>
-                                                        <Select size="small" value={s.batch} onChange={e => updateShortlistPerson(s.id, { batch: e.target.value })} sx={{ ...selectSx, minWidth: 50 }}>
-                                                            {Array.from({ length: 20 }, (_, i) => String(i + 1)).map(v => (
-                                                                <MenuItem key={v} value={v} sx={{ fontSize: '0.8rem' }}>{v}</MenuItem>
-                                                            ))}
-                                                        </Select>
-                                                    </TableCell>
-                                                    <TableCell sx={cellSx}><InlineInput value={s.name} onChange={v => updateShortlistPerson(s.id, { name: v })} placeholder="Имя" /></TableCell>
-                                                    <TableCell sx={cellSx}><InlineInput value={s.linkedinUrl} onChange={v => updateShortlistPerson(s.id, { linkedinUrl: v })} placeholder="URL" /></TableCell>
-                                                    <TableCell sx={cellSx}>
-                                                        <Select size="small" value={s.priority || 'B'} onChange={e => updateShortlistPerson(s.id, { priority: e.target.value as IcpPriority })} sx={selectSx}>
-                                                            {(['A', 'B', 'C'] as IcpPriority[]).map(v => (
-                                                                <MenuItem key={v} value={v} sx={{ fontSize: '0.8rem', fontWeight: 700, color: v === 'A' ? '#3fb68e' : v === 'B' ? '#d29922' : '#8b949e' }}>{v}</MenuItem>
-                                                            ))}
-                                                        </Select>
-                                                    </TableCell>
-                                                    <TableCell sx={cellSx}>
-                                                        <Select
-                                                            size="small"
-                                                            value={s.dmStatus || 'not_sent'}
-                                                            onChange={e => updateShortlistPerson(s.id, { dmStatus: e.target.value as DmStatus })}
-                                                            sx={selectSx}
-                                                            renderValue={(val) => <StatusChip {...DM_STATUS_LABELS[val as DmStatus]} />}
-                                                        >
-                                                            {Object.entries(DM_STATUS_LABELS).map(([k, v]) => (
-                                                                <MenuItem key={k} value={k} sx={{ fontSize: '0.8rem' }}><StatusChip {...v} /></MenuItem>
-                                                            ))}
-                                                        </Select>
-                                                    </TableCell>
-                                                    <TableCell sx={cellSx}>
-                                                        <Select
-                                                            size="small"
-                                                            value={s.connectionStatus || 'not_sent'}
-                                                            onChange={e => updateShortlistPerson(s.id, { connectionStatus: e.target.value as ConnectionStatus })}
-                                                            sx={selectSx}
-                                                            renderValue={(val) => <StatusChip {...CONNECTION_STATUS_LABELS[val as ConnectionStatus]} />}
-                                                        >
-                                                            {Object.entries(CONNECTION_STATUS_LABELS).map(([k, v]) => (
-                                                                <MenuItem key={k} value={k} sx={{ fontSize: '0.8rem' }}><StatusChip {...v} /></MenuItem>
-                                                            ))}
-                                                        </Select>
-                                                    </TableCell>
-                                                    <TableCell sx={cellSx}><InlineInput value={s.source} onChange={v => updateShortlistPerson(s.id, { source: v })} placeholder="Откуда" /></TableCell>
-                                                    <TableCell sx={cellSx}>
-                                                        <Select
-                                                            size="small"
-                                                            value={s.status}
-                                                            onChange={e => updateShortlistPerson(s.id, { status: e.target.value as PersonStatus })}
-                                                            sx={selectSx}
-                                                            renderValue={(val) => <StatusChip {...PERSON_STATUS_LABELS[val as PersonStatus]} />}
-                                                        >
-                                                            {Object.entries(PERSON_STATUS_LABELS).map(([k, v]) => (
-                                                                <MenuItem key={k} value={k} sx={{ fontSize: '0.8rem' }}><StatusChip {...v} /></MenuItem>
-                                                            ))}
-                                                        </Select>
-                                                    </TableCell>
-                                                    <TableCell sx={cellSx}>
-                                                        <Select
-                                                            size="small"
-                                                            multiple
-                                                            value={s.actions || []}
-                                                            onChange={e => updateShortlistPerson(s.id, { actions: e.target.value as ShortlistAction[] })}
-                                                            sx={{ ...selectSx, minWidth: 130 }}
-                                                            renderValue={(selected) => (selected as ShortlistAction[]).length === 0
-                                                                ? <Typography sx={{ fontSize: '0.75rem', color: 'text.secondary' }}>--</Typography>
-                                                                : <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.3 }}>
-                                                                    {(selected as ShortlistAction[]).map(a => (
-                                                                        <Chip key={a} label={SHORTLIST_ACTION_LABELS[a]} size="small" sx={{ fontSize: '0.65rem', height: 18, backgroundColor: '#3fb68e22', color: '#3fb68e', border: '1px solid #3fb68e44' }} />
-                                                                    ))}
-                                                                </Box>
-                                                            }
-                                                        >
-                                                            {(Object.entries(SHORTLIST_ACTION_LABELS) as [ShortlistAction, string][]).map(([key, label]) => (
-                                                                <MenuItem key={key} value={key} sx={{ fontSize: '0.8rem', py: 0.25 }}>
-                                                                    <Checkbox checked={(s.actions || []).includes(key)} size="small" sx={{ p: 0.25 }} />
-                                                                    <ListItemText primary={label} primaryTypographyProps={{ fontSize: '0.8rem', ml: 0.5 }} />
-                                                                </MenuItem>
-                                                            ))}
-                                                        </Select>
-                                                    </TableCell>
-                                                    <TableCell sx={cellSx}>
-                                                        <StatusChip label={nextAction.label} color={nextAction.color} />
-                                                    </TableCell>
-                                                    <TableCell sx={cellSx}><InlineInput value={s.notes} onChange={v => updateShortlistPerson(s.id, { notes: v })} placeholder="..." /></TableCell>
-                                                    <TableCell sx={cellSx}>
-                                                        <Box sx={{ display: 'flex', gap: 0.25, alignItems: 'center' }}>
-                                                            <IconButton size="small" onClick={() => copyCrTemplate(s)} sx={{ color: 'text.secondary', '&:hover': { color: 'primary.main' } }} title="Copy CR template">
-                                                                <ContentCopyRoundedIcon sx={{ fontSize: '0.85rem' }} />
-                                                            </IconButton>
-                                                            {copiedId === s.id && <Typography sx={{ fontSize: '0.65rem', color: '#3fb68e', whiteSpace: 'nowrap' }}>Copied!</Typography>}
-                                                            <IconButton size="small" onClick={() => setDeleteConfirm({ id: s.id, name: s.name || 'без имени', type: 'shortlist' })} sx={{ color: 'text.secondary', '&:hover': { color: 'error.main' } }}>
-                                                                <DeleteRoundedIcon sx={{ fontSize: '0.9rem' }} />
-                                                            </IconButton>
-                                                        </Box>
-                                                    </TableCell>
-                                                </TableRow>
-                                                )
-                                            })}
-                                        </TableBody>
-                                    </Table>
-                                </TableContainer>
-                            </Box>
-                        ))
+                                        )
+                                    })}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
                     )}
                 </Box>
             )}
@@ -1170,6 +1481,16 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                     <Button onClick={() => setCountriesDialogOpen(false)} sx={{ textTransform: 'none' }}>Закрыть</Button>
                 </DialogActions>
             </Dialog>
+
+            {modalPersonId && renderContactModal()}
+
+            <Snackbar
+                open={!!snackbarMsg}
+                autoHideDuration={1500}
+                onClose={() => setSnackbarMsg(null)}
+                message={snackbarMsg}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+            />
         </Box>
     )
 }

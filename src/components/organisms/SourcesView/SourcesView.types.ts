@@ -57,6 +57,12 @@ export type ConnectionStatus = 'not_sent' | 'sent' | 'accepted' | 'declined'
     | 'tweet_reply'
     | 'mention_in_post'
 
+export interface HistoryEntry {
+    date: string
+    text: string
+    auto?: boolean
+}
+
 export interface ShortlistPerson {
     id: string
     batch: string
@@ -71,6 +77,8 @@ export interface ShortlistPerson {
     status: PersonStatus
     notes: string
     actions?: ShortlistAction[]
+    completedActions?: ShortlistAction[]
+    history?: HistoryEntry[]
     createdAt?: string
 }
 
