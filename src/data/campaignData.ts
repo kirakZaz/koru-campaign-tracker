@@ -46,7 +46,7 @@ export const CAMPAIGN_DAYS: CampaignDay[] = [
     // WEEK 1 — INTRIGUE + RESEARCH (5 дней)
     // ==========================================
     {
-        dayIndex: 0, phase: 'Week 1', dayLabel: 'Week 1, Понедельник',
+        dayIndex: 0, phase: 'Week 1', dayLabel: 'Week 1, Пн',
         title: 'Кира учёба. Настя: research Day 1',
         summary: 'Понедельник = Кира учёба. Настя: День 1/3 research.',
         tasks: [
@@ -54,7 +54,7 @@ export const CAMPAIGN_DAYS: CampaignDay[] = [
         ]
     },
     {
-        dayIndex: 1, phase: 'Week 1', dayLabel: 'Week 1, Вторник',
+        dayIndex: 1, phase: 'Week 1', dayLabel: 'Week 1, Вт',
         title: 'POST DAY: Пост 1 + ревью групп + Настя Day 2',
         summary: 'Вторник = POST day. Кира: ревью групп + Пост 1 + engagement. Настя: Day 2/3.',
         tasks: [
@@ -67,7 +67,7 @@ export const CAMPAIGN_DAYS: CampaignDay[] = [
         ]
     },
     {
-        dayIndex: 2, phase: 'Week 1', dayLabel: 'Week 1, Среда',
+        dayIndex: 2, phase: 'Week 1', dayLabel: 'Week 1, Ср',
         title: 'ПОСТ 2 (AI blind spot) + Настя День 3/3',
         summary: 'Пост 2 "The SEO blind spot — AI search" (LinkedIn). Настя: последний день — категоризация.',
         tasks: [
@@ -80,7 +80,7 @@ export const CAMPAIGN_DAYS: CampaignDay[] = [
         ]
     },
     {
-        dayIndex: 3, phase: 'Week 1', dayLabel: 'Week 1, Четверг',
+        dayIndex: 3, phase: 'Week 1', dayLabel: 'Week 1, Чт',
         title: 'Research finish + competitor pain research',
         summary: 'Настя завершает batch 2 + Twitter cross-check. Кира собирает жалобы на конкурентов.',
         tasks: [
@@ -89,7 +89,7 @@ export const CAMPAIGN_DAYS: CampaignDay[] = [
         ]
     },
     {
-        dayIndex: 4, phase: 'Week 1', dayLabel: 'Week 1, Пятница',
+        dayIndex: 4, phase: 'Week 1', dayLabel: 'Week 1, Пт',
         title: 'ПОСТ 3 (AI search poll) + weekly review + черновики',
         summary: 'Пост 3 — Poll про AI search concerns (LinkedIn). Weekly metrics. Кира пишет посты 4-9 (GEO + AI angle).',
         tasks: [
@@ -105,10 +105,19 @@ export const CAMPAIGN_DAYS: CampaignDay[] = [
     },
 
     // ==========================================
-    // WEEK 2 — HINTS + GROUPS + DMs START (5 дней)
+    // WEEK 2 — HINTS + GROUPS + DMs START (6 дней: Вс–Пт)
     // ==========================================
     {
-        dayIndex: 5, phase: 'Week 2', dayLabel: 'Week 2, Понедельник',
+        dayIndex: 1001, phase: 'Week 2', dayLabel: 'Week 2, Вс',
+        calendarDayOffset: 6,
+        title: 'Макс: начало недели (Израиль)',
+        summary: 'Воскресенье = начало рабочей недели Макса. Twitter мониторинг, подготовка к неделе.',
+        tasks: [
+            { id: 'mx-w2-sun', title: 'Макс: Twitter мониторинг + подготовка к неделе', description: 'Начало рабочей недели Макса (Израиль, Вс–Чт). Проверить Twitter mentions, ответить на комменты, подготовить материалы на неделю.', steps: ['Twitter: проверить mentions, ответить на комменты', 'Проверить landing page — всё работает?', 'Подготовить copy blocks для кросс-постов недели'], subtasks: [{ id: 'mx-w2-sun-st1', text: 'Twitter checked' }, { id: 'mx-w2-sun-st2', text: 'Landing OK' }], assignee: 'Макс', estimate: '30 мин', priority: 'medium', tags: ['monitoring'] }
+        ]
+    },
+    {
+        dayIndex: 5, phase: 'Week 2', dayLabel: 'Week 2, Пн',
         title: 'Кира учёба. Настя: research',
         summary: 'Понедельник = Кира учёба. Настя: спикеры конференций.',
         tasks: [
@@ -116,7 +125,7 @@ export const CAMPAIGN_DAYS: CampaignDay[] = [
         ]
     },
     {
-        dayIndex: 6, phase: 'Week 2', dayLabel: 'Week 2, Вторник',
+        dayIndex: 6, phase: 'Week 2', dayLabel: 'Week 2, Вт',
         title: 'POST DAY: Пост 4 (GEO score) + DMs',
         summary: 'Вторник = POST day. Пост 4 + checkpoint + первые DMs.',
         tasks: [
@@ -127,7 +136,7 @@ export const CAMPAIGN_DAYS: CampaignDay[] = [
         ]
     },
     {
-        dayIndex: 7, phase: 'Week 2', dayLabel: 'Week 2, Среда',
+        dayIndex: 7, phase: 'Week 2', dayLabel: 'Week 2, Ср',
         title: 'ПОСТ 5 + DM follow-ups',
         summary: 'Пост 5 Agent Readiness + DM follow-ups. Настя: Twitter influencers.',
         tasks: [
@@ -139,20 +148,20 @@ export const CAMPAIGN_DAYS: CampaignDay[] = [
         ]
     },
     {
-        dayIndex: 8, phase: 'Week 2', dayLabel: 'Week 2, Четверг',
+        dayIndex: 8, phase: 'Week 2', dayLabel: 'Week 2, Чт',
         title: 'G2/Capterra + beta push',
         summary: 'Настя: proven buyers. Кира: push beta invites.',
         tasks: [
-            { id: '039', title: '039. Кира: Написать ещё 3-5 людям про beta + Twitter', description: 'К концу Week 2 нужны 3-5 человек готовых тестировать KORU. Написать DM ещё 3-5 людям из тёплых контактов. Follow up с теми кто не ответил. Twitter: ответить на 3-5 постов.', steps: ['DMs к ещё 3-5 людям', 'Follow up с неответившими', 'Twitter: 3-5 replies'], subtasks: [{ id: '039-st1', text: '3-5 beta agreements total' }], assignee: 'Кира', estimate: '1 час', priority: 'high', tags: ['outreach'] }
+            { id: '039', title: '039. Кира: Написать ещё 3-5 людям про beta + Twitter', description: 'К концу Week 2 нужны 3-5 человек готовых тестировать KORU. Написать DM ещё 3-5 людям из тёплых контактов. Follow up с теми кто не ответил. Twitter: ответить на 3-5 постов.', steps: ['DMs к ещё 3-5 людям', 'Follow up с неответившими', 'Twitter: 3-5 replies'], subtasks: [{ id: '039-st1', text: '3-5 beta agreements total' }], assignee: 'Кира', estimate: '1 час', priority: 'high', tags: ['outreach'] },
+            { id: '040t', title: '040t. Макс: Кросс-пост 6 на Twitter', description: 'Адаптировать пост 6 для Twitter. Запланировать публикацию на пятницу (когда Кира постит Пост 6 на LinkedIn).', steps: ['Адаптировать текст поста 6 для Twitter', 'Запланировать tweet на пятницу через Twitter Schedule'], subtasks: [{ id: '040t-st1', text: 'Tweet запланирован' }], assignee: 'Макс', estimate: '5 мин', priority: 'high', tags: ['content'], tip: 'Макс не работает в пятницу (Израиль). Запланировать tweet заранее через Twitter Schedule.', copyBlocks: [{ label: 'Tweet (copy-paste)', text: '84% of pages AI engines cite come from earned media.\n\nNot your blog. Not your landing page.\n\nIndustry publications. Reviews. Reddit. Wikipedia.\n\nSEO in 2026 is two games:\n1. Make your pages citable (schema, facts, structure)\n2. Get mentioned where AI already trusts\n\nWhich game are you playing?\n\n#SEO #AISearch' }] }
         ]
     },
     {
-        dayIndex: 9, phase: 'Week 2', dayLabel: 'Week 2, Пятница',
+        dayIndex: 9, phase: 'Week 2', dayLabel: 'Week 2, Пт',
         title: 'ПОСТ 6 (первый тизер + LANDING LINK!) + review',
-        summary: 'ПЕРВЫЙ ТИЗЕР. Первая ссылка на landing. С этого момента каждый пост = landing link.',
+        summary: 'ПЕРВЫЙ ТИЗЕР. Первая ссылка на landing. С этого момента каждый пост = landing link. Макс выходной (Израиль).',
         tasks: [
             { id: '040', title: '040. Кира: Пост 6 + ПЕРВЫЙ landing link + 2ч engagement', description: 'Зачем: "Building something." ВПЕРВЫЕ landing link в комментарии. Funnel (воронка) запущена: пост → клик на ссылку → landing → email signup.', steps: ['Creatives → Post 6 → скриншот карточки (84% earned media)', 'Пост 6 LinkedIn + Twitter + прикрепить картинку', 'Расшарить в 3-5 LinkedIn групп', 'СРАЗУ первый коммент: "koru-seo.com"', '2ч engagement', 'ПРАВИЛО: с этого момента КАЖДЫЙ пост = landing link'], subtasks: [{ id: '040-st1', text: 'Пост' }, { id: '040-st2', text: 'Landing link в комменте' }, { id: '040-st3', text: 'Engagement' }], assignee: 'Кира', estimate: '2.5 часа', priority: 'high', tags: ['content'], warning: 'С этого поста КАЖДЫЙ пост = landing link в комментарии.', copyBlocks: [{ label: 'Пост 6 LinkedIn (copy-paste)', text: 'Counterintuitive stat about AI search:\n\n84% of pages that AI engines cite come from EARNED media — not your own site.\n\nIndustry publications. Third-party reviews. Research papers. Reddit threads. Wikipedia.\n\nYour blog post about your product? AI engines mostly skip it.\n\nA journalist\'s review of your product? That\'s what gets cited.\n\nThis means SEO in 2026 is two games:\n\nGame 1: Make YOUR pages citable (structure, schema, facts, freshness)\n\nGame 2: Get mentioned on pages that AI engines ALREADY trust (press, communities, expert roundups)\n\nMost SEO tools only help with Game 1. And even there, they don\'t measure AI-citation readiness specifically.\n\nWhich game are you focused on?\n\n#SEO #AISearch #DigitalPR #EarnedMedia' }, { label: 'Первый комментарий (сразу после поста)', text: 'Building something that measures Game 1 — AI-citation readiness per page, 14 rules. koru-seo.com' }] },
-            { id: '040t', title: '040t. Макс: Кросс-пост 6 на Twitter', description: 'Адаптировать пост 6 для Twitter.', steps: ['Адаптировать текст поста 6 для Twitter', 'Опубликовать в Twitter'], subtasks: [{ id: '040t-st1', text: 'Tweet опубликован' }], assignee: 'Макс', estimate: '5 мин', priority: 'high', tags: ['content'], copyBlocks: [{ label: 'Tweet (copy-paste)', text: '84% of pages AI engines cite come from earned media.\n\nNot your blog. Not your landing page.\n\nIndustry publications. Reviews. Reddit. Wikipedia.\n\nSEO in 2026 is two games:\n1. Make your pages citable (schema, facts, structure)\n2. Get mentioned where AI already trusts\n\nWhich game are you playing?\n\n#SEO #AISearch' }] },
             { id: 'n-w2-3', title: 'Настя: Research — YouTube/Podcast SEO hosts', description: 'Найти ведущих SEO-подкастов и YouTube-каналов → LinkedIn → Sources → Люди.', steps: ['YouTube: искать "SEO tutorial", "keyword research" — каналы с 5K+ подписчиков', 'Подкасты: Search Engine Journal Show, Authority Hacker, Niche Pursuits', 'Hosts/guests → LinkedIn → Sources → Люди'], subtasks: [{ id: 'n-w2-3-st1', text: 'Done' }], assignee: 'Настя', estimate: '2 часа', priority: 'medium', tags: ['research'] },
             { id: '041', title: '041. Кира: Метрики за Week 2', description: 'Dashboard → проверить цели W2.', steps: ['Dashboard → цель 80 людей total'], subtasks: [{ id: '041-st1', text: 'Метрики OK' }], assignee: 'Кира', estimate: '5 мин', priority: 'high', tags: ['review'] }
         ],
@@ -160,10 +169,19 @@ export const CAMPAIGN_DAYS: CampaignDay[] = [
     },
 
     // ==========================================
-    // WEEK 3 — BUILDING IN PUBLIC (5 дней)
+    // WEEK 3 — BUILDING IN PUBLIC (6 дней: Вс–Пт)
     // ==========================================
     {
-        dayIndex: 10, phase: 'Week 3', dayLabel: 'Week 3, Понедельник',
+        dayIndex: 1002, phase: 'Week 3', dayLabel: 'Week 3, Вс',
+        calendarDayOffset: 13,
+        title: 'Макс: начало недели (Израиль)',
+        summary: 'Воскресенье = начало рабочей недели Макса. Twitter мониторинг + подготовка.',
+        tasks: [
+            { id: 'mx-w3-sun', title: 'Макс: Twitter мониторинг + проверка landing', description: 'Начало рабочей недели. Проверить Twitter, landing, подготовить copy blocks.', steps: ['Twitter: проверить mentions, ответить', 'Landing page: всё ОК?', 'Подготовить copy blocks для кросс-постов'], subtasks: [{ id: 'mx-w3-sun-st1', text: 'Done' }], assignee: 'Макс', estimate: '30 мин', priority: 'medium', tags: ['monitoring'] }
+        ]
+    },
+    {
+        dayIndex: 10, phase: 'Week 3', dayLabel: 'Week 3, Пн',
         title: 'Кира учёба. Настя: research',
         summary: 'Понедельник = Кира учёба. Настя: AI Overviews авторы.',
         tasks: [
@@ -171,7 +189,7 @@ export const CAMPAIGN_DAYS: CampaignDay[] = [
         ]
     },
     {
-        dayIndex: 11, phase: 'Week 3', dayLabel: 'Week 3, Вторник',
+        dayIndex: 11, phase: 'Week 3', dayLabel: 'Week 3, Вт',
         title: 'POST DAY: Headline change + Пост 7 + demos',
         summary: 'Вторник = POST day. Headline update + Пост 7 (14 GEO rules) + demos.',
         tasks: [
@@ -182,7 +200,7 @@ export const CAMPAIGN_DAYS: CampaignDay[] = [
         ]
     },
     {
-        dayIndex: 12, phase: 'Week 3', dayLabel: 'Week 3, Среда',
+        dayIndex: 12, phase: 'Week 3', dayLabel: 'Week 3, Ср',
         title: 'ПОСТ 8 + demos + follow-ups',
         summary: 'Пост 8 AI Brand Visibility + demos + DM follow-ups. Настя: newsletters.',
         tasks: [
@@ -194,22 +212,22 @@ export const CAMPAIGN_DAYS: CampaignDay[] = [
         ]
     },
     {
-        dayIndex: 13, phase: 'Week 3', dayLabel: 'Week 3, Четверг',
+        dayIndex: 13, phase: 'Week 3', dayLabel: 'Week 3, Чт',
         title: 'Categorization finish + engagement',
         summary: 'Настя финализирует. Кира — спорные cases + beta.',
         tasks: [
             { id: '049b', title: '049b. Кира: Решить спорные приоритеты + собрать feedback от beta', description: 'Открыть Sources → Люди, найти людей которых Настя отметила как спорные. Решить какой приоритет правильный. Написать beta testers — как им KORU? Что нравится? Что нет?', steps: ['Review спорных cases из Sheets', 'Собрать feedback от beta testers'], subtasks: [{ id: '049b-st1', text: 'Cases решены' }, { id: '049b-st2', text: 'Beta feedback' }], assignee: 'Кира', estimate: '1 час', priority: 'high', tags: ['review'] },
             { id: '049d', title: '049d. Кира + Макс: Определить pricing и monetization модель', description: 'Зачем: Через 2 недели launch. Landing говорит "Try it free" — но что потом? Без чёткой модели люди зайдут, попробуют и уйдут. Нужно знать: free trial или freemium? Сколько стоит? Что включено? Какой путь от signup до оплаты?', steps: ['Созвон 30-45 мин', 'Решить модель: Free trial 14 дней → платная подписка ИЛИ Freemium (базовый функционал бесплатно, advanced платно)', 'Определить pricing: изучить конкурентов (Ahrefs $129, Semrush $129, Surfer $99)', 'Рекомендация: $29-49/мес для фрилансеров, $99-149/мес для агентств (2-3x дешевле конкурентов)', 'Определить что входит в каждый план', 'Обновить landing page с pricing (или отдельная pricing page)', 'Определить onboarding flow: signup → что видит пользователь первым?'], subtasks: [{ id: '049d-st1', text: 'Модель выбрана' }, { id: '049d-st2', text: 'Pricing определён' }, { id: '049d-st3', text: 'Onboarding flow понятен' }], assignee: 'Кира + Макс', estimate: '45 мин', priority: 'high', tags: ['planning', 'pricing'], warning: 'Без pricing launch = просто красивый пост без конверсии в деньги.' },
-            { id: '049c', title: '049c. Кира + Макс: Проверка — product demo-ready?', description: 'Зачем: На следующей неделе будем записывать demo GIF. Продукт должен быть стабильный и выглядеть хорошо для записи.', steps: ['Созвон 30 мин', 'Проверить: keyword analysis flow работает end-to-end?', 'Кластеризация (если готова) работает?', 'UI выглядит presentable для GIF?', 'Если есть баги — список Максу на fix до Week 4 Чт'], subtasks: [{ id: '049c-st1', text: 'Demo flow проверен' }, { id: '049c-st2', text: 'Баги записаны (если есть)' }], assignee: 'Кира + Макс', estimate: '30 мин', priority: 'high', tags: ['review', 'planning'] }
+            { id: '049c', title: '049c. Кира + Макс: Проверка — product demo-ready?', description: 'Зачем: На следующей неделе будем записывать demo GIF. Продукт должен быть стабильный и выглядеть хорошо для записи.', steps: ['Созвон 30 мин', 'Проверить: keyword analysis flow работает end-to-end?', 'Кластеризация (если готова) работает?', 'UI выглядит presentable для GIF?', 'Если есть баги — список Максу на fix до Week 4 Чт'], subtasks: [{ id: '049c-st1', text: 'Demo flow проверен' }, { id: '049c-st2', text: 'Баги записаны (если есть)' }], assignee: 'Кира + Макс', estimate: '30 мин', priority: 'high', tags: ['review', 'planning'] },
+            { id: '050t', title: '050t. Макс: Кросс-пост 9 на Twitter', description: 'Адаптировать пост 9 для Twitter. Запланировать на пятницу.', steps: ['Адаптировать → запланировать tweet через Twitter Schedule на пятницу'], subtasks: [{ id: '050t-st1', text: 'Tweet запланирован' }], assignee: 'Макс', estimate: '5 мин', priority: 'high', tags: ['content'], tip: 'Макс не работает в пятницу (Израиль). Запланировать tweet заранее.', copyBlocks: [{ label: 'Tweet (copy-paste)', text: 'The pipeline we built:\n\nURL → audit → GEO score (14 rules) → keywords with intent → semantic clusters → briefs → drafts → tasks\n\n+ AI Brand Visibility (OpenAI, Gemini)\n+ Agent Readiness (llms.txt, JSON-LD)\n\nClassical SEO + AI search. One platform.\n\nkoru-seo.com\n\n#SEO #AISearch' }] }
         ]
     },
     {
-        dayIndex: 14, phase: 'Week 3', dayLabel: 'Week 3, Пятница',
+        dayIndex: 14, phase: 'Week 3', dayLabel: 'Week 3, Пт',
         title: 'ПОСТ 9 + final review Priority A + templates',
-        summary: 'Pipeline пост. Кира ревьюит ВСЕ Priority A. Настя готовит connection templates.',
+        summary: 'Pipeline пост. Кира ревьюит ВСЕ Priority A. Настя готовит connection templates. Макс выходной (Израиль).',
         tasks: [
             { id: '050', title: '050. Кира: Пост 9 (full pipeline) + 2ч engagement', description: 'Пост 9: полный pipeline KORU с AI-search layer. Картинка: Creatives → Post 9.', steps: ['Creatives → Post 9 → скриншот карточки', 'Пост 9 LinkedIn + прикрепить картинку + landing link', 'Расшарить в 3-5 LinkedIn групп', '2ч engagement + DMs'], subtasks: [{ id: '050-st1', text: 'Пост 9 + engagement' }], assignee: 'Кира', estimate: '3 часа', priority: 'high', tags: ['content', 'outreach'], copyBlocks: [{ label: 'Пост 9 LinkedIn (copy-paste)', text: 'Here\'s the full pipeline we built:\n\nURL\n  ↓\nSite audit — crawl pages, check health, AI summary\n  ↓\nGEO score — 14-rule AI-citation readiness check per page\n  ↓\nKeywords — AI reads your site first, then finds opportunities with intent classification\n  ↓\nRelevance gate — filters out off-topic keywords automatically\n  ↓\nSemantic clustering — groups by meaning, not word overlap\n  ↓\nContent briefs + drafts — based on real top-5 Google results\n  ↓\nTasks — every finding becomes a task with a link to its source\n  ↓\nAI Brand Visibility — are OpenAI and Gemini mentioning you?\n  ↓\nAgent Readiness — can AI crawlers find and read your site?\n\nOne platform. Classical SEO + AI search. Connected.\n\nkoru-seo.com\n\n#SEO #BuildInPublic #AISearch' }] },
-            { id: '050t', title: '050t. Макс: Кросс-пост 9 на Twitter', description: 'Адаптировать пост 9 для Twitter.', steps: ['Адаптировать → Twitter → опубликовать'], subtasks: [{ id: '050t-st1', text: 'Tweet опубликован' }], assignee: 'Макс', estimate: '5 мин', priority: 'high', tags: ['content'], copyBlocks: [{ label: 'Tweet (copy-paste)', text: 'The pipeline we built:\n\nURL → audit → GEO score (14 rules) → keywords with intent → semantic clusters → briefs → drafts → tasks\n\n+ AI Brand Visibility (OpenAI, Gemini)\n+ Agent Readiness (llms.txt, JSON-LD)\n\nClassical SEO + AI search. One platform.\n\nkoru-seo.com\n\n#SEO #AISearch' }] },
             { id: 'n-w3-3', title: 'Настя: Research — G2/Capterra reviewers SEO-инструментов', description: 'Люди оставившие отзыв на SEO-инструмент = точно ими пользуются = наш ICP.', steps: ['G2 Ahrefs: https://www.g2.com/products/ahrefs/reviews', 'G2 Semrush: https://www.g2.com/products/semrush/reviews', 'G2 Surfer: https://www.g2.com/products/surfer/reviews', 'Capterra: https://www.capterra.com/search/?query=SEO%20tools', 'Reviewers → LinkedIn → Sources → Люди'], subtasks: [{ id: 'n-w3-3-st1', text: 'Done' }], assignee: 'Настя', estimate: '2 часа', priority: 'medium', tags: ['research'] },
             { id: '051', title: '051. Кира: Лично проверить каждого Priority A перед outreach', description: 'Им будут отправлены connection requests на след. неделе. Открыть Sources → Люди → фильтр Priority A. Каждого открыть в LinkedIn, убедиться что подходит. Записать чем персонализировать сообщение (недавний пост, компания, роль). Цель: 40-60 подтверждённых Priority A.', steps: ['Sheets → фильтр Priority A', 'Каждый: открыть LinkedIn, подтвердить, записать чем персонализировать', 'Target: 40-60 Priority A'], subtasks: [{ id: '051-st1', text: '40-60 Priority A confirmed' }, { id: '051-st2', text: 'Personalization notes' }], assignee: 'Кира', estimate: '2 часа', priority: 'high', tags: ['review'] },
             { id: '052', title: '052. Кира: Метрики за Week 3', description: 'Dashboard → проверить цели W3. База должна быть чистая после Дня 3 Насти.', steps: ['Dashboard → цель 80+ людей', 'Priority A достаточно для outreach?'], subtasks: [{ id: '052-st1', text: 'Метрики OK' }], assignee: 'Кира', estimate: '5 мин', priority: 'high', tags: ['review'] }
@@ -218,10 +236,19 @@ export const CAMPAIGN_DAYS: CampaignDay[] = [
     },
 
     // ==========================================
-    // WEEK 4 — REVEAL + OUTREACH (5 дней)
+    // WEEK 4 — REVEAL + OUTREACH (6 дней: Вс–Пт)
     // ==========================================
     {
-        dayIndex: 15, phase: 'Week 4', dayLabel: 'Week 4, Понедельник',
+        dayIndex: 1003, phase: 'Week 4', dayLabel: 'Week 4, Вс',
+        calendarDayOffset: 20,
+        title: 'Макс: начало недели (Израиль)',
+        summary: 'Воскресенье = начало рабочей недели Макса. Twitter мониторинг + баги из W3 review.',
+        tasks: [
+            { id: 'mx-w4-sun', title: 'Макс: Twitter мониторинг + фикс багов из W3 review', description: 'Начало рабочей недели. Twitter + если были баги из задачи 049c — начать фиксить.', steps: ['Twitter: проверить mentions, ответить', 'Если есть баги из 049c — начать фикс', 'Landing: проверить что всё работает'], subtasks: [{ id: 'mx-w4-sun-st1', text: 'Done' }], assignee: 'Макс', estimate: '1 час', priority: 'medium', tags: ['monitoring', 'review'] }
+        ]
+    },
+    {
+        dayIndex: 15, phase: 'Week 4', dayLabel: 'Week 4, Пн',
         title: 'Кира учёба. Настя: research',
         summary: 'Понедельник = Кира учёба. Настя: in-house SEO managers.',
         tasks: [
@@ -229,7 +256,7 @@ export const CAMPAIGN_DAYS: CampaignDay[] = [
         ]
     },
     {
-        dayIndex: 16, phase: 'Week 4', dayLabel: 'Week 4, Вторник',
+        dayIndex: 16, phase: 'Week 4', dayLabel: 'Week 4, Вт',
         title: 'POST DAY: REVEAL KORU + Пост 10 + CRs',
         summary: 'Вторник = REVEAL! Headline update + Post 10 + первые connection requests.',
         tasks: [
@@ -241,7 +268,7 @@ export const CAMPAIGN_DAYS: CampaignDay[] = [
         ]
     },
     {
-        dayIndex: 17, phase: 'Week 4', dayLabel: 'Week 4, Среда',
+        dayIndex: 17, phase: 'Week 4', dayLabel: 'Week 4, Ср',
         title: 'CRs + testimonials',
         summary: 'Connection requests + testimonials.',
         tasks: [
@@ -250,37 +277,46 @@ export const CAMPAIGN_DAYS: CampaignDay[] = [
         ]
     },
     {
-        dayIndex: 18, phase: 'Week 4', dayLabel: 'Week 4, Четверг',
+        dayIndex: 18, phase: 'Week 4', dayLabel: 'Week 4, Чт',
         title: 'ПОСТ 11 + CRs',
         summary: 'Пост 11 (50 sites) + CRs. Настя: research.',
         tasks: [
             { id: 'n-w4-2', title: 'Настя: Research — люди которые недавно сменили SEO-инструмент', description: 'Найти людей которые постили про смену инструмента или жаловались на текущий.', steps: ['LinkedIn: "switched from Ahrefs" OR "looking for SEO tool": https://www.linkedin.com/search/results/content/?keywords=%22switched%20from%22%20%22SEO%22', '"alternative to Ahrefs" OR "alternative to Semrush"', 'Reddit: r/SEO "alternative to": https://www.reddit.com/r/SEO/search/?q=%22alternative%20to%22', 'Авторы → LinkedIn → Sources → Люди'], subtasks: [{ id: 'n-w4-2-st1', text: 'Done' }], assignee: 'Настя', estimate: '2 часа', priority: 'medium', tags: ['research'] },
             { id: '058', title: '058. Кира: Пост 11 (50 sites tested) + 2ч engagement', description: 'Пост 11 — data post: "4 out of 50 sites are AI-ready." Картинка: Creatives → Post 11.', steps: ['Creatives → Post 11 → скриншот карточки', 'Пост 11 LinkedIn + прикрепить картинку + landing link', 'Расшарить в 3-5 LinkedIn групп', '2ч engagement'], subtasks: [{ id: '058-st1', text: 'Пост 11 + engagement' }], assignee: 'Кира', estimate: '2.5 часа', priority: 'high', tags: ['content', 'engagement'], copyBlocks: [{ label: 'Пост 11 LinkedIn (copy-paste)', text: 'I checked 50 SEO agency websites for AI-search readiness.\n\nResults:\n\nllms.txt present: 0 out of 50\nMarkdown negotiation: 3 out of 50\nrobots.txt addresses AI crawlers: 8 out of 50 (half were BLOCKING them)\nHTTP Link headers for AI: 1 out of 50\n\n4 out of 50 passed at least one check.\n\nMeanwhile:\n— 48% of Google searches show AI Overviews\n— Google AI Mode is default for 1B+ users\n— Average AI Mode query is 3x longer than classical\n\nThe traffic is shifting. The sites aren\'t ready.\n\nWe built KORU\'s Agent Readiness check for exactly this:\n→ llms.txt detection\n→ Markdown content negotiation\n→ Content-Signal directives\n→ JSON-LD coverage\n→ Score 0-100 with fix recommendations\n\nCheck yours: koru-seo.com\n\n#SEO #AI #TechnicalSEO #AISearch' }] },
             { id: '058t', title: '058t. Макс: Кросс-пост 11 на Twitter', description: 'Адаптировать пост 11 для Twitter.', steps: ['Адаптировать → Twitter → опубликовать'], subtasks: [{ id: '058t-st1', text: 'Tweet опубликован' }], assignee: 'Макс', estimate: '5 мин', priority: 'high', tags: ['content'], copyBlocks: [{ label: 'Tweet (copy-paste)', text: 'Checked 50 SEO agency sites for AI readiness.\n\nllms.txt: 0/50\nMarkdown negotiation: 3/50\nrobots.txt for AI: 8/50 (half blocking)\n\n4 out of 50 passed.\n\n48% of Google searches show AI answers.\nThe sites aren\'t ready.\n\nCheck yours: koru-seo.com\n\n#SEO #AISearch' }] },
-            { id: '059', title: '059. Кира: 8-10 connection requests', description: 'Продолжаем: 8-10 новых requests (Priority A). Обновить статусы.', steps: ['8-10 requests Priority A', 'Обновить статусы в Sources'], subtasks: [{ id: '059-st1', text: 'Requests sent' }], assignee: 'Кира', estimate: '1 час', priority: 'high', tags: ['outreach'] }
+            { id: '059', title: '059. Кира: 8-10 connection requests', description: 'Продолжаем: 8-10 новых requests (Priority A). Обновить статусы.', steps: ['8-10 requests Priority A', 'Обновить статусы в Sources'], subtasks: [{ id: '059-st1', text: 'Requests sent' }], assignee: 'Кира', estimate: '1 час', priority: 'high', tags: ['outreach'] },
+            { id: '060b', title: '060b. Макс: Убедиться что platform stable для demo', description: 'Проверить что продукт работает для записи demo.', steps: ['keyword analysis + brief generation + UI — без багов?'], subtasks: [{ id: '060b-st1', text: 'Stable' }], assignee: 'Макс', estimate: '30 мин', priority: 'high', tags: ['review'] },
+            { id: '060', title: '060. Макс: Записать demo GIF/video (30 сек)', description: 'Открыть KORU → записать экран: URL paste → analysis → clusters → brief. 30 сек GIF + MP4. Отправить Кире на ревью.', steps: ['Открыть KORU', 'Записать: URL paste → analysis → clusters → brief', '30 сек GIF + MP4', 'Отправить Кире на ревью'], subtasks: [{ id: '060-st1', text: 'Demo записан' }, { id: '060-st2', text: 'Кира одобрила' }], assignee: 'Макс', estimate: '1 час', priority: 'high', tags: ['content'] },
+            { id: '061t', title: '061t. Макс: Кросс-пост 12 на Twitter', description: 'Demo tweet с GIF. Запланировать на пятницу.', steps: ['Адаптировать → запланировать tweet + GIF через Twitter Schedule на пятницу'], subtasks: [{ id: '061t-st1', text: 'Tweet + GIF запланирован' }], assignee: 'Макс', estimate: '5 мин', priority: 'high', tags: ['content'], tip: 'Макс не работает в пятницу (Израиль). Запланировать tweet заранее.', copyBlocks: [{ label: 'Tweet (copy-paste + GIF)', text: '"What does it look like?"\n\n30-second demo:\n\nURL → audit → GEO score → AI brand check → keywords → briefs → tasks\n\nClassical SEO + AI search. One platform.\n\nFree GEO score. $19 for full stack.\n\nkoru-seo.com\n\n[ATTACH GIF]\n\n#KORU #SEO #AISearch' }] }
         ]
     },
     {
-        dayIndex: 19, phase: 'Week 4', dayLabel: 'Week 4, Пятница',
-        title: 'CRs + demo recording + GO/NO-GO',
-        summary: 'Добиваем Priority A. Макс записывает demo. GO/NO-GO review.',
+        dayIndex: 19, phase: 'Week 4', dayLabel: 'Week 4, Пт',
+        title: 'CRs + Пост 12 + GO/NO-GO',
+        summary: 'Добиваем Priority A. Пост 12 с demo GIF. GO/NO-GO review. Макс выходной (Израиль).',
         tasks: [
             { id: 'n-w4-3', title: 'Настя: Research — personalization hooks для Priority A', description: 'Пройти топ-30 Priority A. Для каждого записать personalization hook (недавний пост, достижение, компания) для connection request.', steps: ['Sources → Люди → фильтр Priority A → топ 30 по Activity', 'Для каждого: открыть LinkedIn, найти недавний пост или достижение', 'Записать в Notes: "Recent post about X" или "Works at Y, launched Z"'], subtasks: [{ id: 'n-w4-3-st1', text: 'Done' }], assignee: 'Настя', estimate: '2-3 часа', priority: 'medium', tags: ['research'] },
             { id: '059b', title: '059b. Кира: 8-10 connection requests (добиваем Priority A)', description: 'Отправить оставшимся Priority A. Обновить статусы в Sources → Люди.', steps: ['8-10 requests оставшимся Priority A', 'Обновить статусы'], subtasks: [{ id: '059b-st1', text: 'Priority A done' }], assignee: 'Кира', estimate: '1 час', priority: 'high', tags: ['outreach'] },
-            { id: '060', title: '060. Макс: Записать demo GIF/video (30 сек)', description: 'Открыть KORU → записать экран: URL paste → analysis → clusters → brief. 30 сек GIF + MP4. Отправить Кире на ревью.', steps: ['Открыть KORU', 'Записать: URL paste → analysis → clusters → brief', '30 сек GIF + MP4', 'Отправить Кире на ревью'], subtasks: [{ id: '060-st1', text: 'Demo записан' }, { id: '060-st2', text: 'Кира одобрила' }], assignee: 'Макс', estimate: '1 час', priority: 'high', tags: ['content'] },
-            { id: '060b', title: '060b. Макс: Убедиться что platform stable для demo', description: 'Проверить что продукт работает для записи demo.', steps: ['keyword analysis + brief generation + UI — без багов?'], subtasks: [{ id: '060b-st1', text: 'Stable' }], assignee: 'Макс', estimate: '30 мин', priority: 'high', tags: ['review'] },
             { id: '061', title: '061. Кира: Пост 12 (demo GIF) + 2ч engagement', description: 'Пост 12 с demo GIF. Люди видят реальный продукт. Картинка: GIF от Макса (задача 060). Creatives → Post 12 как fallback.', steps: ['Приложить demo GIF от Макса (задача 060)', 'Пост 12 LinkedIn + GIF + landing link', 'Расшарить в 3-5 LinkedIn групп', '2ч engagement'], subtasks: [{ id: '061-st1', text: 'Demo post + engagement' }], assignee: 'Кира', estimate: '2.5 часа', priority: 'high', tags: ['content', 'engagement'], copyBlocks: [{ label: 'Пост 12 LinkedIn (copy-paste + приложить GIF)', text: 'People kept asking: "What does it actually look like?"\n\nSo here\'s a 30-second demo.\n\n1. Paste a URL\n2. KORU audits the site — health check + AI summary\n3. Check GEO score — 14 rules, per page, with evidence\n4. Run AI Brand Visibility — does OpenAI/Gemini mention you?\n5. Discover keywords — intent classification + relevance gate\n6. Semantic clustering — by meaning, not word overlap\n7. Generate brief + content draft\n8. Every finding → task\n\nClassical SEO + AI search readiness. One platform.\n\nGEO score starts free. Full stack from $19.\n\nTry it: koru-seo.com\n\n[ATTACH GIF]\n\n#KORU #SEO #ProductDemo #AISearch' }] },
-            { id: '061t', title: '061t. Макс: Кросс-пост 12 на Twitter', description: 'Demo tweet с GIF.', steps: ['Адаптировать → Twitter + GIF → опубликовать'], subtasks: [{ id: '061t-st1', text: 'Tweet + GIF опубликован' }], assignee: 'Макс', estimate: '5 мин', priority: 'high', tags: ['content'], copyBlocks: [{ label: 'Tweet (copy-paste + GIF)', text: '"What does it look like?"\n\n30-second demo:\n\nURL → audit → GEO score → AI brand check → keywords → briefs → tasks\n\nClassical SEO + AI search. One platform.\n\nFree GEO score. $19 for full stack.\n\nkoru-seo.com\n\n[ATTACH GIF]\n\n#KORU #SEO #AISearch' }] },
             { id: '062', title: '062. Кира: GO/NO-GO review', description: 'GO/NO-GO решение. Посмотреть: сколько connection requests отправлено (цель 30-40), сколько принято (цель >=25%), сколько testimonials (цель 2+), сколько email signups. Если acceptance < 20% — СТОП outreach на Week 5.', steps: ['Total Priority A: target 30-40', 'Acceptance: >=25% → GO. <20% → STOP', 'Beta testimonials: 2+?', 'Email signups?'], subtasks: [{ id: '062-st1', text: '30-40 sent' }, { id: '062-st2', text: 'Acceptance >=25%' }, { id: '062-st3', text: '2+ testimonials' }], assignee: 'Кира', estimate: '30 мин', priority: 'high', tags: ['review'], warning: 'Acceptance <20% = STOP Week 5 outreach.' }
         ],
         keyMetric: 'Week 4: 30-40 CRs sent, acceptance >=25%, 5+ demo calls done, 2+ testimonials, pricing defined, email signups 25+'
     },
 
     // ==========================================
-    // WEEK 5 — PRIORITY B + PRE-LAUNCH (5 дней)
+    // WEEK 5 — PRIORITY B + PRE-LAUNCH (6 дней: Вс–Пт)
     // ==========================================
     {
-        dayIndex: 20, phase: 'Week 5', dayLabel: 'Week 5, Понедельник',
+        dayIndex: 1004, phase: 'Week 5', dayLabel: 'Week 5, Вс',
+        calendarDayOffset: 27,
+        title: 'Макс: начало недели (Израиль)',
+        summary: 'Воскресенье = начало рабочей недели Макса. Баги из W4 + Twitter.',
+        tasks: [
+            { id: 'mx-w5-sun', title: 'Макс: Фикс багов из W4 review + Twitter мониторинг', description: 'Начало рабочей недели. Если были баги из pre-launch review — фиксить. Twitter мониторинг.', steps: ['Баги из 049c / review → фикс', 'Twitter: проверить mentions, ответить', 'Landing page: всё ОК?'], subtasks: [{ id: 'mx-w5-sun-st1', text: 'Done' }], assignee: 'Макс', estimate: '1 час', priority: 'medium', tags: ['monitoring', 'review'] }
+        ]
+    },
+    {
+        dayIndex: 20, phase: 'Week 5', dayLabel: 'Week 5, Пн',
         title: 'Кира учёба. Настя: research',
         summary: 'Понедельник = Кира учёба. Настя: SEO журналисты.',
         tasks: [
@@ -288,7 +324,7 @@ export const CAMPAIGN_DAYS: CampaignDay[] = [
         ]
     },
     {
-        dayIndex: 21, phase: 'Week 5', dayLabel: 'Week 5, Вторник',
+        dayIndex: 21, phase: 'Week 5', dayLabel: 'Week 5, Вт',
         title: 'Priority B CRs + launch post draft',
         summary: 'Вторник = Кира: Priority B CRs + написать launch post.',
         tasks: [
@@ -297,7 +333,7 @@ export const CAMPAIGN_DAYS: CampaignDay[] = [
         ]
     },
     {
-        dayIndex: 22, phase: 'Week 5', dayLabel: 'Week 5, Среда',
+        dayIndex: 22, phase: 'Week 5', dayLabel: 'Week 5, Ср',
         title: 'CRs + launch post review',
         summary: 'CRs Priority B + review launch post. Настя: Product Hunt research.',
         tasks: [
@@ -306,7 +342,7 @@ export const CAMPAIGN_DAYS: CampaignDay[] = [
         ]
     },
     {
-        dayIndex: 23, phase: 'Week 5', dayLabel: 'Week 5, Четверг',
+        dayIndex: 23, phase: 'Week 5', dayLabel: 'Week 5, Чт',
         title: 'CRs + testimonials + pre-launch review',
         summary: 'CRs + testimonials в launch post + pre-launch product review. Настя: PH research.',
         tasks: [
@@ -314,29 +350,38 @@ export const CAMPAIGN_DAYS: CampaignDay[] = [
             { id: '067', title: '067. Кира: 12-15 connection requests (Priority B)', description: 'Продолжаем Priority B. 12-15 requests.', steps: ['12-15 requests Priority B', 'Обновить статусы'], subtasks: [{ id: '067-st1', text: 'Requests sent' }], assignee: 'Кира', estimate: '1.5 часа', priority: 'high', tags: ['outreach'] },
             { id: '068', title: '068. Кира: Проверить — все отзывы получены? Вставить в launch post', description: 'Все beta testers прислали цитаты-отзывы? Если нет — написать gentle reminder. Вставить полученные цитаты в launch post.', steps: ['Check: все testimonials получены?', 'If missing: gentle reminder DM', 'Insert quotes into launch post'], subtasks: [{ id: '068-st1', text: 'Testimonials in launch post' }], assignee: 'Кира', estimate: '1 час', priority: 'high', tags: ['outreach'] },
             { id: '068d', title: '068d. Макс: Landing page — pre-launch update', description: 'Зачем: Launch через 3 дня. Landing должен быть launch-ready с testimonials и demo.', steps: ['Добавить testimonials от beta testers', 'Добавить demo GIF (из задачи 060)', 'Обновить CTA: "Try it free" вместо "Get early access"', 'Проверить mobile версию', 'Проверить скорость загрузки'], subtasks: [{ id: '068d-st1', text: 'Testimonials добавлены' }, { id: '068d-st2', text: 'Demo GIF на странице' }, { id: '068d-st3', text: 'CTA обновлён' }], assignee: 'Макс', estimate: '1.5 часа', priority: 'high', tags: ['landing'] },
-            { id: '068b', title: '068b. Кира + Макс: Pre-launch product review', description: 'Зачем: Launch через 3 дня. Продукт должен быть 100% stable. Это последний шанс найти и пофиксить проблемы.', steps: ['Созвон 30-45 мин', 'Пройти весь user flow: signup → add website → run audit → keyword analysis → brief → task', 'Проверить: landing page → signup → onboarding работает?', 'Проверить: email capture (Mailchimp/ConvertKit) → получаем emails?', 'Записать баги если есть → Макс фиксит до пятницы', 'Нагрузка: выдержит 50 пользователей одновременно?'], subtasks: [{ id: '068b-st1', text: 'Full flow пройден' }, { id: '068b-st2', text: 'Landing → signup OK' }, { id: '068b-st3', text: 'Баги записаны' }, { id: '068b-st4', text: 'Макс подтвердил stable' }], assignee: 'Кира + Макс', estimate: '45 мин', priority: 'high', tags: ['review', 'planning'] }
+            { id: '068b', title: '068b. Кира + Макс: Pre-launch product review', description: 'Зачем: Launch через 3 дня. Продукт должен быть 100% stable. Это последний шанс найти и пофиксить проблемы.', steps: ['Созвон 30-45 мин', 'Пройти весь user flow: signup → add website → run audit → keyword analysis → brief → task', 'Проверить: landing page → signup → onboarding работает?', 'Проверить: email capture (Mailchimp/ConvertKit) → получаем emails?', 'Записать баги если есть → Макс фиксит до пятницы', 'Нагрузка: выдержит 50 пользователей одновременно?'], subtasks: [{ id: '068b-st1', text: 'Full flow пройден' }, { id: '068b-st2', text: 'Landing → signup OK' }, { id: '068b-st3', text: 'Баги записаны' }, { id: '068b-st4', text: 'Макс подтвердил stable' }], assignee: 'Кира + Макс', estimate: '45 мин', priority: 'high', tags: ['review', 'planning'] },
+            { id: '069c', title: '069c. Макс: Подготовить Product Hunt страницу', description: 'Зачем: Product Hunt = 500-2000 визитов в день launch. PH launch делаем через 1-2 дня после LinkedIn launch.', steps: ['Зарегистрироваться на producthunt.com если нет аккаунта', 'Создать Upcoming page: https://www.producthunt.com/posts/new', 'Название: KORU — From URL to keyword strategy in 5 minutes', 'Tagline: Stop researching keywords. Start strategizing.', 'Описание: 3-4 абзаца (проблема → решение → как работает → CTA)', 'Скриншоты: 3-5 (dashboard, clusters, brief generation)', 'Demo GIF (из задачи 060)', 'Maker comment draft: история создания', 'Найти Hunter — спросить в SEO-сообществах'], subtasks: [{ id: '069c-st1', text: 'PH page создана' }, { id: '069c-st2', text: 'Скриншоты готовы' }, { id: '069c-st3', text: 'Hunter найден (опционально)' }], assignee: 'Макс', estimate: '2 часа', priority: 'high', tags: ['launch', 'product-hunt'] },
+            { id: '070b', title: '070b. Макс: Final product stability check', description: 'Зачем: Launch в понедельник. Четверг = последний рабочий день Макса перед launch. Всё должно быть bulletproof.', steps: ['Проверить production: все endpoints отвечают?', 'Проверить: signup flow → первый audit/keyword analysis', 'Нагрузочный тест: хотя бы 10-20 одновременных запросов', 'Мониторинг настроен? (alerts если падает)', 'Доступен ли в Пт/Сб/Вс на случай emergency?'], subtasks: [{ id: '070b-st1', text: 'Production stable' }, { id: '070b-st2', text: 'Signup flow OK' }, { id: '070b-st3', text: 'Мониторинг OK' }, { id: '070b-st4', text: 'Доступен на weekend' }], assignee: 'Макс', estimate: '1 час', priority: 'high', tags: ['review'], warning: 'Четверг = последний рабочий день Макса (Израиль). Если что-то не stable — фиксить СЕГОДНЯ.' }
         ]
     },
     {
-        dayIndex: 24, phase: 'Week 5', dayLabel: 'Week 5, Пятница',
-        title: 'Final CRs + email draft + PH prep + pre-launch check',
-        summary: 'Финальные CRs + launch email + PH page + pre-launch checklist. Настя: hooks.',
+        dayIndex: 24, phase: 'Week 5', dayLabel: 'Week 5, Пт',
+        title: 'Final CRs + email draft + pre-launch check',
+        summary: 'Финальные CRs + launch email + checklist. Макс выходной (Израиль). Настя: hooks.',
         tasks: [
             { id: 'n-w5-3', title: 'Настя: Research — personalization hooks для Priority B', description: 'Пройти топ-20 Priority B (in-house). Записать personalization hooks для Кириных connection requests.', steps: ['Sources → Люди → фильтр Priority B → топ 20', 'Для каждого: недавний пост, роль, компания → Notes'], subtasks: [{ id: 'n-w5-3-st1', text: 'Done' }], assignee: 'Настя', estimate: '2 часа', priority: 'medium', tags: ['research'] },
             { id: '069a', title: '069a. Кира: Последние 12-15 requests перед launch', description: 'Финальный день outreach перед launch. 12-15 connection requests. Максимальная видимость.', steps: ['12-15 requests — финальный push', 'Обновить статусы'], subtasks: [{ id: '069a-st1', text: 'Final requests sent' }], assignee: 'Кира', estimate: '1.5 часа', priority: 'high', tags: ['outreach'] },
-            { id: '069c', title: '069c. Макс: Подготовить Product Hunt страницу', description: 'Зачем: Product Hunt = 500-2000 визитов в день launch. Даже без победы — это бесплатный qualified traffic (люди которые ищут новые инструменты). PH launch делаем через 1-2 дня после LinkedIn launch для двойного удара.', steps: ['Зарегистрироваться на producthunt.com если нет аккаунта', 'Создать Upcoming page: https://www.producthunt.com/posts/new', 'Название: KORU — From URL to keyword strategy in 5 minutes', 'Tagline: Stop researching keywords. Start strategizing.', 'Описание: 3-4 абзаца (проблема → решение → как работает → CTA)', 'Скриншоты: 3-5 (dashboard, clusters, brief generation)', 'Demo GIF (из задачи 060)', 'Maker comment draft: история создания', 'Найти Hunter (человека с followers который запостит) — спросить в SEO-сообществах'], subtasks: [{ id: '069c-st1', text: 'PH page создана' }, { id: '069c-st2', text: 'Скриншоты готовы' }, { id: '069c-st3', text: 'Hunter найден (опционально)' }], assignee: 'Макс', estimate: '2 часа', priority: 'high', tags: ['launch', 'product-hunt'] },
             { id: '069b', title: '069b. Кира: Draft "We launched" email', description: 'Зачем: Email к waitlist в launch day.', steps: ['Subject: "KORU is live — try it free"', 'Short body + signup link'], subtasks: [{ id: '069b-st1', text: 'Email drafted' }], assignee: 'Кира', estimate: '30 мин', priority: 'high', tags: ['content'], copyBlocks: [{ label: 'Launch email (copy-paste в Mailchimp/ConvertKit)', text: 'Subject: KORU is live — check your AI-citation readiness for free\n\nHey,\n\nIt\'s here.\n\nKORU is live. You signed up for early access, and now it\'s ready.\n\nWhat it does:\n-> GEO Score: 14-rule check — how citable is each page to AI engines? Per page, evidence per rule.\n-> AI Brand Visibility: do OpenAI and Gemini recommend you? Per-provider tracking over time.\n-> Agent Readiness: can AI crawlers find your site? llms.txt, Content-Signal, JSON-LD.\n-> Intent-first keywords: AI reads your site, then finds opportunities. Semantic clustering by meaning.\n-> Content briefs + drafts: based on real top-5 Google results.\n-> Tasks: every finding → task. 9 source types.\n\nClassical SEO + AI search readiness. One platform.\n\nGEO score and AI visibility start free: [koru-seo.com/signup]\n\nIf you have questions, just reply — I read every one.\n\nKira\nFounder, KORU' }] },
-            { id: '070', title: '070. Кира: Pre-launch checklist', description: 'Зачем: Один шанс. Ничего не забыть.', steps: ['Launch post: ready + demo GIF?', 'Testimonials: 2-3 вставлены?', 'Landing: working?', 'Email: drafted?', 'Beta testers: notified? ("comment in first 30 min")', 'Twitter launch post adapted?'], subtasks: [{ id: '070-st1', text: 'Launch post final' }, { id: '070-st2', text: 'Testimonials ready' }, { id: '070-st3', text: 'Landing OK' }, { id: '070-st4', text: 'Email ready' }, { id: '070-st5', text: 'Beta testers notified' }, { id: '070-st6', text: 'ALL SYSTEMS GO' }], assignee: 'Кира', estimate: '1 час', priority: 'high', tags: ['planning'] },
-            { id: '070b', title: '070b. Макс: Final product stability check', description: 'Зачем: Launch в понедельник. Это последний рабочий день. Всё должно быть bulletproof.', steps: ['Проверить production: все endpoints отвечают?', 'Проверить: signup flow → первый audit/keyword analysis', 'Нагрузочный тест: хотя бы 10-20 одновременных запросов', 'Мониторинг настроен? (alerts если падает)', 'Доступен ли в выходные на случай emergency?'], subtasks: [{ id: '070b-st1', text: 'Production stable' }, { id: '070b-st2', text: 'Signup flow OK' }, { id: '070b-st3', text: 'Мониторинг OK' }, { id: '070b-st4', text: 'Доступен на weekend' }], assignee: 'Макс', estimate: '1 час', priority: 'high', tags: ['review'], warning: 'Если что-то не stable — фиксить СЕГОДНЯ. В выходные и launch day уже поздно.' }
+            { id: '070', title: '070. Кира: Pre-launch checklist', description: 'Зачем: Один шанс. Ничего не забыть.', steps: ['Launch post: ready + demo GIF?', 'Testimonials: 2-3 вставлены?', 'Landing: working?', 'Email: drafted?', 'Beta testers: notified? ("comment in first 30 min")', 'Twitter launch post adapted?'], subtasks: [{ id: '070-st1', text: 'Launch post final' }, { id: '070-st2', text: 'Testimonials ready' }, { id: '070-st3', text: 'Landing OK' }, { id: '070-st4', text: 'Email ready' }, { id: '070-st5', text: 'Beta testers notified' }, { id: '070-st6', text: 'ALL SYSTEMS GO' }], assignee: 'Кира', estimate: '1 час', priority: 'high', tags: ['planning'] }
         ],
         keyMetric: 'Week 5: 60-80 Priority B sent, acceptance >=20%, testimonials in launch post, PH page ready, email waitlist 50+, ALL SYSTEMS GO'
     },
 
     // ==========================================
-    // WEEK 6 — LAUNCH (5 дней)
+    // WEEK 6 — LAUNCH (6 дней: Вс–Пт)
     // ==========================================
     {
-        dayIndex: 25, phase: 'Week 6', dayLabel: 'Week 6, Понедельник',
+        dayIndex: 1005, phase: 'Week 6', dayLabel: 'Week 6, Вс',
+        calendarDayOffset: 34,
+        title: 'Макс: PRE-LAUNCH final check (Израиль)',
+        summary: 'Воскресенье = последний шанс Макса всё проверить перед launch в Вт. Критический день.',
+        tasks: [
+            { id: 'mx-w6-sun', title: 'Макс: FINAL pre-launch — всё должно работать', description: 'Launch во вторник. Это воскресенье — начало рабочей недели Макса. Последний шанс проверить и пофиксить.', steps: ['Production: все endpoints отвечают?', 'Signup flow: работает end-to-end?', 'Landing page: загружается быстро? Mobile OK?', 'Email capture: тестовый signup → приходит?', 'Twitter: ответить на всё', 'Если баги — фиксить сегодня-завтра'], subtasks: [{ id: 'mx-w6-sun-st1', text: 'Production OK' }, { id: 'mx-w6-sun-st2', text: 'Signup flow OK' }, { id: 'mx-w6-sun-st3', text: 'Landing OK' }], assignee: 'Макс', estimate: '2 часа', priority: 'high', tags: ['review', 'monitoring'], warning: 'КРИТИЧЕСКИЙ ДЕНЬ. Launch через 2 дня.' }
+        ]
+    },
+    {
+        dayIndex: 25, phase: 'Week 6', dayLabel: 'Week 6, Пн',
         title: 'TEASER + pre-launch (Кира учёба → teaser вечером)',
         summary: 'Понедельник = Кира учёба днём. Макс + Настя покрывают engagement. Кира вечером публикует teaser "Tomorrow." Launch = ВТОРНИК.',
         tasks: [
@@ -346,7 +391,7 @@ export const CAMPAIGN_DAYS: CampaignDay[] = [
         ]
     },
     {
-        dayIndex: 26, phase: 'Week 6', dayLabel: 'Week 6, Вторник',
+        dayIndex: 26, phase: 'Week 6', dayLabel: 'Week 6, Вт',
         title: 'LAUNCH DAY!',
         summary: 'ВТОРНИК = лучший день для LinkedIn engagement. Beta testers comment first. Кира online весь день.',
         tasks: [
@@ -358,7 +403,7 @@ export const CAMPAIGN_DAYS: CampaignDay[] = [
         ]
     },
     {
-        dayIndex: 27, phase: 'Week 6', dayLabel: 'Week 6, Среда',
+        dayIndex: 27, phase: 'Week 6', dayLabel: 'Week 6, Ср',
         title: 'Post-launch day 1',
         summary: 'Continue engagement. DMs to interested. Product Hunt launch.',
         tasks: [
@@ -368,23 +413,23 @@ export const CAMPAIGN_DAYS: CampaignDay[] = [
         ]
     },
     {
-        dayIndex: 28, phase: 'Week 6', dayLabel: 'Week 6, Четверг',
+        dayIndex: 28, phase: 'Week 6', dayLabel: 'Week 6, Чт',
         title: 'Post-launch day 2 + PH monitoring',
         summary: 'Follow-up engagement. Demo calls. PH day 2.',
         tasks: [
             { id: 'n-w6-3', title: 'Настя: Research — SEO community discussions про launch', description: 'Проверить Reddit/Twitter — обсуждают ли наш launch. Найти новых заинтересованных.', steps: ['Reddit: r/SEO, r/bigseo — поиск "KORU" или "AI citation" или "GEO score"', 'Twitter: поиск "KORU SEO" или реакции на launch tweet', 'Новые заинтересованные → Sources → Люди'], subtasks: [{ id: 'n-w6-3-st1', text: 'Done' }], assignee: 'Настя', estimate: '2 часа', priority: 'medium', tags: ['research'] },
             { id: '082', title: '082. Кира: Follow-up комменты + demo calls', description: 'Продолжить отвечать на комменты. Провести demo calls с теми кто записался. Twitter engagement.', steps: ['Answer comments', 'Demo calls с interested', 'Twitter engagement'], subtasks: [{ id: '082-st1', text: 'Follow-up done' }], assignee: 'Кира', estimate: '2 часа', priority: 'high', tags: ['engagement', 'outreach'] },
-            { id: '083b', title: '083b. Макс: Product Hunt day 2 + engagement', description: 'Зачем: PH ранжирует по active engagement. День 2 = всё ещё набираем upvotes.', steps: ['Ответить на все новые комменты на PH', 'Расшарить PH ссылку в LinkedIn комменте', 'Мониторить позицию в рейтинге'], subtasks: [{ id: '083b-st1', text: 'PH comments answered' }], assignee: 'Макс', estimate: '1 час', priority: 'high', tags: ['product-hunt'] }
+            { id: '083b', title: '083b. Макс: Product Hunt day 2 + engagement', description: 'Зачем: PH ранжирует по active engagement. День 2 = всё ещё набираем upvotes.', steps: ['Ответить на все новые комменты на PH', 'Расшарить PH ссылку в LinkedIn комменте', 'Мониторить позицию в рейтинге'], subtasks: [{ id: '083b-st1', text: 'PH comments answered' }], assignee: 'Макс', estimate: '1 час', priority: 'high', tags: ['product-hunt'] },
+            { id: '085b', title: '085b. Макс: Launch week метрики — полная сводка', description: 'Зачем: Нужны точные цифры для ретро. GA + все платформы + Product Hunt. Четверг = последний рабочий день Макса.', steps: ['GA4: visits, signups, conversion rate за launch week', 'LinkedIn: impressions, engagement на launch post', 'Twitter: impressions, engagement на launch thread', 'Product Hunt: upvotes, comments, position, traffic from PH', 'Email: open rate, click rate — Mailchimp/ConvertKit', 'FUNNEL: post impressions → landing visits → signups → active users → demo calls', 'Сводка в Google Sheets'], subtasks: [{ id: '085b-st1', text: 'GA метрики' }, { id: '085b-st2', text: 'Social метрики' }, { id: '085b-st3', text: 'PH метрики' }, { id: '085b-st4', text: 'Email метрики' }, { id: '085b-st5', text: 'Funnel сводка' }], assignee: 'Макс', estimate: '1.5 часа', priority: 'high', tags: ['review'] },
+            { id: '085', title: '085. Кира + Макс: Launch Week Review', description: 'Зачем: Понять результаты. Спланировать Week 7+.', steps: ['ALL metrics: impressions, likes, comments, shares, profile views, email signups, product signups, DMs, demo calls, PH upvotes', 'FUNNEL analysis: где теряем людей? post→landing→signup→active — какой этап самый слабый?', 'Retro: что сработало, что нет', 'Week 7+ plan: Priority C + regular content + convert', 'Если signup→active < 30% — product проблема, Макс фиксит', 'Если landing→signup < 10% — messaging проблема, переписать landing'], subtasks: [{ id: '085-st1', text: 'Metrics compiled' }, { id: '085-st2', text: 'Funnel analysis' }, { id: '085-st3', text: 'Retro done' }, { id: '085-st4', text: 'Week 7+ plan' }], assignee: 'Кира + Макс', estimate: '1 час', priority: 'high', tags: ['review'] }
         ]
     },
     {
-        dayIndex: 29, phase: 'Week 6', dayLabel: 'Week 6, Пятница',
-        title: 'Launch Week Review + метрики',
-        summary: 'Полная сводка за launch week. Ретро. План Week 7+.',
+        dayIndex: 29, phase: 'Week 6', dayLabel: 'Week 6, Пт',
+        title: 'Launch Week — last push',
+        summary: 'Финальный push post-launch. Макс выходной (Израиль).',
         tasks: [
-            { id: '084', title: '084. Кира: Последний день активного post-launch push', description: 'Ответить на оставшиеся комменты. DM тем кто заинтересовался но ещё не записался на demo. Twitter engagement.', steps: ['Answer remaining comments', 'DMs к interested: "Happy to do a walkthrough"', 'Twitter engagement'], subtasks: [{ id: '084-st1', text: 'Follow-up done' }], assignee: 'Кира', estimate: '1.5 часа', priority: 'high', tags: ['engagement', 'outreach'] },
-            { id: '085b', title: '085b. Макс: Launch week метрики — полная сводка', description: 'Зачем: Нужны точные цифры для ретро. GA + все платформы + Product Hunt.', steps: ['GA4: visits, signups, conversion rate (% визитов → signups) за launch week', 'LinkedIn: impressions, engagement на launch post', 'Twitter: impressions, engagement на launch thread', 'Product Hunt: upvotes, comments, position, traffic from PH', 'Email: open rate, click rate — Mailchimp/ConvertKit', 'FUNNEL: post impressions → landing visits → signups → active users → demo calls', 'Сводка в Google Sheets'], subtasks: [{ id: '085b-st1', text: 'GA метрики' }, { id: '085b-st2', text: 'Social метрики' }, { id: '085b-st3', text: 'PH метрики' }, { id: '085b-st4', text: 'Email метрики' }, { id: '085b-st5', text: 'Funnel сводка' }], assignee: 'Макс', estimate: '1.5 часа', priority: 'high', tags: ['review'] },
-            { id: '085', title: '085. Кира + Макс: Launch Week Review', description: 'Зачем: Понять результаты. Спланировать Week 7+.', steps: ['ALL metrics: impressions, likes, comments, shares, profile views, email signups, product signups, DMs, demo calls, PH upvotes', 'FUNNEL analysis: где теряем людей? post→landing→signup→active — какой этап самый слабый?', 'Retro: что сработало, что нет', 'Week 7+ plan: Priority C + regular content + convert', 'Если signup→active < 30% — product проблема, Макс фиксит', 'Если landing→signup < 10% — messaging проблема, переписать landing'], subtasks: [{ id: '085-st1', text: 'Metrics compiled' }, { id: '085-st2', text: 'Funnel analysis' }, { id: '085-st3', text: 'Retro done' }, { id: '085-st4', text: 'Week 7+ plan' }], assignee: 'Кира + Макс', estimate: '1 час', priority: 'high', tags: ['review'] }
+            { id: '084', title: '084. Кира: Последний день активного post-launch push', description: 'Ответить на оставшиеся комменты. DM тем кто заинтересовался но ещё не записался на demo. Twitter engagement.', steps: ['Answer remaining comments', 'DMs к interested: "Happy to do a walkthrough"', 'Twitter engagement'], subtasks: [{ id: '084-st1', text: 'Follow-up done' }], assignee: 'Кира', estimate: '1.5 часа', priority: 'high', tags: ['engagement', 'outreach'] }
         ],
         keyMetric: 'LAUNCH: product signups, demo calls booked, email→signup conversion, PH upvotes, first paying users'
     },

@@ -16,10 +16,25 @@ function getQStash() {
     })
 }
 
-function toUtcCron(localTime: string, _timezone: string): string {
-    // QStash supports IANA timezone directly via schedule headers
+function toUtcCron(localTime: string, timezone: string): string {
     const [h, m] = localTime.split(':').map(Number)
-    return `${m} ${h} * * 1-5`
+    // Find current UTC offset for the timezone
+    const ref = new Date()
+    const parts = new Intl.DateTimeFormat('en-US', {
+        timeZone: timezone,
+        hour: 'numeric',
+        minute: 'numeric',
+        hourCycle: 'h23'
+    }).formatToParts(ref)
+    const localH = Number(parts.find((p) => p.type === 'hour')?.value ?? 0)
+    const localM = Number(parts.find((p) => p.type === 'minute')?.value ?? 0)
+    const offsetMin = (localH * 60 + localM) - (ref.getUTCHours() * 60 + ref.getUTCMinutes())
+
+    let targetUtcMin = (h! * 60 + m!) - offsetMin
+    if (targetUtcMin < 0) targetUtcMin += 1440
+    if (targetUtcMin >= 1440) targetUtcMin -= 1440
+
+    return `${targetUtcMin % 60} ${Math.floor(targetUtcMin / 60)} * * *`
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {

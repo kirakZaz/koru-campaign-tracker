@@ -39,6 +39,8 @@ export interface CampaignDay {
     summary: string
     tasks: CampaignTask[]
     keyMetric?: string
+    /** Calendar-day offset from startDate (used for non-business days like Sunday). When set, overrides dayIndex for date display. */
+    calendarDayOffset?: number
 }
 
 export interface TaskOverride {

@@ -47,7 +47,7 @@ const REMINDER_TIMES = [
 const DEFAULT_TEAM: TeamMember[] = [
     { name: 'Кира', assigneeKey: 'Кира' as Assignee, email: '', timezone: 'Europe/Lisbon', reminderTime: '09:00', remindersEnabled: false },
     { name: 'Настя', assigneeKey: 'Настя' as Assignee, email: '', timezone: 'Europe/Lisbon', reminderTime: '09:00', remindersEnabled: false },
-    { name: 'Макс', assigneeKey: 'Макс' as Assignee, email: '', timezone: 'Asia/Kolkata', reminderTime: '09:00', remindersEnabled: false },
+    { name: 'Макс', assigneeKey: 'Макс' as Assignee, email: '', timezone: 'Asia/Jerusalem', reminderTime: '09:00', remindersEnabled: false },
 ]
 
 const SettingsDialog = React.memo(function SettingsDialog({

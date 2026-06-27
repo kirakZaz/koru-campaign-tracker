@@ -1,4 +1,4 @@
-import { addBusinessDays, format, differenceInBusinessDays } from 'date-fns'
+import { addBusinessDays, addDays, format, differenceInBusinessDays } from 'date-fns'
 import { ru } from 'date-fns/locale'
 import type { CampaignDay } from '@/data/campaignData.types'
 
@@ -14,7 +14,10 @@ function getToday(): Date {
     return new Date(now.getFullYear(), now.getMonth(), now.getDate())
 }
 
-export function getCampaignDate(startDate: string, dayIndex: number): Date {
+export function getCampaignDate(startDate: string, dayIndex: number, calendarDayOffset?: number): Date {
+    if (calendarDayOffset !== undefined) {
+        return addDays(parseLocalDate(startDate), calendarDayOffset)
+    }
     return addBusinessDays(parseLocalDate(startDate), dayIndex)
 }
 

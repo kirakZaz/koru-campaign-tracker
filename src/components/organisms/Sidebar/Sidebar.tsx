@@ -241,7 +241,7 @@ const Sidebar = React.memo(function Sidebar({
                                             <CheckCircleRoundedIcon sx={{ fontSize: '0.9rem', color: 'success.main' }} />
                                         ) : (
                                             <Typography sx={styles.dayNumber}>
-                                                {startDate ? formatShortDate(getCampaignDate(startDate, day.dayIndex)) : day.dayIndex + 1}
+                                                {startDate ? formatShortDate(getCampaignDate(startDate, day.dayIndex, day.calendarDayOffset)) : day.dayIndex + 1}
                                             </Typography>
                                         )}
                                         <Box sx={{ flex: 1, minWidth: 0 }}>
