@@ -32,6 +32,8 @@ import ArrowUpwardRoundedIcon from '@mui/icons-material/ArrowUpwardRounded'
 import ArrowDownwardRoundedIcon from '@mui/icons-material/ArrowDownwardRounded'
 import OpenInNewRoundedIcon from '@mui/icons-material/OpenInNewRounded'
 import FilterAltOffRoundedIcon from '@mui/icons-material/FilterAltOffRounded'
+import SearchRoundedIcon from '@mui/icons-material/SearchRounded'
+import InputAdornment from '@mui/material/InputAdornment'
 import BarChartRoundedIcon from '@mui/icons-material/BarChartRounded'
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded'
 import ContentCopyRoundedIcon from '@mui/icons-material/ContentCopyRounded'
@@ -213,6 +215,10 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
     const [needsActionFilter, setNeedsActionFilter] = React.useState(false)
     const [_copiedId, setCopiedId] = React.useState<string | null>(null)
     const [modalPersonId, setModalPersonId] = React.useState<string | null>(null)
+    const [selectedPeopleIds, setSelectedPeopleIds] = React.useState<Set<string>>(new Set())
+    const [addBestDialogOpen, setAddBestDialogOpen] = React.useState(false)
+    const [bestPickIds, setBestPickIds] = React.useState<Set<string>>(new Set())
+    const [searchQuery, setSearchQuery] = React.useState('')
     const [historyInput, setHistoryInput] = React.useState('')
     const [snackbarMsg, setSnackbarMsg] = React.useState<string | null>(null)
 
@@ -282,8 +288,17 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
         return Array.from(set).sort()
     }
 
-    // Reset sort, filters, selection, and needsAction filter when switching tabs
-    React.useEffect(() => { setSortKey(''); setSortDir('asc'); setFilters({}); setSelectedIds(new Set()); setNeedsActionFilter(false) }, [tab])
+    // Reset sort, filters, selection, search, and needsAction filter when switching tabs
+    React.useEffect(() => { setSortKey(''); setSortDir('asc'); setFilters({}); setSelectedIds(new Set()); setNeedsActionFilter(false); setSearchQuery(''); setSelectedPeopleIds(new Set()) }, [tab])
+
+    // Search filter — matches name, notes, source, country, linkedinUrl
+    function searched<T extends Record<string, any>>(items: T[]): T[] {
+        if (!searchQuery.trim()) return items
+        const q = searchQuery.toLowerCase()
+        return items.filter(item =>
+            Object.values(item).some(v => typeof v === 'string' && v.toLowerCase().includes(q))
+        )
+    }
 
     const countries = (local.countries && local.countries.length > 0) ? local.countries : DEFAULT_COUNTRIES
 
@@ -324,6 +339,12 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
         save(next)
     }
     const updatePerson = (id: string, patch: Partial<SourcePerson>) => {
+        // Duplicate check on linkedinUrl
+        if (patch.linkedinUrl) {
+            const normalized = patch.linkedinUrl.replace(/\/$/, '').toLowerCase()
+            const dup = local.people.find(p => p.id !== id && p.linkedinUrl && p.linkedinUrl.replace(/\/$/, '').toLowerCase() === normalized)
+            if (dup) { setSnackbarMsg(`Дубликат: ${dup.name || dup.linkedinUrl} уже в базе`); return }
+        }
         const next = { ...local, people: local.people.map(p => p.id === id ? { ...p, ...patch } : p) }
         save(next)
     }
@@ -418,6 +439,31 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
         setSelectedIds(new Set())
     }
 
+    // Candidates for Outreach (Priority A/B, not already in Outreach)
+    const outreachCandidates = React.useMemo(() => {
+        return local.people.filter(p =>
+            !local.shortlist.some(s => (s.linkedinUrl && s.linkedinUrl === p.linkedinUrl) || (s.name && s.name === p.name))
+        ).sort((a, b) => {
+            const prio = { A: 0, B: 1, C: 2 }
+            const act = { high: 0, medium: 1, low: 2 }
+            return (prio[a.priority] - prio[b.priority]) || (act[a.activityLevel] - act[b.activityLevel])
+        })
+    }, [local.people, local.shortlist])
+
+    const addPeopleToOutreach = (people: SourcePerson[]) => {
+        const now = new Date().toISOString()
+        const newEntries: ShortlistPerson[] = people.map(p => ({
+            id: generateId(), batch: nextBatch, name: p.name, linkedinUrl: p.linkedinUrl,
+            country: p.country, icpSegment: p.icpSegment, priority: p.priority,
+            dmStatus: 'not_sent' as DmStatus, connectionStatus: 'not_sent' as ConnectionStatus,
+            source: p.source, status: p.status, notes: p.notes, actions: [], completedActions: [],
+            history: [{ date: now.slice(0, 10), text: 'Добавлен в Outreach', auto: true }],
+            createdAt: now
+        }))
+        const next = { ...local, shortlist: [...local.shortlist, ...newEntries] }
+        save(next)
+    }
+
     // Needs action filter logic
     const needsAction = (s: ShortlistPerson) =>
         s.connectionStatus === 'not_sent' ||
@@ -428,12 +474,17 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
     const displayShortlist = React.useMemo(() => {
         let result = local.shortlist
         if (needsActionFilter) result = result.filter(needsAction)
+        // Apply search
+        if (searchQuery.trim()) {
+            const q = searchQuery.toLowerCase()
+            result = result.filter(item => Object.values(item).some(v => typeof v === 'string' && v.toLowerCase().includes(q)))
+        }
         // Apply filters
         for (const [key, val] of Object.entries(filters)) {
             if (val) result = result.filter(item => String((item as any)[key] ?? '') === val)
         }
         return result
-    }, [local.shortlist, needsActionFilter, filters])
+    }, [local.shortlist, needsActionFilter, searchQuery, filters])
 
     // All visible IDs for select-all checkbox
     const allVisibleIds = React.useMemo(() => displayShortlist.map(s => s.id), [displayShortlist])
@@ -837,6 +888,10 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
             {tab === 0 && (
                 <Box>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1, flexWrap: 'wrap' }}>
+                        <TextField size="small" placeholder="Поиск..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
+                            InputProps={{ startAdornment: <InputAdornment position="start"><SearchRoundedIcon sx={{ fontSize: '0.9rem', color: 'text.secondary' }} /></InputAdornment> }}
+                            sx={{ width: 160, '& .MuiInputBase-input': { fontSize: '0.8rem', py: 0.5 }, '& .MuiOutlinedInput-notchedOutline': { borderColor: searchQuery ? 'primary.main' : 'divider' } }}
+                        />
                         <FilterSelect label="Страна" value={filters.country || ''} options={uniqueVals(local.people, 'country')} onChange={v => setFilter('country', v)} />
                         <FilterSelect label="ICP" value={filters.icpSegment || ''} options={Object.keys(ICP_LABELS)} onChange={v => setFilter('icpSegment', v)} />
                         <FilterSelect label="Priority" value={filters.priority || ''} options={['A', 'B', 'C']} onChange={v => setFilter('priority', v)} />
@@ -849,6 +904,15 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                             </IconButton>
                         )}
                         <Box sx={{ flex: 1 }} />
+                        {selectedPeopleIds.size > 0 && (
+                            <Button size="small" variant="contained" onClick={() => {
+                                const people = local.people.filter(p => selectedPeopleIds.has(p.id) && !isInShortlist(p))
+                                if (people.length > 0) addPeopleToOutreach(people)
+                                setSelectedPeopleIds(new Set())
+                            }} sx={{ textTransform: 'none', fontSize: '0.8rem', mr: 0.5 }}>
+                                В Outreach ({selectedPeopleIds.size})
+                            </Button>
+                        )}
                         <Button size="small" startIcon={<AddRoundedIcon />} onClick={addPerson} variant="outlined" sx={{ textTransform: 'none', fontSize: '0.8rem' }}>
                             Добавить
                         </Button>
@@ -857,6 +921,16 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                         <Table size="small">
                             <TableHead>
                                 <TableRow sx={{ backgroundColor: '#ffffff06' }}>
+                                    <TableCell sx={{ ...headCellSx, width: 36, px: 0.5 }}>
+                                        <Checkbox size="small" sx={{ p: 0.25 }}
+                                            checked={sorted(filtered(local.people)).length > 0 && sorted(filtered(local.people)).every(p => selectedPeopleIds.has(p.id))}
+                                            indeterminate={sorted(filtered(local.people)).some(p => selectedPeopleIds.has(p.id)) && !sorted(filtered(local.people)).every(p => selectedPeopleIds.has(p.id))}
+                                            onChange={(_, checked) => {
+                                                const visible = sorted(filtered(local.people)).map(p => p.id)
+                                                setSelectedPeopleIds(checked ? new Set(visible) : new Set())
+                                            }}
+                                        />
+                                    </TableCell>
                                     <SortHeader label="Имя" field="name" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
                                     <TableCell sx={headCellSx}>LinkedIn</TableCell>
                                     <SortHeader label="Страна" field="country" activeField={sortKey} direction={sortDir} onSort={toggleSort}>
@@ -876,13 +950,18 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                             <TableBody>
                                 {local.people.length === 0 && (
                                     <TableRow>
-                                        <TableCell colSpan={10} sx={{ ...cellSx, textAlign: 'center', color: 'text.secondary', py: 4 }}>
+                                        <TableCell colSpan={11} sx={{ ...cellSx, textAlign: 'center', color: 'text.secondary', py: 4 }}>
                                             Пока пусто. Нажми "Добавить" чтобы внести первый контакт.
                                         </TableCell>
                                     </TableRow>
                                 )}
-                                {sorted(filtered(local.people)).map((p) => (
-                                    <TableRow key={p.id} sx={{ '&:hover': { backgroundColor: '#ffffff04' } }}>
+                                {sorted(searched(filtered(local.people))).map((p) => (
+                                    <TableRow key={p.id} sx={{ '&:hover': { backgroundColor: '#ffffff04' }, backgroundColor: isInShortlist(p) ? '#3fb68e08' : undefined }}>
+                                        <TableCell sx={{ ...cellSx, px: 0.5, width: 36 }}>
+                                            <Checkbox size="small" sx={{ p: 0.25 }} checked={selectedPeopleIds.has(p.id)} onChange={(_, checked) => {
+                                                setSelectedPeopleIds(prev => { const n = new Set(prev); checked ? n.add(p.id) : n.delete(p.id); return n })
+                                            }} />
+                                        </TableCell>
                                         <TableCell sx={cellSx}><InlineInput value={p.name} onChange={v => updatePerson(p.id, { name: v })} placeholder="Имя" /></TableCell>
                                         <TableCell sx={cellSx}>
                                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.25 }}>
@@ -1070,6 +1149,10 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
             {tab === 3 && (
                 <Box>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1, flexWrap: 'wrap' }}>
+                        <TextField size="small" placeholder="Поиск..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
+                            InputProps={{ startAdornment: <InputAdornment position="start"><SearchRoundedIcon sx={{ fontSize: '0.9rem', color: 'text.secondary' }} /></InputAdornment> }}
+                            sx={{ width: 160, '& .MuiInputBase-input': { fontSize: '0.8rem', py: 0.5 }, '& .MuiOutlinedInput-notchedOutline': { borderColor: searchQuery ? 'primary.main' : 'divider' } }}
+                        />
                         <Button
                             size="small"
                             variant={needsActionFilter ? 'contained' : 'outlined'}
@@ -1106,6 +1189,12 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                             </>
                         )}
                         <Box sx={{ flex: 1 }} />
+                        {outreachCandidates.length > 0 && (
+                            <Button size="small" variant="outlined" onClick={() => { setBestPickIds(new Set(outreachCandidates.filter(p => p.priority === 'A').map(p => p.id))); setAddBestDialogOpen(true) }}
+                                sx={{ textTransform: 'none', fontSize: '0.8rem', mr: 0.5, borderColor: '#3fb68e44', color: '#3fb68e', '&:hover': { borderColor: '#3fb68e', backgroundColor: '#3fb68e11' } }}>
+                                + Лучшие из People ({outreachCandidates.filter(p => p.priority === 'A').length} A)
+                            </Button>
+                        )}
                         <Button size="small" startIcon={<AddRoundedIcon />} onClick={addShortlistPerson} variant="outlined" sx={{ textTransform: 'none', fontSize: '0.8rem' }}>
                             Добавить
                         </Button>
@@ -1479,6 +1568,44 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={() => setCountriesDialogOpen(false)} sx={{ textTransform: 'none' }}>Закрыть</Button>
+                </DialogActions>
+            </Dialog>
+
+            <Dialog open={addBestDialogOpen} onClose={() => setAddBestDialogOpen(false)} maxWidth="sm" fullWidth PaperProps={{ sx: { backgroundColor: 'background.paper' } }}>
+                <DialogTitle sx={{ fontSize: '1rem', fontWeight: 700 }}>
+                    Добавить в Outreach из People
+                    <Typography sx={{ fontSize: '0.8rem', color: 'text.secondary', mt: 0.5 }}>
+                        {outreachCandidates.length} человек ещё не в Outreach. Отмечены Priority A.
+                    </Typography>
+                </DialogTitle>
+                <DialogContent>
+                    <Box sx={{ maxHeight: 400, overflow: 'auto' }}>
+                        {outreachCandidates.map(p => (
+                            <Box key={p.id} sx={{ display: 'flex', alignItems: 'center', gap: 1, py: 0.5, borderBottom: '1px solid', borderColor: 'divider' }}>
+                                <Checkbox size="small" sx={{ p: 0.25 }} checked={bestPickIds.has(p.id)}
+                                    onChange={(_, checked) => setBestPickIds(prev => { const n = new Set(prev); checked ? n.add(p.id) : n.delete(p.id); return n })} />
+                                <Chip label={p.priority} size="small" sx={{ fontSize: '0.7rem', fontWeight: 700, minWidth: 24, color: p.priority === 'A' ? '#3fb68e' : p.priority === 'B' ? '#d29922' : '#8b949e', backgroundColor: (p.priority === 'A' ? '#3fb68e' : p.priority === 'B' ? '#d29922' : '#8b949e') + '22' }} />
+                                <Typography sx={{ fontSize: '0.8rem', fontWeight: 600, flex: 1 }}>{p.name || 'Без имени'}</Typography>
+                                <Typography sx={{ fontSize: '0.7rem', color: 'text.secondary' }}>{p.country}</Typography>
+                                <Typography sx={{ fontSize: '0.7rem', color: 'text.secondary' }}>{ICP_LABELS[p.icpSegment] || ''}</Typography>
+                            </Box>
+                        ))}
+                        {outreachCandidates.length === 0 && <Typography sx={{ fontSize: '0.85rem', color: 'text.secondary', py: 2, textAlign: 'center' }}>Все люди уже в Outreach!</Typography>}
+                    </Box>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => { setBestPickIds(new Set(outreachCandidates.map(p => p.id))); }} sx={{ textTransform: 'none', fontSize: '0.8rem' }}>Выбрать всех ({outreachCandidates.length})</Button>
+                    <Button onClick={() => setBestPickIds(new Set())} sx={{ textTransform: 'none', fontSize: '0.8rem', color: 'text.secondary' }}>Снять</Button>
+                    <Box sx={{ flex: 1 }} />
+                    <Button onClick={() => setAddBestDialogOpen(false)} sx={{ textTransform: 'none' }}>Отмена</Button>
+                    <Button variant="contained" disabled={bestPickIds.size === 0} onClick={() => {
+                        const people = local.people.filter(p => bestPickIds.has(p.id))
+                        addPeopleToOutreach(people)
+                        setAddBestDialogOpen(false)
+                        setBestPickIds(new Set())
+                    }} sx={{ textTransform: 'none' }}>
+                        Добавить ({bestPickIds.size})
+                    </Button>
                 </DialogActions>
             </Dialog>
 
