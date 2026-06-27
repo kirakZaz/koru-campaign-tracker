@@ -16,6 +16,7 @@ export interface SourcePerson {
     source: string
     status: PersonStatus
     notes: string
+    createdAt?: string
 }
 
 export interface SourceGroup {
@@ -61,6 +62,8 @@ export interface ShortlistPerson {
     batch: string
     name: string
     linkedinUrl: string
+    country?: string
+    icpSegment?: IcpSegment
     priority: IcpPriority
     dmStatus: DmStatus
     connectionStatus: ConnectionStatus
@@ -68,6 +71,7 @@ export interface ShortlistPerson {
     status: PersonStatus
     notes: string
     actions?: ShortlistAction[]
+    createdAt?: string
 }
 
 export interface SourcesData {

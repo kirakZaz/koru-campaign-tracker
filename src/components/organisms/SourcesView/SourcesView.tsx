@@ -17,12 +17,14 @@ import MenuItem from '@mui/material/MenuItem'
 import Chip from '@mui/material/Chip'
 import Checkbox from '@mui/material/Checkbox'
 import ListItemText from '@mui/material/ListItemText'
+import Badge from '@mui/material/Badge'
 import AddRoundedIcon from '@mui/icons-material/AddRounded'
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded'
 import PeopleRoundedIcon from '@mui/icons-material/PeopleRounded'
 import GroupsRoundedIcon from '@mui/icons-material/GroupsRounded'
 import BusinessRoundedIcon from '@mui/icons-material/BusinessRounded'
 import StarRoundedIcon from '@mui/icons-material/StarRounded'
+import TrendingUpRoundedIcon from '@mui/icons-material/TrendingUpRounded'
 import EditRoundedIcon from '@mui/icons-material/EditRounded'
 import ArrowUpwardRoundedIcon from '@mui/icons-material/ArrowUpwardRounded'
 import ArrowDownwardRoundedIcon from '@mui/icons-material/ArrowDownwardRounded'
@@ -30,6 +32,7 @@ import OpenInNewRoundedIcon from '@mui/icons-material/OpenInNewRounded'
 import FilterAltOffRoundedIcon from '@mui/icons-material/FilterAltOffRounded'
 import BarChartRoundedIcon from '@mui/icons-material/BarChartRounded'
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded'
+import ContentCopyRoundedIcon from '@mui/icons-material/ContentCopyRounded'
 import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
@@ -172,7 +175,28 @@ function FilterSelect({ label, value, options, onChange }: { label: string, valu
     )
 }
 
-const DEFAULT_COUNTRIES = ['US', 'UK', 'Israel', 'Канада', 'Австралия', 'Германия', 'Индия', 'Нидерланды']
+function getNextAction(s: ShortlistPerson): { label: string, color: string } {
+    if (s.status === 'demo' || s.status === 'beta' || s.status === 'client') return { label: '\u2713', color: '#3fb68e' }
+    if (s.status === 'declined') return { label: '\u2717', color: '#f85149' }
+    if (s.connectionStatus === 'not_sent') return { label: '\u041E\u0442\u043F\u0440\u0430\u0432\u0438\u0442\u044C CR', color: '#6c8eff' }
+    if (s.connectionStatus === 'sent') return { label: '\u0416\u0434\u0451\u043C CR', color: '#d29922' }
+    if (s.connectionStatus === 'declined') return { label: 'CR \u043E\u0442\u043A\u043B\u043E\u043D\u0451\u043D', color: '#f85149' }
+    if (s.connectionStatus === 'accepted' && (s.dmStatus === 'not_sent')) return { label: '\u041D\u0430\u043F\u0438\u0441\u0430\u0442\u044C DM', color: '#a371f7' }
+    if (s.dmStatus === 'sent') return { label: '\u0416\u0434\u0451\u043C DM', color: '#d29922' }
+    if (s.dmStatus === 'no_reply') return { label: 'Follow up', color: '#f85149' }
+    if (s.dmStatus === 'replied') return { label: '\u041D\u0430\u0437\u043D\u0430\u0447\u0438\u0442\u044C demo', color: '#3fb68e' }
+    return { label: '--', color: '#8b949e' }
+}
+
+function isWithinLastWeek(dateStr?: string): boolean {
+    if (!dateStr) return false
+    const d = new Date(dateStr)
+    const now = new Date()
+    const diff = now.getTime() - d.getTime()
+    return diff >= 0 && diff <= 7 * 24 * 60 * 60 * 1000
+}
+
+const DEFAULT_COUNTRIES = ['US', 'UK', 'Israel', '\u041A\u0430\u043D\u0430\u0434\u0430', '\u0410\u0432\u0441\u0442\u0440\u0430\u043B\u0438\u044F', '\u0413\u0435\u0440\u043C\u0430\u043D\u0438\u044F', '\u0418\u043D\u0434\u0438\u044F', '\u041D\u0438\u0434\u0435\u0440\u043B\u0430\u043D\u0434\u044B']
 
 export default function SourcesView({ sources, onSaveSources }: SourcesViewProps) {
     const [tab, setTab] = React.useState(0)
@@ -181,6 +205,9 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
     const [countriesDialogOpen, setCountriesDialogOpen] = React.useState(false)
     const [newCountry, setNewCountry] = React.useState('')
     const [deleteConfirm, setDeleteConfirm] = React.useState<{ id: string, name: string, type: 'person' | 'group' | 'company' | 'shortlist' } | null>(null)
+    const [selectedIds, setSelectedIds] = React.useState<Set<string>>(new Set())
+    const [needsActionFilter, setNeedsActionFilter] = React.useState(false)
+    const [copiedId, setCopiedId] = React.useState<string | null>(null)
 
     const confirmDelete = () => {
         if (!deleteConfirm) return
@@ -248,8 +275,8 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
         return Array.from(set).sort()
     }
 
-    // Reset sort and filters when switching tabs
-    React.useEffect(() => { setSortKey(''); setSortDir('asc'); setFilters({}) }, [tab])
+    // Reset sort, filters, selection, and needsAction filter when switching tabs
+    React.useEffect(() => { setSortKey(''); setSortDir('asc'); setFilters({}); setSelectedIds(new Set()); setNeedsActionFilter(false) }, [tab])
 
     const countries = (local.countries && local.countries.length > 0) ? local.countries : DEFAULT_COUNTRIES
 
@@ -286,7 +313,7 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
 
     // --- People ---
     const addPerson = () => {
-        const next = { ...local, people: [{ id: generateId(), name: '', linkedinUrl: '', country: '', icpSegment: 'freelancer' as IcpSegment, priority: 'B' as IcpPriority, activityLevel: 'medium' as const, source: '', status: 'new' as PersonStatus, notes: '' }, ...local.people] }
+        const next = { ...local, people: [{ id: generateId(), name: '', linkedinUrl: '', country: '', icpSegment: 'freelancer' as IcpSegment, priority: 'B' as IcpPriority, activityLevel: 'medium' as const, source: '', status: 'new' as PersonStatus, notes: '', createdAt: new Date().toISOString() }, ...local.people] }
         save(next)
     }
     const updatePerson = (id: string, patch: Partial<SourcePerson>) => {
@@ -300,7 +327,7 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
 
     // --- Groups ---
     const addGroup = () => {
-        const next = { ...local, groups: [{ id: generateId(), name: '', url: '', platform: 'LinkedIn', members: '', account: 'Кира' as AccountName, status: 'pending' as GroupStatus, priority: 0, activeMembers: ['', '', '', '', ''], notes: '' }, ...local.groups] }
+        const next = { ...local, groups: [{ id: generateId(), name: '', url: '', platform: 'LinkedIn', members: '', account: '\u041A\u0438\u0440\u0430' as AccountName, status: 'pending' as GroupStatus, priority: 0, activeMembers: ['', '', '', '', ''], notes: '' }, ...local.groups] }
         save(next)
     }
     const updateGroup = (id: string, patch: Partial<SourceGroup>) => {
@@ -326,12 +353,12 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
             const next = { ...local, shortlist: local.shortlist.filter(s => !((s.linkedinUrl && s.linkedinUrl === person.linkedinUrl) || (s.name && s.name === person.name))) }
             save(next)
         } else {
-            const next = { ...local, shortlist: [...local.shortlist, { id: generateId(), batch: nextBatch, name: person.name, linkedinUrl: person.linkedinUrl, priority: person.priority, dmStatus: 'not_sent' as DmStatus, connectionStatus: 'not_sent' as ConnectionStatus, source: person.source, status: person.status, notes: person.notes, actions: [] as ShortlistAction[] }] }
+            const next = { ...local, shortlist: [...local.shortlist, { id: generateId(), batch: nextBatch, name: person.name, linkedinUrl: person.linkedinUrl, priority: person.priority, dmStatus: 'not_sent' as DmStatus, connectionStatus: 'not_sent' as ConnectionStatus, source: person.source, status: person.status, notes: person.notes, actions: [] as ShortlistAction[], country: person.country, icpSegment: person.icpSegment, createdAt: new Date().toISOString() }] }
             save(next)
         }
     }
     const addShortlistPerson = () => {
-        const next = { ...local, shortlist: [{ id: generateId(), batch: nextBatch, name: '', linkedinUrl: '', priority: 'B' as IcpPriority, dmStatus: 'not_sent' as DmStatus, connectionStatus: 'not_sent' as ConnectionStatus, source: '', status: 'new' as PersonStatus, notes: '', actions: [] as ShortlistAction[] }, ...local.shortlist] }
+        const next = { ...local, shortlist: [{ id: generateId(), batch: nextBatch, name: '', linkedinUrl: '', priority: 'B' as IcpPriority, dmStatus: 'not_sent' as DmStatus, connectionStatus: 'not_sent' as ConnectionStatus, source: '', status: 'new' as PersonStatus, notes: '', actions: [] as ShortlistAction[], createdAt: new Date().toISOString() }, ...local.shortlist] }
         save(next)
     }
     const updateShortlistPerson = (id: string, patch: Partial<ShortlistPerson>) => {
@@ -343,15 +370,52 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
         save(next)
     }
 
-    const shortlistByBatch = React.useMemo(() => {
-        const map: Record<string, typeof local.shortlist> = {}
-        for (const s of local.shortlist) {
+    // Bulk actions for Outreach
+    const bulkUpdate = (patch: Partial<ShortlistPerson>) => {
+        const next = { ...local, shortlist: local.shortlist.map(s => selectedIds.has(s.id) ? { ...s, ...patch } : s) }
+        save(next)
+        setSelectedIds(new Set())
+    }
+
+    // Needs action filter logic
+    const needsAction = (s: ShortlistPerson) =>
+        s.connectionStatus === 'not_sent' ||
+        (s.connectionStatus === 'accepted' && s.dmStatus === 'not_sent') ||
+        s.dmStatus === 'no_reply'
+
+    // Filtered shortlist for display
+    const displayShortlist = React.useMemo(() => {
+        if (!needsActionFilter) return local.shortlist
+        return local.shortlist.filter(needsAction)
+    }, [local.shortlist, needsActionFilter])
+
+    const displayShortlistByBatch = React.useMemo(() => {
+        const map: Record<string, ShortlistPerson[]> = {}
+        for (const s of displayShortlist) {
             const b = s.batch || '1'
             if (!map[b]) map[b] = []
             map[b].push(s)
         }
         return Object.entries(map).sort(([a], [b]) => (parseInt(a) || 0) - (parseInt(b) || 0))
-    }, [local.shortlist])
+    }, [displayShortlist])
+
+    // All visible IDs for select-all checkbox
+    const allVisibleIds = React.useMemo(() => displayShortlist.map(s => s.id), [displayShortlist])
+    const allSelected = allVisibleIds.length > 0 && allVisibleIds.every(id => selectedIds.has(id))
+    const someSelected = allVisibleIds.some(id => selectedIds.has(id))
+
+    // Copy CR template
+    const copyCrTemplate = (s: ShortlistPerson) => {
+        const firstName = s.name.split(' ')[0] || s.name
+        const notesPart = s.notes ? ` ${s.notes}.` : ''
+        const template = `Hi ${firstName},${notesPart} I'm building KORU \u2014 an SEO platform that audits for both Google and AI search engines. GEO score, AI brand visibility, intent-first keywords. Would love to connect.`
+        navigator.clipboard.writeText(template)
+        setCopiedId(s.id)
+        setTimeout(() => setCopiedId(null), 1500)
+    }
+
+    // New people badge count (last 7 days)
+    const newPeopleCount = React.useMemo(() => local.people.filter(p => isWithinLastWeek(p.createdAt)).length, [local.people])
 
     // --- Companies ---
     const addCompany = () => {
@@ -379,24 +443,28 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                 onChange={(_, v) => setTab(v)}
                 sx={{ mb: 2, '& .MuiTab-root': { textTransform: 'none', fontWeight: 600, fontSize: '0.85rem', minHeight: 40 } }}
             >
-                <Tab icon={<PeopleRoundedIcon sx={{ fontSize: '1rem' }} />} iconPosition="start" label={`Люди (${local.people.length})`} />
-                <Tab icon={<GroupsRoundedIcon sx={{ fontSize: '1rem' }} />} iconPosition="start" label={`Группы (${local.groups.length})`} />
-                <Tab icon={<BusinessRoundedIcon sx={{ fontSize: '1rem' }} />} iconPosition="start" label={`Компании (${local.companies.length})`} />
-                <Tab icon={<StarRoundedIcon sx={{ fontSize: '1rem' }} />} iconPosition="start" label={`Топ-5 (${local.shortlist.length})`} />
+                <Tab icon={<PeopleRoundedIcon sx={{ fontSize: '1rem' }} />} iconPosition="start" label={
+                    newPeopleCount > 0
+                        ? <Badge badgeContent={newPeopleCount} color="primary" sx={{ '& .MuiBadge-badge': { fontSize: '0.65rem', height: 16, minWidth: 16 } }}>{`\u041B\u044E\u0434\u0438 (${local.people.length})`}</Badge>
+                        : `\u041B\u044E\u0434\u0438 (${local.people.length})`
+                } />
+                <Tab icon={<GroupsRoundedIcon sx={{ fontSize: '1rem' }} />} iconPosition="start" label={`\u0413\u0440\u0443\u043F\u043F\u044B (${local.groups.length})`} />
+                <Tab icon={<BusinessRoundedIcon sx={{ fontSize: '1rem' }} />} iconPosition="start" label={`\u041A\u043E\u043C\u043F\u0430\u043D\u0438\u0438 (${local.companies.length})`} />
+                <Tab icon={<TrendingUpRoundedIcon sx={{ fontSize: '1rem' }} />} iconPosition="start" label={`Outreach (${local.shortlist.length})`} />
                 <Tab icon={<BarChartRoundedIcon sx={{ fontSize: '1rem' }} />} iconPosition="start" label="Dashboard" />
             </Tabs>
 
             {tab === 0 && (
                 <Box>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1, flexWrap: 'wrap' }}>
-                        <FilterSelect label="Страна" value={filters.country || ''} options={uniqueVals(local.people, 'country')} onChange={v => setFilter('country', v)} />
+                        <FilterSelect label="\u0421\u0442\u0440\u0430\u043D\u0430" value={filters.country || ''} options={uniqueVals(local.people, 'country')} onChange={v => setFilter('country', v)} />
                         <FilterSelect label="ICP" value={filters.icpSegment || ''} options={Object.keys(ICP_LABELS)} onChange={v => setFilter('icpSegment', v)} />
                         <FilterSelect label="Priority" value={filters.priority || ''} options={['A', 'B', 'C']} onChange={v => setFilter('priority', v)} />
                         <FilterSelect label="Activity" value={filters.activityLevel || ''} options={['high', 'medium', 'low']} onChange={v => setFilter('activityLevel', v)} />
-                        <FilterSelect label="Статус" value={filters.status || ''} options={uniqueVals(local.people, 'status')} onChange={v => setFilter('status', v)} />
-                        <FilterSelect label="Источник" value={filters.source || ''} options={uniqueVals(local.people, 'source')} onChange={v => setFilter('source', v)} />
+                        <FilterSelect label="\u0421\u0442\u0430\u0442\u0443\u0441" value={filters.status || ''} options={uniqueVals(local.people, 'status')} onChange={v => setFilter('status', v)} />
+                        <FilterSelect label="\u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A" value={filters.source || ''} options={uniqueVals(local.people, 'source')} onChange={v => setFilter('source', v)} />
                         {Object.keys(filters).length > 0 && (
-                            <IconButton size="small" onClick={clearFilters} sx={{ color: 'text.secondary', '&:hover': { color: 'error.main' } }} title="Сбросить все фильтры">
+                            <IconButton size="small" onClick={clearFilters} sx={{ color: 'text.secondary', '&:hover': { color: 'error.main' } }} title="\u0421\u0431\u0440\u043E\u0441\u0438\u0442\u044C \u0432\u0441\u0435 \u0444\u0438\u043B\u044C\u0442\u0440\u044B">
                                 <FilterAltOffRoundedIcon sx={{ fontSize: '1rem' }} />
                             </IconButton>
                         )}
@@ -409,9 +477,9 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                         <Table size="small">
                             <TableHead>
                                 <TableRow sx={{ backgroundColor: '#ffffff06' }}>
-                                    <SortHeader label="Имя" field="name" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
+                                    <SortHeader label="\u0418\u043C\u044F" field="name" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
                                     <TableCell sx={headCellSx}>LinkedIn</TableCell>
-                                    <SortHeader label="Страна" field="country" activeField={sortKey} direction={sortDir} onSort={toggleSort}>
+                                    <SortHeader label="\u0421\u0442\u0440\u0430\u043D\u0430" field="country" activeField={sortKey} direction={sortDir} onSort={toggleSort}>
                                         <IconButton size="small" onClick={(e) => { e.stopPropagation(); setCountriesDialogOpen(true) }} sx={{ color: 'text.secondary', p: 0 }}>
                                             <EditRoundedIcon sx={{ fontSize: '0.7rem' }} />
                                         </IconButton>
@@ -419,9 +487,9 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                                     <SortHeader label="ICP" field="icpSegment" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
                                     <SortHeader label="Priority" field="priority" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
                                     <SortHeader label="Activity" field="activityLevel" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
-                                    <SortHeader label="Источник" field="source" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
-                                    <SortHeader label="Статус" field="status" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
-                                    <TableCell sx={headCellSx}>Заметки</TableCell>
+                                    <SortHeader label="\u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A" field="source" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
+                                    <SortHeader label="\u0421\u0442\u0430\u0442\u0443\u0441" field="status" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
+                                    <TableCell sx={headCellSx}>\u0417\u0430\u043C\u0435\u0442\u043A\u0438</TableCell>
                                     <TableCell sx={{ ...headCellSx, width: 40 }} />
                                 </TableRow>
                             </TableHead>
@@ -435,7 +503,7 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                                 )}
                                 {sorted(filtered(local.people)).map((p) => (
                                     <TableRow key={p.id} sx={{ '&:hover': { backgroundColor: '#ffffff04' } }}>
-                                        <TableCell sx={cellSx}><InlineInput value={p.name} onChange={v => updatePerson(p.id, { name: v })} placeholder="Имя" /></TableCell>
+                                        <TableCell sx={cellSx}><InlineInput value={p.name} onChange={v => updatePerson(p.id, { name: v })} placeholder="\u0418\u043C\u044F" /></TableCell>
                                         <TableCell sx={cellSx}>
                                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.25 }}>
                                                 <InlineInput value={p.linkedinUrl} onChange={v => updatePerson(p.id, { linkedinUrl: v })} placeholder="URL" />
@@ -448,7 +516,7 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                                         </TableCell>
                                         <TableCell sx={cellSx}>
                                             <Select size="small" value={p.country || ''} onChange={e => updatePerson(p.id, { country: e.target.value })} sx={selectSx} displayEmpty>
-                                                <MenuItem value="" sx={{ fontSize: '0.8rem', color: '#8b949e' }}>—</MenuItem>
+                                                <MenuItem value="" sx={{ fontSize: '0.8rem', color: '#8b949e' }}>\u2014</MenuItem>
                                                 {countries.map(c => <MenuItem key={c} value={c} sx={{ fontSize: '0.8rem' }}>{c}</MenuItem>)}
                                             </Select>
                                         </TableCell>
@@ -471,7 +539,7 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                                                 <MenuItem value="low" sx={{ fontSize: '0.8rem' }}>Low</MenuItem>
                                             </Select>
                                         </TableCell>
-                                        <TableCell sx={cellSx}><InlineInput value={p.source} onChange={v => updatePerson(p.id, { source: v })} placeholder="Группа, поиск..." /></TableCell>
+                                        <TableCell sx={cellSx}><InlineInput value={p.source} onChange={v => updatePerson(p.id, { source: v })} placeholder="\u0413\u0440\u0443\u043F\u043F\u0430, \u043F\u043E\u0438\u0441\u043A..." /></TableCell>
                                         <TableCell sx={cellSx}>
                                             <Select
                                                 size="small"
@@ -488,10 +556,10 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                                         <TableCell sx={cellSx}><InlineInput value={p.notes} onChange={v => updatePerson(p.id, { notes: v })} placeholder="..." /></TableCell>
                                         <TableCell sx={cellSx}>
                                             <Box sx={{ display: 'flex', gap: 0.25 }}>
-                                                <IconButton size="small" onClick={() => togglePersonShortlist(p)} sx={{ color: isInShortlist(p) ? 'warning.main' : 'text.secondary', '&:hover': { color: 'warning.main' } }} title="В Топ-5">
+                                                <IconButton size="small" onClick={() => togglePersonShortlist(p)} sx={{ color: isInShortlist(p) ? 'warning.main' : 'text.secondary', '&:hover': { color: 'warning.main' } }} title="\u0412 Outreach">
                                                     <StarRoundedIcon sx={{ fontSize: '0.9rem' }} />
                                                 </IconButton>
-                                                <IconButton size="small" onClick={() => setDeleteConfirm({ id: p.id, name: p.name || 'без имени', type: 'person' })} sx={{ color: 'text.secondary', '&:hover': { color: 'error.main' } }}>
+                                                <IconButton size="small" onClick={() => setDeleteConfirm({ id: p.id, name: p.name || '\u0431\u0435\u0437 \u0438\u043C\u0435\u043D\u0438', type: 'person' })} sx={{ color: 'text.secondary', '&:hover': { color: 'error.main' } }}>
                                                     <DeleteRoundedIcon sx={{ fontSize: '0.9rem' }} />
                                                 </IconButton>
                                             </Box>
@@ -507,11 +575,11 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
             {tab === 1 && (
                 <Box>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1, flexWrap: 'wrap' }}>
-                        <FilterSelect label="Платформа" value={filters.platform || ''} options={uniqueVals(local.groups, 'platform')} onChange={v => setFilter('platform', v)} />
-                        <FilterSelect label="Аккаунт" value={filters.account || ''} options={['Кира', 'Настя']} onChange={v => setFilter('account', v)} />
-                        <FilterSelect label="Статус" value={filters.status || ''} options={['pending', 'approved', 'rejected']} onChange={v => setFilter('status', v)} />
+                        <FilterSelect label="\u041F\u043B\u0430\u0442\u0444\u043E\u0440\u043C\u0430" value={filters.platform || ''} options={uniqueVals(local.groups, 'platform')} onChange={v => setFilter('platform', v)} />
+                        <FilterSelect label="\u0410\u043A\u043A\u0430\u0443\u043D\u0442" value={filters.account || ''} options={['\u041A\u0438\u0440\u0430', '\u041D\u0430\u0441\u0442\u044F']} onChange={v => setFilter('account', v)} />
+                        <FilterSelect label="\u0421\u0442\u0430\u0442\u0443\u0441" value={filters.status || ''} options={['pending', 'approved', 'rejected']} onChange={v => setFilter('status', v)} />
                         {Object.keys(filters).length > 0 && (
-                            <IconButton size="small" onClick={clearFilters} sx={{ color: 'text.secondary', '&:hover': { color: 'error.main' } }} title="Сбросить все фильтры">
+                            <IconButton size="small" onClick={clearFilters} sx={{ color: 'text.secondary', '&:hover': { color: 'error.main' } }} title="\u0421\u0431\u0440\u043E\u0441\u0438\u0442\u044C \u0432\u0441\u0435 \u0444\u0438\u043B\u044C\u0442\u0440\u044B">
                                 <FilterAltOffRoundedIcon sx={{ fontSize: '1rem' }} />
                             </IconButton>
                         )}
@@ -525,14 +593,14 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                             <TableHead>
                                 <TableRow sx={{ backgroundColor: '#ffffff06' }}>
                                     <SortHeader label="#" field="priority" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
-                                    <SortHeader label="Название" field="name" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
-                                    <TableCell sx={headCellSx}>Ссылка</TableCell>
-                                    <SortHeader label="Платформа" field="platform" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
-                                    <TableCell sx={headCellSx}>Участников</TableCell>
-                                    <SortHeader label="Аккаунт" field="account" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
-                                    <SortHeader label="Статус" field="status" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
-                                    <TableCell sx={headCellSx}>Активные (5)</TableCell>
-                                    <TableCell sx={headCellSx}>Заметки</TableCell>
+                                    <SortHeader label="\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435" field="name" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
+                                    <TableCell sx={headCellSx}>\u0421\u0441\u044B\u043B\u043A\u0430</TableCell>
+                                    <SortHeader label="\u041F\u043B\u0430\u0442\u0444\u043E\u0440\u043C\u0430" field="platform" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
+                                    <TableCell sx={headCellSx}>\u0423\u0447\u0430\u0441\u0442\u043D\u0438\u043A\u043E\u0432</TableCell>
+                                    <SortHeader label="\u0410\u043A\u043A\u0430\u0443\u043D\u0442" field="account" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
+                                    <SortHeader label="\u0421\u0442\u0430\u0442\u0443\u0441" field="status" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
+                                    <TableCell sx={headCellSx}>\u0410\u043A\u0442\u0438\u0432\u043D\u044B\u0435 (5)</TableCell>
+                                    <TableCell sx={headCellSx}>\u0417\u0430\u043C\u0435\u0442\u043A\u0438</TableCell>
                                     <TableCell sx={{ ...headCellSx, width: 40 }} />
                                 </TableRow>
                             </TableHead>
@@ -573,8 +641,8 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                                         <TableCell sx={cellSx}><InlineInput value={g.members} onChange={v => updateGroup(g.id, { members: v })} placeholder="10k" /></TableCell>
                                         <TableCell sx={cellSx}>
                                             <Select size="small" value={g.account} onChange={e => updateGroup(g.id, { account: e.target.value as AccountName })} sx={selectSx}>
-                                                <MenuItem value="Кира" sx={{ fontSize: '0.8rem' }}>Кира</MenuItem>
-                                                <MenuItem value="Настя" sx={{ fontSize: '0.8rem' }}>Настя</MenuItem>
+                                                <MenuItem value="\u041A\u0438\u0440\u0430" sx={{ fontSize: '0.8rem' }}>\u041A\u0438\u0440\u0430</MenuItem>
+                                                <MenuItem value="\u041D\u0430\u0441\u0442\u044F" sx={{ fontSize: '0.8rem' }}>\u041D\u0430\u0441\u0442\u044F</MenuItem>
                                             </Select>
                                         </TableCell>
                                         <TableCell sx={cellSx}>
@@ -601,13 +669,13 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                                                     const arr = [...parts, ...Array(5 - parts.length).fill('')]
                                                     updateGroup(g.id, { activeMembers: arr.slice(0, 5) })
                                                 }}
-                                                placeholder="Имя1, Имя2, ..."
+                                                placeholder="\u0418\u043C\u044F1, \u0418\u043C\u044F2, ..."
                                                 sx={{ ...inputSx, '& .MuiInputBase-input': { fontSize: '0.75rem', py: 0.25, px: 0.5 } }}
                                             />
                                         </TableCell>
                                         <TableCell sx={cellSx}><InlineInput value={g.notes} onChange={v => updateGroup(g.id, { notes: v })} placeholder="..." /></TableCell>
                                         <TableCell sx={cellSx}>
-                                            <IconButton size="small" onClick={() => setDeleteConfirm({ id: g.id, name: g.name || 'без названия', type: 'group' })} sx={{ color: 'text.secondary', '&:hover': { color: 'error.main' } }}>
+                                            <IconButton size="small" onClick={() => setDeleteConfirm({ id: g.id, name: g.name || '\u0431\u0435\u0437 \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u044F', type: 'group' })} sx={{ color: 'text.secondary', '&:hover': { color: 'error.main' } }}>
                                                 <DeleteRoundedIcon sx={{ fontSize: '0.9rem' }} />
                                             </IconButton>
                                         </TableCell>
@@ -621,23 +689,53 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
 
             {tab === 3 && (
                 <Box>
-                    <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 1 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1, flexWrap: 'wrap' }}>
+                        <Button
+                            size="small"
+                            variant={needsActionFilter ? 'contained' : 'outlined'}
+                            onClick={() => setNeedsActionFilter(prev => !prev)}
+                            sx={{ textTransform: 'none', fontSize: '0.75rem', height: 28 }}
+                        >
+                            Нужно действие
+                        </Button>
+                        {selectedIds.size > 0 && (
+                            <>
+                                <Button size="small" variant="outlined" onClick={() => bulkUpdate({ connectionStatus: 'sent' })} sx={{ textTransform: 'none', fontSize: '0.7rem', height: 26 }}>
+                                    CR sent ({selectedIds.size})
+                                </Button>
+                                <Button size="small" variant="outlined" onClick={() => bulkUpdate({ connectionStatus: 'accepted' })} sx={{ textTransform: 'none', fontSize: '0.7rem', height: 26 }}>
+                                    CR accepted ({selectedIds.size})
+                                </Button>
+                                <Button size="small" variant="outlined" onClick={() => bulkUpdate({ dmStatus: 'sent' })} sx={{ textTransform: 'none', fontSize: '0.7rem', height: 26 }}>
+                                    DM sent ({selectedIds.size})
+                                </Button>
+                                <Button size="small" variant="outlined" onClick={() => bulkUpdate({ dmStatus: 'replied' })} sx={{ textTransform: 'none', fontSize: '0.7rem', height: 26 }}>
+                                    DM replied ({selectedIds.size})
+                                </Button>
+                                <Button size="small" variant="outlined" onClick={() => setSelectedIds(new Set())} sx={{ textTransform: 'none', fontSize: '0.7rem', height: 26, color: 'text.secondary' }}>
+                                    Снять выбор
+                                </Button>
+                            </>
+                        )}
+                        <Box sx={{ flex: 1 }} />
                         <Button size="small" startIcon={<AddRoundedIcon />} onClick={addShortlistPerson} variant="outlined" sx={{ textTransform: 'none', fontSize: '0.8rem' }}>
                             Добавить
                         </Button>
                     </Box>
-                    {local.shortlist.length === 0 ? (
+                    {displayShortlist.length === 0 ? (
                         <Box sx={{ border: '1px solid', borderColor: 'divider', borderRadius: 1, py: 4, textAlign: 'center' }}>
                             <Typography sx={{ color: 'text.secondary', fontSize: '0.85rem' }}>
-                                Пока пусто. Добавляй лучших людей — они автоматически группируются по 5.
+                                {needsActionFilter
+                                    ? 'Нет людей, требующих действия.'
+                                    : 'Пока пусто. Добавляй лучших людей \u2014 они автоматически группируются по 5.'}
                             </Typography>
                         </Box>
                     ) : (
-                        shortlistByBatch.map(([batch, people]) => (
+                        displayShortlistByBatch.map(([batch, people]) => (
                             <Box key={batch} sx={{ mb: 3 }}>
                                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
                                     <Chip
-                                        label={`Группа ${batch}`}
+                                        label={`\u0413\u0440\u0443\u043F\u043F\u0430 ${batch}`}
                                         size="small"
                                         sx={{ fontWeight: 700, fontSize: '0.75rem', backgroundColor: '#3fb68e22', color: '#3fb68e', border: '1px solid #3fb68e44' }}
                                     />
@@ -649,6 +747,21 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                                     <Table size="small">
                                         <TableHead>
                                             <TableRow sx={{ backgroundColor: '#ffffff06' }}>
+                                                <TableCell sx={{ ...headCellSx, width: 36, px: 0.5 }}>
+                                                    <Checkbox
+                                                        size="small"
+                                                        checked={allSelected}
+                                                        indeterminate={someSelected && !allSelected}
+                                                        onChange={() => {
+                                                            if (allSelected) {
+                                                                setSelectedIds(new Set())
+                                                            } else {
+                                                                setSelectedIds(new Set(allVisibleIds))
+                                                            }
+                                                        }}
+                                                        sx={{ p: 0.25 }}
+                                                    />
+                                                </TableCell>
                                                 <TableCell sx={{ ...headCellSx, width: 60 }}>Группа</TableCell>
                                                 <TableCell sx={headCellSx}>Имя</TableCell>
                                                 <TableCell sx={headCellSx}>LinkedIn</TableCell>
@@ -658,13 +771,31 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                                                 <TableCell sx={headCellSx}>Источник</TableCell>
                                                 <TableCell sx={headCellSx}>Статус</TableCell>
                                                 <TableCell sx={headCellSx}>Действия</TableCell>
+                                                <TableCell sx={headCellSx}>Next</TableCell>
                                                 <TableCell sx={headCellSx}>Заметки</TableCell>
-                                                <TableCell sx={{ ...headCellSx, width: 40 }} />
+                                                <TableCell sx={{ ...headCellSx, width: 60 }} />
                                             </TableRow>
                                         </TableHead>
                                         <TableBody>
-                                            {people.map((s) => (
-                                                <TableRow key={s.id} sx={{ '&:hover': { backgroundColor: '#ffffff04' } }}>
+                                            {people.map((s) => {
+                                                const nextAction = getNextAction(s)
+                                                return (
+                                                <TableRow key={s.id} sx={{ '&:hover': { backgroundColor: '#ffffff04' }, backgroundColor: selectedIds.has(s.id) ? '#6c8eff08' : undefined }}>
+                                                    <TableCell sx={{ ...cellSx, px: 0.5 }}>
+                                                        <Checkbox
+                                                            size="small"
+                                                            checked={selectedIds.has(s.id)}
+                                                            onChange={() => {
+                                                                setSelectedIds(prev => {
+                                                                    const next = new Set(prev)
+                                                                    if (next.has(s.id)) next.delete(s.id)
+                                                                    else next.add(s.id)
+                                                                    return next
+                                                                })
+                                                            }}
+                                                            sx={{ p: 0.25 }}
+                                                        />
+                                                    </TableCell>
                                                     <TableCell sx={cellSx}>
                                                         <Select size="small" value={s.batch} onChange={e => updateShortlistPerson(s.id, { batch: e.target.value })} sx={{ ...selectSx, minWidth: 50 }}>
                                                             {Array.from({ length: 20 }, (_, i) => String(i + 1)).map(v => (
@@ -672,7 +803,7 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                                                             ))}
                                                         </Select>
                                                     </TableCell>
-                                                    <TableCell sx={cellSx}><InlineInput value={s.name} onChange={v => updateShortlistPerson(s.id, { name: v })} placeholder="Имя" /></TableCell>
+                                                    <TableCell sx={cellSx}><InlineInput value={s.name} onChange={v => updateShortlistPerson(s.id, { name: v })} placeholder="\u0418\u043C\u044F" /></TableCell>
                                                     <TableCell sx={cellSx}><InlineInput value={s.linkedinUrl} onChange={v => updateShortlistPerson(s.id, { linkedinUrl: v })} placeholder="URL" /></TableCell>
                                                     <TableCell sx={cellSx}>
                                                         <Select size="small" value={s.priority || 'B'} onChange={e => updateShortlistPerson(s.id, { priority: e.target.value as IcpPriority })} sx={selectSx}>
@@ -707,7 +838,7 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                                                             ))}
                                                         </Select>
                                                     </TableCell>
-                                                    <TableCell sx={cellSx}><InlineInput value={s.source} onChange={v => updateShortlistPerson(s.id, { source: v })} placeholder="Откуда" /></TableCell>
+                                                    <TableCell sx={cellSx}><InlineInput value={s.source} onChange={v => updateShortlistPerson(s.id, { source: v })} placeholder="\u041E\u0442\u043A\u0443\u0434\u0430" /></TableCell>
                                                     <TableCell sx={cellSx}>
                                                         <Select
                                                             size="small"
@@ -745,14 +876,24 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                                                             ))}
                                                         </Select>
                                                     </TableCell>
+                                                    <TableCell sx={cellSx}>
+                                                        <StatusChip label={nextAction.label} color={nextAction.color} />
+                                                    </TableCell>
                                                     <TableCell sx={cellSx}><InlineInput value={s.notes} onChange={v => updateShortlistPerson(s.id, { notes: v })} placeholder="..." /></TableCell>
                                                     <TableCell sx={cellSx}>
-                                                        <IconButton size="small" onClick={() => setDeleteConfirm({ id: s.id, name: s.name || 'без имени', type: 'shortlist' })} sx={{ color: 'text.secondary', '&:hover': { color: 'error.main' } }}>
-                                                            <DeleteRoundedIcon sx={{ fontSize: '0.9rem' }} />
-                                                        </IconButton>
+                                                        <Box sx={{ display: 'flex', gap: 0.25, alignItems: 'center' }}>
+                                                            <IconButton size="small" onClick={() => copyCrTemplate(s)} sx={{ color: 'text.secondary', '&:hover': { color: 'primary.main' } }} title="Copy CR template">
+                                                                <ContentCopyRoundedIcon sx={{ fontSize: '0.85rem' }} />
+                                                            </IconButton>
+                                                            {copiedId === s.id && <Typography sx={{ fontSize: '0.65rem', color: '#3fb68e', whiteSpace: 'nowrap' }}>Copied!</Typography>}
+                                                            <IconButton size="small" onClick={() => setDeleteConfirm({ id: s.id, name: s.name || '\u0431\u0435\u0437 \u0438\u043C\u0435\u043D\u0438', type: 'shortlist' })} sx={{ color: 'text.secondary', '&:hover': { color: 'error.main' } }}>
+                                                                <DeleteRoundedIcon sx={{ fontSize: '0.9rem' }} />
+                                                            </IconButton>
+                                                        </Box>
                                                     </TableCell>
                                                 </TableRow>
-                                            ))}
+                                                )
+                                            })}
                                         </TableBody>
                                     </Table>
                                 </TableContainer>
@@ -765,10 +906,10 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
             {tab === 2 && (
                 <Box>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1, flexWrap: 'wrap' }}>
-                        <FilterSelect label="Сегмент" value={filters.segment || ''} options={Object.keys(ICP_LABELS)} onChange={v => setFilter('segment', v)} />
-                        <FilterSelect label="Статус" value={filters.status || ''} options={['research', 'contacted', 'in_talks', 'partner', 'declined']} onChange={v => setFilter('status', v)} />
+                        <FilterSelect label="\u0421\u0435\u0433\u043C\u0435\u043D\u0442" value={filters.segment || ''} options={Object.keys(ICP_LABELS)} onChange={v => setFilter('segment', v)} />
+                        <FilterSelect label="\u0421\u0442\u0430\u0442\u0443\u0441" value={filters.status || ''} options={['research', 'contacted', 'in_talks', 'partner', 'declined']} onChange={v => setFilter('status', v)} />
                         {Object.keys(filters).length > 0 && (
-                            <IconButton size="small" onClick={clearFilters} sx={{ color: 'text.secondary', '&:hover': { color: 'error.main' } }} title="Сбросить все фильтры">
+                            <IconButton size="small" onClick={clearFilters} sx={{ color: 'text.secondary', '&:hover': { color: 'error.main' } }} title="\u0421\u0431\u0440\u043E\u0441\u0438\u0442\u044C \u0432\u0441\u0435 \u0444\u0438\u043B\u044C\u0442\u0440\u044B">
                                 <FilterAltOffRoundedIcon sx={{ fontSize: '1rem' }} />
                             </IconButton>
                         )}
@@ -781,13 +922,13 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                         <Table size="small">
                             <TableHead>
                                 <TableRow sx={{ backgroundColor: '#ffffff06' }}>
-                                    <SortHeader label="Название" field="name" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
-                                    <TableCell sx={headCellSx}>Сайт</TableCell>
-                                    <SortHeader label="Сегмент" field="segment" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
-                                    <TableCell sx={headCellSx}>Размер</TableCell>
-                                    <SortHeader label="Контакт" field="contactPerson" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
-                                    <SortHeader label="Статус" field="status" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
-                                    <TableCell sx={headCellSx}>Заметки</TableCell>
+                                    <SortHeader label="\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435" field="name" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
+                                    <TableCell sx={headCellSx}>\u0421\u0430\u0439\u0442</TableCell>
+                                    <SortHeader label="\u0421\u0435\u0433\u043C\u0435\u043D\u0442" field="segment" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
+                                    <TableCell sx={headCellSx}>\u0420\u0430\u0437\u043C\u0435\u0440</TableCell>
+                                    <SortHeader label="\u041A\u043E\u043D\u0442\u0430\u043A\u0442" field="contactPerson" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
+                                    <SortHeader label="\u0421\u0442\u0430\u0442\u0443\u0441" field="status" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
+                                    <TableCell sx={headCellSx}>\u0417\u0430\u043C\u0435\u0442\u043A\u0438</TableCell>
                                     <TableCell sx={{ ...headCellSx, width: 40 }} />
                                 </TableRow>
                             </TableHead>
@@ -809,7 +950,7 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                                             </Select>
                                         </TableCell>
                                         <TableCell sx={cellSx}><InlineInput value={c.size} onChange={v => updateCompany(c.id, { size: v })} placeholder="3-15" /></TableCell>
-                                        <TableCell sx={cellSx}><InlineInput value={c.contactPerson} onChange={v => updateCompany(c.id, { contactPerson: v })} placeholder="Имя" /></TableCell>
+                                        <TableCell sx={cellSx}><InlineInput value={c.contactPerson} onChange={v => updateCompany(c.id, { contactPerson: v })} placeholder="\u0418\u043C\u044F" /></TableCell>
                                         <TableCell sx={cellSx}>
                                             <Select
                                                 size="small"
@@ -825,7 +966,7 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                                         </TableCell>
                                         <TableCell sx={cellSx}><InlineInput value={c.notes} onChange={v => updateCompany(c.id, { notes: v })} placeholder="..." /></TableCell>
                                         <TableCell sx={cellSx}>
-                                            <IconButton size="small" onClick={() => setDeleteConfirm({ id: c.id, name: c.name || 'без названия', type: 'company' })} sx={{ color: 'text.secondary', '&:hover': { color: 'error.main' } }}>
+                                            <IconButton size="small" onClick={() => setDeleteConfirm({ id: c.id, name: c.name || '\u0431\u0435\u0437 \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u044F', type: 'company' })} sx={{ color: 'text.secondary', '&:hover': { color: 'error.main' } }}>
                                                 <DeleteRoundedIcon sx={{ fontSize: '0.9rem' }} />
                                             </IconButton>
                                         </TableCell>
@@ -853,16 +994,6 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                     medium: local.people.filter(p => p.activityLevel === 'medium').length,
                     low: local.people.filter(p => p.activityLevel === 'low').length,
                 }
-                const byStatus = {
-                    new: local.people.filter(p => p.status === 'new').length,
-                    connected: local.people.filter(p => p.status === 'connected').length,
-                    dm_sent: local.people.filter(p => p.status === 'dm_sent').length,
-                    replied: local.people.filter(p => p.status === 'replied').length,
-                    demo: local.people.filter(p => p.status === 'demo').length,
-                    beta: local.people.filter(p => p.status === 'beta').length,
-                    client: local.people.filter(p => p.status === 'client').length,
-                    declined: local.people.filter(p => p.status === 'declined').length,
-                }
                 const groupsApproved = local.groups.filter(g => g.status === 'approved').length
                 const groupsPending = local.groups.filter(g => g.status === 'pending').length
                 const groupsRejected = local.groups.filter(g => g.status === 'rejected').length
@@ -873,9 +1004,13 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                 const dmSent = local.shortlist.filter(s => s.dmStatus === 'sent').length
                 const dmReplied = local.shortlist.filter(s => s.dmStatus === 'replied').length
                 const dmNoReply = local.shortlist.filter(s => s.dmStatus === 'no_reply').length
+                const demoCount = local.shortlist.filter(s => s.status === 'demo').length
+                const betaCount = local.shortlist.filter(s => s.status === 'beta').length
+                const clientCount = local.shortlist.filter(s => s.status === 'client').length
                 const countryCounts: Record<string, number> = {}
                 for (const p of local.people) { if (p.country) countryCounts[p.country] = (countryCounts[p.country] || 0) + 1 }
                 const topCountries = Object.entries(countryCounts).sort((a, b) => b[1] - a[1]).slice(0, 8)
+                const addedThisWeek = local.people.filter(p => isWithinLastWeek(p.createdAt)).length
 
                 const statBox = { p: 2, borderRadius: 2, backgroundColor: '#ffffff05', border: '1px solid', borderColor: 'divider' }
                 const statNum = { fontSize: '1.8rem', fontWeight: 800, color: 'primary.main', lineHeight: 1 }
@@ -889,29 +1024,30 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                             <Box sx={statBox}><Typography sx={{ ...statNum, color: '#3fb68e' }}>{priorityA}</Typography><Typography sx={statLabel}>Priority A</Typography></Box>
                             <Box sx={statBox}><Typography sx={{ ...statNum, color: '#d29922' }}>{priorityB}</Typography><Typography sx={statLabel}>Priority B</Typography></Box>
                             <Box sx={statBox}><Typography sx={{ ...statNum, color: '#8b949e' }}>{priorityC}</Typography><Typography sx={statLabel}>Priority C</Typography></Box>
-                            <Box sx={statBox}><Typography sx={{ ...statNum, color: '#6c8eff' }}>{shortlistTotal}</Typography><Typography sx={statLabel}>Top-5 shortlist</Typography></Box>
+                            <Box sx={statBox}><Typography sx={{ ...statNum, color: '#6c8eff' }}>{shortlistTotal}</Typography><Typography sx={statLabel}>Outreach</Typography></Box>
                             <Box sx={statBox}><Typography sx={{ ...statNum, color: '#a371f7' }}>{local.groups.length}</Typography><Typography sx={statLabel}>Groups total</Typography></Box>
+                            <Box sx={statBox}><Typography sx={{ ...statNum, color: '#3fb68e' }}>{addedThisWeek}</Typography><Typography sx={statLabel}>{'\u041D\u0430\u0441\u0442\u044F: \u0434\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u043E \u0437\u0430 \u043D\u0435\u0434\u0435\u043B\u044E'}</Typography></Box>
                         </Box>
 
                         <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2, mb: 3 }}>
                             <Box sx={statBox}>
-                                <Typography sx={{ fontSize: '0.8rem', fontWeight: 700, mb: 1.5 }}>Pipeline (People)</Typography>
+                                <Typography sx={{ fontSize: '0.8rem', fontWeight: 700, mb: 1.5 }}>Outreach Funnel</Typography>
                                 {[
-                                    { label: 'New', count: byStatus.new, color: '#8b949e' },
-                                    { label: 'Connected', count: byStatus.connected, color: '#6c8eff' },
-                                    { label: 'DM sent', count: byStatus.dm_sent, color: '#d29922' },
-                                    { label: 'Replied', count: byStatus.replied, color: '#3fb68e' },
-                                    { label: 'Demo', count: byStatus.demo, color: '#a371f7' },
-                                    { label: 'Beta', count: byStatus.beta, color: '#3fb68e' },
-                                    { label: 'Client', count: byStatus.client, color: '#3fb68e' },
-                                    { label: 'Declined', count: byStatus.declined, color: '#f85149' },
-                                ].filter(r => r.count > 0).map(r => (
+                                    { label: 'In Outreach', count: shortlistTotal, color: '#6c8eff' },
+                                    { label: 'CR sent', count: crSent, color: '#d29922' },
+                                    { label: `CR accepted${crSent + crAccepted + crDeclined > 0 ? ` (${Math.round((crAccepted / (crSent + crAccepted + crDeclined)) * 100)}%)` : ''}`, count: crAccepted, color: '#3fb68e' },
+                                    { label: 'DM sent', count: dmSent, color: '#a371f7' },
+                                    { label: `DM replied${dmSent + dmReplied + dmNoReply > 0 ? ` (${Math.round((dmReplied / (dmSent + dmReplied + dmNoReply)) * 100)}%)` : ''}`, count: dmReplied, color: '#3fb68e' },
+                                    { label: 'Demo', count: demoCount, color: '#a371f7' },
+                                    { label: 'Beta', count: betaCount, color: '#3fb68e' },
+                                    { label: 'Client', count: clientCount, color: '#3fb68e' },
+                                ].map(r => (
                                     <Box key={r.label} sx={{ mb: 1 }}>
                                         <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.3 }}>
                                             <Typography sx={{ fontSize: '0.75rem', color: 'text.secondary' }}>{r.label}</Typography>
                                             <Typography sx={{ fontSize: '0.75rem', fontWeight: 700, color: r.color }}>{r.count}</Typography>
                                         </Box>
-                                        <Box sx={barSx(r.color, totalPeople > 0 ? (r.count / totalPeople) * 100 : 0)} />
+                                        <Box sx={barSx(r.color, shortlistTotal > 0 ? (r.count / shortlistTotal) * 100 : 0)} />
                                     </Box>
                                 ))}
                             </Box>
@@ -946,7 +1082,7 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                             </Box>
 
                             <Box sx={statBox}>
-                                <Typography sx={{ fontSize: '0.8rem', fontWeight: 700, mb: 1.5 }}>Connection Requests (Top-5)</Typography>
+                                <Typography sx={{ fontSize: '0.8rem', fontWeight: 700, mb: 1.5 }}>Connection Requests (Outreach)</Typography>
                                 <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
                                     <Chip label={`Sent ${crSent}`} size="small" sx={{ fontSize: '0.7rem', backgroundColor: '#d2992222', color: '#d29922' }} />
                                     <Chip label={`Accepted ${crAccepted}`} size="small" sx={{ fontSize: '0.7rem', backgroundColor: '#3fb68e22', color: '#3fb68e' }} />
@@ -956,7 +1092,7 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                             </Box>
 
                             <Box sx={statBox}>
-                                <Typography sx={{ fontSize: '0.8rem', fontWeight: 700, mb: 1.5 }}>DMs (Top-5)</Typography>
+                                <Typography sx={{ fontSize: '0.8rem', fontWeight: 700, mb: 1.5 }}>DMs (Outreach)</Typography>
                                 <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
                                     <Chip label={`Sent ${dmSent}`} size="small" sx={{ fontSize: '0.7rem', backgroundColor: '#d2992222', color: '#d29922' }} />
                                     <Chip label={`Replied ${dmReplied}`} size="small" sx={{ fontSize: '0.7rem', backgroundColor: '#3fb68e22', color: '#3fb68e' }} />
