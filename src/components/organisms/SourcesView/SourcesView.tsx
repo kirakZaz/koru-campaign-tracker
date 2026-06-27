@@ -176,15 +176,15 @@ function FilterSelect({ label, value, options, onChange }: { label: string, valu
 }
 
 function getNextAction(s: ShortlistPerson): { label: string, color: string } {
-    if (s.status === 'demo' || s.status === 'beta' || s.status === 'client') return { label: '\u2713', color: '#3fb68e' }
-    if (s.status === 'declined') return { label: '\u2717', color: '#f85149' }
-    if (s.connectionStatus === 'not_sent') return { label: '\u041E\u0442\u043F\u0440\u0430\u0432\u0438\u0442\u044C CR', color: '#6c8eff' }
-    if (s.connectionStatus === 'sent') return { label: '\u0416\u0434\u0451\u043C CR', color: '#d29922' }
-    if (s.connectionStatus === 'declined') return { label: 'CR \u043E\u0442\u043A\u043B\u043E\u043D\u0451\u043D', color: '#f85149' }
-    if (s.connectionStatus === 'accepted' && (s.dmStatus === 'not_sent')) return { label: '\u041D\u0430\u043F\u0438\u0441\u0430\u0442\u044C DM', color: '#a371f7' }
-    if (s.dmStatus === 'sent') return { label: '\u0416\u0434\u0451\u043C DM', color: '#d29922' }
+    if (s.status === 'demo' || s.status === 'beta' || s.status === 'client') return { label: '✓', color: '#3fb68e' }
+    if (s.status === 'declined') return { label: '✗', color: '#f85149' }
+    if (s.connectionStatus === 'not_sent') return { label: 'Отправить CR', color: '#6c8eff' }
+    if (s.connectionStatus === 'sent') return { label: 'Ждём CR', color: '#d29922' }
+    if (s.connectionStatus === 'declined') return { label: 'CR отклонён', color: '#f85149' }
+    if (s.connectionStatus === 'accepted' && (s.dmStatus === 'not_sent')) return { label: 'Написать DM', color: '#a371f7' }
+    if (s.dmStatus === 'sent') return { label: 'Ждём DM', color: '#d29922' }
     if (s.dmStatus === 'no_reply') return { label: 'Follow up', color: '#f85149' }
-    if (s.dmStatus === 'replied') return { label: '\u041D\u0430\u0437\u043D\u0430\u0447\u0438\u0442\u044C demo', color: '#3fb68e' }
+    if (s.dmStatus === 'replied') return { label: 'Назначить demo', color: '#3fb68e' }
     return { label: '--', color: '#8b949e' }
 }
 
@@ -196,7 +196,7 @@ function isWithinLastWeek(dateStr?: string): boolean {
     return diff >= 0 && diff <= 7 * 24 * 60 * 60 * 1000
 }
 
-const DEFAULT_COUNTRIES = ['US', 'UK', 'Israel', '\u041A\u0430\u043D\u0430\u0434\u0430', '\u0410\u0432\u0441\u0442\u0440\u0430\u043B\u0438\u044F', '\u0413\u0435\u0440\u043C\u0430\u043D\u0438\u044F', '\u0418\u043D\u0434\u0438\u044F', '\u041D\u0438\u0434\u0435\u0440\u043B\u0430\u043D\u0434\u044B']
+const DEFAULT_COUNTRIES = ['US', 'UK', 'Israel', 'Канада', 'Австралия', 'Германия', 'Индия', 'Нидерланды']
 
 export default function SourcesView({ sources, onSaveSources }: SourcesViewProps) {
     const [tab, setTab] = React.useState(0)
@@ -327,7 +327,7 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
 
     // --- Groups ---
     const addGroup = () => {
-        const next = { ...local, groups: [{ id: generateId(), name: '', url: '', platform: 'LinkedIn', members: '', account: '\u041A\u0438\u0440\u0430' as AccountName, status: 'pending' as GroupStatus, priority: 0, activeMembers: ['', '', '', '', ''], notes: '' }, ...local.groups] }
+        const next = { ...local, groups: [{ id: generateId(), name: '', url: '', platform: 'LinkedIn', members: '', account: 'Кира' as AccountName, status: 'pending' as GroupStatus, priority: 0, activeMembers: ['', '', '', '', ''], notes: '' }, ...local.groups] }
         save(next)
     }
     const updateGroup = (id: string, patch: Partial<SourceGroup>) => {
@@ -408,7 +408,7 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
     const copyCrTemplate = (s: ShortlistPerson) => {
         const firstName = s.name.split(' ')[0] || s.name
         const notesPart = s.notes ? ` ${s.notes}.` : ''
-        const template = `Hi ${firstName},${notesPart} I'm building KORU \u2014 an SEO platform that audits for both Google and AI search engines. GEO score, AI brand visibility, intent-first keywords. Would love to connect.`
+        const template = `Hi ${firstName},${notesPart} I'm building KORU — an SEO platform that audits for both Google and AI search engines. GEO score, AI brand visibility, intent-first keywords. Would love to connect.`
         navigator.clipboard.writeText(template)
         setCopiedId(s.id)
         setTimeout(() => setCopiedId(null), 1500)
@@ -445,11 +445,11 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
             >
                 <Tab icon={<PeopleRoundedIcon sx={{ fontSize: '1rem' }} />} iconPosition="start" label={
                     newPeopleCount > 0
-                        ? <Badge badgeContent={newPeopleCount} color="primary" sx={{ '& .MuiBadge-badge': { fontSize: '0.65rem', height: 16, minWidth: 16 } }}>{`\u041B\u044E\u0434\u0438 (${local.people.length})`}</Badge>
-                        : `\u041B\u044E\u0434\u0438 (${local.people.length})`
+                        ? <Badge badgeContent={newPeopleCount} color="primary" sx={{ '& .MuiBadge-badge': { fontSize: '0.65rem', height: 16, minWidth: 16 } }}>{`Люди (${local.people.length})`}</Badge>
+                        : `Люди (${local.people.length})`
                 } />
-                <Tab icon={<GroupsRoundedIcon sx={{ fontSize: '1rem' }} />} iconPosition="start" label={`\u0413\u0440\u0443\u043F\u043F\u044B (${local.groups.length})`} />
-                <Tab icon={<BusinessRoundedIcon sx={{ fontSize: '1rem' }} />} iconPosition="start" label={`\u041A\u043E\u043C\u043F\u0430\u043D\u0438\u0438 (${local.companies.length})`} />
+                <Tab icon={<GroupsRoundedIcon sx={{ fontSize: '1rem' }} />} iconPosition="start" label={`Группы (${local.groups.length})`} />
+                <Tab icon={<BusinessRoundedIcon sx={{ fontSize: '1rem' }} />} iconPosition="start" label={`Компании (${local.companies.length})`} />
                 <Tab icon={<TrendingUpRoundedIcon sx={{ fontSize: '1rem' }} />} iconPosition="start" label={`Outreach (${local.shortlist.length})`} />
                 <Tab icon={<BarChartRoundedIcon sx={{ fontSize: '1rem' }} />} iconPosition="start" label="Dashboard" />
             </Tabs>
@@ -457,14 +457,14 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
             {tab === 0 && (
                 <Box>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1, flexWrap: 'wrap' }}>
-                        <FilterSelect label="\u0421\u0442\u0440\u0430\u043D\u0430" value={filters.country || ''} options={uniqueVals(local.people, 'country')} onChange={v => setFilter('country', v)} />
+                        <FilterSelect label="Страна" value={filters.country || ''} options={uniqueVals(local.people, 'country')} onChange={v => setFilter('country', v)} />
                         <FilterSelect label="ICP" value={filters.icpSegment || ''} options={Object.keys(ICP_LABELS)} onChange={v => setFilter('icpSegment', v)} />
                         <FilterSelect label="Priority" value={filters.priority || ''} options={['A', 'B', 'C']} onChange={v => setFilter('priority', v)} />
                         <FilterSelect label="Activity" value={filters.activityLevel || ''} options={['high', 'medium', 'low']} onChange={v => setFilter('activityLevel', v)} />
-                        <FilterSelect label="\u0421\u0442\u0430\u0442\u0443\u0441" value={filters.status || ''} options={uniqueVals(local.people, 'status')} onChange={v => setFilter('status', v)} />
-                        <FilterSelect label="\u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A" value={filters.source || ''} options={uniqueVals(local.people, 'source')} onChange={v => setFilter('source', v)} />
+                        <FilterSelect label="Статус" value={filters.status || ''} options={uniqueVals(local.people, 'status')} onChange={v => setFilter('status', v)} />
+                        <FilterSelect label="Источник" value={filters.source || ''} options={uniqueVals(local.people, 'source')} onChange={v => setFilter('source', v)} />
                         {Object.keys(filters).length > 0 && (
-                            <IconButton size="small" onClick={clearFilters} sx={{ color: 'text.secondary', '&:hover': { color: 'error.main' } }} title="\u0421\u0431\u0440\u043E\u0441\u0438\u0442\u044C \u0432\u0441\u0435 \u0444\u0438\u043B\u044C\u0442\u0440\u044B">
+                            <IconButton size="small" onClick={clearFilters} sx={{ color: 'text.secondary', '&:hover': { color: 'error.main' } }} title="Сбросить все фильтры">
                                 <FilterAltOffRoundedIcon sx={{ fontSize: '1rem' }} />
                             </IconButton>
                         )}
@@ -477,9 +477,9 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                         <Table size="small">
                             <TableHead>
                                 <TableRow sx={{ backgroundColor: '#ffffff06' }}>
-                                    <SortHeader label="\u0418\u043C\u044F" field="name" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
+                                    <SortHeader label="Имя" field="name" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
                                     <TableCell sx={headCellSx}>LinkedIn</TableCell>
-                                    <SortHeader label="\u0421\u0442\u0440\u0430\u043D\u0430" field="country" activeField={sortKey} direction={sortDir} onSort={toggleSort}>
+                                    <SortHeader label="Страна" field="country" activeField={sortKey} direction={sortDir} onSort={toggleSort}>
                                         <IconButton size="small" onClick={(e) => { e.stopPropagation(); setCountriesDialogOpen(true) }} sx={{ color: 'text.secondary', p: 0 }}>
                                             <EditRoundedIcon sx={{ fontSize: '0.7rem' }} />
                                         </IconButton>
@@ -487,9 +487,9 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                                     <SortHeader label="ICP" field="icpSegment" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
                                     <SortHeader label="Priority" field="priority" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
                                     <SortHeader label="Activity" field="activityLevel" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
-                                    <SortHeader label="\u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A" field="source" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
-                                    <SortHeader label="\u0421\u0442\u0430\u0442\u0443\u0441" field="status" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
-                                    <TableCell sx={headCellSx}>\u0417\u0430\u043C\u0435\u0442\u043A\u0438</TableCell>
+                                    <SortHeader label="Источник" field="source" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
+                                    <SortHeader label="Статус" field="status" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
+                                    <TableCell sx={headCellSx}>Заметки</TableCell>
                                     <TableCell sx={{ ...headCellSx, width: 40 }} />
                                 </TableRow>
                             </TableHead>
@@ -503,7 +503,7 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                                 )}
                                 {sorted(filtered(local.people)).map((p) => (
                                     <TableRow key={p.id} sx={{ '&:hover': { backgroundColor: '#ffffff04' } }}>
-                                        <TableCell sx={cellSx}><InlineInput value={p.name} onChange={v => updatePerson(p.id, { name: v })} placeholder="\u0418\u043C\u044F" /></TableCell>
+                                        <TableCell sx={cellSx}><InlineInput value={p.name} onChange={v => updatePerson(p.id, { name: v })} placeholder="Имя" /></TableCell>
                                         <TableCell sx={cellSx}>
                                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.25 }}>
                                                 <InlineInput value={p.linkedinUrl} onChange={v => updatePerson(p.id, { linkedinUrl: v })} placeholder="URL" />
@@ -516,7 +516,7 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                                         </TableCell>
                                         <TableCell sx={cellSx}>
                                             <Select size="small" value={p.country || ''} onChange={e => updatePerson(p.id, { country: e.target.value })} sx={selectSx} displayEmpty>
-                                                <MenuItem value="" sx={{ fontSize: '0.8rem', color: '#8b949e' }}>\u2014</MenuItem>
+                                                <MenuItem value="" sx={{ fontSize: '0.8rem', color: '#8b949e' }}>—</MenuItem>
                                                 {countries.map(c => <MenuItem key={c} value={c} sx={{ fontSize: '0.8rem' }}>{c}</MenuItem>)}
                                             </Select>
                                         </TableCell>
@@ -539,7 +539,7 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                                                 <MenuItem value="low" sx={{ fontSize: '0.8rem' }}>Low</MenuItem>
                                             </Select>
                                         </TableCell>
-                                        <TableCell sx={cellSx}><InlineInput value={p.source} onChange={v => updatePerson(p.id, { source: v })} placeholder="\u0413\u0440\u0443\u043F\u043F\u0430, \u043F\u043E\u0438\u0441\u043A..." /></TableCell>
+                                        <TableCell sx={cellSx}><InlineInput value={p.source} onChange={v => updatePerson(p.id, { source: v })} placeholder="Группа, поиск..." /></TableCell>
                                         <TableCell sx={cellSx}>
                                             <Select
                                                 size="small"
@@ -556,10 +556,10 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                                         <TableCell sx={cellSx}><InlineInput value={p.notes} onChange={v => updatePerson(p.id, { notes: v })} placeholder="..." /></TableCell>
                                         <TableCell sx={cellSx}>
                                             <Box sx={{ display: 'flex', gap: 0.25 }}>
-                                                <IconButton size="small" onClick={() => togglePersonShortlist(p)} sx={{ color: isInShortlist(p) ? 'warning.main' : 'text.secondary', '&:hover': { color: 'warning.main' } }} title="\u0412 Outreach">
+                                                <IconButton size="small" onClick={() => togglePersonShortlist(p)} sx={{ color: isInShortlist(p) ? 'warning.main' : 'text.secondary', '&:hover': { color: 'warning.main' } }} title="В Outreach">
                                                     <StarRoundedIcon sx={{ fontSize: '0.9rem' }} />
                                                 </IconButton>
-                                                <IconButton size="small" onClick={() => setDeleteConfirm({ id: p.id, name: p.name || '\u0431\u0435\u0437 \u0438\u043C\u0435\u043D\u0438', type: 'person' })} sx={{ color: 'text.secondary', '&:hover': { color: 'error.main' } }}>
+                                                <IconButton size="small" onClick={() => setDeleteConfirm({ id: p.id, name: p.name || 'без имени', type: 'person' })} sx={{ color: 'text.secondary', '&:hover': { color: 'error.main' } }}>
                                                     <DeleteRoundedIcon sx={{ fontSize: '0.9rem' }} />
                                                 </IconButton>
                                             </Box>
@@ -575,11 +575,11 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
             {tab === 1 && (
                 <Box>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1, flexWrap: 'wrap' }}>
-                        <FilterSelect label="\u041F\u043B\u0430\u0442\u0444\u043E\u0440\u043C\u0430" value={filters.platform || ''} options={uniqueVals(local.groups, 'platform')} onChange={v => setFilter('platform', v)} />
-                        <FilterSelect label="\u0410\u043A\u043A\u0430\u0443\u043D\u0442" value={filters.account || ''} options={['\u041A\u0438\u0440\u0430', '\u041D\u0430\u0441\u0442\u044F']} onChange={v => setFilter('account', v)} />
-                        <FilterSelect label="\u0421\u0442\u0430\u0442\u0443\u0441" value={filters.status || ''} options={['pending', 'approved', 'rejected']} onChange={v => setFilter('status', v)} />
+                        <FilterSelect label="Платформа" value={filters.platform || ''} options={uniqueVals(local.groups, 'platform')} onChange={v => setFilter('platform', v)} />
+                        <FilterSelect label="Аккаунт" value={filters.account || ''} options={['Кира', 'Настя']} onChange={v => setFilter('account', v)} />
+                        <FilterSelect label="Статус" value={filters.status || ''} options={['pending', 'approved', 'rejected']} onChange={v => setFilter('status', v)} />
                         {Object.keys(filters).length > 0 && (
-                            <IconButton size="small" onClick={clearFilters} sx={{ color: 'text.secondary', '&:hover': { color: 'error.main' } }} title="\u0421\u0431\u0440\u043E\u0441\u0438\u0442\u044C \u0432\u0441\u0435 \u0444\u0438\u043B\u044C\u0442\u0440\u044B">
+                            <IconButton size="small" onClick={clearFilters} sx={{ color: 'text.secondary', '&:hover': { color: 'error.main' } }} title="Сбросить все фильтры">
                                 <FilterAltOffRoundedIcon sx={{ fontSize: '1rem' }} />
                             </IconButton>
                         )}
@@ -593,14 +593,14 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                             <TableHead>
                                 <TableRow sx={{ backgroundColor: '#ffffff06' }}>
                                     <SortHeader label="#" field="priority" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
-                                    <SortHeader label="\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435" field="name" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
-                                    <TableCell sx={headCellSx}>\u0421\u0441\u044B\u043B\u043A\u0430</TableCell>
-                                    <SortHeader label="\u041F\u043B\u0430\u0442\u0444\u043E\u0440\u043C\u0430" field="platform" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
-                                    <TableCell sx={headCellSx}>\u0423\u0447\u0430\u0441\u0442\u043D\u0438\u043A\u043E\u0432</TableCell>
-                                    <SortHeader label="\u0410\u043A\u043A\u0430\u0443\u043D\u0442" field="account" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
-                                    <SortHeader label="\u0421\u0442\u0430\u0442\u0443\u0441" field="status" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
-                                    <TableCell sx={headCellSx}>\u0410\u043A\u0442\u0438\u0432\u043D\u044B\u0435 (5)</TableCell>
-                                    <TableCell sx={headCellSx}>\u0417\u0430\u043C\u0435\u0442\u043A\u0438</TableCell>
+                                    <SortHeader label="Название" field="name" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
+                                    <TableCell sx={headCellSx}>Ссылка</TableCell>
+                                    <SortHeader label="Платформа" field="platform" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
+                                    <TableCell sx={headCellSx}>Участников</TableCell>
+                                    <SortHeader label="Аккаунт" field="account" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
+                                    <SortHeader label="Статус" field="status" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
+                                    <TableCell sx={headCellSx}>Активные (5)</TableCell>
+                                    <TableCell sx={headCellSx}>Заметки</TableCell>
                                     <TableCell sx={{ ...headCellSx, width: 40 }} />
                                 </TableRow>
                             </TableHead>
@@ -641,8 +641,8 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                                         <TableCell sx={cellSx}><InlineInput value={g.members} onChange={v => updateGroup(g.id, { members: v })} placeholder="10k" /></TableCell>
                                         <TableCell sx={cellSx}>
                                             <Select size="small" value={g.account} onChange={e => updateGroup(g.id, { account: e.target.value as AccountName })} sx={selectSx}>
-                                                <MenuItem value="\u041A\u0438\u0440\u0430" sx={{ fontSize: '0.8rem' }}>\u041A\u0438\u0440\u0430</MenuItem>
-                                                <MenuItem value="\u041D\u0430\u0441\u0442\u044F" sx={{ fontSize: '0.8rem' }}>\u041D\u0430\u0441\u0442\u044F</MenuItem>
+                                                <MenuItem value="Кира" sx={{ fontSize: '0.8rem' }}>Кира</MenuItem>
+                                                <MenuItem value="Настя" sx={{ fontSize: '0.8rem' }}>Настя</MenuItem>
                                             </Select>
                                         </TableCell>
                                         <TableCell sx={cellSx}>
@@ -669,13 +669,13 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                                                     const arr = [...parts, ...Array(5 - parts.length).fill('')]
                                                     updateGroup(g.id, { activeMembers: arr.slice(0, 5) })
                                                 }}
-                                                placeholder="\u0418\u043C\u044F1, \u0418\u043C\u044F2, ..."
+                                                placeholder="Имя1, Имя2, ..."
                                                 sx={{ ...inputSx, '& .MuiInputBase-input': { fontSize: '0.75rem', py: 0.25, px: 0.5 } }}
                                             />
                                         </TableCell>
                                         <TableCell sx={cellSx}><InlineInput value={g.notes} onChange={v => updateGroup(g.id, { notes: v })} placeholder="..." /></TableCell>
                                         <TableCell sx={cellSx}>
-                                            <IconButton size="small" onClick={() => setDeleteConfirm({ id: g.id, name: g.name || '\u0431\u0435\u0437 \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u044F', type: 'group' })} sx={{ color: 'text.secondary', '&:hover': { color: 'error.main' } }}>
+                                            <IconButton size="small" onClick={() => setDeleteConfirm({ id: g.id, name: g.name || 'без названия', type: 'group' })} sx={{ color: 'text.secondary', '&:hover': { color: 'error.main' } }}>
                                                 <DeleteRoundedIcon sx={{ fontSize: '0.9rem' }} />
                                             </IconButton>
                                         </TableCell>
@@ -727,7 +727,7 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                             <Typography sx={{ color: 'text.secondary', fontSize: '0.85rem' }}>
                                 {needsActionFilter
                                     ? 'Нет людей, требующих действия.'
-                                    : 'Пока пусто. Добавляй лучших людей \u2014 они автоматически группируются по 5.'}
+                                    : 'Пока пусто. Добавляй лучших людей — они автоматически группируются по 5.'}
                             </Typography>
                         </Box>
                     ) : (
@@ -735,7 +735,7 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                             <Box key={batch} sx={{ mb: 3 }}>
                                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
                                     <Chip
-                                        label={`\u0413\u0440\u0443\u043F\u043F\u0430 ${batch}`}
+                                        label={`Группа ${batch}`}
                                         size="small"
                                         sx={{ fontWeight: 700, fontSize: '0.75rem', backgroundColor: '#3fb68e22', color: '#3fb68e', border: '1px solid #3fb68e44' }}
                                     />
@@ -803,7 +803,7 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                                                             ))}
                                                         </Select>
                                                     </TableCell>
-                                                    <TableCell sx={cellSx}><InlineInput value={s.name} onChange={v => updateShortlistPerson(s.id, { name: v })} placeholder="\u0418\u043C\u044F" /></TableCell>
+                                                    <TableCell sx={cellSx}><InlineInput value={s.name} onChange={v => updateShortlistPerson(s.id, { name: v })} placeholder="Имя" /></TableCell>
                                                     <TableCell sx={cellSx}><InlineInput value={s.linkedinUrl} onChange={v => updateShortlistPerson(s.id, { linkedinUrl: v })} placeholder="URL" /></TableCell>
                                                     <TableCell sx={cellSx}>
                                                         <Select size="small" value={s.priority || 'B'} onChange={e => updateShortlistPerson(s.id, { priority: e.target.value as IcpPriority })} sx={selectSx}>
@@ -838,7 +838,7 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                                                             ))}
                                                         </Select>
                                                     </TableCell>
-                                                    <TableCell sx={cellSx}><InlineInput value={s.source} onChange={v => updateShortlistPerson(s.id, { source: v })} placeholder="\u041E\u0442\u043A\u0443\u0434\u0430" /></TableCell>
+                                                    <TableCell sx={cellSx}><InlineInput value={s.source} onChange={v => updateShortlistPerson(s.id, { source: v })} placeholder="Откуда" /></TableCell>
                                                     <TableCell sx={cellSx}>
                                                         <Select
                                                             size="small"
@@ -886,7 +886,7 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                                                                 <ContentCopyRoundedIcon sx={{ fontSize: '0.85rem' }} />
                                                             </IconButton>
                                                             {copiedId === s.id && <Typography sx={{ fontSize: '0.65rem', color: '#3fb68e', whiteSpace: 'nowrap' }}>Copied!</Typography>}
-                                                            <IconButton size="small" onClick={() => setDeleteConfirm({ id: s.id, name: s.name || '\u0431\u0435\u0437 \u0438\u043C\u0435\u043D\u0438', type: 'shortlist' })} sx={{ color: 'text.secondary', '&:hover': { color: 'error.main' } }}>
+                                                            <IconButton size="small" onClick={() => setDeleteConfirm({ id: s.id, name: s.name || 'без имени', type: 'shortlist' })} sx={{ color: 'text.secondary', '&:hover': { color: 'error.main' } }}>
                                                                 <DeleteRoundedIcon sx={{ fontSize: '0.9rem' }} />
                                                             </IconButton>
                                                         </Box>
@@ -906,10 +906,10 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
             {tab === 2 && (
                 <Box>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1, flexWrap: 'wrap' }}>
-                        <FilterSelect label="\u0421\u0435\u0433\u043C\u0435\u043D\u0442" value={filters.segment || ''} options={Object.keys(ICP_LABELS)} onChange={v => setFilter('segment', v)} />
-                        <FilterSelect label="\u0421\u0442\u0430\u0442\u0443\u0441" value={filters.status || ''} options={['research', 'contacted', 'in_talks', 'partner', 'declined']} onChange={v => setFilter('status', v)} />
+                        <FilterSelect label="Сегмент" value={filters.segment || ''} options={Object.keys(ICP_LABELS)} onChange={v => setFilter('segment', v)} />
+                        <FilterSelect label="Статус" value={filters.status || ''} options={['research', 'contacted', 'in_talks', 'partner', 'declined']} onChange={v => setFilter('status', v)} />
                         {Object.keys(filters).length > 0 && (
-                            <IconButton size="small" onClick={clearFilters} sx={{ color: 'text.secondary', '&:hover': { color: 'error.main' } }} title="\u0421\u0431\u0440\u043E\u0441\u0438\u0442\u044C \u0432\u0441\u0435 \u0444\u0438\u043B\u044C\u0442\u0440\u044B">
+                            <IconButton size="small" onClick={clearFilters} sx={{ color: 'text.secondary', '&:hover': { color: 'error.main' } }} title="Сбросить все фильтры">
                                 <FilterAltOffRoundedIcon sx={{ fontSize: '1rem' }} />
                             </IconButton>
                         )}
@@ -922,13 +922,13 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                         <Table size="small">
                             <TableHead>
                                 <TableRow sx={{ backgroundColor: '#ffffff06' }}>
-                                    <SortHeader label="\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435" field="name" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
-                                    <TableCell sx={headCellSx}>\u0421\u0430\u0439\u0442</TableCell>
-                                    <SortHeader label="\u0421\u0435\u0433\u043C\u0435\u043D\u0442" field="segment" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
-                                    <TableCell sx={headCellSx}>\u0420\u0430\u0437\u043C\u0435\u0440</TableCell>
-                                    <SortHeader label="\u041A\u043E\u043D\u0442\u0430\u043A\u0442" field="contactPerson" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
-                                    <SortHeader label="\u0421\u0442\u0430\u0442\u0443\u0441" field="status" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
-                                    <TableCell sx={headCellSx}>\u0417\u0430\u043C\u0435\u0442\u043A\u0438</TableCell>
+                                    <SortHeader label="Название" field="name" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
+                                    <TableCell sx={headCellSx}>Сайт</TableCell>
+                                    <SortHeader label="Сегмент" field="segment" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
+                                    <TableCell sx={headCellSx}>Размер</TableCell>
+                                    <SortHeader label="Контакт" field="contactPerson" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
+                                    <SortHeader label="Статус" field="status" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
+                                    <TableCell sx={headCellSx}>Заметки</TableCell>
                                     <TableCell sx={{ ...headCellSx, width: 40 }} />
                                 </TableRow>
                             </TableHead>
@@ -950,7 +950,7 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                                             </Select>
                                         </TableCell>
                                         <TableCell sx={cellSx}><InlineInput value={c.size} onChange={v => updateCompany(c.id, { size: v })} placeholder="3-15" /></TableCell>
-                                        <TableCell sx={cellSx}><InlineInput value={c.contactPerson} onChange={v => updateCompany(c.id, { contactPerson: v })} placeholder="\u0418\u043C\u044F" /></TableCell>
+                                        <TableCell sx={cellSx}><InlineInput value={c.contactPerson} onChange={v => updateCompany(c.id, { contactPerson: v })} placeholder="Имя" /></TableCell>
                                         <TableCell sx={cellSx}>
                                             <Select
                                                 size="small"
@@ -966,7 +966,7 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                                         </TableCell>
                                         <TableCell sx={cellSx}><InlineInput value={c.notes} onChange={v => updateCompany(c.id, { notes: v })} placeholder="..." /></TableCell>
                                         <TableCell sx={cellSx}>
-                                            <IconButton size="small" onClick={() => setDeleteConfirm({ id: c.id, name: c.name || '\u0431\u0435\u0437 \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u044F', type: 'company' })} sx={{ color: 'text.secondary', '&:hover': { color: 'error.main' } }}>
+                                            <IconButton size="small" onClick={() => setDeleteConfirm({ id: c.id, name: c.name || 'без названия', type: 'company' })} sx={{ color: 'text.secondary', '&:hover': { color: 'error.main' } }}>
                                                 <DeleteRoundedIcon sx={{ fontSize: '0.9rem' }} />
                                             </IconButton>
                                         </TableCell>
@@ -1026,7 +1026,7 @@ export default function SourcesView({ sources, onSaveSources }: SourcesViewProps
                             <Box sx={statBox}><Typography sx={{ ...statNum, color: '#8b949e' }}>{priorityC}</Typography><Typography sx={statLabel}>Priority C</Typography></Box>
                             <Box sx={statBox}><Typography sx={{ ...statNum, color: '#6c8eff' }}>{shortlistTotal}</Typography><Typography sx={statLabel}>Outreach</Typography></Box>
                             <Box sx={statBox}><Typography sx={{ ...statNum, color: '#a371f7' }}>{local.groups.length}</Typography><Typography sx={statLabel}>Groups total</Typography></Box>
-                            <Box sx={statBox}><Typography sx={{ ...statNum, color: '#3fb68e' }}>{addedThisWeek}</Typography><Typography sx={statLabel}>{'\u041D\u0430\u0441\u0442\u044F: \u0434\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u043E \u0437\u0430 \u043D\u0435\u0434\u0435\u043B\u044E'}</Typography></Box>
+                            <Box sx={statBox}><Typography sx={{ ...statNum, color: '#3fb68e' }}>{addedThisWeek}</Typography><Typography sx={statLabel}>{'Настя: добавлено за неделю'}</Typography></Box>
                         </Box>
 
                         <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2, mb: 3 }}>
