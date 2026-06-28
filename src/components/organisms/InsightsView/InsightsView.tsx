@@ -76,7 +76,7 @@ export default function InsightsView({ phase, insights, onSave }: InsightsViewPr
     }
 
     return (
-        <Box sx={{ p: { xs: 2, md: 4 }, maxWidth: 900, overflow: 'auto', height: '100%' }}>
+        <Box sx={{ p: { xs: 2, md: 4 }, overflow: 'auto', height: '100%' }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
                 <Typography sx={{ fontSize: '1.2rem', fontWeight: 700, color: 'text.primary' }}>
                     {phase} — Выводы
