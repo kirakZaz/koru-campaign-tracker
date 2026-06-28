@@ -986,6 +986,42 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
                             </Box>
                         )}
                     </Box>
+
+                    <Box sx={{ borderTop: '1px solid', borderColor: 'divider' }} />
+
+                    {/* Delete actions */}
+                    <Box sx={{ p: 2.5, display: 'flex', gap: 1 }}>
+                        <Button
+                            size="small"
+                            variant="outlined"
+                            color="warning"
+                            startIcon={<DeleteRoundedIcon sx={{ fontSize: '0.8rem' }} />}
+                            onClick={() => {
+                                deleteShortlistPerson(person.id)
+                                setModalPersonId(null)
+                                setHistoryInput('')
+                            }}
+                            sx={{ textTransform: 'none', fontSize: '0.75rem', borderColor: '#d2992244', color: '#d29922', '&:hover': { borderColor: '#d29922', backgroundColor: '#d2992211' } }}
+                        >
+                            Убрать из Outreach
+                        </Button>
+                        <Button
+                            size="small"
+                            variant="outlined"
+                            color="error"
+                            startIcon={<DeleteRoundedIcon sx={{ fontSize: '0.8rem' }} />}
+                            onClick={() => {
+                                deleteShortlistPerson(person.id)
+                                const personInPeople = local.people.find(p => p.name === person.name)
+                                if (personInPeople) deletePerson(personInPeople.id)
+                                setModalPersonId(null)
+                                setHistoryInput('')
+                            }}
+                            sx={{ textTransform: 'none', fontSize: '0.75rem', borderColor: '#f8514944', color: '#f85149', '&:hover': { borderColor: '#f85149', backgroundColor: '#f8514911' } }}
+                        >
+                            Удалить совсем
+                        </Button>
+                    </Box>
                 </DialogContent>
             </Dialog>
         )
