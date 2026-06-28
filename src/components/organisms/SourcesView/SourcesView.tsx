@@ -34,7 +34,6 @@ import OpenInNewRoundedIcon from '@mui/icons-material/OpenInNewRounded'
 import FilterAltOffRoundedIcon from '@mui/icons-material/FilterAltOffRounded'
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded'
 import InputAdornment from '@mui/material/InputAdornment'
-import BarChartRoundedIcon from '@mui/icons-material/BarChartRounded'
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded'
 import ContentCopyRoundedIcon from '@mui/icons-material/ContentCopyRounded'
 import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded'
@@ -1012,7 +1011,6 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
                 <Tab icon={<GroupsRoundedIcon sx={{ fontSize: '1rem' }} />} iconPosition="start" label={`Группы (${local.groups.length})`} />
                 <Tab icon={<BusinessRoundedIcon sx={{ fontSize: '1rem' }} />} iconPosition="start" label={`Компании (${local.companies.length})`} />
                 <Tab icon={<TrendingUpRoundedIcon sx={{ fontSize: '1rem' }} />} iconPosition="start" label={`Outreach (${local.shortlist.length})`} />
-                <Tab icon={<BarChartRoundedIcon sx={{ fontSize: '1rem' }} />} iconPosition="start" label="Dashboard" />
                 <Tab icon={<CompareArrowsRoundedIcon sx={{ fontSize: '1rem' }} />} iconPosition="start" label={`Конкуренты (${local.competitors.length})`} />
             </Tabs>
 
@@ -1607,7 +1605,7 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
                 </Box>
             )}
 
-            {tab === 4 && (() => {
+            {tab === 99 && (() => {
                 const totalPeople = local.people.length
                 const priorityA = local.people.filter(p => p.priority === 'A').length
                 const priorityB = local.people.filter(p => p.priority === 'B').length
@@ -1754,7 +1752,7 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
                 )
             })()}
 
-            {tab === 5 && (
+            {tab === 4 && (
                 <Box>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1, flexWrap: 'wrap' }}>
                         <FilterSelect label="Уровень" value={filters.threatLevel || ''} options={['direct', 'indirect', 'adjacent']} onChange={v => setFilter('threatLevel', v)} />

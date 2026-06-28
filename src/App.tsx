@@ -250,7 +250,7 @@ function App() {
                         sources={sources as SourcesData}
                         onSaveSources={saveSources}
                         startDate={progress.startDate}
-                        initialTab={4}
+                        initialTab={99}
                     />
                 ) : currentDayIndex === SOURCES_INDEX ? (
                     <SourcesView
