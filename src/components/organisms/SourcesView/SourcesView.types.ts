@@ -82,11 +82,27 @@ export interface ShortlistPerson {
     createdAt?: string
 }
 
+export type CompetitorThreatLevel = 'direct' | 'indirect' | 'adjacent'
+
+export interface SourceCompetitor {
+    id: string
+    name: string
+    url: string
+    type: string
+    pricing: string
+    features: string
+    missingVsKoru: string
+    linkedinPerson: string
+    threatLevel: CompetitorThreatLevel
+    notes: string
+}
+
 export interface SourcesData {
     people: SourcePerson[]
     groups: SourceGroup[]
     companies: SourceCompany[]
     shortlist: ShortlistPerson[]
+    competitors: SourceCompetitor[]
     countries: string[]
 }
 

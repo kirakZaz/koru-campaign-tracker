@@ -1,5 +1,5 @@
 import * as React from 'react'
-import type { ProgressData, TaskOverride, TeamMember, SourcesData } from '@/data/campaignData.types'
+import type { ProgressData, TaskOverride, TeamMember, SourcesData, InsightEntry } from '@/data/campaignData.types'
 import { CAMPAIGN_DAYS } from '@/data/campaignData'
 
 const API_URL = '/api/progress'
@@ -177,6 +177,26 @@ export function useProgress() {
         }
     }, [progress.sources])
 
+    const saveWeekInsights = React.useCallback(async (phase: string, insights: InsightEntry[]) => {
+        setProgress(prev => ({
+            ...prev,
+            weekInsights: { ...(prev.weekInsights ?? {}), [phase]: insights }
+        }))
+
+        try {
+            await fetch(API_URL, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'set-week-insights', phase, insights })
+            })
+        } catch {
+            setProgress(prev => ({
+                ...prev,
+                weekInsights: { ...(prev.weekInsights ?? {}), [phase]: progress.weekInsights?.[phase] ?? [] }
+            }))
+        }
+    }, [progress.weekInsights])
+
     const saveTeam = React.useCallback(async (team: TeamMember[]) => {
         setProgress(prev => ({ ...prev, team }))
 
@@ -217,7 +237,9 @@ export function useProgress() {
         saveSources,
         saveOverviewSection,
         overviewOverrides: progress.overviewOverrides ?? {},
-        sources: { people: [], groups: [], companies: [], shortlist: [], countries: ['US', 'UK', 'Israel', 'Канада', 'Австралия', 'Германия', 'Индия', 'Нидерланды'], ...(progress.sources ?? {}) },
+        sources: { people: [], groups: [], companies: [], shortlist: [], competitors: [], countries: ['US', 'UK', 'Israel', 'Канада', 'Австралия', 'Германия', 'Индия', 'Нидерланды'], ...(progress.sources ?? {}) },
+        weekInsights: progress.weekInsights ?? {},
+        saveWeekInsights,
         refetch: fetchProgress
     }
 }

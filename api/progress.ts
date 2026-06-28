@@ -65,6 +65,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                 data.overviewOverrides[req.body.sectionKey as string] = req.body.value as { en: string, ru: string }
             } else if (action === 'set-sources') {
                 data.sources = req.body.sources as ProgressData['sources']
+            } else if (action === 'set-week-insights') {
+                if (!data.weekInsights) data.weekInsights = {}
+                data.weekInsights[req.body.phase as string] = req.body.insights
             }
 
             await redis.set(PROGRESS_KEY, data)

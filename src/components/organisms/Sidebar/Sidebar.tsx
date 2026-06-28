@@ -15,7 +15,8 @@ import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded'
 import TableChartRoundedIcon from '@mui/icons-material/TableChartRounded'
 import BrushRoundedIcon from '@mui/icons-material/BrushRounded'
 import MenuBookRoundedIcon from '@mui/icons-material/MenuBookRounded'
-import { OVERVIEW_INDEX, SOURCES_INDEX, CREATIVES_INDEX, PLAYBOOK_INDEX } from '@/App'
+import LightbulbOutlinedIcon from '@mui/icons-material/LightbulbOutlined'
+import { OVERVIEW_INDEX, SOURCES_INDEX, CREATIVES_INDEX, PLAYBOOK_INDEX, INSIGHTS_PHASES, getInsightsIndex } from '@/App'
 import { getCampaignDate, formatShortDate } from '@/utils/dateUtils'
 import ProgressBar from '@/components/molecules/ProgressBar/ProgressBar'
 import type { SidebarProps } from './Sidebar.types'
@@ -219,44 +220,70 @@ const Sidebar = React.memo(function Sidebar({
                             Playbook
                         </Typography>
                     </Box>
-                    {daysByPhase.map((group) => (
-                        <React.Fragment key={group.phase}>
-                            <Typography sx={styles.phaseHeader}>
-                                {group.phase}
-                            </Typography>
-                            {group.days.map((day) => {
-                                const isActive = day.dayIndex === currentDayIndex
-                                const completedCount = day.tasks.filter((t) => isTaskCompleted(t.id)).length
-                                const totalCount = day.tasks.length
-                                const allDone = completedCount === totalCount && totalCount > 0
+                    {daysByPhase.map((group) => {
+                        const phaseIdx = INSIGHTS_PHASES.indexOf(group.phase as typeof INSIGHTS_PHASES[number])
+                        const insightsIndex = phaseIdx >= 0 ? getInsightsIndex(phaseIdx) : null
+                        const insightsActive = insightsIndex !== null && currentDayIndex === insightsIndex
 
-                                return (
-                                    <Box
-                                        key={day.dayIndex}
-                                        ref={isActive ? activeRef : undefined}
-                                        sx={styles.dayItem(isActive, allDone)}
-                                        onClick={() => onDaySelect(day.dayIndex)}
-                                    >
-                                        {allDone ? (
-                                            <CheckCircleRoundedIcon sx={{ fontSize: '0.9rem', color: 'success.main' }} />
-                                        ) : (
-                                            <Typography sx={styles.dayNumber}>
-                                                {startDate ? formatShortDate(getCampaignDate(startDate, day.dayIndex, day.calendarDayOffset)) : day.dayIndex + 1}
-                                            </Typography>
-                                        )}
-                                        <Box sx={{ flex: 1, minWidth: 0 }}>
-                                            <Typography sx={styles.dayTitle(isActive)}>
-                                                {day.title}
+                        return (
+                            <React.Fragment key={group.phase}>
+                                <Typography sx={styles.phaseHeader}>
+                                    {group.phase}
+                                </Typography>
+                                {group.days.map((day) => {
+                                    const isActive = day.dayIndex === currentDayIndex
+                                    const completedCount = day.tasks.filter((t) => isTaskCompleted(t.id)).length
+                                    const totalCount = day.tasks.length
+                                    const allDone = completedCount === totalCount && totalCount > 0
+
+                                    return (
+                                        <Box
+                                            key={day.dayIndex}
+                                            ref={isActive ? activeRef : undefined}
+                                            sx={styles.dayItem(isActive, allDone)}
+                                            onClick={() => onDaySelect(day.dayIndex)}
+                                        >
+                                            {allDone ? (
+                                                <CheckCircleRoundedIcon sx={{ fontSize: '0.9rem', color: 'success.main' }} />
+                                            ) : (
+                                                <Typography sx={styles.dayNumber}>
+                                                    {startDate ? formatShortDate(getCampaignDate(startDate, day.dayIndex, day.calendarDayOffset)) : day.dayIndex + 1}
+                                                </Typography>
+                                            )}
+                                            <Box sx={{ flex: 1, minWidth: 0 }}>
+                                                <Typography sx={styles.dayTitle(isActive)}>
+                                                    {day.title}
+                                                </Typography>
+                                            </Box>
+                                            <Typography sx={styles.dayProgress}>
+                                                {completedCount}/{totalCount}
                                             </Typography>
                                         </Box>
-                                        <Typography sx={styles.dayProgress}>
-                                            {completedCount}/{totalCount}
+                                    )
+                                })}
+                                {insightsIndex !== null && (
+                                    <Box
+                                        sx={{
+                                            ...styles.dayItem(insightsActive, false),
+                                            pl: 3,
+                                            opacity: insightsActive ? 1 : 0.7,
+                                            '&:hover': { opacity: 1, backgroundColor: '#ffffff06' }
+                                        }}
+                                        onClick={() => onDaySelect(insightsIndex)}
+                                    >
+                                        <LightbulbOutlinedIcon sx={{ fontSize: '0.8rem', color: insightsActive ? '#d29922' : 'text.secondary' }} />
+                                        <Typography sx={{
+                                            fontSize: '0.75rem',
+                                            fontWeight: insightsActive ? 700 : 500,
+                                            color: insightsActive ? '#d29922' : 'text.secondary'
+                                        }}>
+                                            Выводы
                                         </Typography>
                                     </Box>
-                                )
-                            })}
-                        </React.Fragment>
-                    ))}
+                                )}
+                            </React.Fragment>
+                        )
+                    })}
                 </Box>
             )}
         </Box>

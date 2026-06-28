@@ -68,7 +68,17 @@ export interface SourcesData {
     groups: unknown[]
     companies: unknown[]
     shortlist: unknown[]
+    competitors: unknown[]
     countries: string[]
+}
+
+export type InsightCategory = 'competitor' | 'market' | 'product' | 'post_analysis' | 'general'
+
+export interface InsightEntry {
+    id: string
+    date: string
+    category: InsightCategory
+    text: string
 }
 
 export interface ProgressData {
@@ -79,4 +89,5 @@ export interface ProgressData {
     team?: TeamMember[]
     overviewOverrides?: Record<string, { en: string, ru: string }>
     sources?: SourcesData
+    weekInsights?: Record<string, InsightEntry[]>
 }
