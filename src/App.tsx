@@ -29,6 +29,7 @@ export const OVERVIEW_INDEX = -100
 export const SOURCES_INDEX = -200
 export const CREATIVES_INDEX = -300
 export const PLAYBOOK_INDEX = -400
+export const DASHBOARD_INDEX = -600
 export const INSIGHTS_PHASES = ['Story 0', 'Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Week 6', 'Week 7+'] as const
 export function getInsightsPhase(dayIndex: number): string | null {
     const idx = -501 - dayIndex
@@ -217,7 +218,7 @@ function App() {
             )}
 
             <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-                {currentDayIndex === OVERVIEW_INDEX || currentDayIndex === SOURCES_INDEX || currentDayIndex === CREATIVES_INDEX || currentDayIndex === PLAYBOOK_INDEX || getInsightsPhase(currentDayIndex) ? (
+                {currentDayIndex === OVERVIEW_INDEX || currentDayIndex === SOURCES_INDEX || currentDayIndex === CREATIVES_INDEX || currentDayIndex === PLAYBOOK_INDEX || currentDayIndex === DASHBOARD_INDEX || getInsightsPhase(currentDayIndex) ? (
                     isMobile ? (
                         <Box sx={{ px: 2, pt: 2, borderBottom: (t: any) => `1px solid ${t.palette.divider}` }}>
                             <IconButton onClick={handleToggleDrawer} size="small">
@@ -244,7 +245,14 @@ function App() {
                     </Box>
                 )}
 
-                {currentDayIndex === SOURCES_INDEX ? (
+                {currentDayIndex === DASHBOARD_INDEX ? (
+                    <SourcesView
+                        sources={sources as SourcesData}
+                        onSaveSources={saveSources}
+                        startDate={progress.startDate}
+                        initialTab={4}
+                    />
+                ) : currentDayIndex === SOURCES_INDEX ? (
                     <SourcesView
                         sources={sources as SourcesData}
                         onSaveSources={saveSources}

@@ -16,7 +16,8 @@ import TableChartRoundedIcon from '@mui/icons-material/TableChartRounded'
 import BrushRoundedIcon from '@mui/icons-material/BrushRounded'
 import MenuBookRoundedIcon from '@mui/icons-material/MenuBookRounded'
 import LightbulbOutlinedIcon from '@mui/icons-material/LightbulbOutlined'
-import { OVERVIEW_INDEX, SOURCES_INDEX, CREATIVES_INDEX, PLAYBOOK_INDEX, INSIGHTS_PHASES, getInsightsIndex } from '@/App'
+import BarChartRoundedIcon from '@mui/icons-material/BarChartRounded'
+import { OVERVIEW_INDEX, SOURCES_INDEX, CREATIVES_INDEX, PLAYBOOK_INDEX, DASHBOARD_INDEX, INSIGHTS_PHASES, getInsightsIndex } from '@/App'
 import { getCampaignDate, formatShortDate } from '@/utils/dateUtils'
 import ProgressBar from '@/components/molecules/ProgressBar/ProgressBar'
 import type { SidebarProps } from './Sidebar.types'
@@ -218,6 +219,15 @@ const Sidebar = React.memo(function Sidebar({
                         <MenuBookRoundedIcon sx={{ fontSize: '0.9rem', color: currentDayIndex === PLAYBOOK_INDEX ? 'primary.main' : 'text.secondary' }} />
                         <Typography sx={styles.dayTitle(currentDayIndex === PLAYBOOK_INDEX)}>
                             Playbook
+                        </Typography>
+                    </Box>
+                    <Box
+                        sx={styles.dayItem(currentDayIndex === DASHBOARD_INDEX, false)}
+                        onClick={() => onDaySelect(DASHBOARD_INDEX)}
+                    >
+                        <BarChartRoundedIcon sx={{ fontSize: '0.9rem', color: currentDayIndex === DASHBOARD_INDEX ? 'primary.main' : 'text.secondary' }} />
+                        <Typography sx={styles.dayTitle(currentDayIndex === DASHBOARD_INDEX)}>
+                            Dashboard
                         </Typography>
                     </Box>
                     {daysByPhase.map((group) => {

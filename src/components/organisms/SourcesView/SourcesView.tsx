@@ -276,8 +276,9 @@ function getCampaignWeek(startDate: string | null | undefined): number {
     return Math.max(1, Math.ceil((diffDays + 1) / 7))
 }
 
-export default function SourcesView({ sources, onSaveSources, startDate }: SourcesViewProps) {
-    const [tab, setTab] = React.useState(0)
+export default function SourcesView({ sources, onSaveSources, startDate, initialTab }: SourcesViewProps) {
+    const [tab, setTab] = React.useState(initialTab ?? 0)
+    React.useEffect(() => { if (initialTab !== undefined) setTab(initialTab) }, [initialTab])
     const [local, setLocal] = React.useState({ people: sources.people || [], groups: sources.groups || [], companies: sources.companies || [], shortlist: sources.shortlist || [], competitors: sources.competitors || [], countries: sources.countries || [] })
     const saveTimerRef = React.useRef<ReturnType<typeof setTimeout>>()
     const [countriesDialogOpen, setCountriesDialogOpen] = React.useState(false)
