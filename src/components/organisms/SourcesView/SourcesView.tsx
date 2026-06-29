@@ -59,7 +59,8 @@ import type {
     DmStatus,
     ConnectionStatus,
     ShortlistAction,
-    HistoryEntry
+    HistoryEntry,
+    FollowStatus
 } from './SourcesView.types'
 
 const DM_STATUS_LABELS: Record<DmStatus, { label: string, color: string }> = {
@@ -74,6 +75,12 @@ const CONNECTION_STATUS_LABELS: Record<ConnectionStatus, { label: string, color:
     sent: { label: 'Sent', color: '#d29922' },
     accepted: { label: 'Accepted', color: '#3fb68e' },
     declined: { label: 'Declined', color: '#f85149' }
+}
+
+const FOLLOW_STATUS_LABELS: Record<FollowStatus, { label: string, color: string }> = {
+    not_followed: { label: '--', color: '#8b949e' },
+    followed: { label: 'Followed', color: '#d29922' },
+    follow_back: { label: 'Follow-back', color: '#3fb68e' }
 }
 
 const PERSON_STATUS_LABELS: Record<PersonStatus, { label: string, color: string }> = {
@@ -207,12 +214,21 @@ function getNextAction(s: ShortlistPerson): { label: string, color: string } {
     if (s.status === 'beta') return { label: 'В бете ✓', color: '#3fb68e' }
     if (s.status === 'declined') return { label: 'Отказ', color: '#f85149' }
 
+    // Follow-only path
+    const fs = s.followStatus || 'not_followed'
+    if (fs === 'not_followed' && s.connectionStatus === 'not_sent') return { label: 'Follow / Отправить запрос', color: '#6c8eff' }
+    if (fs === 'followed' && s.connectionStatus === 'not_sent') return { label: 'Комментировать посты', color: '#d29922' }
+    if (fs === 'follow_back' && s.connectionStatus === 'not_sent') return { label: 'Отправить запрос (follow-back!)', color: '#3fb68e' }
+
     // Waiting states from funnel
     if (s.connectionStatus === 'sent') return { label: 'Ждём ответ', color: '#d29922' }
     if (s.dmStatus === 'sent') return { label: 'Ждём DM', color: '#d29922' }
     if (s.dmStatus === 'no_reply') return { label: 'Follow up!', color: '#f85149' }
     if (s.dmStatus === 'replied') return { label: 'Назначить demo', color: '#3fb68e' }
     if (s.status === 'demo') return { label: 'Провести demo', color: '#a371f7' }
+
+    // Connected but no DM yet
+    if (s.connectionStatus === 'accepted' && s.dmStatus === 'not_sent') return { label: 'Написать DM', color: '#6c8eff' }
 
     // Next from checklist — first uncompleted planned action
     const planned = s.actions || []
@@ -657,6 +673,9 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
         const notesRef = person.notes ? person.notes.slice(0, 50) : 'your work'
         const priorityColor = person.priority === 'A' ? '#3fb68e' : person.priority === 'B' ? '#d29922' : '#8b949e'
 
+        const followSt = person.followStatus || 'not_followed'
+        const isFollowed = followSt === 'followed' || followSt === 'follow_back'
+        const isFollowBack = followSt === 'follow_back'
         const crDone = person.connectionStatus === 'sent' || person.connectionStatus === 'accepted' || person.connectionStatus === 'declined'
         const crAccepted = person.connectionStatus === 'accepted'
         const dmDone = person.dmStatus === 'sent' || person.dmStatus === 'replied' || person.dmStatus === 'no_reply'
@@ -775,7 +794,7 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
                                     DM шаблон
                                 </Button>
                             )}
-                            {nextAction.label === 'Отправить запрос' && (
+                            {(nextAction.label === 'Отправить запрос' || nextAction.label.includes('Отправить запрос') || nextAction.label.includes('Follow / Отправить')) && (
                                 <Button
                                     size="small"
                                     startIcon={<ContentCopyRoundedIcon sx={{ fontSize: '0.7rem' }} />}
@@ -794,6 +813,20 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
                     <Box sx={{ p: 2.5, pb: 1.5 }}>
                         <Typography sx={{ fontSize: '0.8rem', fontWeight: 700, mb: 1 }}>Воронка</Typography>
                         <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 0.75 }}>
+                            {funnelChip('Followed', isFollowed, () => {
+                                if (isFollowed && !isFollowBack) {
+                                    updateShortlistWithHistory(person.id, { followStatus: 'not_followed' })
+                                } else if (!isFollowed) {
+                                    updateShortlistWithHistory(person.id, { followStatus: 'followed' })
+                                }
+                            })}
+                            {funnelChip('Follow-back', isFollowBack, () => {
+                                if (isFollowBack) {
+                                    updateShortlistWithHistory(person.id, { followStatus: 'followed' })
+                                } else {
+                                    updateShortlistWithHistory(person.id, { followStatus: 'follow_back' })
+                                }
+                            })}
                             {funnelChip('Запрос отправлен', crDone, () => {
                                 if (crDone && !crAccepted) {
                                     updateShortlistWithHistory(person.id, { connectionStatus: 'not_sent' })
@@ -1492,6 +1525,7 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
                                         </TableCell>
                                         <SortHeader label="Имя" field="name" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
                                         <SortHeader label="Priority" field="priority" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
+                                        <SortHeader label="Follow" field="followStatus" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
                                         <SortHeader label="Запрос" field="connectionStatus" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
                                         <SortHeader label="DM" field="dmStatus" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
                                         <TableCell sx={headCellSx}>Next</TableCell>
@@ -1535,6 +1569,9 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
                                                         size="small"
                                                         sx={{ fontSize: '0.7rem', fontWeight: 800, height: 20, minWidth: 24, backgroundColor: prColor + '22', color: prColor, border: `1px solid ${prColor}44` }}
                                                     />
+                                                </TableCell>
+                                                <TableCell sx={cellSx}>
+                                                    <StatusChip {...FOLLOW_STATUS_LABELS[(s.followStatus || 'not_followed') as FollowStatus]} />
                                                 </TableCell>
                                                 <TableCell sx={cellSx}>
                                                     <StatusChip {...CONNECTION_STATUS_LABELS[s.connectionStatus || 'not_sent']} />

@@ -45,6 +45,7 @@ export interface SourceCompany {
 
 export type DmStatus = 'not_sent' | 'sent' | 'replied' | 'no_reply'
 export type ConnectionStatus = 'not_sent' | 'sent' | 'accepted' | 'declined'
+export type FollowStatus = 'not_followed' | 'followed' | 'follow_back'
 
  export type ShortlistAction =
     | 'comment_post'
@@ -73,6 +74,7 @@ export interface ShortlistPerson {
     priority: IcpPriority
     dmStatus: DmStatus
     connectionStatus: ConnectionStatus
+    followStatus?: FollowStatus
     source: string
     status: PersonStatus
     notes: string
