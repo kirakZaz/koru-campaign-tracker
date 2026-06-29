@@ -78,6 +78,7 @@ export interface InsightEntry {
     id: string
     date: string
     category: InsightCategory
+    title: string
     text: string
 }
 
