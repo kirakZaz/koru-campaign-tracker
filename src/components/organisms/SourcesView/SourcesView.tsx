@@ -425,7 +425,7 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
 
     // --- People ---
     const addPerson = () => {
-        if (local.people.length > 0 && !local.people[0].name?.trim()) { setSnackbarMsg('Заполни имя в предыдущей строке'); return }
+        if (local.people.length > 0 && !local.people[0]!.name?.trim()) { setSnackbarMsg('Заполни имя в предыдущей строке'); return }
         const next = { ...local, people: [{ id: generateId(), name: '', title: '', linkedinUrl: '', country: '', icpSegment: 'freelancer' as IcpSegment, priority: 'B' as IcpPriority, activityLevel: 'medium' as const, source: '', status: 'new' as PersonStatus, notes: '', createdAt: new Date().toISOString() }, ...local.people] }
         save(next)
     }
@@ -446,7 +446,7 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
 
     // --- Groups ---
     const addGroup = () => {
-        if (local.groups.length > 0 && !local.groups[0].name?.trim()) { setSnackbarMsg('Заполни название в предыдущей строке'); return }
+        if (local.groups.length > 0 && !local.groups[0]!.name?.trim()) { setSnackbarMsg('Заполни название в предыдущей строке'); return }
         const next = { ...local, groups: [{ id: generateId(), name: '', url: '', platform: 'LinkedIn', members: '', account: 'Кира' as AccountName, status: 'pending' as GroupStatus, priority: 0, activeMembers: ['', '', '', '', ''], notes: '' }, ...local.groups] }
         save(next)
     }
@@ -480,7 +480,7 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
         }
     }
     const addShortlistPerson = () => {
-        if (local.shortlist.length > 0 && !local.shortlist[0].name?.trim()) { setSnackbarMsg('Заполни имя в предыдущей строке'); return }
+        if (local.shortlist.length > 0 && !local.shortlist[0]!.name?.trim()) { setSnackbarMsg('Заполни имя в предыдущей строке'); return }
         const next = { ...local, shortlist: [{ id: generateId(), batch: nextBatch, name: '', linkedinUrl: '', priority: 'B' as IcpPriority, dmStatus: 'not_sent' as DmStatus, connectionStatus: 'not_sent' as ConnectionStatus, source: '', status: 'new' as PersonStatus, notes: '', actions: [] as ShortlistAction[], createdAt: new Date().toISOString() }, ...local.shortlist] }
         save(next)
     }
@@ -640,7 +640,7 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
 
     // --- Companies ---
     const addCompany = () => {
-        if (local.companies.length > 0 && !local.companies[0].name?.trim()) { setSnackbarMsg('Заполни название в предыдущей строке'); return }
+        if (local.companies.length > 0 && !local.companies[0]!.name?.trim()) { setSnackbarMsg('Заполни название в предыдущей строке'); return }
         const next = { ...local, companies: [{ id: generateId(), name: '', website: '', segment: 'small_agency' as IcpSegment, size: '', contactPerson: '', status: 'research' as CompanyStatus, notes: '' }, ...local.companies] }
         save(next)
     }
@@ -655,7 +655,7 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
 
     // --- Competitors ---
     const addCompetitor = () => {
-        if (local.competitors.length > 0 && !local.competitors[0].name?.trim()) { setSnackbarMsg('Заполни название в предыдущей строке'); return }
+        if (local.competitors.length > 0 && !local.competitors[0]!.name?.trim()) { setSnackbarMsg('Заполни название в предыдущей строке'); return }
         const next = { ...local, competitors: [{ id: generateId(), name: '', url: '', type: '', pricing: '', features: '', missingVsKoru: '', linkedinPerson: '', threatLevel: 'indirect' as CompetitorThreatLevel, notes: '' }, ...local.competitors] }
         save(next)
     }
