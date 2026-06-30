@@ -142,6 +142,27 @@ export function useProgress() {
         return progress.taskOverrides?.[taskId]
     }, [progress.taskOverrides])
 
+    const saveTaskDayMove = React.useCallback(async (taskId: string, dayIndex: number) => {
+        setProgress(prev => ({
+            ...prev,
+            taskDayMoves: { ...(prev.taskDayMoves ?? {}), [taskId]: dayIndex }
+        }))
+
+        try {
+            await fetch(API_URL, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'set-task-day-move', taskId, dayIndex })
+            })
+        } catch {
+            setProgress(prev => {
+                const moves = { ...(prev.taskDayMoves ?? {}) }
+                delete moves[taskId]
+                return { ...prev, taskDayMoves: moves }
+            })
+        }
+    }, [])
+
     const saveOverviewSection = React.useCallback(async (sectionKey: string, value: { en: string, ru: string }) => {
         setProgress(prev => ({
             ...prev,
@@ -240,6 +261,8 @@ export function useProgress() {
         sources: { people: [], groups: [], companies: [], shortlist: [], competitors: [], countries: ['US', 'UK', 'Israel', 'Канада', 'Австралия', 'Германия', 'Индия', 'Нидерланды'], ...(progress.sources ?? {}) },
         weekInsights: progress.weekInsights ?? {},
         saveWeekInsights,
+        saveTaskDayMove,
+        taskDayMoves: progress.taskDayMoves ?? {},
         refetch: fetchProgress
     }
 }

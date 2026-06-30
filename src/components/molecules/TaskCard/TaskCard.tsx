@@ -13,6 +13,8 @@ import LightbulbOutlinedIcon from '@mui/icons-material/LightbulbOutlined'
 import WarningAmberRoundedIcon from '@mui/icons-material/WarningAmberRounded'
 import ChatBubbleOutlineRoundedIcon from '@mui/icons-material/ChatBubbleOutlineRounded'
 import Paper from '@mui/material/Paper'
+import Select from '@mui/material/Select'
+import MenuItem from '@mui/material/MenuItem'
 import AssigneeChip from '@/components/atoms/AssigneeChip/AssigneeChip'
 import type { TaskCardProps } from './TaskCard.types'
 import { styles } from './TaskCard.styles'
@@ -60,7 +62,7 @@ const CopyBlock = React.memo(function CopyBlock({ label, text }: { label: string
     )
 })
 
-const TaskCard = React.memo(function TaskCard({ task, isTaskCompleted, onToggleTask, onEditTask }: TaskCardProps) {
+const TaskCard = React.memo(function TaskCard({ task, isTaskCompleted, onToggleTask, onEditTask, currentDayIndex, allDays, onMoveTask }: TaskCardProps) {
     const [expanded, setExpanded] = React.useState(false)
 
     const taskCompleted = isTaskCompleted(task.id)
@@ -112,6 +114,22 @@ const TaskCard = React.memo(function TaskCard({ task, isTaskCompleted, onToggleT
                         {!expanded && (task.tip || task.warning) && (
                             <ChatBubbleOutlineRoundedIcon sx={{ fontSize: '0.85rem', color: task.warning ? 'warning.main' : 'info.main', ml: 0.5 }} />
                         )}
+                        {allDays && onMoveTask && (() => {
+                            const phases = [...new Set(allDays.map(d => d.phase))]
+                            const currentPhase = allDays.find(d => d.dayIndex === currentDayIndex)?.phase ?? phases[0]
+                            const daysInPhase = allDays.filter(d => d.phase === currentPhase)
+                            const selectSx = { fontSize: '0.7rem', height: 24, minWidth: 0, '& .MuiSelect-select': { py: 0, px: 0.75, fontSize: '0.7rem' }, '& .MuiOutlinedInput-notchedOutline': { borderColor: '#30363d' } }
+                            return (
+                                <Box sx={{ display: 'flex', gap: 0.5, ml: 0.5 }} onClick={e => e.stopPropagation()}>
+                                    <Select size="small" value={currentPhase} onChange={e => { const firstDay = allDays.find(d => d.phase === e.target.value); if (firstDay) onMoveTask(task.id, firstDay.dayIndex) }} sx={selectSx}>
+                                        {phases.map(p => <MenuItem key={p} value={p} sx={{ fontSize: '0.7rem' }}>{p}</MenuItem>)}
+                                    </Select>
+                                    <Select size="small" value={currentDayIndex ?? ''} onChange={e => onMoveTask(task.id, Number(e.target.value))} sx={selectSx}>
+                                        {daysInPhase.map(d => <MenuItem key={d.dayIndex} value={d.dayIndex} sx={{ fontSize: '0.7rem' }}>{d.dayLabel.split(', ')[1] || d.dayLabel}</MenuItem>)}
+                                    </Select>
+                                </Box>
+                            )
+                        })()}
                     </Box>
                 </Box>
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>

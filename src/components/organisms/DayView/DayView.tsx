@@ -23,7 +23,9 @@ const DayView = React.memo(function DayView({
     note,
     onNoteChange,
     overdueDays,
-    onGoToDay
+    onGoToDay,
+    allDays,
+    onMoveTask
 }: DayViewProps) {
     const debounceRef = React.useRef<ReturnType<typeof setTimeout> | null>(null)
     const [searchQuery, setSearchQuery] = React.useState('')
@@ -170,6 +172,9 @@ const DayView = React.memo(function DayView({
                         isTaskCompleted={isTaskCompleted}
                         onToggleTask={onToggleTask}
                         onEditTask={onEditTask}
+                        currentDayIndex={day.dayIndex}
+                        allDays={allDays}
+                        onMoveTask={onMoveTask}
                     />
                 ))}
                 {filteredTasks.length === 0 && day.tasks.length > 0 && (

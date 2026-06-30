@@ -17,4 +17,6 @@ export interface DayViewProps {
     onNoteChange: (note: string) => void
     overdueDays: OverdueDay[]
     onGoToDay: (dayIndex: number) => void
+    allDays?: CampaignDay[]
+    onMoveTask?: (taskId: string, dayIndex: number) => void
 }

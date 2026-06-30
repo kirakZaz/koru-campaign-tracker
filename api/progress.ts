@@ -68,6 +68,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             } else if (action === 'set-week-insights') {
                 if (!data.weekInsights) data.weekInsights = {}
                 data.weekInsights[req.body.phase as string] = req.body.insights
+            } else if (action === 'set-task-day-move') {
+                if (!data.taskDayMoves) data.taskDayMoves = {}
+                data.taskDayMoves[req.body.taskId as string] = req.body.dayIndex as number
             }
 
             await redis.set(PROGRESS_KEY, data)

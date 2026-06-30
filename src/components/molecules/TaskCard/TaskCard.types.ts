@@ -1,8 +1,11 @@
-import type { CampaignTask } from '@/data/campaignData.types'
+import type { CampaignTask, CampaignDay } from '@/data/campaignData.types'
 
 export interface TaskCardProps {
     task: CampaignTask
     isTaskCompleted: (taskId: string) => boolean
     onToggleTask: (taskId: string) => void
     onEditTask: (task: CampaignTask) => void
+    currentDayIndex?: number
+    allDays?: CampaignDay[]
+    onMoveTask?: (taskId: string, dayIndex: number) => void
 }

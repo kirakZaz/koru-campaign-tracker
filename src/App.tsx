@@ -58,7 +58,7 @@ function applyOverride(task: CampaignTask, override: TaskOverride | undefined): 
 }
 
 function App() {
-    const { progress, isLoading, error, toggleTask, setStartDate, setNote, isTaskCompleted, saveTaskOverride, getTaskOverride, saveTeam, saveSources, saveOverviewSection, overviewOverrides, sources, weekInsights, saveWeekInsights } = useProgress()
+    const { progress, isLoading, error, toggleTask, setStartDate, setNote, isTaskCompleted, saveTaskOverride, getTaskOverride, saveTeam, saveSources, saveOverviewSection, overviewOverrides, sources, weekInsights, saveWeekInsights, saveTaskDayMove, taskDayMoves } = useProgress()
     const [currentDayIndex, setCurrentDayIndexRaw] = React.useState(() => {
         const hash = window.location.hash.slice(1)
         if (hash) {
@@ -95,11 +95,27 @@ function App() {
     const isMobile = useMediaQuery(muiTheme.breakpoints.down('md'))
 
     const mergedDays = React.useMemo((): CampaignDay[] => {
+        // Collect all tasks, apply overrides
+        const allTasks = CAMPAIGN_DAYS.flatMap(day => day.tasks.map(task => ({ ...applyOverride(task, getTaskOverride(task.id)), _origDay: day.dayIndex })))
+        // Build moved tasks map: dayIndex → tasks moved TO this day
+        const movedToDay: Record<number, typeof allTasks> = {}
+        const movedTaskIds = new Set<string>()
+        for (const task of allTasks) {
+            const targetDay = taskDayMoves[task.id]
+            if (targetDay !== undefined && targetDay !== task._origDay) {
+                movedTaskIds.add(task.id)
+                if (!movedToDay[targetDay]) movedToDay[targetDay] = []
+                movedToDay[targetDay]!.push(task)
+            }
+        }
         return CAMPAIGN_DAYS.map((day) => ({
             ...day,
-            tasks: day.tasks.map((task) => applyOverride(task, getTaskOverride(task.id)))
+            tasks: [
+                ...day.tasks.filter(t => !movedTaskIds.has(t.id)).map(t => applyOverride(t, getTaskOverride(t.id))),
+                ...(movedToDay[day.dayIndex] ?? []).map(({ _origDay, ...t }) => t)
+            ]
         }))
-    }, [getTaskOverride])
+    }, [getTaskOverride, taskDayMoves])
 
     const overdueDays = React.useMemo((): OverdueDay[] => {
         if (!progress.startDate) {
@@ -311,6 +327,8 @@ function App() {
                         onNoteChange={handleNoteChange}
                         overdueDays={overdueDays}
                         onGoToDay={setCurrentDayIndex}
+                        allDays={mergedDays}
+                        onMoveTask={saveTaskDayMove}
                     />
                 )}
             </Box>
