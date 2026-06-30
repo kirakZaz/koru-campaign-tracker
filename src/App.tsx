@@ -275,6 +275,7 @@ function App() {
                     />
                 ) : (
                     <DayView
+                        key={currentDayIndex}
                         day={currentDay}
                         startDate={progress.startDate}
                         isTaskCompleted={isTaskCompleted}
