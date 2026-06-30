@@ -1,6 +1,6 @@
 export type Assignee = 'Кира' | 'Настя' | 'Макс' | 'Кира + Настя' | 'Кира + Макс' | 'Кира + Настя + Макс' | 'Настя → Кира'
 
-export type Phase = 'Story 0' | 'Week 1' | 'Week 2' | 'Week 3' | 'Week 4' | 'Week 5' | 'Week 6' | 'Week 7+'
+export type Phase = 'Story 0' | 'Week 1' | 'Week 2' | 'Week 3' | 'Week 4' | 'Week 5' | 'Week 6' | 'Week 7' | 'Week 8' | 'Post-launch'
 
 export type Priority = 'high' | 'medium' | 'low'
 

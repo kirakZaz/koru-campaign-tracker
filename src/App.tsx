@@ -30,7 +30,7 @@ export const SOURCES_INDEX = -200
 export const CREATIVES_INDEX = -300
 export const PLAYBOOK_INDEX = -400
 export const DASHBOARD_INDEX = -600
-export const INSIGHTS_PHASES = ['Story 0', 'Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Week 6', 'Week 7+'] as const
+export const INSIGHTS_PHASES = ['Story 0', 'Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Week 6', 'Week 7', 'Week 8'] as const
 export function getInsightsPhase(dayIndex: number): string | null {
     const idx = -501 - dayIndex
     if (idx < 0 || idx >= INSIGHTS_PHASES.length) return null
