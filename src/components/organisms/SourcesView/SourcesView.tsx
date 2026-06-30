@@ -535,16 +535,23 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
     }
 
     // Score and rank candidates for Outreach
+    const AI_KEYWORDS = /\b(ai|llm|geo|aeo|generative|ai.?seo|llm.?seo|ai.?search|machine learning|chatgpt|openai|gemini|perplexity|ai overview|answer engine|citation|agent readiness)\b/i
+    const STRONG_SEO_KEYWORDS = /\b(seo director|head of seo|vp seo|seo lead|seo manager|content strateg|digital marketing director|growth lead|head of content|head of growth)\b/i
+
     function candidateScore(p: SourcePerson): number {
         let score = 0
         // Priority: A=30, B=15, C=0
         score += p.priority === 'A' ? 30 : p.priority === 'B' ? 15 : 0
-        // Activity: high=20, medium=10, low=0
-        score += p.activityLevel === 'high' ? 20 : p.activityLevel === 'medium' ? 10 : 0
-        // Has notes (personalization possible): +15
-        if (p.notes && p.notes.trim().length > 10) score += 15
-        // Has LinkedIn URL: +10
-        if (p.linkedinUrl && p.linkedinUrl.includes('linkedin')) score += 10
+        // Activity: high=25, medium=10, low=-10 (penalty!)
+        score += p.activityLevel === 'high' ? 25 : p.activityLevel === 'medium' ? 10 : -10
+        // Title relevance: AI/GEO keywords = +25, strong SEO title = +10
+        const titleAndNotes = `${p.title || ''} ${p.notes || ''}`
+        if (AI_KEYWORDS.test(titleAndNotes)) score += 25
+        else if (STRONG_SEO_KEYWORDS.test(titleAndNotes)) score += 10
+        // Has notes (personalization possible): +10
+        if (p.notes && p.notes.trim().length > 10) score += 10
+        // Has LinkedIn URL: +5
+        if (p.linkedinUrl && p.linkedinUrl.includes('linkedin')) score += 5
         // ICP segment filled: +5
         if (p.icpSegment && p.icpSegment !== 'other') score += 5
         return score
