@@ -59,7 +59,33 @@ function applyOverride(task: CampaignTask, override: TaskOverride | undefined): 
 
 function App() {
     const { progress, isLoading, error, toggleTask, setStartDate, setNote, isTaskCompleted, saveTaskOverride, getTaskOverride, saveTeam, saveSources, saveOverviewSection, overviewOverrides, sources, weekInsights, saveWeekInsights } = useProgress()
-    const [currentDayIndex, setCurrentDayIndex] = React.useState(0)
+    const [currentDayIndex, setCurrentDayIndexRaw] = React.useState(() => {
+        const hash = window.location.hash.slice(1)
+        if (hash) {
+            const parsed = parseInt(hash, 10)
+            if (!isNaN(parsed)) return parsed
+        }
+        return 0
+    })
+
+    const setCurrentDayIndex = React.useCallback((idx: number | ((prev: number) => number)) => {
+        setCurrentDayIndexRaw((prev) => {
+            const next = typeof idx === 'function' ? idx(prev) : idx
+            window.location.hash = String(next)
+            return next
+        })
+    }, [])
+
+    // Sync with browser back/forward
+    React.useEffect(() => {
+        const onHashChange = () => {
+            const hash = window.location.hash.slice(1)
+            const parsed = parseInt(hash, 10)
+            if (!isNaN(parsed)) setCurrentDayIndexRaw(parsed)
+        }
+        window.addEventListener('hashchange', onHashChange)
+        return () => window.removeEventListener('hashchange', onHashChange)
+    }, [])
     const [settingsOpen, setSettingsOpen] = React.useState(false)
     const [mobileDrawerOpen, setMobileDrawerOpen] = React.useState(false)
     const [editingTask, setEditingTask] = React.useState<CampaignTask | null>(null)
@@ -101,7 +127,7 @@ function App() {
     }, [mergedDays, isTaskCompleted, progress.startDate])
 
     React.useEffect(() => {
-        if (!isLoading && progress.startDate) {
+        if (!isLoading && progress.startDate && !window.location.hash.slice(1)) {
             const todayIndex = getTodayDayIndex(progress.startDate, mergedDays)
             setCurrentDayIndex(todayIndex)
         }

@@ -425,7 +425,8 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
 
     // --- People ---
     const addPerson = () => {
-        const next = { ...local, people: [{ id: generateId(), name: '', linkedinUrl: '', country: '', icpSegment: 'freelancer' as IcpSegment, priority: 'B' as IcpPriority, activityLevel: 'medium' as const, source: '', status: 'new' as PersonStatus, notes: '', createdAt: new Date().toISOString() }, ...local.people] }
+        if (local.people.length > 0 && !local.people[0].name?.trim()) { setSnackbarMsg('Заполни имя в предыдущей строке'); return }
+        const next = { ...local, people: [{ id: generateId(), name: '', title: '', linkedinUrl: '', country: '', icpSegment: 'freelancer' as IcpSegment, priority: 'B' as IcpPriority, activityLevel: 'medium' as const, source: '', status: 'new' as PersonStatus, notes: '', createdAt: new Date().toISOString() }, ...local.people] }
         save(next)
     }
     const updatePerson = (id: string, patch: Partial<SourcePerson>) => {
@@ -445,6 +446,7 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
 
     // --- Groups ---
     const addGroup = () => {
+        if (local.groups.length > 0 && !local.groups[0].name?.trim()) { setSnackbarMsg('Заполни название в предыдущей строке'); return }
         const next = { ...local, groups: [{ id: generateId(), name: '', url: '', platform: 'LinkedIn', members: '', account: 'Кира' as AccountName, status: 'pending' as GroupStatus, priority: 0, activeMembers: ['', '', '', '', ''], notes: '' }, ...local.groups] }
         save(next)
     }
@@ -478,6 +480,7 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
         }
     }
     const addShortlistPerson = () => {
+        if (local.shortlist.length > 0 && !local.shortlist[0].name?.trim()) { setSnackbarMsg('Заполни имя в предыдущей строке'); return }
         const next = { ...local, shortlist: [{ id: generateId(), batch: nextBatch, name: '', linkedinUrl: '', priority: 'B' as IcpPriority, dmStatus: 'not_sent' as DmStatus, connectionStatus: 'not_sent' as ConnectionStatus, source: '', status: 'new' as PersonStatus, notes: '', actions: [] as ShortlistAction[], createdAt: new Date().toISOString() }, ...local.shortlist] }
         save(next)
     }
@@ -637,6 +640,7 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
 
     // --- Companies ---
     const addCompany = () => {
+        if (local.companies.length > 0 && !local.companies[0].name?.trim()) { setSnackbarMsg('Заполни название в предыдущей строке'); return }
         const next = { ...local, companies: [{ id: generateId(), name: '', website: '', segment: 'small_agency' as IcpSegment, size: '', contactPerson: '', status: 'research' as CompanyStatus, notes: '' }, ...local.companies] }
         save(next)
     }
@@ -651,6 +655,7 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
 
     // --- Competitors ---
     const addCompetitor = () => {
+        if (local.competitors.length > 0 && !local.competitors[0].name?.trim()) { setSnackbarMsg('Заполни название в предыдущей строке'); return }
         const next = { ...local, competitors: [{ id: generateId(), name: '', url: '', type: '', pricing: '', features: '', missingVsKoru: '', linkedinPerson: '', threatLevel: 'indirect' as CompetitorThreatLevel, notes: '' }, ...local.competitors] }
         save(next)
     }
@@ -1156,6 +1161,7 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
                                         />
                                     </TableCell>
                                     <SortHeader label="Имя" field="name" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
+                                    <SortHeader label="Должность" field="title" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
                                     <TableCell sx={headCellSx}>LinkedIn</TableCell>
                                     <SortHeader label="Страна" field="country" activeField={sortKey} direction={sortDir} onSort={toggleSort}>
                                         <IconButton size="small" onClick={(e) => { e.stopPropagation(); setCountriesDialogOpen(true) }} sx={{ color: 'text.secondary', p: 0 }}>
@@ -1174,7 +1180,7 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
                             <TableBody>
                                 {local.people.length === 0 && (
                                     <TableRow>
-                                        <TableCell colSpan={11} sx={{ ...cellSx, textAlign: 'center', color: 'text.secondary', py: 4 }}>
+                                        <TableCell colSpan={12} sx={{ ...cellSx, textAlign: 'center', color: 'text.secondary', py: 4 }}>
                                             Пока пусто. Нажми "Добавить" чтобы внести первый контакт.
                                         </TableCell>
                                     </TableRow>
@@ -1187,6 +1193,7 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
                                             }} />
                                         </TableCell>
                                         <TableCell sx={cellSx}><InlineInput value={p.name} onChange={v => updatePerson(p.id, { name: v })} placeholder="Имя" /></TableCell>
+                                        <TableCell sx={cellSx}><InlineInput value={p.title || ''} onChange={v => updatePerson(p.id, { title: v })} placeholder="Должность" /></TableCell>
                                         <TableCell sx={cellSx}>
                                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.25 }}>
                                                 <InlineInput value={p.linkedinUrl} onChange={v => updatePerson(p.id, { linkedinUrl: v })} placeholder="URL" />

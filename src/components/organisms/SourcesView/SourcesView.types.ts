@@ -8,6 +8,7 @@ export type AccountName = 'Кира' | 'Настя'
 export interface SourcePerson {
     id: string
     name: string
+    title: string
     linkedinUrl: string
     country: string
     icpSegment: IcpSegment

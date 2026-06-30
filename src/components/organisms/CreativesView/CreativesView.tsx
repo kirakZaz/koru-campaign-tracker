@@ -16,7 +16,7 @@ const sectionBox = {
 }
 
 const BRAND_COLORS = [
-    { name: 'Background', hex: '#FFFFF0', text: '#2E3633' },
+    { name: 'Background', hex: '#fbfbf3', text: '#2E3633' },
     { name: 'Surface', hex: '#f0ede8', text: '#2E3633' },
     { name: 'Green', hex: '#3FB68E', text: 'white' },
     { name: 'Brown', hex: '#B56B3F', text: 'white' },
@@ -56,7 +56,7 @@ function downloadCard(id: string, _filename: string) {
 // ── Visual card base styles ──
 // Palette: ivory bg, dark text, earthy accents
 const C = {
-    bg: '#FFFFF0',
+    bg: '#fbfbf3',
     surface: '#f0ede8',
     text: '#2E3633',
     muted: '#6b6b6b',
@@ -384,7 +384,7 @@ const POST_VISUALS: PostVisual[] = [
                         Intent-first keywords + briefs + tasks
                     </div>
                     <div style={{ marginTop: 24, padding: '10px 24px', backgroundColor: '#3fb68e', borderRadius: 8, display: 'inline-block' }}>
-                        <div style={{ fontSize: 14, fontWeight: 700, color: '#FFFFF0' }}>GEO score starts free</div>
+                        <div style={{ fontSize: 14, fontWeight: 700, color: '#fbfbf3' }}>GEO score starts free</div>
                     </div>
                     <div style={{ marginTop: 12, fontSize: 12, color: '#6b6b6b' }}>koru-seo.com</div>
                 </div>
