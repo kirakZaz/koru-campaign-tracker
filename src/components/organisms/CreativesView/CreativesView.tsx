@@ -217,31 +217,15 @@ const POST_VISUALS: PostVisual[] = [
     {
         id: 'post5',
         postNumber: 5,
-        title: 'Agent Readiness — 4 checks',
+        title: 'Agent Readiness — /llms.txt',
         card: (
-            <div id="card-post5" style={cardBase}>
-                <div style={{ textAlign: 'center', marginBottom: 32 }}>
-                    <div style={{ fontSize: 20, fontWeight: 800, color: '#2E3633' }}>Is your site agent-ready?</div>
-                    <div style={{ fontSize: 14, color: '#6b6b6b', marginTop: 4 }}>4 things AI agents look for in 2026</div>
-                </div>
-                {[
-                    { label: '/llms.txt', desc: 'Structured site summary for AI crawlers', icon: '1' },
-                    { label: 'text/markdown', desc: 'Can your server respond with clean markdown?', icon: '2' },
-                    { label: 'Content-Signal', desc: 'robots.txt: explicit AI permission', icon: '3' },
-                    { label: 'JSON-LD', desc: 'Structured data for page understanding', icon: '4' },
-                ].map((item) => (
-                    <div key={item.icon} style={{ display: 'flex', alignItems: 'flex-start', gap: 14, marginBottom: 18, width: '100%' }}>
-                        <div style={{ width: 36, height: 36, borderRadius: 10, backgroundColor: '#4a7fb522', color: '#4a7fb5', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 16, flexShrink: 0 }}>
-                            {item.icon}
-                        </div>
-                        <div>
-                            <div style={{ fontSize: 16, fontWeight: 700, color: '#2E3633', fontFamily: 'monospace' }}>{item.label}</div>
-                            <div style={{ fontSize: 13, color: '#6b6b6b' }}>{item.desc}</div>
-                        </div>
-                    </div>
-                ))}
-                <div style={{ marginTop: 24, padding: '10px 16px', backgroundColor: '#B5423F15', borderRadius: 8, border: '1px solid #B5423F33', textAlign: 'center', width: '100%' }}>
-                    <div style={{ fontSize: 14, color: '#B5423F', fontWeight: 600 }}>Most sites fail all four.</div>
+            <div id="card-post5" style={{ ...cardBase, justifyContent: 'center', minHeight: 400 }}>
+                <div style={{ textAlign: 'center' }}>
+                    <div style={{ fontSize: 13, fontWeight: 600, color: '#6b6b6b', letterSpacing: 2, textTransform: 'uppercase' as const, marginBottom: 32 }}>Quick test</div>
+                    <div style={{ fontFamily: 'monospace', fontSize: 28, fontWeight: 800, color: '#2E3633', lineHeight: 1.3 }}>yoursite.com<span style={{ color: '#4a7fb5' }}>/llms.txt</span></div>
+                    <div style={{ width: 60, height: 3, backgroundColor: '#B5423F', margin: '28px auto' }} />
+                    <div style={{ fontSize: 36, fontWeight: 900, color: '#B5423F', marginBottom: 8 }}>Got a 404?</div>
+                    <div style={{ fontSize: 16, color: '#6b6b6b', marginTop: 24 }}>Most sites do.</div>
                 </div>
             </div>
         ),
