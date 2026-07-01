@@ -1042,6 +1042,16 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
                             color="warning"
                             startIcon={<DeleteRoundedIcon sx={{ fontSize: '0.8rem' }} />}
                             onClick={() => {
+                                // Return to People with 'declined' status, at the bottom
+                                const personInPeople = local.people.find(p => (p.linkedinUrl && person.linkedinUrl && p.linkedinUrl.replace(/\/$/, '').toLowerCase() === person.linkedinUrl.replace(/\/$/, '').toLowerCase()) || (p.name && person.name && p.name.toLowerCase() === person.name.toLowerCase()))
+                                if (personInPeople) {
+                                    updatePerson(personInPeople.id, { status: 'declined' as PersonStatus })
+                                } else {
+                                    // Not in People yet — add at the bottom
+                                    const newPerson = { id: generateId(), name: person.name, title: '', linkedinUrl: person.linkedinUrl, country: person.country || '', icpSegment: person.icpSegment || 'other' as IcpSegment, priority: person.priority || 'C' as IcpPriority, activityLevel: 'low' as const, source: person.source || '', status: 'declined' as PersonStatus, notes: person.notes || '' }
+                                    const next = { ...local, people: [...local.people, newPerson] }
+                                    save(next)
+                                }
                                 deleteShortlistPerson(person.id)
                                 setModalPersonId(null)
                                 setHistoryInput('')
@@ -1057,7 +1067,7 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
                             startIcon={<DeleteRoundedIcon sx={{ fontSize: '0.8rem' }} />}
                             onClick={() => {
                                 deleteShortlistPerson(person.id)
-                                const personInPeople = local.people.find(p => p.name === person.name)
+                                const personInPeople = local.people.find(p => (p.linkedinUrl && person.linkedinUrl && p.linkedinUrl.replace(/\/$/, '').toLowerCase() === person.linkedinUrl.replace(/\/$/, '').toLowerCase()) || (p.name && person.name && p.name.toLowerCase() === person.name.toLowerCase()))
                                 if (personInPeople) deletePerson(personInPeople.id)
                                 setModalPersonId(null)
                                 setHistoryInput('')
