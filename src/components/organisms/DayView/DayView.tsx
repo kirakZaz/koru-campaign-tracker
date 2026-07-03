@@ -26,7 +26,10 @@ const DayView = React.memo(function DayView({
     onGoToDay,
     allDays,
     onMoveTask,
-    onSaveDayOverride
+    onSaveDayOverride,
+    onUpdateTask,
+    onDeleteTask,
+    onCreateTask
 }: DayViewProps) {
     const debounceRef = React.useRef<ReturnType<typeof setTimeout> | null>(null)
     const [searchQuery, setSearchQuery] = React.useState('')
@@ -192,12 +195,23 @@ const DayView = React.memo(function DayView({
                         currentDayIndex={day.dayIndex}
                         allDays={allDays}
                         onMoveTask={onMoveTask}
+                        onUpdateTask={onUpdateTask}
+                        onDeleteTask={onDeleteTask}
                     />
                 ))}
                 {filteredTasks.length === 0 && day.tasks.length > 0 && (
                     <Typography sx={{ color: 'text.secondary', fontSize: '0.85rem', py: 2 }}>
                         Нет задач по фильтру
                     </Typography>
+                )}
+                {onCreateTask && (
+                    <Button
+                        size="small"
+                        onClick={() => onCreateTask(day.dayIndex)}
+                        sx={{ textTransform: 'none', fontSize: '0.8rem', color: 'text.secondary', mt: 1, '&:hover': { color: 'primary.main' } }}
+                    >
+                        + Добавить задачу
+                    </Button>
                 )}
             </Box>
 

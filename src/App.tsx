@@ -42,7 +42,7 @@ export function getInsightsIndex(phaseIdx: number): number {
 
 
 function App() {
-    const { progress, isLoading, error, toggleTask, setStartDate, setNote, isTaskCompleted, saveTaskOverride, saveTeam, saveSources, saveOverviewSection, overviewOverrides, sources, weekInsights, saveWeekInsights, campaignState, moveTaskLive, updateDayLive } = useProgress()
+    const { progress, isLoading, error, toggleTask, setStartDate, setNote, isTaskCompleted, saveTaskOverride, saveTeam, saveSources, saveOverviewSection, overviewOverrides, sources, weekInsights, saveWeekInsights, campaignState, moveTaskLive, updateDayLive, updateTaskLive, deleteTaskLive, createTaskLive } = useProgress()
     const [currentDayIndex, setCurrentDayIndexRaw] = React.useState(() => {
         const hash = window.location.hash.slice(1)
         if (hash) {
@@ -304,6 +304,16 @@ function App() {
                         }}
                         onSaveDayOverride={(dayIndex: number, override: { title?: string, summary?: string }) => {
                             updateDayLive(dayIndex, override)
+                        }}
+                        onUpdateTask={(taskId: string, patch: any) => updateTaskLive(taskId, patch)}
+                        onDeleteTask={(taskId: string) => deleteTaskLive(taskId)}
+                        onCreateTask={(dayIndex: number) => {
+                            const id = `custom-${Date.now()}`
+                            createTaskLive(dayIndex, {
+                                id, title: 'Новая задача', description: '', steps: [], subtasks: [],
+                                assignee: 'Кира' as any, estimate: '', priority: 'medium' as any, tags: [],
+                                completed: false, _edited: true
+                            })
                         }}
                     />
                 )}

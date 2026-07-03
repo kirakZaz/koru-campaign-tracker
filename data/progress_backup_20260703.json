@@ -1,0 +1,2408 @@
+{
+  "completedTasks": {
+    "014-st1": true,
+    "004": true,
+    "005": true,
+    "001-st1": true,
+    "001-st2": true,
+    "002-st1": true,
+    "002-st3": true,
+    "003-st2": true,
+    "003": true,
+    "002": true,
+    "001": true,
+    "009-st1": true,
+    "009": true,
+    "006-st1": true,
+    "006-st2": true,
+    "006": true,
+    "007": true,
+    "008": true,
+    "012-st1": true,
+    "012-st4": true,
+    "012-st3": true,
+    "012-st5": true,
+    "012-st6": true,
+    "012": true,
+    "013": true,
+    "010-st1": true,
+    "010-st2": true,
+    "019": true,
+    "010": true,
+    "017b": true,
+    "011": true,
+    "009b": true,
+    "009c": true,
+    "014": true,
+    "016": true,
+    "016b": true,
+    "017c-st1": true,
+    "015": true,
+    "017c-st2": true,
+    "017c": true,
+    "020t-st1": true,
+    "020t": true,
+    "020": true,
+    "020b": true,
+    "020c-st1": true,
+    "023-st1": true,
+    "023": true,
+    "020c-st2": true,
+    "020c": true,
+    "026": true,
+    "028": true,
+    "029": true,
+    "026t": true,
+    "026b": true,
+    "028b": true,
+    "017": true,
+    "033": true,
+    "048": true,
+    "noa-1": true,
+    "noa-2": true,
+    "mx-w2-sun": true,
+    "025": true,
+    "028b-st2": true,
+    "030": true,
+    "030c": true,
+    "032": true,
+    "030d": true,
+    "035-st1": true,
+    "035": true,
+    "036-st1": true,
+    "036": true,
+    "036t-st1": true,
+    "036t": true,
+    "n-w2-1": true,
+    "n-w2-2": true,
+    "noa-3": true,
+    "noa-3-st1": true,
+    "noa-3-st2": true,
+    "041-st1": true,
+    "041": true
+  },
+  "startDate": "2026-06-22",
+  "notes": {
+    "0": "2 часа работы =настройка + 1,2 done .\n",
+    "5": "MozCon: выташила \nBrightonSEO:вытащила \nSMX: делаю",
+    "6": "",
+    "7": "",
+    "8": "",
+    "1001": "",
+    "-3": "",
+    "-2": ""
+  },
+  "taskOverrides": {
+    "003": {
+      "title": "003. Кира: Создать Twitter/X аккаунт",
+      "description": "Зачем: SEO-сообщество активно в Twitter. Второй канал.",
+      "steps": [
+        "Sign up: https://x.com",
+        "Bio: см. ниже",
+        "Подписаться на 20-30 SEO-людей — поиск: https://x.com/search?q=SEO%20consultant&f=user",
+        "Ключевые: Lily Ray, Aleyda Solis, John Mueller, Barry Schwartz, Kevin Indig",
+        "НЕ постить пока — неделя listening"
+      ],
+      "subtasks": [
+        {
+          "id": "003-st1",
+          "text": "Аккаунт создан"
+        },
+        {
+          "id": "003-st2",
+          "text": "Подписки 20-30"
+        }
+      ],
+      "assignee": "Кира",
+      "estimate": "30 мин",
+      "tip": "https://x.com/home\n\nEmail: kira@koru-seo.com\nuserName: kira__za   \nps: NvzKoru!123"
+    },
+    "009": {
+      "title": "009. Кира: LinkedIn Company Page (soft stealth)",
+      "description": "Зачем: Stealth = скрытный режим. Страница компании есть, но без деталей продукта. Доверие без раскрытия.",
+      "steps": [
+        "KORU | Software Development | 2-10",
+        "About: \"Rethinking how SEO professionals do keyword research. Launching 2026.\"",
+        "НЕ добавлять KORU в Experience пока"
+      ],
+      "subtasks": [
+        {
+          "id": "009-st1",
+          "text": "Company Page создана"
+        }
+      ],
+      "assignee": "Кира",
+      "estimate": "45 мин",
+      "tip": "https://www.linkedin.com/company/131113928/admin/dashboard/"
+    },
+    "009b": {
+      "title": "009b. Макс: Google Analytics + UTM tracking",
+      "description": "Зачем: Без аналитики не узнаем сколько людей приходят с постов на landing. GA4 (Google Analytics 4) — бесплатный сервис от Google, показывает кто заходит на сайт, откуда и что делает. UTM — это специальные метки в ссылках (например ?utm_source=linkedin&utm_campaign=post1), по которым GA4 понимает из какого именно поста пришёл человек. Goals — это целевые действия которые мы хотим отслеживать (подписка на email, клик на кнопку).\n\n\nNOT RELEVANT FOR NOW. Jira ticket: https://koru-seo-team.atlassian.net/browse/KORU-259",
+      "steps": [
+        "GA4: зарегистрироваться на https://analytics.google.com/ → создать property для koru-seo.com → вставить tracking код на сайт",
+        "UTM: создать шаблон ссылок. Пример: koru-seo.com?utm_source=linkedin&utm_medium=post&utm_campaign=post1. Для каждого поста менять utm_campaign",
+        "UTM генератор: https://ga-dev-tools.google/campaign-url-builder/",
+        "Goals: в GA4 → Admin → Events → создать events: \"email_signup\" (когда кто-то подписывается) и \"page_view\" (просмотры)",
+        "Проверить: открыть landing с UTM-ссылкой → зайти в GA4 Realtime → убедиться что визит виден"
+      ],
+      "subtasks": [
+        {
+          "id": "009b-st1",
+          "text": "GA4 установлен"
+        },
+        {
+          "id": "009b-st2",
+          "text": "UTM шаблоны"
+        },
+        {
+          "id": "009b-st3",
+          "text": "Goals настроены"
+        }
+      ],
+      "assignee": "Макс",
+      "estimate": "1.5 часа"
+    },
+    "009c": {
+      "title": "009c. Макс: Email capture настройка (Mailchimp/ConvertKit)",
+      "description": "Зачем: Landing page собирает emails. Mailchimp и ConvertKit — сервисы email-рассылок. Хранят список подписчиков и позволяют отправлять красивые письма всем сразу.\n\nNOT RELEVANT FOR NOW. Jira ticket: https://koru-seo-team.atlassian.net/browse/KORU-260",
+      "steps": [
+        "Выбрать сервис (Mailchimp или ConvertKit)",
+        "Создать list \"KORU Early Access\"",
+        "Интегрировать с landing page формой",
+        "Тестовый signup"
+      ],
+      "subtasks": [
+        {
+          "id": "009c-st1",
+          "text": "Сервис выбран"
+        },
+        {
+          "id": "009c-st2",
+          "text": "Интеграция работает"
+        }
+      ],
+      "assignee": "Макс",
+      "estimate": "1 час"
+    },
+    "025": {
+      "title": "025. Кира: Найти 10-15 жалоб на keyword research + AI search pain",
+      "description": "Зайти в LinkedIn, Twitter, Reddit. Найти посты где люди жалуются на: ручной keyword research, дорогие подписки, AI Overviews убивающие клики, непонимание как оптимизировать для AI search. Скопировать цитаты. Материал для постов и landing page.",
+      "steps": [
+        "V LinkedIn: \"keyword research\" + \"manual\": https://www.linkedin.com/search/results/content/?keywords=%22keyword%20research%22%20%22manual%22",
+        "LinkedIn: \"AI Overviews\" + \"CTR\" OR \"clicks\": https://www.linkedin.com/search/results/content/?keywords=%22AI%20Overviews%22%20%22CTR%22",
+        "Twitter: #SEOtools complaints + AI search: https://x.com/search?q=%23SEO%20%22AI%20overview%22&src=typed_query",
+        "Reddit r/SEO \"AI overview\" OR \"zero click\": https://www.reddit.com/r/SEO/search/?q=%22AI%20overview%22%20OR%20%22zero%20click%22",
+        "Reddit r/bigseo: https://www.reddit.com/r/bigseo/search/?q=AI%20overview%20OR%20GEO",
+        "Записать 10-15 цитат с источником (mix: старые боли + AI search боли)"
+      ],
+      "subtasks": [
+        {
+          "id": "025-st1",
+          "text": "10-15 цитат"
+        }
+      ],
+      "assignee": "Кира",
+      "estimate": "1.5 часа"
+    },
+    "017": {
+      "title": "017. Настя: ДЕНЬ 1/3 — LinkedIn search (цель: 40 людей)",
+      "description": "День 1 из 3. Только research. Все LinkedIn запросы. Добавить в Sources → Люди. Цель: 40 человек.",
+      "steps": [
+        "\"SEO consultant\" AND \"freelance\": https://www.linkedin.com/search/results/people/?keywords=%22SEO%20consultant%22%20%22freelance%22",
+        "\"SEO agency\" AND \"founder\": https://www.linkedin.com/search/results/people/?keywords=%22SEO%20agency%22%20%22founder%22",
+        "\"Head of SEO\": https://www.linkedin.com/search/results/people/?keywords=%22Head%20of%20SEO%22",
+        "\"SEO manager\" AND \"agency\": https://www.linkedin.com/search/results/people/?keywords=%22SEO%20manager%22%20%22agency%22",
+        "\"SEO strategist\": https://www.linkedin.com/search/results/people/?keywords=%22SEO%20strategist%22",
+        "\"SEO analyst\" AND \"senior\": https://www.linkedin.com/search/results/people/?keywords=%22SEO%20analyst%22%20%22senior%22",
+        "Из каждого: пролистать 20-30 → выбрать 5-7 лучших → Sources → Люди",
+        "Проверить Dashboard → цель 40 людей"
+      ],
+      "subtasks": [
+        {
+          "id": "017-st1",
+          "text": "40 людей в базе"
+        }
+      ],
+      "assignee": "Настя",
+      "estimate": "2-3 часа"
+    },
+    "043d": {
+      "title": "043d. Макс: LinkedIn Company Page — оформление + первый контент",
+      "description": "LinkedIn Company Page: добавить лого, баннер, обновить About с building in public messaging. Репостнуть пост от имени компании. Подписаться на 10-15 SEO-компаний.",
+      "steps": [
+        "Добавить logo (тёмная тема, #3fb68e)",
+        "Banner в стиле landing page",
+        "Обновить About: building in public messaging",
+        "Репост поста от имени компании",
+        "Подписаться на 10-15 SEO-компаний"
+      ],
+      "subtasks": [
+        {
+          "id": "043d-st1",
+          "text": "Logo + banner"
+        },
+        {
+          "id": "043d-st2",
+          "text": "About обновлён"
+        },
+        {
+          "id": "043d-st3",
+          "text": "Первый репост"
+        }
+      ],
+      "assignee": "Кира",
+      "estimate": "1.5 часа"
+    },
+    "040": {
+      "title": "040. Кира: Пост 6 + ПЕРВЫЙ landing link + 2ч engagement",
+      "description": "Зачем: \"Building something.\" ВПЕРВЫЕ landing link в комментарии. Funnel (воронка) запущена: пост → клик на ссылку → landing → email signup.",
+      "steps": [
+        "Creatives → Post 6 → скриншот карточки (84% earned media)",
+        "Пост 6 LinkedIn + Twitter + прикрепить картинку",
+        "Расшарить в 3-5 LinkedIn групп",
+        "СРАЗУ первый коммент: \"koru-seo.com\"",
+        "2ч engagement",
+        "ПРАВИЛО: с этого момента КАЖДЫЙ пост = landing link"
+      ],
+      "subtasks": [
+        {
+          "id": "040-st1",
+          "text": "Пост"
+        },
+        {
+          "id": "040-st2",
+          "text": "Landing link в комменте"
+        },
+        {
+          "id": "040-st3",
+          "text": "Engagement"
+        }
+      ],
+      "assignee": "Кира",
+      "estimate": "2.5 часа",
+      "warning": "С этого поста КАЖДЫЙ пост = landing link в комментарии."
+    },
+    "050": {
+      "title": "050. Кира: Пост 9 (full pipeline) + 2ч engagement",
+      "description": "Пост 9: полный pipeline KORU с AI-search layer. Картинка: Creatives → Post 9.",
+      "steps": [
+        "Creatives → Post 9 → скриншот карточки",
+        "Пост 9 LinkedIn + прикрепить картинку + landing link",
+        "Расшарить в 3-5 LinkedIn групп",
+        "2ч engagement + DMs"
+      ],
+      "subtasks": [
+        {
+          "id": "050-st1",
+          "text": "Пост 9 + engagement"
+        }
+      ],
+      "assignee": "Кира",
+      "estimate": "3 часа"
+    }
+  },
+  "team": [
+    {
+      "name": "Кира",
+      "assigneeKey": "Кира",
+      "email": "kirka.zaz@gmail.com",
+      "timezone": "Australia/Sydney",
+      "reminderTime": "11:00",
+      "remindersEnabled": true
+    },
+    {
+      "name": "Настя",
+      "assigneeKey": "Настя",
+      "email": "ad.ak091988@gmail.com",
+      "timezone": "Europe/Lisbon",
+      "reminderTime": "12:00",
+      "remindersEnabled": true
+    },
+    {
+      "name": "Макс",
+      "assigneeKey": "Макс",
+      "email": "max@koru-seo.com",
+      "timezone": "Asia/Jerusalem",
+      "reminderTime": "12:00",
+      "remindersEnabled": true
+    }
+  ],
+  "sources": {
+    "people": [
+      {
+        "id": "mr1x85v0w5ceb",
+        "name": "Noa Vernick",
+        "title": "",
+        "linkedinUrl": "https://www.linkedin.com/in/noa-vernick-b82494203/",
+        "country": "US",
+        "icpSegment": "in_house",
+        "priority": "A",
+        "activityLevel": "medium",
+        "source": "",
+        "status": "new",
+        "notes": "",
+        "createdAt": "2026-07-01T10:16:47.532Z"
+      },
+      {
+        "id": "mr18ma0g69aps",
+        "name": "Aleyda Solís",
+        "title": "SEO & AI Search Consultant & Founder Orainti",
+        "linkedinUrl": "https://www.linkedin.com/in/aleyda/",
+        "country": "",
+        "icpSegment": "small_agency",
+        "priority": "B",
+        "activityLevel": "high",
+        "source": "",
+        "status": "new",
+        "notes": "Exceeds all Priority A criteria",
+        "createdAt": "2026-06-30T22:47:55.696Z"
+      },
+      {
+        "id": "mr17y4u1bo2ji",
+        "name": "Cindy Krum",
+        "title": "Founder & CEO of MobileMoxie Inc",
+        "linkedinUrl": "https://www.linkedin.com/in/cindykrum/",
+        "country": "US",
+        "icpSegment": "small_agency",
+        "priority": "A",
+        "activityLevel": "high",
+        "source": "brightonseobrightonseo",
+        "status": "new",
+        "notes": "US agency founder",
+        "createdAt": "2026-06-30T22:29:09.241Z"
+      },
+      {
+        "id": "mr17x4t4iey96",
+        "name": "Lily Ray",
+        "title": "Founder of Algorythmic | VP SEO & AI Search at Amsive",
+        "linkedinUrl": "https://www.linkedin.com/in/lily-ray-44755615/",
+        "country": "US",
+        "icpSegment": "small_agency",
+        "priority": "A",
+        "activityLevel": "high",
+        "source": "brightonseobrightonseo",
+        "status": "new",
+        "notes": "US-based SEO/AI search consultant",
+        "createdAt": "2026-06-30T22:28:22.552Z"
+      },
+      {
+        "id": "mr17qzh14re6e",
+        "name": "Wil Reynolds",
+        "title": "Founder / co-CEO / VP Innovation at Seer Interactive",
+        "linkedinUrl": "https://www.linkedin.com/in/wilreynolds/",
+        "country": "US",
+        "icpSegment": "small_agency",
+        "priority": "A",
+        "activityLevel": "high",
+        "source": "brightonseobrightonseo",
+        "status": "new",
+        "notes": "US agency founder posts weekly about AI/GEO optimization with 43K+ followers and deep expertise in search strategy",
+        "createdAt": "2026-06-30T22:23:35.701Z"
+      },
+      {
+        "id": "mr17mlqnf9clc",
+        "name": "Rand Fishkin",
+        "title": "Founder of SparkToro & Alertmouse",
+        "linkedinUrl": "https://www.linkedin.com/in/randfishkin/",
+        "country": "US",
+        "icpSegment": "small_agency",
+        "priority": "A",
+        "activityLevel": "high",
+        "source": "brightonseobrightonseo",
+        "status": "new",
+        "notes": "US founder",
+        "createdAt": "2026-06-30T22:20:11.279Z"
+      },
+      {
+        "id": "mr17f88owjeel",
+        "name": "Ross Hudgens",
+        "title": "CEO Siege",
+        "linkedinUrl": "https://www.linkedin.com/in/rosshudgens/",
+        "country": "US",
+        "icpSegment": "small_agency",
+        "priority": "A",
+        "activityLevel": "high",
+        "source": "brightonseobrightonseo",
+        "status": "new",
+        "notes": "",
+        "createdAt": "2026-06-30T22:14:27.192Z"
+      },
+      {
+        "id": "mr176yt92khbo",
+        "name": "Patrick Stox",
+        "title": "SEO Consultant / Freelancer",
+        "linkedinUrl": "https://www.linkedin.com/in/patrickstox/",
+        "country": "US",
+        "icpSegment": "freelancer",
+        "priority": "A",
+        "activityLevel": "medium",
+        "source": "brightonseobrightonseo",
+        "status": "new",
+        "notes": "US freelance SEO consultant with 15K+ followers posts weekly on AI search/Programmatic SEO/GEO topics with high engagement",
+        "createdAt": "2026-06-30T22:08:01.725Z"
+      },
+      {
+        "id": "mr176r7qyruvl",
+        "name": "John Shehata",
+        "title": "CEO Founder of NewzDash and GDdash",
+        "linkedinUrl": "https://www.linkedin.com/in/johnshehata/",
+        "country": "US",
+        "icpSegment": "small_agency",
+        "priority": "A",
+        "activityLevel": "medium",
+        "source": "brightonseo",
+        "status": "new",
+        "notes": "US agency founder posts weekly about AI Overviews and News SEO with 10.8K followers and active engagement",
+        "createdAt": "2026-06-30T22:07:51.878Z"
+      },
+      {
+        "id": "mr1709gpvozd0",
+        "name": "Ruth Burr Reedy",
+        "title": "Director SEO Solutions",
+        "linkedinUrl": "https://www.linkedin.com/in/ruthburr/",
+        "country": "US",
+        "icpSegment": "in_house",
+        "priority": "A",
+        "activityLevel": "high",
+        "source": "brightonseo",
+        "status": "new",
+        "notes": "Located in US, Director role at Microsoft, posts about AI search and AI citations, 2700+ followers, posts weekly with recent engagement.",
+        "createdAt": "2026-06-30T22:02:48.937Z"
+      },
+      {
+        "id": "mr1628dqjqxp2",
+        "name": "Fili Wiese",
+        "title": "Ex-Google Engineer & SEO Consultant",
+        "linkedinUrl": "https://www.linkedin.com/in/filiwiese/",
+        "country": "Германия",
+        "icpSegment": "freelancer",
+        "priority": "A",
+        "activityLevel": "medium",
+        "source": "brightonseo",
+        "status": "new",
+        "notes": "Specialized in technical SEO and Google algorithms",
+        "createdAt": "2026-06-30T21:36:21.230Z"
+      },
+      {
+        "id": "mr0gy3dviw809",
+        "name": "Sergey Lucktinov",
+        "title": "CEO and Founder",
+        "linkedinUrl": "https://www.linkedin.com/in/sergeylucktinov/",
+        "country": "US",
+        "icpSegment": "other",
+        "priority": "B",
+        "activityLevel": "medium",
+        "source": "comments",
+        "status": "dm_sent",
+        "notes": "Author: “Semantic SEO, SRO & AI”  | Semantic SEO, GEO & SRO Strategist | AI Visibility Systems Architect",
+        "createdAt": "2026-06-30T09:53:17.731Z"
+      },
+      {
+        "id": "mr0btop7x45gh",
+        "name": "Ahmad Hassan",
+        "linkedinUrl": "https://www.linkedin.com/in/ahmad-hassanah/",
+        "country": "Pakistan",
+        "icpSegment": "other",
+        "priority": "C",
+        "activityLevel": "high",
+        "source": "",
+        "status": "new",
+        "notes": "",
+        "createdAt": "2026-06-30T07:29:53.995Z"
+      },
+      {
+        "id": "mr06lldxbrgni",
+        "name": "Mani Mann",
+        "linkedinUrl": "https://www.linkedin.com/in/mani-seo-expert/",
+        "country": "UK",
+        "icpSegment": "in_house",
+        "priority": "A",
+        "activityLevel": "high",
+        "source": "comments",
+        "status": "new",
+        "notes": "",
+        "createdAt": "2026-06-30T05:03:38.373Z"
+      },
+      {
+        "id": "mqzr96a72j9aq",
+        "name": "Debbie Chew",
+        "linkedinUrl": "https://www.linkedin.com/in/debbiechew/",
+        "country": "US",
+        "icpSegment": "freelancer",
+        "priority": "C",
+        "activityLevel": "medium",
+        "source": "Moz",
+        "status": "new",
+        "notes": "SEO & Digital PR Consultant; 3505 followers; Posts on SEO",
+        "createdAt": "2026-06-29T21:54:04.687Z"
+      },
+      {
+        "id": "mqzr8yeex1kxs",
+        "name": "Michael King",
+        "linkedinUrl": "https://www.linkedin.com/in/michaelkingphilly/",
+        "country": "US",
+        "icpSegment": "small_agency",
+        "priority": "B",
+        "activityLevel": "medium",
+        "source": "Moz",
+        "status": "new",
+        "notes": "Founder iPullRank; 40983 followers; Writes extensively on AI Search",
+        "createdAt": "2026-06-29T21:53:54.470Z"
+      },
+      {
+        "id": "mqzr8rbik9pob",
+        "name": "Eric Siu",
+        "linkedinUrl": "https://www.linkedin.com/in/ericosiu/",
+        "country": "US",
+        "icpSegment": "small_agency",
+        "priority": "B",
+        "activityLevel": "medium",
+        "source": "Moz",
+        "status": "new",
+        "notes": "Founder Single Grain",
+        "createdAt": "2026-06-29T21:53:45.294Z"
+      },
+      {
+        "id": "mqzqmrmubwvtk",
+        "name": "Crystal Carter",
+        "linkedinUrl": "https://www.linkedin.com/in/crystal-carter-digital/",
+        "country": "UK",
+        "icpSegment": "in_house",
+        "priority": "A",
+        "activityLevel": "high",
+        "source": "Moz",
+        "status": "new",
+        "notes": "Head of AI Search & SEO Communications at Wix",
+        "createdAt": "2026-06-29T21:36:39.270Z"
+      },
+      {
+        "id": "mqzqmk1q3bbbm",
+        "name": "Ken Albrecht",
+        "linkedinUrl": "https://www.linkedin.com/in/kenalbrecht/",
+        "country": "US",
+        "icpSegment": "small_agency",
+        "priority": "A",
+        "activityLevel": "medium",
+        "source": "LinkedIn Search",
+        "status": "new",
+        "notes": "Plano Texas Reputation & Authority Marketing",
+        "createdAt": "2026-06-29T21:36:29.438Z"
+      },
+      {
+        "id": "mqwbauicu8gip",
+        "name": "Mark Williams-Cook",
+        "linkedinUrl": "https://www.linkedin.com/in/markseo/",
+        "country": "UK",
+        "icpSegment": "small_agency",
+        "priority": "A",
+        "activityLevel": "high",
+        "source": "comment",
+        "status": "new",
+        "notes": "SEO & AI-search professional, agency director and SaaS founder.",
+        "createdAt": "2026-06-27T12:04:10.356Z"
+      },
+      {
+        "id": "mqwb487jlcxsk",
+        "name": "Michael Vale",
+        "linkedinUrl": "https://www.linkedin.com/in/immichaelvale/",
+        "country": "US",
+        "icpSegment": "small_agency",
+        "priority": "A",
+        "activityLevel": "high",
+        "source": "comment",
+        "status": "new",
+        "notes": "Founder of Eclipse Marketing | AI SEO",
+        "createdAt": "2026-06-27T11:59:01.519Z"
+      },
+      {
+        "id": "mqutn8ezui2pg",
+        "name": "Samy Thuillier",
+        "linkedinUrl": "https://www.linkedin.com/in/samythuillier/",
+        "country": "portugal",
+        "icpSegment": "small_agency",
+        "priority": "C",
+        "activityLevel": "medium",
+        "source": "Co-Founer SHILA AI-powered SEO",
+        "status": "new",
+        "notes": "Co-Founer SHILA AI-powered SEO"
+      },
+      {
+        "id": "mqutmx841soz1",
+        "name": "Cristina Kent",
+        "linkedinUrl": "https://www.linkedin.com/in/cristinakent/",
+        "country": "US",
+        "icpSegment": "small_agency",
+        "priority": "C",
+        "activityLevel": "medium",
+        "source": "Founder Just Another SEO",
+        "status": "new",
+        "notes": "Manhattan Beach Audience Growth focus not pure SEO"
+      },
+      {
+        "id": "mqutmqlhqae2n",
+        "name": "Manny Lopez",
+        "linkedinUrl": "https://www.linkedin.com/in/mannylopezsbba/",
+        "country": "US",
+        "icpSegment": "small_agency",
+        "priority": "A",
+        "activityLevel": "medium",
+        "source": "Founder SEO Brand Builder Agency",
+        "status": "new",
+        "notes": "Miami-Fort Lauderdale Area"
+      },
+      {
+        "id": "mqutmk2ptilla",
+        "name": "Joshua Kerr",
+        "linkedinUrl": "https://www.linkedin.com/in/joshua-kerr-0574016a/",
+        "country": "US",
+        "icpSegment": "small_agency",
+        "priority": "A",
+        "activityLevel": "medium",
+        "source": "Founder Tekafari Media & Tekafari SEO Agency",
+        "status": "new",
+        "notes": "Greater Duluth Area"
+      },
+      {
+        "id": "mqutmfga5n1c6",
+        "name": "Flavio Amiel",
+        "linkedinUrl": "https://www.linkedin.com/in/flavioamiel/en/",
+        "country": "portugal",
+        "icpSegment": "small_agency",
+        "priority": "C",
+        "activityLevel": "medium",
+        "source": "Founder SWAT SEO Agency",
+        "status": "new",
+        "notes": "Porto Portugal non-approved EU location 5K followers"
+      },
+      {
+        "id": "mqutmatoohxb7",
+        "name": "Leighton E.",
+        "linkedinUrl": "https://www.linkedin.com/in/leighton-e-274641b6/",
+        "country": "portugal",
+        "icpSegment": "small_agency",
+        "priority": "C",
+        "activityLevel": "medium",
+        "source": "Co-Founder Mamba SEO Agency",
+        "status": "new",
+        "notes": "Lisbon Portugal non-approved EU location"
+      },
+      {
+        "id": "mqutm577ist6w",
+        "name": "Kevin Dunn",
+        "linkedinUrl": "https://www.linkedin.com/in/kevin-andrew-dunn/",
+        "country": "UK",
+        "icpSegment": "small_agency",
+        "priority": "B",
+        "activityLevel": "low",
+        "source": "CEO Founder Owner UK Digital Marketing SEO Agency",
+        "status": "new",
+        "notes": "Greater Bristol Area Multi Award-Winning"
+      },
+      {
+        "id": "mqtu2i7b0hqns",
+        "name": "Kai Cromwell (eCommerce SEO)",
+        "linkedinUrl": "https://www.linkedin.com/in/kai-cromwell/",
+        "country": "US",
+        "icpSegment": "small_agency",
+        "priority": "A",
+        "activityLevel": "high",
+        "source": "Founder New Seas Shopify SEO Agency",
+        "status": "new",
+        "notes": "Santa Monica California 14K followers"
+      },
+      {
+        "id": "mqtu2cyxg3tp7",
+        "name": "Shamil Shamilov",
+        "linkedinUrl": "https://www.linkedin.com/in/shamil-shamilov/",
+        "country": "Канада",
+        "icpSegment": "small_agency",
+        "priority": "A",
+        "activityLevel": "medium",
+        "source": "Founder dNOVO Group Digital Marketing",
+        "status": "new",
+        "notes": "Greater Toronto Area Canada 7K followers"
+      },
+      {
+        "id": "mqtu27qn683fb",
+        "name": "Ryan L.",
+        "linkedinUrl": "https://www.linkedin.com/in/ryanatkofa/",
+        "country": "Канада",
+        "icpSegment": "small_agency",
+        "priority": "A",
+        "activityLevel": "medium",
+        "source": "",
+        "status": "new",
+        "notes": "British Columbia Canada"
+      },
+      {
+        "id": "mqtu22ibug9vk",
+        "name": "Irene Tay",
+        "linkedinUrl": "https://www.linkedin.com/in/sydneymaestroseo/",
+        "country": "Австралия",
+        "icpSegment": "small_agency",
+        "priority": "A",
+        "activityLevel": "medium",
+        "source": "Founder Sydney Maestro SEO Agency",
+        "status": "new",
+        "notes": "Greater Sydney Area"
+      },
+      {
+        "id": "mqtu1wwtucyul",
+        "name": "Vadim Litvak",
+        "linkedinUrl": "https://www.linkedin.com/in/vadimlitvak/",
+        "country": "Канада",
+        "icpSegment": "small_agency",
+        "priority": "A",
+        "activityLevel": "medium",
+        "source": "Founder Verticality AI Visibility",
+        "status": "new",
+        "notes": "Toronto Canada verified"
+      },
+      {
+        "id": "mqtu1rs627k64",
+        "name": "Eyal Dorfman",
+        "linkedinUrl": "https://www.linkedin.com/in/eyal-dorfman/",
+        "country": "Israel",
+        "icpSegment": "small_agency",
+        "priority": "B",
+        "activityLevel": "medium",
+        "source": "Founder E.D Marketing Agency",
+        "status": "new",
+        "notes": "Israel location Sales & Business Development focus"
+      },
+      {
+        "id": "mqttjr7v5aww3",
+        "name": "Caleb Harward",
+        "linkedinUrl": "https://www.linkedin.com/in/caleb-harward/",
+        "country": "Австралия",
+        "icpSegment": "small_agency",
+        "priority": "A",
+        "activityLevel": "medium",
+        "source": "Founder StudioBetter SEO",
+        "status": "new",
+        "notes": "Victoria Collingwood"
+      },
+      {
+        "id": "mqttjmtbu5ndn",
+        "name": "Lynn Patchett",
+        "linkedinUrl": "https://www.linkedin.com/in/lynnpatchett/",
+        "country": "Greece",
+        "icpSegment": "small_agency",
+        "priority": "C",
+        "activityLevel": "medium",
+        "source": "Founder Kollective Hotel Digital",
+        "status": "new",
+        "notes": "Greece non-approved location"
+      },
+      {
+        "id": "mqttjhk8ktoy6",
+        "name": "Sharleen Ndlovu",
+        "linkedinUrl": "https://www.linkedin.com/in/sharleen-seo-jetleadsagency/",
+        "country": "Австралия",
+        "icpSegment": "small_agency",
+        "priority": "A",
+        "activityLevel": "medium",
+        "source": "Founder Jet Leads SEO Agency",
+        "status": "new",
+        "notes": "Australia location verified"
+      },
+      {
+        "id": "mqttjcav5nmj2",
+        "name": "John Stevenson",
+        "linkedinUrl": "https://www.linkedin.com/in/john-stevenson-760bb5219/",
+        "country": "Австралия",
+        "icpSegment": "small_agency",
+        "priority": "A",
+        "activityLevel": "medium",
+        "source": "Founder Your Best YBSA SEO",
+        "status": "new",
+        "notes": "Sunshine Coast Queensland"
+      },
+      {
+        "id": "mqttj724ds27i",
+        "name": "Charlie O.",
+        "linkedinUrl": "https://www.linkedin.com/in/charlesobien/",
+        "country": "Австралия",
+        "icpSegment": "small_agency",
+        "priority": "A",
+        "activityLevel": "medium",
+        "source": "Director & Founder Shoutout Digital",
+        "status": "new",
+        "notes": "Perth Western Australia"
+      },
+      {
+        "id": "mqttj2odub4zs",
+        "name": "James Reynolds",
+        "linkedinUrl": "https://www.linkedin.com/in/jameshreynolds/",
+        "country": "UAE",
+        "icpSegment": "small_agency",
+        "priority": "C",
+        "activityLevel": "medium",
+        "source": "CEO & Founder SEO SHERPA",
+        "status": "new",
+        "notes": "UAE non-approved location 74K followers"
+      },
+      {
+        "id": "mqttixgafsvs9",
+        "name": "Lisa Baade",
+        "linkedinUrl": "https://www.linkedin.com/in/lisabaade/",
+        "country": "Австралия",
+        "icpSegment": "small_agency",
+        "priority": "C",
+        "activityLevel": "medium",
+        "source": "Founder/Director Luxury SEO",
+        "status": "new",
+        "notes": "17+ years Manly Queensland"
+      },
+      {
+        "id": "mqttit3uip5z7",
+        "name": "Alex Lankmiler",
+        "linkedinUrl": "https://www.linkedin.com/in/alexlankmiler/",
+        "country": "Ukraine",
+        "icpSegment": "small_agency",
+        "priority": "C",
+        "activityLevel": "medium",
+        "source": "Founder & CEO VisibleWebs Agency",
+        "status": "new",
+        "notes": "Ukraine non-approved location"
+      },
+      {
+        "id": "mqttinbbjfv2o",
+        "name": "Bas Janssen 🚀",
+        "linkedinUrl": "https://www.linkedin.com/in/bas-janssen-enschede/",
+        "country": "Нидерланды",
+        "icpSegment": "small_agency",
+        "priority": "A",
+        "activityLevel": "medium",
+        "source": "Founder/CEO Programmatic SEO Agency",
+        "status": "new",
+        "notes": "Netherlands verified 7K followers"
+      },
+      {
+        "id": "mqttii50x8cgi",
+        "name": "Junaid Ashraf",
+        "linkedinUrl": "https://www.linkedin.com/in/junaid-ashraf-32067b184/",
+        "country": "US",
+        "icpSegment": "small_agency",
+        "priority": "A",
+        "activityLevel": "medium",
+        "source": "Founder & CEO Link Building SEO",
+        "status": "new",
+        "notes": "NYC 7K followers"
+      },
+      {
+        "id": "mqttid08onud3",
+        "name": "Jason Langella",
+        "linkedinUrl": "https://www.linkedin.com/in/jasonlangella/",
+        "country": "US",
+        "icpSegment": "small_agency",
+        "priority": "A",
+        "activityLevel": "medium",
+        "source": "Founder & Chairman SEO Agency USA",
+        "status": "new",
+        "notes": "Tampa Florida 8K followers"
+      },
+      {
+        "id": "mqtti7wg4whqj",
+        "name": "Liam Ridings",
+        "linkedinUrl": "https://www.linkedin.com/in/liamridings/",
+        "country": "Австралия",
+        "icpSegment": "small_agency",
+        "priority": "A",
+        "activityLevel": "medium",
+        "source": "Founder Safari Digital SEO Agency",
+        "status": "new",
+        "notes": "Sydney AFR Fast Starters"
+      },
+      {
+        "id": "mqtti2r04ydow",
+        "name": "James Banks",
+        "linkedinUrl": "https://www.linkedin.com/in/jamesbanksco/",
+        "country": "Австралия",
+        "icpSegment": "small_agency",
+        "priority": "A",
+        "activityLevel": "medium",
+        "source": "Founder Rankmax AI SEO Agency",
+        "status": "new",
+        "notes": "Melbourne $20M+ revenue 4K followers"
+      },
+      {
+        "id": "mqtthxnkg61qu",
+        "name": "James Norquay",
+        "linkedinUrl": "https://www.linkedin.com/in/norquay/",
+        "country": "Австралия",
+        "icpSegment": "small_agency",
+        "priority": "A",
+        "activityLevel": "medium",
+        "source": "Founder Prosperity Media SEO Agency",
+        "status": "new",
+        "notes": "Sydney Winner Best Large SEO Agency"
+      },
+      {
+        "id": "mqtthsm739lof",
+        "name": "Eliav Lankri",
+        "linkedinUrl": "https://www.linkedin.com/in/eliavlankri/",
+        "country": "Israel",
+        "icpSegment": "small_agency",
+        "priority": "B",
+        "activityLevel": "medium",
+        "source": "Founder & CEO GHA LTD",
+        "status": "new",
+        "notes": "Israel location 7K followers SEO/GEO Expert"
+      },
+      {
+        "id": "mqtthngwd7xnr",
+        "name": "Gareth Bull",
+        "linkedinUrl": "https://www.linkedin.com/in/garethbull/",
+        "country": "UK",
+        "icpSegment": "small_agency",
+        "priority": "A",
+        "activityLevel": "medium",
+        "source": "Founder Bulldog SEO Agency",
+        "status": "new",
+        "notes": "Multi-business owner SEO focused"
+      },
+      {
+        "id": "mqtt5osxoc457",
+        "name": "Matt Dickinson SEO",
+        "linkedinUrl": "https://www.linkedin.com/in/mdickinson35/",
+        "country": "UK",
+        "icpSegment": "freelancer",
+        "priority": "A",
+        "activityLevel": "medium",
+        "source": "SEO Consultant Freelance",
+        "status": "new",
+        "notes": "Greater Leeds Area 18K followers"
+      },
+      {
+        "id": "mqtt5jjma5815",
+        "name": "Abbey Ng",
+        "linkedinUrl": "https://www.linkedin.com/in/abbey-ng-313462106/",
+        "country": "UK",
+        "icpSegment": "freelancer",
+        "priority": "A",
+        "activityLevel": "medium",
+        "source": "Freelance SEO Consultant",
+        "status": "new",
+        "notes": "London UK verified"
+      },
+      {
+        "id": "mqtt5f4ty1kqa",
+        "name": "Charlotte Maghe",
+        "linkedinUrl": "https://www.linkedin.com/in/charlottemaghe/",
+        "country": "",
+        "icpSegment": "freelancer",
+        "priority": "C",
+        "activityLevel": "medium",
+        "source": "Senior SEO consultant & Freelance",
+        "status": "new",
+        "notes": "Belgium non-approved EU country"
+      },
+      {
+        "id": "mqtt5aqz25dnc",
+        "name": "Susanna Naldi",
+        "linkedinUrl": "https://www.linkedin.com/in/susannanaldi/en/",
+        "country": "",
+        "icpSegment": "freelancer",
+        "priority": "C",
+        "activityLevel": "medium",
+        "source": "SEO Consultant & Freelance",
+        "status": "new",
+        "notes": "Italy non-approved EU country"
+      },
+      {
+        "id": "mqtt56cnpkxfd",
+        "name": "Vytautas Šešelgis",
+        "linkedinUrl": "https://www.linkedin.com/in/vytautas-seselgis/",
+        "country": "",
+        "icpSegment": "freelancer",
+        "priority": "C",
+        "activityLevel": "medium",
+        "source": "SEO Consultant",
+        "status": "new",
+        "notes": "EU but not in approved list"
+      },
+      {
+        "id": "mqtt516iz7kdy",
+        "name": "Cyrus Badde",
+        "linkedinUrl": "https://www.linkedin.com/in/onlinemarketingagentur/",
+        "country": "Германия",
+        "icpSegment": "freelancer",
+        "priority": "A",
+        "activityLevel": "medium",
+        "source": "SEO Consultant Programmatic & Technical",
+        "status": "new",
+        "notes": "Helps brands win organic search"
+      },
+      {
+        "id": "mqtt4w2f4bb5i",
+        "name": "Guy Shamir",
+        "linkedinUrl": "https://www.linkedin.com/in/guy-shamir-69a63362/",
+        "country": "Israel",
+        "icpSegment": "freelancer",
+        "priority": "B",
+        "activityLevel": "medium",
+        "source": "SEO & Online Marketing",
+        "status": "new",
+        "notes": "Israel freelance"
+      },
+      {
+        "id": "mqtt4qw8axwqd",
+        "name": "Dan Howell",
+        "linkedinUrl": "https://www.linkedin.com/in/dan-howell-66bb4727/",
+        "country": "UK",
+        "icpSegment": "freelancer",
+        "priority": "A",
+        "activityLevel": "medium",
+        "source": "Freelance SEO Consultant",
+        "status": "new",
+        "notes": "UK verified"
+      },
+      {
+        "id": "mqtt4lrup6i8q",
+        "name": "Avi Rosenthal",
+        "linkedinUrl": "https://www.linkedin.com/in/avi-rosenthal-38484420/",
+        "country": "Israel",
+        "icpSegment": "freelancer",
+        "priority": "B",
+        "activityLevel": "medium",
+        "source": "Head of SEO R2Net",
+        "status": "new",
+        "notes": "In-house primary not freelance"
+      },
+      {
+        "id": "mqtt4gk1ainvm",
+        "name": "Kiran Flynn",
+        "linkedinUrl": "https://www.linkedin.com/in/kiran-flynn-74953644/",
+        "country": "Австралия",
+        "icpSegment": "freelancer",
+        "priority": "A",
+        "activityLevel": "medium",
+        "source": "Freelance SEO & Digital Marketer",
+        "status": "new",
+        "notes": "Melbourne verified 2025 award"
+      },
+      {
+        "id": "mqtt4bfnqkl4o",
+        "name": "Alexis Francois",
+        "linkedinUrl": "https://www.linkedin.com/in/alexis-francois-digital-consulting/",
+        "country": "Австралия",
+        "icpSegment": "freelancer",
+        "priority": "C",
+        "activityLevel": "medium",
+        "source": "ANZ SEO Lead Havas",
+        "status": "new",
+        "notes": "In-house not freelancer"
+      },
+      {
+        "id": "mqtt474kusevy",
+        "name": "Sebas Daviu",
+        "linkedinUrl": "https://www.linkedin.com/in/sebastian-daviu/",
+        "country": "",
+        "icpSegment": "freelancer",
+        "priority": "C",
+        "activityLevel": "medium",
+        "source": "SEO Consultant",
+        "status": "new",
+        "notes": "Barcelona area non-approved"
+      },
+      {
+        "id": "mqtt424d2y93e",
+        "name": "Yaniv Bar Lev",
+        "linkedinUrl": "https://www.linkedin.com/in/yaniv-bar-lev-92378364/",
+        "country": "Israel",
+        "icpSegment": "freelancer",
+        "priority": "B",
+        "activityLevel": "medium",
+        "source": "Head of SEO",
+        "status": "new",
+        "notes": "Freelance specialist"
+      },
+      {
+        "id": "mqtt3xjf33trr",
+        "name": "Geza Gog",
+        "linkedinUrl": "https://www.linkedin.com/in/geza-gog-5342212b/",
+        "country": "",
+        "icpSegment": "freelancer",
+        "priority": "C",
+        "activityLevel": "medium",
+        "source": "Full-stack Developer + SEO",
+        "status": "new",
+        "notes": "Developer primary"
+      },
+      {
+        "id": "mqtt3sjrfrfcx",
+        "name": "Sari Holtz",
+        "linkedinUrl": "https://www.linkedin.com/in/sariholtz/",
+        "country": "Israel",
+        "icpSegment": "freelancer",
+        "priority": "B",
+        "activityLevel": "medium",
+        "source": "SEO Consultant & Marketer",
+        "status": "new",
+        "notes": "Career Coach background"
+      },
+      {
+        "id": "mqtt3ng6penyd",
+        "name": "Richard K.",
+        "linkedinUrl": "https://www.linkedin.com/in/richardkempthorne/",
+        "country": "Австралия",
+        "icpSegment": "freelancer",
+        "priority": "C",
+        "activityLevel": "medium",
+        "source": "SEO Consultant Generalist",
+        "status": "new",
+        "notes": "Content Strategy focus"
+      },
+      {
+        "id": "mqtt3icdnwnsl",
+        "name": "Kayla Adams",
+        "linkedinUrl": "https://www.linkedin.com/in/kaylaadams1/",
+        "country": "Австралия",
+        "icpSegment": "in_house",
+        "priority": "C",
+        "activityLevel": "medium",
+        "source": "SEO Manager",
+        "status": "new",
+        "notes": "In-house not target"
+      },
+      {
+        "id": "mqtt3dc4qq0ch",
+        "name": "Nathalie Krant",
+        "linkedinUrl": "https://www.linkedin.com/in/nathalie-krant-185b74120/",
+        "country": "Israel",
+        "icpSegment": "freelancer",
+        "priority": "B",
+        "activityLevel": "medium",
+        "source": "SEO Lead/Consultant",
+        "status": "new",
+        "notes": "15+ years experience"
+      },
+      {
+        "id": "mqtt3806fkx9h",
+        "name": "Michael Carrico",
+        "linkedinUrl": "https://www.linkedin.com/in/michaelcarrico/",
+        "country": "US",
+        "icpSegment": "freelancer",
+        "priority": "A",
+        "activityLevel": "medium",
+        "source": "Freelance SEO Consultant",
+        "status": "new",
+        "notes": "St Charles Missouri 2K followers"
+      },
+      {
+        "id": "mqtt32yaeikxg",
+        "name": "Alexandre Ferron",
+        "linkedinUrl": "https://www.linkedin.com/in/alexandre-ferron/",
+        "country": "Германия",
+        "icpSegment": "freelancer",
+        "priority": "A",
+        "activityLevel": "medium",
+        "source": "Freelance SEO Consultant",
+        "status": "new",
+        "notes": "Berlin verified"
+      },
+      {
+        "id": "mqtt2xx4aqehy",
+        "name": "Annemarie H.",
+        "linkedinUrl": "https://www.linkedin.com/in/annemariehunter/",
+        "country": "Австралия",
+        "icpSegment": "freelancer",
+        "priority": "A",
+        "activityLevel": "medium",
+        "source": "SEO Consultant",
+        "status": "new",
+        "notes": "Byron Bay Premium member"
+      },
+      {
+        "id": "mqtt2sw2vzyfb",
+        "name": "Rio Prawira",
+        "linkedinUrl": "https://www.linkedin.com/in/rioprawira/",
+        "country": "Австралия",
+        "icpSegment": "freelancer",
+        "priority": "A",
+        "activityLevel": "medium",
+        "source": "Freelance SEO Consultant",
+        "status": "new",
+        "notes": "Melbourne self-employed"
+      },
+      {
+        "id": "mqtt2nssbqdg8",
+        "name": "Fernando Vela González",
+        "linkedinUrl": "https://www.linkedin.com/in/fernando-vela-gonz%C3%A1lez-4083a368/",
+        "country": "Австралия",
+        "icpSegment": "freelancer",
+        "priority": "A",
+        "activityLevel": "medium",
+        "source": "Freelance SEO Consultant",
+        "status": "new",
+        "notes": "Bondi Beach based"
+      },
+      {
+        "id": "mqtt13khyg78d",
+        "name": "Simon Cole",
+        "linkedinUrl": "https://www.linkedin.com/in/simoncole/",
+        "country": "Австралия",
+        "icpSegment": "small_agency",
+        "priority": "A",
+        "activityLevel": "medium",
+        "source": "SEO Consultant & Director",
+        "status": "new",
+        "notes": "Orca Digital agency leadership"
+      },
+      {
+        "id": "mqtt0x1yp5w3s",
+        "name": "Luke Jones",
+        "linkedinUrl": "https://www.linkedin.com/in/luke-jones-660453247/",
+        "country": "Австралия",
+        "icpSegment": "freelancer",
+        "priority": "A",
+        "activityLevel": "medium",
+        "source": "SEO Specialist",
+        "status": "new",
+        "notes": "Independent SEO Consultant"
+      },
+      {
+        "id": "mqs6wj3furxwq",
+        "name": "vahe arabian",
+        "linkedinUrl": "https://www.linkedin.com/in/vahearabian/",
+        "country": "Австралия",
+        "icpSegment": "freelancer",
+        "priority": "B",
+        "activityLevel": "medium",
+        "source": "",
+        "status": "new",
+        "notes": ""
+      },
+      {
+        "id": "mqs6wirlsdt1z",
+        "name": "Marcin Chirowski",
+        "linkedinUrl": "https://www.linkedin.com/in/chirowski/",
+        "country": "",
+        "icpSegment": "freelancer",
+        "priority": "A",
+        "activityLevel": "medium",
+        "source": "LinkedIn Search",
+        "status": "new",
+        "notes": "(EU) Founder GrowthTurn.com (SEO Agency), AI-powered SEO"
+      },
+      {
+        "id": "mqs6wigdjxa6s",
+        "name": " Puya Fazlali",
+        "linkedinUrl": "https://www.linkedin.com/in/puya-fazlali/",
+        "country": "Германия",
+        "icpSegment": "small_agency",
+        "priority": "A",
+        "activityLevel": "medium",
+        "source": "LinkedIn Search",
+        "status": "new",
+        "notes": " Founder Mozweb, Technical SEO,"
+      },
+      {
+        "id": "mqs6qm1mq9541",
+        "name": "Kyle Eggleston",
+        "linkedinUrl": "https://www.linkedin.com/in/keggleston/",
+        "country": "US",
+        "icpSegment": "freelancer",
+        "priority": "A",
+        "activityLevel": "medium",
+        "source": "LinkedIn Search",
+        "status": "new",
+        "notes": "Founder Mozweb, Technical SEO"
+      },
+      {
+        "id": "mqs6qkyvio4s5",
+        "name": " Michael Hoffmann",
+        "linkedinUrl": "https://www.linkedin.com/in/michael-alexander-hoffmann/",
+        "country": "Германия",
+        "icpSegment": "freelancer",
+        "priority": "A",
+        "activityLevel": "medium",
+        "source": "LinkedIn Search",
+        "status": "new",
+        "notes": "GEO + AI SEO консультант"
+      },
+      {
+        "id": "mqs6qkv1a2fcn",
+        "name": "Hafiz Ahmad Fraz",
+        "linkedinUrl": "https://www.linkedin.com/in/hafiz-ahmad-fraz-b40238112/",
+        "country": "US",
+        "icpSegment": "small_agency",
+        "priority": "A",
+        "activityLevel": "medium",
+        "source": "LinkedIn Search",
+        "status": "new",
+        "notes": " Founder собственного SEO-агентства, 9+ лет, работал с Dyson/3M"
+      },
+      {
+        "id": "mqraidmga061e",
+        "name": "Mehadi Hasan Miazi",
+        "linkedinUrl": "https://www.linkedin.com/in/mehadihasanmiazi/",
+        "country": "Bangladesh",
+        "icpSegment": "in_house",
+        "priority": "B",
+        "activityLevel": "medium",
+        "source": "group",
+        "status": "new",
+        "notes": ""
+      },
+      {
+        "id": "mqrafxlfwk4qn",
+        "name": "Kashmala Malik · 2nd",
+        "linkedinUrl": "https://www.linkedin.com/in/kashmala-malik/",
+        "country": "Pakistan",
+        "icpSegment": "freelancer",
+        "priority": "A",
+        "activityLevel": "medium",
+        "source": "group",
+        "status": "new",
+        "notes": ""
+      },
+      {
+        "id": "mqrac5aat6gxe",
+        "name": "Dipo Ebenezer · 3rd",
+        "linkedinUrl": "https://www.linkedin.com/in/dipo-ebenezer-a39722409/",
+        "country": "Nigeria",
+        "icpSegment": "other",
+        "priority": "B",
+        "activityLevel": "medium",
+        "source": "group",
+        "status": "new",
+        "notes": ""
+      },
+      {
+        "id": "mqra6pxkfvs5m",
+        "name": "Joel Newport · 3rd",
+        "linkedinUrl": "https://www.linkedin.com/in/joel-newport-34840557/",
+        "country": "US",
+        "icpSegment": "other",
+        "priority": "A",
+        "activityLevel": "medium",
+        "source": "comment to post",
+        "status": "new",
+        "notes": ""
+      },
+      {
+        "id": "p01",
+        "name": "Lior F",
+        "linkedinUrl": "https://www.linkedin.com/in/liorf89/",
+        "icpSegment": "freelancer",
+        "priority": "B",
+        "activityLevel": "medium",
+        "source": "LinkedIn Search",
+        "status": "new",
+        "notes": "Israel, нет в скриншоте — добавлен из линков",
+        "country": "Israel"
+      },
+      {
+        "id": "p02",
+        "name": "D Yankovsky",
+        "linkedinUrl": "https://www.linkedin.com/in/dyankovsky/",
+        "icpSegment": "freelancer",
+        "priority": "B",
+        "activityLevel": "medium",
+        "source": "LinkedIn Search",
+        "status": "new",
+        "notes": "Israel, добавлен из линков",
+        "country": "Israel"
+      },
+      {
+        "id": "p03",
+        "name": "Shoshana Sigar",
+        "linkedinUrl": "https://www.linkedin.com/in/shoshana-sigar/",
+        "icpSegment": "freelancer",
+        "priority": "B",
+        "activityLevel": "medium",
+        "source": "LinkedIn Search",
+        "status": "new",
+        "notes": "Israel, добавлен из линков",
+        "country": "Israel"
+      },
+      {
+        "id": "p04",
+        "name": "Dror Yehuda",
+        "linkedinUrl": "https://www.linkedin.com/in/dror-yehuda-52549472/",
+        "icpSegment": "freelancer",
+        "priority": "B",
+        "activityLevel": "medium",
+        "source": "SEO consultant",
+        "status": "new",
+        "notes": "Israel. SEO Specialist | SEO PM",
+        "country": "Israel"
+      },
+      {
+        "id": "p06",
+        "name": "Kapil Ochani",
+        "linkedinUrl": "https://www.linkedin.com/in/kapilochani/",
+        "icpSegment": "small_agency",
+        "priority": "A",
+        "activityLevel": "medium",
+        "source": "SEO consultant",
+        "status": "new",
+        "notes": "US. SEO Consultant",
+        "country": "US"
+      },
+      {
+        "id": "p07",
+        "name": "Hila Duek",
+        "linkedinUrl": "https://www.linkedin.com/in/hila-duek-6aa51753/",
+        "icpSegment": "freelancer",
+        "priority": "B",
+        "activityLevel": "medium",
+        "source": "SEO consultant",
+        "status": "new",
+        "notes": "Israel. SEO & GEO Expert",
+        "country": "Israel"
+      },
+      {
+        "id": "p08",
+        "name": "Eitan Butnaru",
+        "linkedinUrl": "https://www.linkedin.com/in/eitan-butnaru-2a911ba9/",
+        "icpSegment": "freelancer",
+        "priority": "B",
+        "activityLevel": "medium",
+        "source": "SEO consultant",
+        "status": "new",
+        "notes": "Israel. SEO Consultant",
+        "country": "Israel"
+      },
+      {
+        "id": "p09",
+        "name": "Guy Sternfeld",
+        "linkedinUrl": "https://www.linkedin.com/in/guy-sternfeld/",
+        "icpSegment": "freelancer",
+        "priority": "B",
+        "activityLevel": "medium",
+        "source": "SEO consultant",
+        "status": "new",
+        "notes": "Israel. SEO & GEO Expert",
+        "country": "Israel"
+      },
+      {
+        "id": "p10",
+        "name": "Hari Menon",
+        "linkedinUrl": "https://www.linkedin.com/in/theharimenon/",
+        "icpSegment": "small_agency",
+        "priority": "A",
+        "activityLevel": "medium",
+        "source": "SEO consultant",
+        "status": "new",
+        "notes": "Австралия. SEO & GEO Expert",
+        "country": "Австралия"
+      },
+      {
+        "id": "p11",
+        "name": "Kathy Alice Brown",
+        "linkedinUrl": "https://www.linkedin.com/in/kathyalice/",
+        "icpSegment": "freelancer",
+        "priority": "B",
+        "activityLevel": "medium",
+        "source": "SEO consultant",
+        "status": "new",
+        "notes": "US. SEO Consultant",
+        "country": "US"
+      },
+      {
+        "id": "p12",
+        "name": "Kent Mermet-Au-Louis",
+        "linkedinUrl": "https://www.linkedin.com/in/kentmermet/",
+        "icpSegment": "freelancer",
+        "priority": "B",
+        "activityLevel": "medium",
+        "source": "SEO consultant",
+        "status": "new",
+        "notes": "Канада. Senior SEO Strategist",
+        "country": "Канада"
+      },
+      {
+        "id": "p13",
+        "name": "Santosh Bhattarai",
+        "linkedinUrl": "https://www.linkedin.com/in/santosh-bhattarai-65095913b/",
+        "icpSegment": "freelancer",
+        "priority": "B",
+        "activityLevel": "medium",
+        "source": "SEO consultant",
+        "status": "new",
+        "notes": "Австралия. SEO Consultant",
+        "country": "Австралия"
+      },
+      {
+        "id": "p14",
+        "name": "Norma Raees",
+        "linkedinUrl": "https://www.linkedin.com/in/norma-raees-605b2b197/",
+        "icpSegment": "freelancer",
+        "priority": "B",
+        "activityLevel": "medium",
+        "source": "SEO consultant",
+        "status": "new",
+        "notes": "US. SEO Consultant",
+        "country": "US"
+      },
+      {
+        "id": "p16",
+        "name": "Hadar Graf",
+        "linkedinUrl": "https://www.linkedin.com/in/hadar-graf/",
+        "icpSegment": "freelancer",
+        "priority": "B",
+        "activityLevel": "medium",
+        "source": "SEO consultant",
+        "status": "new",
+        "notes": "Israel. SEO Consultant",
+        "country": "Israel"
+      },
+      {
+        "id": "p17",
+        "name": "Zaheer Abbas",
+        "linkedinUrl": "https://www.linkedin.com/in/zaheer-abbas-14059a16a/",
+        "icpSegment": "small_agency",
+        "priority": "A",
+        "activityLevel": "medium",
+        "source": "SEO consultant",
+        "status": "new",
+        "notes": "UK. SEO Consultant",
+        "country": "UK"
+      },
+      {
+        "id": "p18",
+        "name": "Allison White",
+        "linkedinUrl": "https://www.linkedin.com/in/allison-white-%E2%9C%85-123275190/",
+        "icpSegment": "small_agency",
+        "priority": "A",
+        "activityLevel": "medium",
+        "source": "SEO consultant",
+        "status": "new",
+        "notes": "Канада. SEO Specialist | SEO PM",
+        "country": "Канада"
+      },
+      {
+        "id": "p19",
+        "name": "David Manuvakhov",
+        "linkedinUrl": "https://www.linkedin.com/in/david-manuvahov-1279297b/",
+        "icpSegment": "freelancer",
+        "priority": "B",
+        "activityLevel": "medium",
+        "source": "SEO consultant",
+        "status": "new",
+        "notes": "Israel. SEO Consultant",
+        "country": "Israel"
+      },
+      {
+        "id": "p20",
+        "name": "Laila Naqvi",
+        "linkedinUrl": "https://www.linkedin.com/in/lailanaqviseo/",
+        "icpSegment": "freelancer",
+        "priority": "B",
+        "activityLevel": "medium",
+        "source": "SEO consultant",
+        "status": "new",
+        "notes": "UK. SEO Manager",
+        "country": "UK"
+      },
+      {
+        "id": "p21",
+        "name": "Grase P.",
+        "linkedinUrl": "https://www.linkedin.com/in/jonemical/",
+        "icpSegment": "freelancer",
+        "priority": "B",
+        "activityLevel": "medium",
+        "source": "SEO consultant",
+        "status": "new",
+        "notes": "US. SEO Consultant",
+        "country": "US"
+      },
+      {
+        "id": "p22",
+        "name": "Amna Nadeem",
+        "linkedinUrl": "https://www.linkedin.com/in/amna-nadeem-seo/",
+        "icpSegment": "freelancer",
+        "priority": "B",
+        "activityLevel": "medium",
+        "source": "SEO consultant",
+        "status": "new",
+        "notes": "Австралия. Senior SEO",
+        "country": "Австралия"
+      },
+      {
+        "id": "p24",
+        "name": "Nate Wheeler",
+        "linkedinUrl": "https://www.linkedin.com/in/natewheeleraz/",
+        "icpSegment": "small_agency",
+        "priority": "A",
+        "activityLevel": "medium",
+        "source": "SEO consultant",
+        "status": "new",
+        "notes": "US. SEO Consultant",
+        "country": "US"
+      },
+      {
+        "id": "p25",
+        "name": "Jessie Moore",
+        "linkedinUrl": "https://www.linkedin.com/in/jessica-moore-10/",
+        "icpSegment": "small_agency",
+        "priority": "A",
+        "activityLevel": "medium",
+        "source": "SEO consultant",
+        "status": "new",
+        "notes": "UK. SEO Consultant",
+        "country": "UK"
+      },
+      {
+        "id": "p29",
+        "name": "Nick Kenny",
+        "linkedinUrl": "https://www.linkedin.com/in/nickkennyseospecialistyorks/",
+        "icpSegment": "freelancer",
+        "priority": "B",
+        "activityLevel": "medium",
+        "source": "SEO consultant",
+        "status": "new",
+        "notes": "UK. Digital Marketing Manager | SEO. Freelance",
+        "country": "UK"
+      },
+      {
+        "id": "p30",
+        "name": "Andre Holmes",
+        "linkedinUrl": "https://www.linkedin.com/in/andre-holmes-a1736620a/",
+        "icpSegment": "freelancer",
+        "priority": "B",
+        "activityLevel": "medium",
+        "source": "SEO Manager",
+        "status": "new",
+        "notes": "Канада. SEO Manager",
+        "country": "Канада"
+      },
+      {
+        "id": "mqqdr55xwfoh4",
+        "name": "Marom Anaky · 2nd",
+        "linkedinUrl": "https://www.linkedin.com/in/marom-anaky-b1600b175/",
+        "country": "Israel",
+        "icpSegment": "freelancer",
+        "priority": "A",
+        "activityLevel": "high",
+        "source": "CEO & Founder - Tropicon Digital",
+        "status": "new",
+        "notes": ""
+      },
+      {
+        "id": "mqqfkpoq0az98",
+        "name": "Jes Scholz · 3rd",
+        "linkedinUrl": "https://www.linkedin.com/in/jes-scholz/",
+        "country": "Австралия",
+        "icpSegment": "freelancer",
+        "priority": "A",
+        "activityLevel": "high",
+        "source": "",
+        "status": "new",
+        "notes": ""
+      }
+    ],
+    "groups": [
+      {
+        "id": "mr0dugxqgq5j2",
+        "name": "Generative Engine Optimization - GEO / AIO / SEO for AI",
+        "url": "https://www.linkedin.com/groups/13200001/?showWelcomeNote=true",
+        "platform": "LinkedIn",
+        "members": "104",
+        "account": "Кира",
+        "status": "approved",
+        "priority": 1,
+        "activeMembers": [
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "notes": ""
+      },
+      {
+        "id": "mr0dqnbcttbt7",
+        "name": "SEO GEO AI Jobs",
+        "url": "http://linkedin.com/groups/1936156/?showWelcomeNote=true",
+        "platform": "LinkedIn",
+        "members": "50k",
+        "account": "Кира",
+        "status": "approved",
+        "priority": 0,
+        "activeMembers": [
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "notes": ""
+      },
+      {
+        "id": "g5",
+        "name": "Marketing Club: Digital Advertising Content Social Media Email Marketing, B2B & More",
+        "platform": "LinkedIn",
+        "members": "638k",
+        "account": "Кира",
+        "status": "approved",
+        "notes": "",
+        "url": "https://www.linkedin.com/groups/4702266/",
+        "activeMembers": [
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "priority": 0
+      },
+      {
+        "id": "g7",
+        "name": "SEO Expert",
+        "platform": "LinkedIn",
+        "members": "432k",
+        "account": "Кира",
+        "status": "approved",
+        "notes": "",
+        "url": "https://www.linkedin.com/groups/4230298/",
+        "activeMembers": [
+          "High",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "priority": 1
+      },
+      {
+        "id": "g8",
+        "name": "SEO & Digital Marketing | AI, Ecommerce, SaaS & B2C | Growth Scaling & ABM",
+        "platform": "LinkedIn",
+        "members": "182k",
+        "account": "Кира",
+        "status": "approved",
+        "notes": "",
+        "url": "https://www.linkedin.com/groups/8500003/"
+      },
+      {
+        "id": "mqqbmmxuhpzup",
+        "name": "Digital Marketing Group - #1 Internet Online Advertising SEO Social Media Mobile",
+        "url": "https://www.linkedin.com/groups/3416532/",
+        "platform": "LinkedIn",
+        "members": "577k",
+        "account": "Кира",
+        "status": "approved",
+        "activeMembers": [
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "notes": "",
+        "priority": 0
+      },
+      {
+        "id": "mqqbp62jrrqhn",
+        "name": "SEO, Google Ads, and Digital Marketing",
+        "url": "https://www.linkedin.com/groups/8120082/",
+        "platform": "LinkedIn",
+        "members": "147k",
+        "account": "Кира",
+        "status": "approved",
+        "activeMembers": [
+          "Derar Abdelqader - Barqawi",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "notes": ""
+      },
+      {
+        "id": "mqqbquf4t2ukw",
+        "name": "Digital Marketing Factory - Free Guest Post, SEO TIPS, Social Media, Influencer Marketing Tips",
+        "url": "https://www.linkedin.com/groups/12398515/",
+        "platform": "LinkedIn",
+        "members": "131k",
+        "account": "Кира",
+        "status": "approved",
+        "activeMembers": [
+          "hassan hassan · 3rd",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "notes": ""
+      },
+      {
+        "id": "mqqbsmjoceqyh",
+        "name": "SEO Backlinks, Guest Posting, Ai SEO Marketing, GMB expert's, AEO, GEO, SMM, SEO",
+        "url": "https://www.linkedin.com/groups/9042192/",
+        "platform": "LinkedIn",
+        "members": "122k",
+        "account": "Кира",
+        "status": "approved",
+        "activeMembers": [
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "notes": ""
+      },
+      {
+        "id": "mqqbty9bhfs5m",
+        "name": "Marketing, Strategy, Brands, Media, Mobile, Digital, Technology, SEO, AI, CRM, Social, ORM & Jobshttps://www.linkedin.com/groups/71207/",
+        "url": "https://www.linkedin.com/groups/71207/",
+        "platform": "LinkedIn",
+        "members": "477k",
+        "account": "Кира",
+        "status": "approved",
+        "activeMembers": [
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "notes": ""
+      },
+      {
+        "id": "mqqbyj3h2bcj0",
+        "name": "Google Adwords SEO SEM (Search Engine Optimization & Internet Marketing)",
+        "url": "https://www.linkedin.com/groups/3190679/",
+        "platform": "LinkedIn",
+        "members": "51k",
+        "account": "Кира",
+        "status": "approved",
+        "activeMembers": [
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "notes": ""
+      },
+      {
+        "id": "mqqbznqitc4dz",
+        "name": "Social Media & SEO - Digital Marketing Community",
+        "url": "https://www.linkedin.com/groups/68961/",
+        "platform": "LinkedIn",
+        "members": "74k",
+        "account": "Кира",
+        "status": "approved",
+        "activeMembers": [
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "notes": ""
+      },
+      {
+        "id": "mqqc0l6ggwswx",
+        "name": "Expert SEO Community",
+        "url": "https://www.linkedin.com/groups/4230298/",
+        "platform": "LinkedIn",
+        "members": "73k",
+        "account": "Кира",
+        "status": "approved",
+        "activeMembers": [
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "notes": ""
+      },
+      {
+        "id": "mqqcauvnmep9d",
+        "name": "Search Engine Land",
+        "url": "https://www.linkedin.com/company/search-engine-land/",
+        "platform": "LinkedIn",
+        "members": "160к",
+        "account": "Кира",
+        "status": "approved",
+        "activeMembers": [
+          "once a week",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "notes": ""
+      }
+    ],
+    "companies": [
+      {
+        "id": "mr06iq12zydmi",
+        "name": "Kreative Splash",
+        "website": "https://www.linkedin.com/company/kreatives-splash/posts/?feedView=all",
+        "segment": "small_agency",
+        "size": "2-10",
+        "contactPerson": "",
+        "status": "research",
+        "notes": "DM"
+      }
+    ],
+    "shortlist": [
+      {
+        "id": "mqwb7peyaxmdv",
+        "batch": "1",
+        "name": "Michael Vale",
+        "linkedinUrl": "https://www.linkedin.com/in/immichaelvale/",
+        "country": "US",
+        "icpSegment": "small_agency",
+        "priority": "A",
+        "dmStatus": "not_sent",
+        "connectionStatus": "not_sent",
+        "source": "comment",
+        "status": "new",
+        "notes": "Founder of Eclipse Marketing | AI SEO",
+        "actions": [
+          "comment_post",
+          "send_dm"
+        ],
+        "completedActions": [
+          "comment_post"
+        ],
+        "history": [
+          {
+            "date": "2026-06-27",
+            "text": "Добавлен в Outreach (W1). Авто-задачи: Коммент к посту",
+            "auto": true
+          }
+        ],
+        "createdAt": "2026-06-27T12:01:43.786Z",
+        "followStatus": "followed"
+      },
+      {
+        "id": "mqwb7pey819db",
+        "batch": "1",
+        "name": "Kai Cromwell (eCommerce SEO)",
+        "linkedinUrl": "https://www.linkedin.com/in/kai-cromwell/",
+        "country": "US",
+        "icpSegment": "small_agency",
+        "priority": "A",
+        "dmStatus": "not_sent",
+        "connectionStatus": "not_sent",
+        "source": "Founder New Seas Shopify SEO Agency",
+        "status": "new",
+        "notes": "Santa Monica California 14K followers",
+        "actions": [
+          "comment_post",
+          "send_dm",
+          "send_cr"
+        ],
+        "completedActions": [],
+        "history": [
+          {
+            "date": "2026-06-27",
+            "text": "Добавлен в Outreach (W1). Авто-задачи: Коммент к посту",
+            "auto": true
+          },
+          {
+            "date": "2026-06-30",
+            "text": "Запрос отправлен",
+            "auto": true
+          },
+          {
+            "date": "2026-06-30",
+            "text": "DM отправлен",
+            "auto": true
+          }
+        ],
+        "createdAt": "2026-06-27T12:01:43.786Z",
+        "followStatus": "followed"
+      },
+      {
+        "id": "mqwb7peynahly",
+        "batch": "1",
+        "name": "Vadim Litvak",
+        "linkedinUrl": "https://www.linkedin.com/in/vadimlitvak/",
+        "country": "Канада",
+        "icpSegment": "small_agency",
+        "priority": "A",
+        "dmStatus": "sent",
+        "connectionStatus": "sent",
+        "source": "Founder Verticality AI Visibility",
+        "status": "new",
+        "notes": "Toronto Canada verified",
+        "actions": [
+          "comment_post",
+          "send_dm",
+          "send_cr"
+        ],
+        "completedActions": [
+          "send_dm",
+          "send_cr"
+        ],
+        "history": [
+          {
+            "date": "2026-06-27",
+            "text": "Добавлен в Outreach (W1). Авто-задачи: Коммент к посту",
+            "auto": true
+          },
+          {
+            "date": "2026-07-01",
+            "text": "Запрос отправлен",
+            "auto": true
+          },
+          {
+            "date": "2026-07-01",
+            "text": "DM отправлен",
+            "auto": true
+          }
+        ],
+        "createdAt": "2026-06-27T12:01:43.786Z"
+      },
+      {
+        "id": "mr06nlg7em336",
+        "batch": "3",
+        "name": "Mani Mann",
+        "linkedinUrl": "https://www.linkedin.com/in/mani-seo-expert/",
+        "priority": "A",
+        "dmStatus": "sent",
+        "connectionStatus": "not_sent",
+        "source": "comments",
+        "status": "new",
+        "notes": "",
+        "actions": [
+          "comment_post",
+          "send_dm"
+        ],
+        "completedActions": [
+          "send_dm"
+        ],
+        "country": "UK",
+        "icpSegment": "in_house",
+        "createdAt": "2026-06-30T05:05:11.767Z",
+        "history": [
+          {
+            "date": "2026-06-30",
+            "text": "Добавлен в Outreach (W2)",
+            "auto": true
+          },
+          {
+            "date": "2026-06-30",
+            "text": "DM отправлен",
+            "auto": true
+          }
+        ],
+        "followStatus": "followed"
+      },
+      {
+        "id": "mr07lbnojwoe3",
+        "batch": "3",
+        "name": "Cristina Kent",
+        "linkedinUrl": "https://www.linkedin.com/in/cristinakent/",
+        "priority": "C",
+        "dmStatus": "sent",
+        "connectionStatus": "sent",
+        "source": "Founder Just Another SEO",
+        "status": "new",
+        "notes": "Manhattan Beach Audience Growth focus not pure SEO",
+        "actions": [
+          "comment_post",
+          "send_dm",
+          "send_cr"
+        ],
+        "completedActions": [
+          "send_dm",
+          "send_cr"
+        ],
+        "country": "US",
+        "icpSegment": "small_agency",
+        "createdAt": "2026-06-30T05:31:25.380Z",
+        "history": [
+          {
+            "date": "2026-06-30",
+            "text": "Добавлен в Outreach (W2)",
+            "auto": true
+          },
+          {
+            "date": "2026-06-30",
+            "text": "DM отправлен",
+            "auto": true
+          },
+          {
+            "date": "2026-06-30",
+            "text": "Запрос отправлен",
+            "auto": true
+          }
+        ]
+      },
+      {
+        "id": "mr0h08t334w3p",
+        "batch": "3",
+        "name": "Sergey Lucktinov",
+        "linkedinUrl": "https://www.linkedin.com/in/sergeylucktinov/",
+        "priority": "A",
+        "dmStatus": "sent",
+        "connectionStatus": "not_sent",
+        "source": "comments",
+        "status": "dm_sent",
+        "notes": "A potential advocate, Author: “Semantic SEO, SRO & AI”  | Semantic SEO, GEO & SRO Strategist | AI Visibility Systems Architect",
+        "actions": [
+          "comment_post",
+          "send_cr"
+        ],
+        "completedActions": [
+          "send_cr"
+        ],
+        "country": "US",
+        "icpSegment": "other",
+        "createdAt": "2026-06-30T09:54:58.071Z",
+        "history": [
+          {
+            "date": "2026-06-30",
+            "text": "Добавлен в Outreach (W2)",
+            "auto": true
+          },
+          {
+            "date": "2026-06-30",
+            "text": "DM отправлен",
+            "auto": true
+          }
+        ]
+      },
+      {
+        "id": "mr1jtnc6ewovn",
+        "batch": "3",
+        "name": "Crystal Carter",
+        "linkedinUrl": "https://www.linkedin.com/in/crystal-carter-digital/",
+        "country": "UK",
+        "icpSegment": "in_house",
+        "priority": "A",
+        "dmStatus": "not_sent",
+        "connectionStatus": "not_sent",
+        "source": "Moz",
+        "status": "new",
+        "notes": "Head of AI Search & SEO Communications at Wix",
+        "actions": [
+          "comment_post"
+        ],
+        "completedActions": [],
+        "history": [
+          {
+            "date": "2026-07-01",
+            "text": "Добавлен в Outreach (W2). Авто-задачи: Коммент к посту",
+            "auto": true
+          }
+        ],
+        "createdAt": "2026-07-01T04:01:35.334Z"
+      },
+      {
+        "id": "mr1jtnc6kftu4",
+        "batch": "3",
+        "name": "Mark Williams-Cook",
+        "linkedinUrl": "https://www.linkedin.com/in/markseo/",
+        "country": "UK",
+        "icpSegment": "small_agency",
+        "priority": "A",
+        "dmStatus": "not_sent",
+        "connectionStatus": "not_sent",
+        "source": "comment",
+        "status": "new",
+        "notes": "SEO & AI-search professional, agency director and SaaS founder.",
+        "actions": [
+          "comment_post"
+        ],
+        "completedActions": [],
+        "history": [
+          {
+            "date": "2026-07-01",
+            "text": "Добавлен в Outreach (W2). Авто-задачи: Коммент к посту",
+            "auto": true
+          }
+        ],
+        "createdAt": "2026-07-01T04:01:35.334Z"
+      },
+      {
+        "id": "mr1jtnc69y6ol",
+        "batch": "3",
+        "name": "Marcin Chirowski",
+        "linkedinUrl": "https://www.linkedin.com/in/chirowski/",
+        "country": "",
+        "icpSegment": "freelancer",
+        "priority": "A",
+        "dmStatus": "not_sent",
+        "connectionStatus": "not_sent",
+        "source": "LinkedIn Search",
+        "status": "new",
+        "notes": "(EU) Founder GrowthTurn.com (SEO Agency), AI-powered SEO",
+        "actions": [
+          "comment_post"
+        ],
+        "completedActions": [],
+        "history": [
+          {
+            "date": "2026-07-01",
+            "text": "Добавлен в Outreach (W2). Авто-задачи: Коммент к посту",
+            "auto": true
+          }
+        ],
+        "createdAt": "2026-07-01T04:01:35.334Z"
+      },
+      {
+        "id": "mr1jtnc6vlhci",
+        "batch": "3",
+        "name": " Michael Hoffmann",
+        "linkedinUrl": "https://www.linkedin.com/in/michael-alexander-hoffmann/",
+        "country": "Германия",
+        "icpSegment": "freelancer",
+        "priority": "A",
+        "dmStatus": "not_sent",
+        "connectionStatus": "not_sent",
+        "source": "LinkedIn Search",
+        "status": "new",
+        "notes": "GEO + AI SEO консультант",
+        "actions": [
+          "comment_post"
+        ],
+        "completedActions": [],
+        "history": [
+          {
+            "date": "2026-07-01",
+            "text": "Добавлен в Outreach (W2). Авто-задачи: Коммент к посту",
+            "auto": true
+          }
+        ],
+        "createdAt": "2026-07-01T04:01:35.334Z"
+      },
+      {
+        "id": "mr1x2pec5a1fb",
+        "batch": "4",
+        "name": "Lily Ray",
+        "linkedinUrl": "https://www.linkedin.com/in/lily-ray-44755615/",
+        "priority": "A",
+        "dmStatus": "not_sent",
+        "connectionStatus": "not_sent",
+        "source": "brightonseobrightonseo",
+        "status": "new",
+        "notes": "US-based SEO/AI search consultant",
+        "actions": [
+          "comment_post"
+        ],
+        "completedActions": [],
+        "country": "US",
+        "icpSegment": "small_agency",
+        "createdAt": "2026-07-01T10:12:32.916Z",
+        "history": [
+          {
+            "date": "2026-07-01",
+            "text": "Добавлен в Outreach (W2)",
+            "auto": true
+          }
+        ]
+      },
+      {
+        "id": "mr1x8zr8gngaa",
+        "batch": "4",
+        "name": "Noa Vernick",
+        "linkedinUrl": "https://www.linkedin.com/in/noa-vernick-b82494203/",
+        "priority": "A",
+        "dmStatus": "sent",
+        "connectionStatus": "sent",
+        "source": "",
+        "status": "new",
+        "notes": "",
+        "actions": [
+          "comment_post"
+        ],
+        "completedActions": [],
+        "country": "US",
+        "icpSegment": "in_house",
+        "createdAt": "2026-07-01T10:17:26.276Z",
+        "history": [
+          {
+            "date": "2026-07-01",
+            "text": "Добавлен в Outreach (W2)",
+            "auto": true
+          },
+          {
+            "date": "2026-07-03",
+            "text": "DM отправлен",
+            "auto": true
+          },
+          {
+            "date": "2026-07-03",
+            "text": "Запрос отправлен",
+            "auto": true
+          }
+        ],
+        "followStatus": "followed"
+      }
+    ],
+    "competitors": [
+      {
+        "id": "mqxp07mev57sn",
+        "name": "Distribb",
+        "url": "https://distribb.io/",
+        "type": "",
+        "pricing": "97$/mo",
+        "features": "",
+        "missingVsKoru": "",
+        "linkedinPerson": "Borja Obeso",
+        "threatLevel": "indirect",
+        "notes": " - Promo: $9 первый месяц (потом $97). Free trial 3 дня.   - 500+ customers claimed   - CMS: 8 платформ (WP, Webflow, Shopify, Wix, Ghost, Notion, Framer, GoHighLevel)   - Accelerator ($495): + видео для YouTube/Instagram, Medium syndication, Instagram carousels,   Quora answers   - AI Agent — \"talk to Distribb like an employee\"   - На лендинге прямо пишут \"become the answer AI chatbots use\" и \"show up in AI-powered search\" —   но в продукте это пустые слова, никаких метрик AI visibility нет"
+      }
+    ],
+    "countries": [
+      "US",
+      "UK",
+      "Israel",
+      "Канада",
+      "Австралия",
+      "Германия",
+      "Индия",
+      "Нидерланды",
+      "Nigeria",
+      "Pakistan",
+      "Bangladesh",
+      "portugal",
+      "Greece",
+      "UAE",
+      "Ukraine"
+    ]
+  },
+  "weekInsights": {
+    "Week 2": [
+      {
+        "id": "ins-xfu0ar9",
+        "date": "2026-06-28",
+        "category": "general",
+        "text": ""
+      }
+    ],
+    "Week 1": [
+      {
+        "id": "ins-xkik7bj",
+        "date": "2026-06-29",
+        "category": "competitor",
+        "text": "  Перспектива A: Конкурентный аналитик\n\n  Пост позиционирует 10 инструментов как \"must know\" для GEO. Разберём каждый по реальной ценности:\n\n  ┌─────┬─────────────────────────────┬──────────────────────────────────┬────────────────────────────────────────────────────┬──────────────┐\n  │  #  │         Инструмент          │        Что реально делает        │                  Конкурент KORU?                   │ Threat level │\n  ├─────┼─────────────────────────────┼──────────────────────────────────┼────────────────────────────────────────────────────┼──────────────┤\n  │ 1   │ Geoptie GEO Audit           │ Бесплатный скан на GEO-сигналы   │ Прямой конкурент — наш GEO Score делает то же      │ 🔴 Высокий   │\n  ├─────┼─────────────────────────────┼──────────────────────────────────┼────────────────────────────────────────────────────┼──────────────┤\n  │ 2   │ InLinks                     │ Entity linking, internal linking │ Пересечение с нашей entity density проверкой в GEO │ 🟡 Средний   │\n  ├─────┼─────────────────────────────┼──────────────────────────────────┼────────────────────────────────────────────────────┼──────────────┤\n  │ 3   │ Nightwatch                  │ Rank tracking                    │ Пересечение с нашим Rank Tracking                  │ 🟡 Средний   │\n  ├─────┼─────────────────────────────┼──────────────────────────────────┼────────────────────────────────────────────────────┼──────────────┤\n  │ 4   │ Semrush AI Visibility       │ Keyword research + AI visibility │ Пересечение с нашим AI Brand Visibility            │ 🔴 Высокий   │\n  ├─────┼─────────────────────────────┼──────────────────────────────────┼────────────────────────────────────────────────────┼──────────────┤\n  │ 5   │ Writesonic                  │ AI-контент генерация             │ Пересечение с нашими Content Drafts                │ 🟡 Средний   │\n  ├─────┼─────────────────────────────┼──────────────────────────────────┼────────────────────────────────────────────────────┼──────────────┤\n  │ 6   │ Geoptie GEO Content Checker │ Page-level GEO signals           │ Прямой конкурент нашего GEO Score                  │ 🔴 Высокий   │\n  ├─────┼─────────────────────────────┼──────────────────────────────────┼────────────────────────────────────────────────────┼──────────────┤\n  │ 7   │ Otterly AI                  │ Brand monitoring в AI поиске     │ Прямой конкурент нашего AI Brand Visibility        │ 🔴 Высокий   │\n  ├─────┼─────────────────────────────┼──────────────────────────────────┼────────────────────────────────────────────────────┼──────────────┤\n  │ 8   │ Also Asked                  │ Related questions / PAA          │ Нет прямого аналога у нас                          │ 🟢 Низкий    │\n  ├─────┼─────────────────────────────┼──────────────────────────────────┼────────────────────────────────────────────────────┼──────────────┤\n  │ 9   │ HubSpot AI Search Grader    │ Бесплатный оценщик AI visibility │ Конкурент нашего GEO + Agent Readiness             │ 🟡 Средний   │\n  ├─────┼─────────────────────────────┼──────────────────────────────────┼────────────────────────────────────────────────────┼──────────────┤\n  │ 10  │ Copy.ai                     │ AI-контент                       │ Пересечение с Content Drafts                       │ 🟡 Средний   │\n  └─────┴─────────────────────────────┴──────────────────────────────────┴────────────────────────────────────────────────────┴──────────────┘\n\n  Вывод A: Geoptie (2 продукта!), Otterly AI и Semrush AI Visibility — главные конкуренты. Geoptie особенно опасен — у них уже два GEO-специфичных продукта и бесплатный вход.\n\n  ---\n  Перспектива B: Продуктовый стратег\n\n  Главное наблюдение: ни один из 10 инструментов не делает то, что делает KORU целиком. Каждый — это point solution. Автор поста невольно показал боль рынка: чтобы покрыть GEO, нужно жонглировать 10\n  разных инструментов.\n\n  Что KORU покрывает из одной платформы:\n  - GEO Audit → наш GEO Score (14 rules)\n  - AI Brand Monitoring → наш AI Brand Visibility (OpenAI + Gemini)\n  - AI Rank Tracking → наш AI Mode Rank Tracking\n  - Content Generation → наши Content Drafts\n  - Agent Readiness → наш Agent Readiness (llms.txt, robots.txt и т.д.)\n  - Keyword Research → наш Keyword Pipeline + Intent Classification\n\n  KORU заменяет инструменты #1, #3, #4, #5, #6, #7, #9 из списка. Это 7 из 10.\n\n  Чего у нас НЕТ:\n  - Entity linking (InLinks) — мы проверяем entity density в GEO, но не предлагаем auto-linking\n  - Related questions discovery (Also Asked) — нет аналога\n  - Content generation уровня Copy.ai — наши drafts более SEO-brief-driven, но менее mass-production\n\n  ---\n  Перспектива C: Маркетолог / позиционирование\n\n  Пост интересен тем, что он создаёт категорию \"GEO tools\" в головах аудитории. Это хорошо для KORU — мы в этой категории. Но он НЕ упоминает KORU, что значит:\n\n  1. Awareness problem — нас не знают в этом пространстве\n  2. Geoptie упомянут ДВАЖДЫ (позиции 1 и 6) — у них явно лучший brand awareness в GEO-нише\n  3. Otterly AI на 7-м месте — а это наш прямой конкурент по AI Brand Visibility\n\n  Формат поста — типичный LinkedIn engagement bait (carousel + \"save this\" + \"repost\"). Но работает — 2 дня, автор с Open to Work badge (значит активно строит personal brand). Целевая аудитория —\n  SEO-специалисты, осознающие GEO.\n\n  ---\n  Pass 2 — Кросс-ревью перспектив\n\n  ┌──────────────────────────────┬───────────────────────────────┬────────────────────────────────────────────────────────────────────────────────────┐\n  │            Тезис             │         Подтверждён?          │                                       Нюанс                                        │\n  ├──────────────────────────────┼───────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────┤\n  │ Geoptie — главный конкурент  │ ✅ Все 3 перспективы сходятся │ Но неизвестно, насколько глубок их audit vs наши 14 rules                          │\n  ├──────────────────────────────┼───────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────┤\n  │ KORU покрывает 7/10          │ ✅ Но с оговорками            │ Наш rank tracking — AI Mode (DataForSEO), Nightwatch — классический. Разные фокусы │\n  ├──────────────────────────────┼───────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────┤\n  │ Нас нет в awareness          │ ✅ Факт                       │ Но пост одного человека — не рыночный срез                                         │\n  ├──────────────────────────────┼───────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────┤\n  │ Boль рынка = point solutions │ ✅ Сильный insight            │ Это наш главный messaging angle: \"one platform, not 10 tabs\"                       │\n  └──────────────────────────────┴───────────────────────────────┴────────────────────────────────────────────────────────────────────────────────────┘\n\n  ---\n  Pass 3 — Синтез\n\n  Ключевые выводы\n\n  1. Конкуренты, на которых стоит обратить внимание (в порядке threat level):\n  - 🔴 Geoptie — два GEO-продукта, бесплатный вход, упомянут дважды. Нужно изучить их audit methodology vs наши 14 rules.\n  - 🔴 Otterly AI — прямой конкурент AI Brand Visibility. Нужно посмотреть какие провайдеры, какая глубина.\n  - 🔴 Semrush AI Visibility — большой бренд с ресурсами, вошёл в AI visibility space.\n  - 🟡 HubSpot AI Search Grader — бесплатный, огромная аудитория HubSpot, но скорее lead-gen tool, не глубокий.\n\n  2. Позиционирование KORU против этого списка:\n\n  KORU — это единственная платформа, которая объединяет GEO audit + AI Brand Visibility + AI Rank Tracking + Content Drafts + Agent Readiness в одном месте. Вместо 7-10 подписок и табов — один\n  dashboard. Это не \"ещё один GEO tool\" — это integrated GEO platform.\n\n  3. Что стоит рассмотреть для roadmap (не срочно, для обсуждения):\n  - Entity linking / recommendations (конкурирует с InLinks)\n  - Related questions / PAA data (конкурирует с Also Asked) — может быть как доп. сигнал в keyword pipeline\n\n  4. Marketing action:\n  Этот пост — шаблон для нашего контента. Формат \"Top N GEO Tools\" привлекает внимание. KORU должен быть в таких списках. Нужен content marketing / outreach, чтобы попадать в подобные посты.\n\n  ---\n  Хочешь, чтобы я глубже копнул в какой-то из инструментов, или обновил docs/seo-knowledge.md с этими конкурентными данными?"
+      },
+      {
+        "id": "ins-pgs6dog",
+        "date": "2026-06-28",
+        "category": "competitor",
+        "text": " Конкурентный анализ: Distribb.io vs Koru\n\n  Что такое Distribb (из скриншотов)\n\n  Позиционирование: \"Your SEO engine runs 24/7 while you focus on your product\" — полностью автопилотный контент-движок.\n\n  Продукт:\n  - Auto keyword research → AI-генерация статей (4500+ слов, с картинками, FAQ schema, internal links)\n  - Прямая публикация через CMS интеграции (WordPress, Webflow, Shopify, Wix, Ghost, Notion, Framer, GoHighLevel, Webhook)\n  - Content Calendar — визуальный планировщик по дням, типы контента (Listicle, Guide), Volume/Difficulty\n  - Backlinks Exchange — сетевой обмен бэклинками между пользователями (toggle вкл/выкл)\n  - Reddit Radar — автоматические комментарии от имени бренда в релевантных Reddit-тредах\n  - Social distribution — авто-посты в LinkedIn, Instagram, TikTok, Facebook, X\n  - Dashboard: 285 articles, 256 social posts, 55 backlinks, 30 Reddit conversations tracked\n\n\nPerspective 1: Product Strategy Lens\n\n  Distribb — это content factory. Их ценностное предложение: \"подключи CMS, мы делаем всё остальное.\" Полный автопилот от ресерча до публикации. Это привлекательно для solo founders / micro-SaaS кто\n  не хочет думать о SEO вообще.\n\n  Koru — это SEO intelligence platform. Наше предложение: \"пойми где ты стоишь, что делать, и делай осознанно.\" Аудиты, GEO Score, AI Brand Visibility, Rank Tracking, Keyword Pipeline, Content Briefs\n  с scoring — это инструменты для принятия решений, не автопилот.\n\n  Вывод: Это разные рынки с перехлёстом. Distribb продаёт \"не думай, мы сделаем.\" Koru продаёт \"думай лучше, действуй точнее.\" Оба подхода жизнеспособны, но для разных покупателей.\n\n Что у нас объективно лучше:\n\n  1. AI-forward intelligence — у них этого просто нет. GEO Score, AI Brand Visibility, Agent Readiness, AI Mode Rank Tracking — это наш moat. Distribb оптимизирует под Google 2020 года (статьи +\n  бэклинки). Мы оптимизируем под Google + ChatGPT + Gemini 2026 года.\n  2. Глубина анализа. Наш audit pipeline, keyword scoring с intent classification + relevance gate + semantic clustering — это аналитический движок. У них \"auto keyword research\" без видимой глубины.\n  3. Ценовая доступность. $19 вход vs $97. Мы доступнее для bootstrapped founders.\n  4. Прозрачность. Наш подход \"вот данные, вот рекомендации, решай сам\" vs их \"trust us, we'll handle it.\" Для серьёзного SEO-профессионала наш подход предпочтительнее.\n  5. Task system с provenance. 9 source types, full audit trail — у них нет workflow management.\n\n  Что у них объективно лучше:\n\n  1. Time-to-value. \"5 minutes → autopilot → articles on Day 2-3\" — наш onboarding значительно медленнее (именно это мы решаем с Onboarding Wizard).\n  2. End-to-end execution. Они не просто анализируют — они делают. Статьи генерятся, публикуются в CMS, расшариваются в соцсетях. У нас content briefs + drafts, но пользователь сам копирует и\n  вставляет.\n  3. Distribution. Social posts, Reddit comments, Medium syndication — мультиканальный output. Мы — single-channel (SEO only).\n  4. Backlink exchange network. Это clever network effect — каждый новый пользователь делает сеть ценнее для остальных. У нас backlinks = мониторинг, не action.\n  5. Visual content calendar. Простая, но мощная штука для планирования.\n\nКритика обоих подходов:\n\n  Distribb risks:\n  - Reddit auto-comments — ethically и TOS-wise рискованно. Reddit банит за это. Скриншот показывает шаблонный comment с subtle brand mention — это astroturfing, который Reddit активно детектит.\n  - Backlink exchange — Google explicitly считает link schemes violation of guidelines. Automated reciprocal linking = penalty risk для пользователей.\n  - 285 AI статей на одном сайте — Helpful Content System может наказать за mass low-quality AI content.\n  - Нет аудита, нет диагностики — они строят на фундаменте который не проверяют.\n\n  Koru risks:\n  - \"Analysis paralysis\" — много данных, мало execution. Пользователь получает 47 рекомендаций и не знает с чего начать.\n  - Нет прямого output delivery — briefs и drafts это полуфабрикат.\n"
+      }
+    ]
+  },
+  "taskDayMoves": {
+    "039": 15,
+    "noa-3": 8,
+    "040": 17,
+    "042": 15,
+    "noa-4": 13,
+    "046": 13,
+    "049b": 20
+  },
+  "dayOverrides": {
+    "16": {
+      "title": "POST DAY: Пост 9 + Company Page",
+      "summary": "Пост 9 (pipeline) + Макс: Company Page setup."
+    }
+  }
+}

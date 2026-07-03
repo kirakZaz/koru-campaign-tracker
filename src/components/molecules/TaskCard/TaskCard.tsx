@@ -15,54 +15,62 @@ import ChatBubbleOutlineRoundedIcon from '@mui/icons-material/ChatBubbleOutlineR
 import Paper from '@mui/material/Paper'
 import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
+import DeleteOutlineRoundedIcon from '@mui/icons-material/DeleteOutlineRounded'
+import TextField from '@mui/material/TextField'
 import AssigneeChip from '@/components/atoms/AssigneeChip/AssigneeChip'
 import type { TaskCardProps } from './TaskCard.types'
 import { styles } from './TaskCard.styles'
 
-const CopyBlock = React.memo(function CopyBlock({ label, text }: { label: string, text: string }) {
+
+const EditableCopyBlock = React.memo(function EditableCopyBlock({ label, text, editable, onSave }: { label: string, text: string, editable: boolean, onSave: (text: string) => void }) {
+    const [editing, setEditing] = React.useState(false)
+    const [value, setValue] = React.useState(text)
     const [copied, setCopied] = React.useState(false)
 
-    const handleCopy = React.useCallback(() => {
-        void navigator.clipboard.writeText(text)
-        setCopied(true)
-        setTimeout(() => setCopied(false), 2000)
-    }, [text])
+    React.useEffect(() => { setValue(text) }, [text])
+
+    if (editing) {
+        return (
+            <Box sx={{ mt: 2, mb: 1 }}>
+                <Typography sx={styles.stepsTitle}>{label}</Typography>
+                <TextField
+                    multiline fullWidth size="small" autoFocus value={value}
+                    onChange={e => setValue(e.target.value)}
+                    onBlur={() => { onSave(value); setEditing(false) }}
+                    onKeyDown={e => { if (e.key === 'Escape') { setValue(text); setEditing(false) } }}
+                    sx={{ '& .MuiInputBase-input': { fontSize: '0.85rem', fontFamily: '"Raleway", sans-serif', lineHeight: 1.7, color: '#e6edf3' }, '& .MuiOutlinedInput-root': { backgroundColor: '#0d1117', border: '1px solid #30363d', borderRadius: 1.5 }, '& .MuiOutlinedInput-notchedOutline': { border: 'none' } }}
+                />
+            </Box>
+        )
+    }
 
     return (
         <Box sx={{ mt: 2, mb: 1 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 0.5 }}>
                 <Typography sx={styles.stepsTitle}>{label}</Typography>
-                <IconButton size="small" onClick={handleCopy} sx={{ color: copied ? 'success.main' : 'text.secondary' }}>
-                    {copied ? <CheckRoundedIcon fontSize="small" /> : <ContentCopyRoundedIcon fontSize="small" />}
-                </IconButton>
+                <Box sx={{ display: 'flex', gap: 0.5 }}>
+                    {editable && (
+                        <IconButton size="small" onClick={() => setEditing(true)} sx={{ color: 'text.secondary', '&:hover': { color: 'primary.main' } }}>
+                            <EditRoundedIcon sx={{ fontSize: '0.8rem' }} />
+                        </IconButton>
+                    )}
+                    <IconButton size="small" onClick={() => { void navigator.clipboard.writeText(text); setCopied(true); setTimeout(() => setCopied(false), 2000) }} sx={{ color: copied ? 'success.main' : 'text.secondary' }}>
+                        {copied ? <CheckRoundedIcon fontSize="small" /> : <ContentCopyRoundedIcon fontSize="small" />}
+                    </IconButton>
+                </Box>
             </Box>
-            <Box sx={{
-                p: 2,
-                borderRadius: 1.5,
-                backgroundColor: '#0d1117',
-                border: '1px solid #30363d',
-                whiteSpace: 'pre-wrap' as const,
-                fontSize: '0.85rem',
-                lineHeight: 1.7,
-                color: '#e6edf3',
-                fontFamily: '"Raleway", sans-serif',
-                maxHeight: 400,
-                overflow: 'auto',
-                cursor: 'pointer',
-                '&:hover': { borderColor: 'primary.main' }
-            }} onClick={handleCopy}>
+            <Box sx={{ p: 2, borderRadius: 1.5, backgroundColor: '#0d1117', border: '1px solid #30363d', whiteSpace: 'pre-wrap' as const, fontSize: '0.85rem', lineHeight: 1.7, color: '#e6edf3', fontFamily: '"Raleway", sans-serif', maxHeight: 400, overflow: 'auto', cursor: editable ? 'pointer' : 'default', '&:hover': editable ? { borderColor: 'primary.main' } : {} }}
+                onDoubleClick={editable ? () => setEditing(true) : undefined}
+                onClick={() => { void navigator.clipboard.writeText(text); setCopied(true); setTimeout(() => setCopied(false), 2000) }}
+            >
                 {text}
             </Box>
-            {copied && (
-                <Typography sx={{ fontSize: '0.7rem', color: 'success.main', mt: 0.5, fontWeight: 600 }}>
-                    Скопировано!
-                </Typography>
-            )}
+            {copied && <Typography sx={{ fontSize: '0.7rem', color: 'success.main', mt: 0.5, fontWeight: 600 }}>Скопировано!</Typography>}
         </Box>
     )
 })
 
-const TaskCard = React.memo(function TaskCard({ task, isTaskCompleted, onToggleTask, onEditTask, currentDayIndex, allDays, onMoveTask }: TaskCardProps) {
+const TaskCard = React.memo(function TaskCard({ task, isTaskCompleted, onToggleTask, onEditTask, currentDayIndex, allDays, onMoveTask, onUpdateTask, onDeleteTask }: TaskCardProps) {
     const [expanded, setExpanded] = React.useState(false)
 
     const taskCompleted = isTaskCompleted(task.id)
@@ -96,11 +104,23 @@ const TaskCard = React.memo(function TaskCard({ task, isTaskCompleted, onToggleT
                 />
                 <Box sx={styles.headerLeft}>
                     <Box sx={styles.titleRow}>
-                        <Typography sx={styles.title(taskCompleted)}>
+                        <Typography
+                            sx={{ ...styles.title(taskCompleted), cursor: onUpdateTask ? 'text' : 'default', '&:hover': onUpdateTask ? { outline: '1px solid #30363d', borderRadius: 1 } : {} }}
+                            contentEditable={!!onUpdateTask}
+                            suppressContentEditableWarning
+                            onClick={onUpdateTask ? (e: React.MouseEvent) => e.stopPropagation() : undefined}
+                            onBlur={onUpdateTask ? (e: React.FocusEvent) => { const v = e.currentTarget.textContent || ''; if (v !== task.title) onUpdateTask(task.id, { title: v }) } : undefined}
+                        >
                             {task.title}
                         </Typography>
                     </Box>
-                    <Typography sx={styles.description}>
+                    <Typography
+                        sx={{ ...styles.description, cursor: onUpdateTask ? 'text' : 'default', '&:hover': onUpdateTask ? { outline: '1px solid #30363d', borderRadius: 1 } : {} }}
+                        contentEditable={!!onUpdateTask}
+                        suppressContentEditableWarning
+                        onClick={onUpdateTask ? (e: React.MouseEvent) => e.stopPropagation() : undefined}
+                        onBlur={onUpdateTask ? (e: React.FocusEvent) => { const v = e.currentTarget.textContent || ''; if (v !== task.description) onUpdateTask(task.id, { description: v }) } : undefined}
+                    >
                         {task.description}
                     </Typography>
                     <Box sx={styles.chips}>
@@ -143,6 +163,15 @@ const TaskCard = React.memo(function TaskCard({ task, isTaskCompleted, onToggleT
                     >
                         <EditRoundedIcon fontSize="small" />
                     </IconButton>
+                    {onDeleteTask && (
+                        <IconButton
+                            size="small"
+                            sx={{ color: 'text.secondary', '&:hover': { color: 'error.main' } }}
+                            onClick={(e) => { e.stopPropagation(); if (window.confirm('Удалить задачу?')) onDeleteTask(task.id) }}
+                        >
+                            <DeleteOutlineRoundedIcon fontSize="small" />
+                        </IconButton>
+                    )}
                 </Box>
             </Box>
 
@@ -170,7 +199,13 @@ const TaskCard = React.memo(function TaskCard({ task, isTaskCompleted, onToggleT
                     ))}
 
                     {task.copyBlocks && task.copyBlocks.length > 0 && task.copyBlocks.map((block, idx) => (
-                        <CopyBlock key={idx} label={block.label} text={block.text} />
+                        <EditableCopyBlock key={idx} label={block.label} text={block.text} editable={!!onUpdateTask} onSave={(newText) => {
+                            if (onUpdateTask && newText !== block.text) {
+                                const newBlocks = [...(task.copyBlocks || [])]
+                                newBlocks[idx] = { ...block, text: newText }
+                                onUpdateTask(task.id, { copyBlocks: newBlocks })
+                            }
+                        }} />
                     ))}
 
                     {totalSubtasks > 0 && (

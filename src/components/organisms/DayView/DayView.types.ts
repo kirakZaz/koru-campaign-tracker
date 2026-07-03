@@ -1,4 +1,4 @@
-import type { CampaignDay, CampaignTask } from '@/data/campaignData.types'
+import type { CampaignDay, CampaignTask, LiveTask } from '@/data/campaignData.types'
 
 export interface OverdueDay {
     dayIndex: number
@@ -20,4 +20,7 @@ export interface DayViewProps {
     allDays?: CampaignDay[]
     onMoveTask?: (taskId: string, dayIndex: number) => void
     onSaveDayOverride?: (dayIndex: number, override: { title?: string, summary?: string }) => void
+    onUpdateTask?: (taskId: string, patch: Partial<LiveTask>) => void
+    onDeleteTask?: (taskId: string) => void
+    onCreateTask?: (dayIndex: number) => void
 }
