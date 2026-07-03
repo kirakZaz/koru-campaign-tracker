@@ -25,7 +25,8 @@ const DayView = React.memo(function DayView({
     overdueDays,
     onGoToDay,
     allDays,
-    onMoveTask
+    onMoveTask,
+    onSaveDayOverride
 }: DayViewProps) {
     const debounceRef = React.useRef<ReturnType<typeof setTimeout> | null>(null)
     const [searchQuery, setSearchQuery] = React.useState('')
@@ -85,10 +86,26 @@ const DayView = React.memo(function DayView({
                         {completedTasks}/{totalTasks} задач
                     </Typography>
                 </Box>
-                <Typography sx={styles.dayTitle}>
+                <Typography
+                    sx={{ ...styles.dayTitle, cursor: onSaveDayOverride ? 'text' : 'default', '&:hover': onSaveDayOverride ? { outline: '1px solid #30363d', borderRadius: 1, px: 0.5, mx: -0.5 } : {} }}
+                    contentEditable={!!onSaveDayOverride}
+                    suppressContentEditableWarning
+                    onBlur={(e) => {
+                        const newTitle = e.currentTarget.textContent || ''
+                        if (newTitle !== day.title && onSaveDayOverride) onSaveDayOverride(day.dayIndex, { title: newTitle, summary: day.summary })
+                    }}
+                >
                     {day.title}
                 </Typography>
-                <Typography sx={styles.daySummary}>
+                <Typography
+                    sx={{ ...styles.daySummary, cursor: onSaveDayOverride ? 'text' : 'default', '&:hover': onSaveDayOverride ? { outline: '1px solid #30363d', borderRadius: 1, px: 0.5, mx: -0.5 } : {} }}
+                    contentEditable={!!onSaveDayOverride}
+                    suppressContentEditableWarning
+                    onBlur={(e) => {
+                        const newSummary = e.currentTarget.textContent || ''
+                        if (newSummary !== day.summary && onSaveDayOverride) onSaveDayOverride(day.dayIndex, { title: day.title, summary: newSummary })
+                    }}
+                >
                     {day.summary}
                 </Typography>
                 {day.keyMetric && (

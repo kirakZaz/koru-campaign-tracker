@@ -19,4 +19,5 @@ export interface DayViewProps {
     onGoToDay: (dayIndex: number) => void
     allDays?: CampaignDay[]
     onMoveTask?: (taskId: string, dayIndex: number) => void
+    onSaveDayOverride?: (dayIndex: number, override: { title?: string, summary?: string }) => void
 }

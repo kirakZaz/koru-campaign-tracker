@@ -163,6 +163,27 @@ export function useProgress() {
         }
     }, [])
 
+    const saveDayOverride = React.useCallback(async (dayIndex: number, override: { title?: string, summary?: string }) => {
+        setProgress(prev => ({
+            ...prev,
+            dayOverrides: { ...(prev.dayOverrides ?? {}), [dayIndex]: override }
+        }))
+
+        try {
+            await fetch(API_URL, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'set-day-override', dayIndex: String(dayIndex), override })
+            })
+        } catch {
+            setProgress(prev => {
+                const overrides = { ...(prev.dayOverrides ?? {}) }
+                delete overrides[dayIndex]
+                return { ...prev, dayOverrides: overrides }
+            })
+        }
+    }, [])
+
     const saveOverviewSection = React.useCallback(async (sectionKey: string, value: { en: string, ru: string }) => {
         setProgress(prev => ({
             ...prev,
@@ -263,6 +284,8 @@ export function useProgress() {
         saveWeekInsights,
         saveTaskDayMove,
         taskDayMoves: progress.taskDayMoves ?? {},
+        saveDayOverride,
+        dayOverrides: progress.dayOverrides ?? {},
         refetch: fetchProgress
     }
 }

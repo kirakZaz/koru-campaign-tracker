@@ -71,6 +71,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             } else if (action === 'set-task-day-move') {
                 if (!data.taskDayMoves) data.taskDayMoves = {}
                 data.taskDayMoves[req.body.taskId as string] = req.body.dayIndex as number
+            } else if (action === 'set-day-override') {
+                if (!data.dayOverrides) data.dayOverrides = {}
+                data.dayOverrides[req.body.dayIndex as string] = req.body.override as { title?: string, summary?: string }
             }
 
             await redis.set(PROGRESS_KEY, data)

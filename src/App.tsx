@@ -58,7 +58,7 @@ function applyOverride(task: CampaignTask, override: TaskOverride | undefined): 
 }
 
 function App() {
-    const { progress, isLoading, error, toggleTask, setStartDate, setNote, isTaskCompleted, saveTaskOverride, getTaskOverride, saveTeam, saveSources, saveOverviewSection, overviewOverrides, sources, weekInsights, saveWeekInsights, saveTaskDayMove, taskDayMoves } = useProgress()
+    const { progress, isLoading, error, toggleTask, setStartDate, setNote, isTaskCompleted, saveTaskOverride, getTaskOverride, saveTeam, saveSources, saveOverviewSection, overviewOverrides, sources, weekInsights, saveWeekInsights, saveTaskDayMove, taskDayMoves, saveDayOverride, dayOverrides } = useProgress()
     const [currentDayIndex, setCurrentDayIndexRaw] = React.useState(() => {
         const hash = window.location.hash.slice(1)
         if (hash) {
@@ -108,14 +108,19 @@ function App() {
                 movedToDay[targetDay]!.push(task)
             }
         }
-        return CAMPAIGN_DAYS.map((day) => ({
-            ...day,
-            tasks: [
-                ...day.tasks.filter(t => !movedTaskIds.has(t.id)).map(t => applyOverride(t, getTaskOverride(t.id))),
-                ...(movedToDay[day.dayIndex] ?? []).map(({ _origDay, ...t }) => t)
-            ]
-        }))
-    }, [getTaskOverride, taskDayMoves])
+        return CAMPAIGN_DAYS.map((day) => {
+            const dayOv = dayOverrides[day.dayIndex]
+            return {
+                ...day,
+                title: dayOv?.title || day.title,
+                summary: dayOv?.summary || day.summary,
+                tasks: [
+                    ...day.tasks.filter(t => !movedTaskIds.has(t.id)).map(t => applyOverride(t, getTaskOverride(t.id))),
+                    ...(movedToDay[day.dayIndex] ?? []).map(({ _origDay, ...t }) => t)
+                ]
+            }
+        })
+    }, [getTaskOverride, taskDayMoves, dayOverrides])
 
     const overdueDays = React.useMemo((): OverdueDay[] => {
         if (!progress.startDate) {
@@ -329,6 +334,7 @@ function App() {
                         onGoToDay={setCurrentDayIndex}
                         allDays={mergedDays}
                         onMoveTask={saveTaskDayMove}
+                        onSaveDayOverride={saveDayOverride}
                     />
                 )}
             </Box>
