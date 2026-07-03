@@ -404,15 +404,20 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
         save(next)
     }
 
+    // Only sync from server on FIRST load — don't overwrite user edits
+    const initializedRef = React.useRef(false)
     React.useEffect(() => {
-        setLocal({
-            people: sources.people || [],
-            groups: sources.groups || [],
-            companies: sources.companies || [],
-            shortlist: sources.shortlist || [],
-            competitors: sources.competitors || [],
-            countries: sources.countries || []
-        })
+        if (!initializedRef.current) {
+            setLocal({
+                people: sources.people || [],
+                groups: sources.groups || [],
+                companies: sources.companies || [],
+                shortlist: sources.shortlist || [],
+                competitors: sources.competitors || [],
+                countries: sources.countries || []
+            })
+            initializedRef.current = true
+        }
     }, [sources])
 
     const save = React.useCallback((next: typeof local) => {
