@@ -82,6 +82,25 @@ export interface InsightEntry {
     text: string
 }
 
+// === Campaign State: single source of truth ===
+
+export interface LiveTask extends CampaignTask {
+    completed?: boolean
+    completedSubtasks?: Record<string, boolean>
+    _edited?: boolean
+}
+
+export interface LiveDay extends Omit<CampaignDay, 'tasks'> {
+    tasks: LiveTask[]
+    note?: string
+    _edited?: boolean
+}
+
+export interface CampaignState {
+    version: number
+    days: LiveDay[]
+}
+
 export interface ProgressData {
     completedTasks: Record<string, boolean>
     startDate: string | null
@@ -93,4 +112,5 @@ export interface ProgressData {
     overviewOverrides?: Record<string, { en: string, ru: string }>
     sources?: SourcesData
     weekInsights?: Record<string, InsightEntry[]>
+    campaignState?: CampaignState
 }

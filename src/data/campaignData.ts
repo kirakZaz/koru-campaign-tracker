@@ -1,4 +1,4 @@
-import type { CampaignDay } from './campaignData.types'
+import type { CampaignDay, CampaignState, LiveDay, LiveTask } from './campaignData.types'
 
 export const CAMPAIGN_DAYS: CampaignDay[] = [
     // ==========================================
@@ -556,3 +556,58 @@ export const CAMPAIGN_DAYS: CampaignDay[] = [
 ]
 
 export const TOTAL_CAMPAIGN_DAYS = CAMPAIGN_DAYS.length
+
+export const CAMPAIGN_VERSION = 2
+
+export function buildInitialState(
+    existingProgress?: { completedTasks?: Record<string, boolean>, notes?: Record<string, string>, taskOverrides?: Record<string, any>, taskDayMoves?: Record<string, number>, dayOverrides?: Record<string, { title?: string, summary?: string }> }
+): CampaignState {
+    const completedTasks = existingProgress?.completedTasks ?? {}
+    const notes = existingProgress?.notes ?? {}
+    const taskOverrides = existingProgress?.taskOverrides ?? {}
+    const taskDayMoves = existingProgress?.taskDayMoves ?? {}
+    const dayOverrides = existingProgress?.dayOverrides ?? {}
+
+    // Build days with tasks, applying existing overrides
+    const days: LiveDay[] = CAMPAIGN_DAYS.map(day => {
+        const dayOv = dayOverrides[day.dayIndex]
+        return {
+            ...day,
+            title: dayOv?.title || day.title,
+            summary: dayOv?.summary || day.summary,
+            note: notes[day.dayIndex] ?? '',
+            _edited: !!dayOv,
+            tasks: day.tasks.map(task => {
+                const ov = taskOverrides[task.id] as any
+                const liveTask: LiveTask = {
+                    ...task,
+                    ...(ov ? { title: ov.title ?? task.title, description: ov.description ?? task.description, steps: ov.steps ?? task.steps, subtasks: ov.subtasks ?? task.subtasks, assignee: ov.assignee ?? task.assignee, estimate: ov.estimate ?? task.estimate, tip: ov.tip !== undefined ? ov.tip : task.tip, warning: ov.warning !== undefined ? ov.warning : task.warning } : {}),
+                    completed: !!completedTasks[task.id],
+                    completedSubtasks: Object.fromEntries(task.subtasks.filter(st => completedTasks[st.id]).map(st => [st.id, true])),
+                    _edited: !!ov
+                }
+                return liveTask
+            })
+        }
+    })
+
+    // Apply task moves
+    for (const [taskId, targetDayIndex] of Object.entries(taskDayMoves)) {
+        let movedTask: LiveTask | undefined
+        // Remove from source day
+        for (const day of days) {
+            const idx = day.tasks.findIndex(t => t.id === taskId)
+            if (idx !== -1) {
+                movedTask = day.tasks.splice(idx, 1)[0]
+                break
+            }
+        }
+        // Add to target day
+        if (movedTask) {
+            const targetDay = days.find(d => d.dayIndex === targetDayIndex)
+            if (targetDay) targetDay.tasks.push(movedTask)
+        }
+    }
+
+    return { version: CAMPAIGN_VERSION, days }
+}

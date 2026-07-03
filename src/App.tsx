@@ -9,7 +9,7 @@ import MenuRoundedIcon from '@mui/icons-material/MenuRounded'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { useTheme } from '@mui/material/styles'
 import { CAMPAIGN_DAYS } from '@/data/campaignData'
-import type { CampaignTask, CampaignDay, TaskOverride } from '@/data/campaignData.types'
+import type { CampaignTask, CampaignDay } from '@/data/campaignData.types'
 import type { OverdueDay } from '@/components/organisms/DayView/DayView.types'
 import { useProgress } from '@/hooks/useProgress'
 import { getTodayDayIndex } from '@/utils/dateUtils'
@@ -40,25 +40,9 @@ export function getInsightsIndex(phaseIdx: number): number {
     return -501 - phaseIdx
 }
 
-function applyOverride(task: CampaignTask, override: TaskOverride | undefined): CampaignTask {
-    if (!override) {
-        return task
-    }
-    return {
-        ...task,
-        title: override.title ?? task.title,
-        description: override.description ?? task.description,
-        steps: override.steps ?? task.steps,
-        subtasks: override.subtasks ?? task.subtasks,
-        assignee: override.assignee ?? task.assignee,
-        estimate: override.estimate ?? task.estimate,
-        tip: override.tip !== undefined ? override.tip : task.tip,
-        warning: override.warning !== undefined ? override.warning : task.warning
-    }
-}
 
 function App() {
-    const { progress, isLoading, error, toggleTask, setStartDate, setNote, isTaskCompleted, saveTaskOverride, getTaskOverride, saveTeam, saveSources, saveOverviewSection, overviewOverrides, sources, weekInsights, saveWeekInsights, saveTaskDayMove, taskDayMoves, saveDayOverride, dayOverrides } = useProgress()
+    const { progress, isLoading, error, toggleTask, setStartDate, setNote, isTaskCompleted, saveTaskOverride, saveTeam, saveSources, saveOverviewSection, overviewOverrides, sources, weekInsights, saveWeekInsights, campaignState, moveTaskLive, updateDayLive } = useProgress()
     const [currentDayIndex, setCurrentDayIndexRaw] = React.useState(() => {
         const hash = window.location.hash.slice(1)
         if (hash) {
@@ -94,33 +78,14 @@ function App() {
     const muiTheme = useTheme()
     const isMobile = useMediaQuery(muiTheme.breakpoints.down('md'))
 
+    // Single source of truth: render from campaignState (server) or fallback to static template
     const mergedDays = React.useMemo((): CampaignDay[] => {
-        // Collect all tasks, apply overrides
-        const allTasks = CAMPAIGN_DAYS.flatMap(day => day.tasks.map(task => ({ ...applyOverride(task, getTaskOverride(task.id)), _origDay: day.dayIndex })))
-        // Build moved tasks map: dayIndex → tasks moved TO this day
-        const movedToDay: Record<number, typeof allTasks> = {}
-        const movedTaskIds = new Set<string>()
-        for (const task of allTasks) {
-            const targetDay = taskDayMoves[task.id]
-            if (targetDay !== undefined && targetDay !== task._origDay) {
-                movedTaskIds.add(task.id)
-                if (!movedToDay[targetDay]) movedToDay[targetDay] = []
-                movedToDay[targetDay]!.push(task)
-            }
+        if (campaignState) {
+            return campaignState.days as CampaignDay[]
         }
-        return CAMPAIGN_DAYS.map((day) => {
-            const dayOv = dayOverrides[day.dayIndex]
-            return {
-                ...day,
-                title: dayOv?.title || day.title,
-                summary: dayOv?.summary || day.summary,
-                tasks: [
-                    ...day.tasks.filter(t => !movedTaskIds.has(t.id)).map(t => applyOverride(t, getTaskOverride(t.id))),
-                    ...(movedToDay[day.dayIndex] ?? []).map(({ _origDay, ...t }) => t)
-                ]
-            }
-        })
-    }, [getTaskOverride, taskDayMoves, dayOverrides])
+        // Fallback: static template (before campaignState loads)
+        return CAMPAIGN_DAYS
+    }, [campaignState])
 
     const overdueDays = React.useMemo((): OverdueDay[] => {
         if (!progress.startDate) {
@@ -198,7 +163,7 @@ function App() {
         setEditingTask(null)
     }, [])
 
-    const handleSaveEdit = React.useCallback((taskId: string, override: TaskOverride) => {
+    const handleSaveEdit = React.useCallback((taskId: string, override: any) => {
         void saveTaskOverride(taskId, override)
     }, [saveTaskOverride])
 
@@ -333,8 +298,13 @@ function App() {
                         overdueDays={overdueDays}
                         onGoToDay={setCurrentDayIndex}
                         allDays={mergedDays}
-                        onMoveTask={saveTaskDayMove}
-                        onSaveDayOverride={saveDayOverride}
+                        onMoveTask={(taskId: string, toDayIndex: number) => {
+                            const fromDay = mergedDays.find(d => d.tasks.some(t => t.id === taskId))
+                            if (fromDay) moveTaskLive(taskId, fromDay.dayIndex, toDayIndex)
+                        }}
+                        onSaveDayOverride={(dayIndex: number, override: { title?: string, summary?: string }) => {
+                            updateDayLive(dayIndex, override)
+                        }}
                     />
                 )}
             </Box>
