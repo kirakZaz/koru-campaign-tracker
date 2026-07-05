@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { getCampaignWeek } from '@/utils/dateUtils'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Tabs from '@mui/material/Tabs'
@@ -282,14 +283,7 @@ function getAutoActions(week: number, priority: IcpPriority): ShortlistAction[] 
     return ['send_cr', 'send_dm']
 }
 
-function getCampaignWeek(startDate: string | null | undefined): number {
-    if (!startDate) return 1
-    const start = new Date(startDate)
-    const now = new Date()
-    const diffMs = now.getTime() - start.getTime()
-    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24))
-    return Math.max(1, Math.ceil((diffDays + 1) / 7))
-}
+// getCampaignWeek imported from @/utils/dateUtils
 
 export default function SourcesView({ sources, onSaveSources, startDate, initialTab }: SourcesViewProps) {
     const [tab, setTab] = React.useState(initialTab ?? 0)

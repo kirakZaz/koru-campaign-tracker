@@ -14,7 +14,7 @@ import FormControl from '@mui/material/FormControl'
 import InputLabel from '@mui/material/InputLabel'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
-import { getCampaignDate, formatCampaignDate } from '@/utils/dateUtils'
+import { getCampaignDate, formatCampaignDate, getViewerTimezone, getTimezoneAbbr } from '@/utils/dateUtils'
 import { CAMPAIGN_DAYS } from '@/data/campaignData'
 import type { TeamMember, Assignee } from '@/data/campaignData.types'
 import type { SettingsDialogProps } from './SettingsDialog.types'
@@ -45,7 +45,7 @@ const REMINDER_TIMES = [
 ]
 
 const DEFAULT_TEAM: TeamMember[] = [
-    { name: 'Кира', assigneeKey: 'Кира' as Assignee, email: '', timezone: 'Europe/Lisbon', reminderTime: '09:00', remindersEnabled: false },
+    { name: 'Кира', assigneeKey: 'Кира' as Assignee, email: '', timezone: 'Australia/Sydney', reminderTime: '09:00', remindersEnabled: false },
     { name: 'Настя', assigneeKey: 'Настя' as Assignee, email: '', timezone: 'Europe/Lisbon', reminderTime: '09:00', remindersEnabled: false },
     { name: 'Макс', assigneeKey: 'Макс' as Assignee, email: '', timezone: 'Asia/Jerusalem', reminderTime: '09:00', remindersEnabled: false },
 ]
@@ -149,7 +149,7 @@ const SettingsDialog = React.memo(function SettingsDialog({
                                 label="Дата старта"
                             />
                             <Typography sx={styles.dateInfo}>
-                                Выходные пропускаются автоматически.
+                                Выходные пропускаются автоматически. Часовой пояс: {getViewerTimezone()} ({getTimezoneAbbr(getViewerTimezone())})
                             </Typography>
                         </Box>
                         {dateValue && (

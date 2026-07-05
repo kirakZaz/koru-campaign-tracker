@@ -6,7 +6,7 @@ import Button from '@mui/material/Button'
 import ChevronLeftRoundedIcon from '@mui/icons-material/ChevronLeftRounded'
 import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded'
 import TodayRoundedIcon from '@mui/icons-material/TodayRounded'
-import { getCampaignDate, formatCampaignDate } from '@/utils/dateUtils'
+import { getCampaignDate, formatCampaignDate, formatFullDateTime } from '@/utils/dateUtils'
 import type { DayNavigationProps } from './DayNavigation.types'
 import { styles } from './DayNavigation.styles'
 
@@ -18,6 +18,12 @@ const DayNavigation = React.memo(function DayNavigation({
     onGoToToday
 }: DayNavigationProps) {
     const currentPos = allDayIndexes.indexOf(currentDayIndex)
+    const [clock, setClock] = React.useState(() => formatFullDateTime())
+
+    React.useEffect(() => {
+        const id = setInterval(() => setClock(formatFullDateTime()), 60_000)
+        return () => clearInterval(id)
+    }, [])
 
     const handlePrev = React.useCallback(() => {
         if (currentPos > 0) {
@@ -47,15 +53,25 @@ const DayNavigation = React.memo(function DayNavigation({
                 <ChevronRightRoundedIcon />
             </IconButton>
             {startDate && (
-                <Button
-                    variant="outlined"
-                    size="small"
-                    startIcon={<TodayRoundedIcon />}
-                    onClick={onGoToToday}
-                    sx={styles.todayButton}
-                >
-                    Сегодня
-                </Button>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <Button
+                        variant="outlined"
+                        size="small"
+                        startIcon={<TodayRoundedIcon />}
+                        onClick={onGoToToday}
+                        sx={styles.todayButton}
+                    >
+                        Сегодня
+                    </Button>
+                    <Typography sx={{
+                        fontSize: '0.72rem',
+                        color: 'text.secondary',
+                        whiteSpace: 'nowrap',
+                        fontWeight: 500
+                    }}>
+                        {clock}
+                    </Typography>
+                </Box>
             )}
         </Box>
     )

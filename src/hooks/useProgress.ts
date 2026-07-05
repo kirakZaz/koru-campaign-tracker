@@ -16,9 +16,9 @@ export function useProgress() {
     const [isLoading, setIsLoading] = React.useState(true)
     const [error, setError] = React.useState<string | null>(null)
 
-    const fetchProgress = React.useCallback(async () => {
+    const fetchProgress = React.useCallback(async (signal?: AbortSignal) => {
         try {
-            const res = await fetch(API_URL)
+            const res = await fetch(API_URL, { signal })
             if (!res.ok) throw new Error('Failed to fetch')
             const data = await res.json() as ProgressData
             setProgress(data)
@@ -26,10 +26,8 @@ export function useProgress() {
 
             // Seed or load campaignState
             if (data.campaignState && data.campaignState.version >= CAMPAIGN_VERSION) {
-                // Server has up-to-date state — use it
                 setCampaignState(data.campaignState)
             } else {
-                // Need to seed: build from template + migrate existing overrides
                 const state = buildInitialState({
                     completedTasks: data.completedTasks,
                     notes: data.notes,
@@ -38,14 +36,15 @@ export function useProgress() {
                     dayOverrides: data.dayOverrides
                 })
                 setCampaignState(state)
-                // Save to server
                 await fetch(API_URL, {
                     method: 'PATCH',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: 'seed-campaign-state', campaignState: state })
+                    body: JSON.stringify({ action: 'seed-campaign-state', campaignState: state }),
+                    signal
                 })
             }
-        } catch {
+        } catch (e) {
+            if (e instanceof DOMException && e.name === 'AbortError') return
             setError('Failed to load progress')
         } finally {
             setIsLoading(false)
@@ -53,7 +52,9 @@ export function useProgress() {
     }, [])
 
     React.useEffect(() => {
-        void fetchProgress()
+        const controller = new AbortController()
+        void fetchProgress(controller.signal)
+        return () => controller.abort()
     }, [fetchProgress])
 
     // === Campaign State operations (new) ===
