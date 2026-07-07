@@ -11,15 +11,8 @@ function getRedis() {
 }
 
 interface ProgressData {
-    completedTasks: Record<string, boolean>
     startDate: string | null
-    notes: Record<string, string>
-    taskOverrides: Record<string, unknown>
-    taskDayMoves?: Record<string, number>
-    dayOverrides?: Record<string, { title?: string, summary?: string }>
-    team: unknown[]
-    overviewOverrides: Record<string, { en: string, ru: string }>
-    sources: { people: unknown[], groups: unknown[], companies: unknown[], shortlist: unknown[], competitors?: unknown[], countries?: string[] }
+    overviewOverrides?: Record<string, { en: string, ru: string }>
     weekInsights?: Record<string, unknown[]>
     campaignState?: {
         version: number
@@ -30,15 +23,15 @@ interface ProgressData {
             title: string
             summary: string
             tasks: Array<Record<string, unknown>>
-            note?: string
-            _edited?: boolean
+            note: string
+            _edited: boolean
             keyMetric?: string
             calendarDayOffset?: number
         }>
     }
 }
 
-const DEFAULT_DATA: ProgressData = { completedTasks: {}, startDate: null, notes: {}, taskOverrides: {}, team: [], overviewOverrides: {}, sources: { people: [], groups: [], companies: [], shortlist: [] } }
+const DEFAULT_DATA: ProgressData = { startDate: null }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
     const redis = getRedis()
@@ -68,19 +61,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             const data: ProgressData = (await redis.get<ProgressData>(PROGRESS_KEY)) ?? { ...DEFAULT_DATA }
             const { action } = req.body as { action: string, [key: string]: unknown }
 
-            // === Legacy actions (kept for backward compat) ===
             if (action === 'toggle-task') {
-                data.completedTasks[req.body.taskId as string] = req.body.completed as boolean
-                // Also update in campaignState if exists
                 if (data.campaignState) {
+                    const { taskId, completed } = req.body as { taskId: string, completed: boolean }
                     for (const day of data.campaignState.days) {
-                        const task = day.tasks.find((t: any) => t.id === req.body.taskId)
-                        if (task) { task.completed = req.body.completed; break }
-                        // Check subtasks
+                        const task = day.tasks.find((t: any) => t.id === taskId)
+                        if (task) { task.completed = completed; break }
                         for (const t of day.tasks) {
-                            if ((t as any).subtasks?.some((st: any) => st.id === req.body.taskId)) {
+                            if ((t as any).subtasks?.some((st: any) => st.id === taskId)) {
                                 if (!(t as any).completedSubtasks) (t as any).completedSubtasks = {}
-                                ;(t as any).completedSubtasks[req.body.taskId as string] = req.body.completed
+                                ;(t as any).completedSubtasks[taskId] = completed
                                 break
                             }
                         }
@@ -88,29 +78,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                 }
             } else if (action === 'set-start-date') {
                 data.startDate = req.body.startDate as string
-            } else if (action === 'set-note') {
-                data.notes[req.body.dayIndex as string] = req.body.note as string
-                // Also update in campaignState
-                if (data.campaignState) {
-                    const day = data.campaignState.days.find(d => d.dayIndex === Number(req.body.dayIndex))
-                    if (day) day.note = req.body.note as string
-                }
-            } else if (action === 'set-task-override') {
-                data.taskOverrides[req.body.taskId as string] = req.body.override
             } else if (action === 'set-overview-section') {
                 if (!data.overviewOverrides) data.overviewOverrides = {} as any
                 data.overviewOverrides[req.body.sectionKey as string] = req.body.value as { en: string, ru: string }
             } else if (action === 'set-week-insights') {
                 if (!data.weekInsights) data.weekInsights = {}
                 data.weekInsights[req.body.phase as string] = req.body.insights
-            } else if (action === 'set-task-day-move') {
-                if (!data.taskDayMoves) data.taskDayMoves = {}
-                data.taskDayMoves[req.body.taskId as string] = req.body.dayIndex as number
-            } else if (action === 'set-day-override') {
-                if (!data.dayOverrides) data.dayOverrides = {}
-                data.dayOverrides[req.body.dayIndex as string] = req.body.override as { title?: string, summary?: string }
-
-            // === Campaign State actions (new single source of truth) ===
             } else if (action === 'seed-campaign-state') {
                 // Only seed if not already present or if version is newer
                 const incoming = req.body.campaignState as ProgressData['campaignState']
