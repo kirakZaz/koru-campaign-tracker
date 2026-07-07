@@ -249,6 +249,7 @@ function App() {
                             <DayNavigation
                                 currentDayIndex={currentDayIndex}
                                 allDayIndexes={mergedDays.map((d) => d.dayIndex)}
+                                calendarDayOffsets={Object.fromEntries(mergedDays.map((d) => [d.dayIndex, d.calendarDayOffset]))}
                                 startDate={progress.startDate}
                                 onDayChange={setCurrentDayIndex}
                                 onGoToToday={handleGoToToday}

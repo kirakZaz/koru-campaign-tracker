@@ -13,6 +13,7 @@ import { styles } from './DayNavigation.styles'
 const DayNavigation = React.memo(function DayNavigation({
     currentDayIndex,
     allDayIndexes,
+    calendarDayOffsets,
     startDate,
     onDayChange,
     onGoToToday
@@ -38,7 +39,7 @@ const DayNavigation = React.memo(function DayNavigation({
     }, [currentPos, allDayIndexes, onDayChange])
 
     const dateLabel = startDate
-        ? formatCampaignDate(getCampaignDate(startDate, currentDayIndex))
+        ? formatCampaignDate(getCampaignDate(startDate, currentDayIndex, calendarDayOffsets[currentDayIndex]))
         : `День ${currentDayIndex}`
 
     return (
