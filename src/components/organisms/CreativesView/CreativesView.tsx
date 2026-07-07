@@ -233,26 +233,6 @@ const POST_VISUALS: PostVisual[] = [
     {
         id: 'post6',
         postNumber: 6,
-        title: 'Earned Media — 84% stat',
-        card: (
-            <div id="card-post6" style={cardBase}>
-                <div style={{ textAlign: 'center' }}>
-                    <div style={{ fontSize: 96, fontWeight: 900, color: '#4a7fb5', lineHeight: 1 }}>84%</div>
-                    <div style={{ fontSize: 18, color: '#2E3633', marginTop: 12, fontWeight: 600 }}>of AI-cited pages come from</div>
-                    <div style={{ fontSize: 24, color: '#4a7fb5', fontWeight: 800, marginTop: 4 }}>earned media</div>
-                    <div style={{ width: 60, height: 2, backgroundColor: '#4a7fb555', margin: '28px auto' }} />
-                    <div style={{ fontSize: 15, color: '#6b6b6b', lineHeight: 1.7 }}>
-                        Industry publications. Reviews.<br />
-                        Reddit. YouTube. Wikipedia.<br /><br />
-                        Not your own blog.
-                    </div>
-                </div>
-            </div>
-        ),
-    },
-    {
-        id: 'post7',
-        postNumber: 7,
         title: '14 GEO Rules — full checklist',
         tall: true,
         card: (
@@ -290,39 +270,32 @@ const POST_VISUALS: PostVisual[] = [
         ),
     },
     {
-        id: 'post8',
-        postNumber: 8,
-        title: 'AI Brand Visibility — ChatGPT vs Gemini',
+        id: 'post7',
+        postNumber: 7,
+        title: 'Earned Media — 84% stat',
         card: (
-            <div id="card-post8" style={cardBase}>
-                <div style={{ textAlign: 'center', marginBottom: 28 }}>
-                    <div style={{ fontSize: 20, fontWeight: 800, color: '#2E3633' }}>Is AI recommending your brand?</div>
+            <div id="card-post7" style={cardBase}>
+                <div style={{ textAlign: 'center' }}>
+                    <div style={{ fontSize: 96, fontWeight: 900, color: '#4a7fb5', lineHeight: 1 }}>84%</div>
+                    <div style={{ fontSize: 18, color: '#2E3633', marginTop: 12, fontWeight: 600 }}>of AI-cited pages come from</div>
+                    <div style={{ fontSize: 24, color: '#4a7fb5', fontWeight: 800, marginTop: 4 }}>earned media</div>
+                    <div style={{ width: 60, height: 2, backgroundColor: '#4a7fb555', margin: '28px auto' }} />
+                    <div style={{ fontSize: 15, color: '#6b6b6b', lineHeight: 1.7 }}>
+                        Industry publications. Reviews.<br />
+                        Reddit. YouTube. Wikipedia.<br /><br />
+                        Not your own blog.
+                    </div>
                 </div>
-                <div style={{ width: '100%', marginBottom: 16, padding: '14px 16px', backgroundColor: '#f0ede8', borderRadius: 8, border: '1px solid #3FB68E55' }}>
-                    <div style={{ fontSize: 12, color: '#6b6b6b', marginBottom: 6, fontWeight: 600 }}>ChatGPT: "Best SEO tool for freelancers?"</div>
-                    {['1. Ahrefs', '2. Semrush', '3. Surfer SEO', '4. SE Ranking', '5. Mangools'].map((item, i) => (
-                        <div key={i} style={{ fontSize: 13, color: '#2E3633', lineHeight: 1.6, paddingLeft: 8 }}>{item}</div>
-                    ))}
-                    <div style={{ fontSize: 13, color: '#B5423F', marginTop: 8, fontWeight: 600 }}>Your brand: not listed</div>
-                </div>
-                <div style={{ width: '100%', padding: '14px 16px', backgroundColor: '#f0ede8', borderRadius: 8, border: '1px solid #4a7fb555' }}>
-                    <div style={{ fontSize: 12, color: '#6b6b6b', marginBottom: 6, fontWeight: 600 }}>Gemini: same question</div>
-                    {['1. Semrush', '2. Ahrefs', '3. Moz', '4. Ubersuggest', '5. Surfer SEO'].map((item, i) => (
-                        <div key={i} style={{ fontSize: 13, color: '#2E3633', lineHeight: 1.6, paddingLeft: 8 }}>{item}</div>
-                    ))}
-                    <div style={{ fontSize: 13, color: '#B5423F', marginTop: 8, fontWeight: 600 }}>Your brand: not listed</div>
-                </div>
-                <div style={{ marginTop: 20, fontSize: 14, color: '#B56B3F', fontWeight: 600, textAlign: 'center' }}>You can't fix what you can't see.</div>
             </div>
         ),
     },
     {
-        id: 'post9',
-        postNumber: 9,
+        id: 'post8',
+        postNumber: 8,
         title: 'KORU Pipeline — full flow',
         tall: true,
         card: (
-            <div id="card-post9" style={tallCardBase}>
+            <div id="card-post8" style={tallCardBase}>
                 <div style={{ textAlign: 'center', marginBottom: 20 }}>
                     <div style={{ fontSize: 18, fontWeight: 800, color: '#2E3633' }}>The KORU Pipeline</div>
                     <div style={{ fontSize: 13, color: '#6b6b6b', marginTop: 2 }}>Classical SEO + AI Search. Connected.</div>
@@ -348,6 +321,33 @@ const POST_VISUALS: PostVisual[] = [
                         {i < 7 && <div style={{ width: 2, height: 8, backgroundColor: item.color + '33', marginLeft: 22 }} />}
                     </div>
                 ))}
+            </div>
+        ),
+    },
+    {
+        id: 'post9',
+        postNumber: 9,
+        title: 'AI Brand Visibility — ChatGPT vs Gemini',
+        card: (
+            <div id="card-post9" style={cardBase}>
+                <div style={{ textAlign: 'center', marginBottom: 28 }}>
+                    <div style={{ fontSize: 20, fontWeight: 800, color: '#2E3633' }}>Is AI recommending your brand?</div>
+                </div>
+                <div style={{ width: '100%', marginBottom: 16, padding: '14px 16px', backgroundColor: '#f0ede8', borderRadius: 8, border: '1px solid #3FB68E55' }}>
+                    <div style={{ fontSize: 12, color: '#6b6b6b', marginBottom: 6, fontWeight: 600 }}>ChatGPT: "Best SEO tool for freelancers?"</div>
+                    {['1. Ahrefs', '2. Semrush', '3. Surfer SEO', '4. SE Ranking', '5. Mangools'].map((item, i) => (
+                        <div key={i} style={{ fontSize: 13, color: '#2E3633', lineHeight: 1.6, paddingLeft: 8 }}>{item}</div>
+                    ))}
+                    <div style={{ fontSize: 13, color: '#B5423F', marginTop: 8, fontWeight: 600 }}>Your brand: not listed</div>
+                </div>
+                <div style={{ width: '100%', padding: '14px 16px', backgroundColor: '#f0ede8', borderRadius: 8, border: '1px solid #4a7fb555' }}>
+                    <div style={{ fontSize: 12, color: '#6b6b6b', marginBottom: 6, fontWeight: 600 }}>Gemini: same question</div>
+                    {['1. Semrush', '2. Ahrefs', '3. Moz', '4. Ubersuggest', '5. Surfer SEO'].map((item, i) => (
+                        <div key={i} style={{ fontSize: 13, color: '#2E3633', lineHeight: 1.6, paddingLeft: 8 }}>{item}</div>
+                    ))}
+                    <div style={{ fontSize: 13, color: '#B5423F', marginTop: 8, fontWeight: 600 }}>Your brand: not listed</div>
+                </div>
+                <div style={{ marginTop: 20, fontSize: 14, color: '#B56B3F', fontWeight: 600, textAlign: 'center' }}>You can't fix what you can't see.</div>
             </div>
         ),
     },
