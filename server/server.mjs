@@ -71,6 +71,13 @@ app.patch('/api/progress', (req, res) => {
             const incoming = req.body.campaignState
             if (!data.campaignState || (incoming && incoming.version > data.campaignState.version)) {
                 data.campaignState = incoming
+                delete data.completedTasks
+                delete data.notes
+                delete data.taskOverrides
+                delete data.taskDayMoves
+                delete data.dayOverrides
+                delete data.team
+                delete data.sources
             }
         } else if (action === 'save-campaign-state') {
             data.campaignState = req.body.campaignState

@@ -116,6 +116,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                 const incoming = req.body.campaignState as ProgressData['campaignState']
                 if (!data.campaignState || (incoming && incoming.version > data.campaignState.version)) {
                     data.campaignState = incoming
+                    // Clean up legacy fields merged into campaignState
+                    delete (data as any).completedTasks
+                    delete (data as any).notes
+                    delete (data as any).taskOverrides
+                    delete (data as any).taskDayMoves
+                    delete (data as any).dayOverrides
+                    delete (data as any).team
+                    delete (data as any).sources
                 }
             } else if (action === 'save-campaign-state') {
                 data.campaignState = req.body.campaignState as ProgressData['campaignState']
