@@ -109,7 +109,7 @@ export function useProgress() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ action: 'toggle-task', taskId, completed: newCompleted })
         })
-    }, [])
+    }, [campaignState])
 
     const moveTask = React.useCallback(async (taskId: string, fromDayIndex: number, toDayIndex: number) => {
         setCampaignState(prev => {
