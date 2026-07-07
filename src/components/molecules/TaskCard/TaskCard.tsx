@@ -201,7 +201,7 @@ const TaskCard = React.memo(function TaskCard({ task, isTaskCompleted, onToggleT
                     {task.image && (
                         <Box sx={{ mb: 1.5, p: 1.5, borderRadius: 1.5, backgroundColor: '#3fb68e0a', border: '1px solid', borderColor: '#3fb68e33', display: 'flex', alignItems: 'center', gap: 1 }}>
                             <Typography sx={{ fontSize: '0.8rem', fontWeight: 600, color: '#3fb68e' }}>
-                                Creatives → Post {task.image.replace('post', '')}
+                                Creatives → {task.image}
                             </Typography>
                             <Typography sx={{ fontSize: '0.72rem', color: 'text.secondary' }}>
                                 Скриншот карточки для поста
