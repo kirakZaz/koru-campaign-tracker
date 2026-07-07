@@ -75,7 +75,19 @@ export function useProgress() {
     // === Task operations ===
 
     const toggleTask = React.useCallback(async (taskId: string) => {
+        // Find current value BEFORE setState
         let newCompleted = false
+        if (campaignState) {
+            for (const day of campaignState.days) {
+                const task = day.tasks.find(t => t.id === taskId)
+                if (task) { newCompleted = !task.completed; break }
+                for (const t of day.tasks) {
+                    if (t.subtasks.some(st => st.id === taskId)) {
+                        newCompleted = !t.completedSubtasks[taskId]; break
+                    }
+                }
+            }
+        }
         setCampaignState(prev => {
             if (!prev) return prev
             return {
@@ -83,12 +95,8 @@ export function useProgress() {
                 days: prev.days.map(d => ({
                     ...d,
                     tasks: d.tasks.map(t => {
-                        if (t.id === taskId) {
-                            newCompleted = !t.completed
-                            return { ...t, completed: newCompleted }
-                        }
+                        if (t.id === taskId) return { ...t, completed: newCompleted }
                         if (t.subtasks.some(st => st.id === taskId)) {
-                            newCompleted = !t.completedSubtasks[taskId]
                             return { ...t, completedSubtasks: { ...t.completedSubtasks, [taskId]: newCompleted } }
                         }
                         return t
