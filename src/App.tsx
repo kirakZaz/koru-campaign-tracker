@@ -12,6 +12,8 @@ import { CAMPAIGN_DAYS } from '@/data/campaignData'
 import type { CampaignTask, CampaignDay } from '@/data/campaignData.types'
 import type { OverdueDay } from '@/components/organisms/DayView/DayView.types'
 import { useProgress } from '@/hooks/useProgress'
+import { useSources } from '@/hooks/useSources'
+import { useTeam } from '@/hooks/useTeam'
 import { getTodayDayIndex } from '@/utils/dateUtils'
 import Sidebar from '@/components/organisms/Sidebar/Sidebar'
 import DayView from '@/components/organisms/DayView/DayView'
@@ -42,7 +44,9 @@ export function getInsightsIndex(phaseIdx: number): number {
 
 
 function App() {
-    const { progress, isLoading, error, toggleTask, setStartDate, setNote, isTaskCompleted, saveTaskOverride, saveTeam, saveSources, saveOverviewSection, overviewOverrides, sources, weekInsights, saveWeekInsights, campaignState, moveTaskLive, updateDayLive, updateTaskLive, deleteTaskLive, createTaskLive } = useProgress()
+    const { progress, isLoading, error, toggleTask, setStartDate, setNote, isTaskCompleted, saveTaskOverride, saveOverviewSection, overviewOverrides, weekInsights, saveWeekInsights, campaignState, moveTaskLive, updateDayLive, updateTaskLive, deleteTaskLive, createTaskLive } = useProgress()
+    const { sources, saveSources } = useSources()
+    const { team, saveTeam } = useTeam()
     const [currentDayIndex, setCurrentDayIndexRaw] = React.useState(() => {
         const hash = window.location.hash.slice(1)
         if (hash) {
@@ -325,7 +329,7 @@ function App() {
                 onClose={handleCloseSettings}
                 startDate={progress.startDate}
                 onSetStartDate={setStartDate}
-                team={progress.team ?? []}
+                team={team}
                 onSaveTeam={saveTeam}
             />
 

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import type { ProgressData, CampaignState, LiveDay, LiveTask, TeamMember, SourcesData, InsightEntry } from '@/data/campaignData.types'
+import type { ProgressData, CampaignState, LiveDay, LiveTask, InsightEntry } from '@/data/campaignData.types'
 import { CAMPAIGN_VERSION, buildInitialState } from '@/data/campaignData'
 
 const API_URL = '/api/progress'
@@ -269,18 +269,7 @@ export function useProgress() {
         }
     }, [])
 
-    const saveSources = React.useCallback(async (sources: SourcesData) => {
-        setProgress(prev => ({ ...prev, sources }))
-        try {
-            await fetch(API_URL, {
-                method: 'PATCH',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ action: 'set-sources', sources })
-            })
-        } catch {
-            setProgress(prev => ({ ...prev, sources: progress.sources }))
-        }
-    }, [progress.sources])
+    // Sources moved to useSources hook (/api/sources)
 
     const saveWeekInsights = React.useCallback(async (phase: string, insights: InsightEntry[]) => {
         setProgress(prev => ({
@@ -301,18 +290,7 @@ export function useProgress() {
         }
     }, [progress.weekInsights])
 
-    const saveTeam = React.useCallback(async (team: TeamMember[]) => {
-        setProgress(prev => ({ ...prev, team }))
-        try {
-            await fetch(API_URL, {
-                method: 'PATCH',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ action: 'set-team', team })
-            })
-        } catch {
-            setProgress(prev => ({ ...prev, team: progress.team ?? [] }))
-        }
-    }, [progress.team])
+    // Team moved to useTeam hook (/api/team)
 
     return {
         progress,
@@ -324,11 +302,8 @@ export function useProgress() {
         isTaskCompleted,
         saveTaskOverride,
         getTaskOverride,
-        saveTeam,
-        saveSources,
         saveOverviewSection,
         overviewOverrides: progress.overviewOverrides ?? {},
-        sources: { people: [], groups: [], companies: [], shortlist: [], competitors: [], countries: ['US', 'UK', 'Israel', 'Канада', 'Австралия', 'Германия', 'Индия', 'Нидерланды'], ...(progress.sources ?? {}) },
         weekInsights: progress.weekInsights ?? {},
         saveWeekInsights,
         // New campaign state

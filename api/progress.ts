@@ -97,13 +97,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                 }
             } else if (action === 'set-task-override') {
                 data.taskOverrides[req.body.taskId as string] = req.body.override
-            } else if (action === 'set-team') {
-                data.team = req.body.team as unknown[]
             } else if (action === 'set-overview-section') {
                 if (!data.overviewOverrides) data.overviewOverrides = {} as any
                 data.overviewOverrides[req.body.sectionKey as string] = req.body.value as { en: string, ru: string }
-            } else if (action === 'set-sources') {
-                data.sources = req.body.sources as ProgressData['sources']
             } else if (action === 'set-week-insights') {
                 if (!data.weekInsights) data.weekInsights = {}
                 data.weekInsights[req.body.phase as string] = req.body.insights
