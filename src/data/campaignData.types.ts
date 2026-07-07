@@ -18,6 +18,8 @@ export interface CopyBlock {
 
 export interface CampaignTask {
     id: string
+    dayNumber: string
+    phaseNumber: string
     title: string
     description: string
     steps: string[]
@@ -30,6 +32,9 @@ export interface CampaignTask {
     warning?: string
     copyBlocks?: CopyBlock[]
     image?: string
+    completed: boolean
+    completedSubtasks: Record<string, boolean>
+    _edited: boolean
 }
 
 export interface CampaignDay {
@@ -39,20 +44,10 @@ export interface CampaignDay {
     title: string
     summary: string
     tasks: CampaignTask[]
+    note: string
     keyMetric?: string
-    /** Calendar-day offset from startDate (used for non-business days like Sunday). When set, overrides dayIndex for date display. */
     calendarDayOffset?: number
-}
-
-export interface TaskOverride {
-    title?: string
-    description?: string
-    steps?: string[]
-    subtasks?: Subtask[]
-    assignee?: Assignee
-    estimate?: string
-    tip?: string
-    warning?: string
+    _edited: boolean
 }
 
 export interface TeamMember {
@@ -83,35 +78,42 @@ export interface InsightEntry {
     text: string
 }
 
-// === Campaign State: single source of truth ===
-
-export interface LiveTask extends CampaignTask {
-    completed?: boolean
-    completedSubtasks?: Record<string, boolean>
-    _edited?: boolean
+// Template types — used in campaignData.ts before buildInitialState fills runtime fields
+export interface TemplateTask {
+    id: string
+    title: string
+    description: string
+    steps: string[]
+    subtasks: Subtask[]
+    assignee: Assignee
+    estimate: string
+    priority: Priority
+    tags: TaskTag[]
+    tip?: string
+    warning?: string
+    copyBlocks?: CopyBlock[]
+    image?: string
 }
 
-export interface LiveDay extends Omit<CampaignDay, 'tasks'> {
-    tasks: LiveTask[]
-    note?: string
-    _edited?: boolean
+export interface TemplateDay {
+    dayIndex: number
+    phase: Phase
+    dayLabel: string
+    title: string
+    summary: string
+    tasks: TemplateTask[]
+    keyMetric?: string
+    calendarDayOffset?: number
 }
 
 export interface CampaignState {
     version: number
-    days: LiveDay[]
+    days: CampaignDay[]
 }
 
 export interface ProgressData {
-    completedTasks: Record<string, boolean>
     startDate: string | null
-    notes: Record<string, string>
-    taskOverrides?: Record<string, TaskOverride>
-    taskDayMoves?: Record<string, number>
-    dayOverrides?: Record<string, { title?: string, summary?: string }>
-    team?: TeamMember[]
     overviewOverrides?: Record<string, { en: string, ru: string }>
-    sources?: SourcesData
     weekInsights?: Record<string, InsightEntry[]>
     campaignState?: CampaignState
 }

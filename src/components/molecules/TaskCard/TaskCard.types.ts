@@ -1,4 +1,4 @@
-import type { CampaignTask, CampaignDay, LiveTask } from '@/data/campaignData.types'
+import type { CampaignTask, CampaignDay } from '@/data/campaignData.types'
 
 export interface TaskCardProps {
     task: CampaignTask
@@ -8,6 +8,6 @@ export interface TaskCardProps {
     currentDayIndex?: number
     allDays?: CampaignDay[]
     onMoveTask?: (taskId: string, dayIndex: number) => void
-    onUpdateTask?: (taskId: string, patch: Partial<LiveTask>) => void
+    onUpdateTask?: (taskId: string, patch: Partial<CampaignTask>) => void
     onDeleteTask?: (taskId: string) => void
 }

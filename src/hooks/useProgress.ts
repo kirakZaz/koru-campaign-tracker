@@ -1,13 +1,11 @@
 import * as React from 'react'
-import type { ProgressData, CampaignState, LiveDay, LiveTask, InsightEntry } from '@/data/campaignData.types'
+import type { ProgressData, CampaignState, CampaignDay, CampaignTask, InsightEntry } from '@/data/campaignData.types'
 import { CAMPAIGN_VERSION, buildInitialState } from '@/data/campaignData'
 
 const API_URL = '/api/progress'
 
 const DEFAULT_PROGRESS: ProgressData = {
-    completedTasks: {},
-    startDate: null,
-    notes: {}
+    startDate: null
 }
 
 export function useProgress() {
@@ -24,17 +22,34 @@ export function useProgress() {
             setProgress(data)
             setError(null)
 
-            // Seed or load campaignState
             if (data.campaignState && data.campaignState.version >= CAMPAIGN_VERSION) {
                 setCampaignState(data.campaignState)
             } else {
-                const state = buildInitialState({
-                    completedTasks: data.completedTasks,
-                    notes: data.notes,
-                    taskOverrides: data.taskOverrides as any,
-                    taskDayMoves: data.taskDayMoves,
-                    dayOverrides: data.dayOverrides
-                })
+                const state = buildInitialState()
+                // Migrate: carry over completed status and notes from old campaignState if present
+                if (data.campaignState) {
+                    for (const oldDay of data.campaignState.days) {
+                        const newDay = state.days.find(d => d.dayIndex === oldDay.dayIndex)
+                        if (!newDay) continue
+                        if (oldDay.note) newDay.note = oldDay.note
+                        if (oldDay._edited) newDay._edited = oldDay._edited
+                        if (oldDay.title !== newDay.title && oldDay._edited) newDay.title = oldDay.title
+                        if (oldDay.summary !== newDay.summary && oldDay._edited) newDay.summary = oldDay.summary
+                        for (const oldTask of oldDay.tasks) {
+                            const newTask = newDay.tasks.find(t => t.id === oldTask.id)
+                            if (!newTask) {
+                                // Task was created by user — keep it
+                                newDay.tasks.push({ ...oldTask, dayNumber: String(oldDay.dayIndex), phaseNumber: oldDay.phase } as CampaignTask)
+                                continue
+                            }
+                            if (oldTask.completed) newTask.completed = true
+                            if (oldTask.completedSubtasks) Object.assign(newTask.completedSubtasks, oldTask.completedSubtasks)
+                            if (oldTask._edited) {
+                                Object.assign(newTask, oldTask, { dayNumber: String(oldDay.dayIndex), phaseNumber: oldDay.phase })
+                            }
+                        }
+                    }
+                }
                 setCampaignState(state)
                 await fetch(API_URL, {
                     method: 'PATCH',
@@ -57,9 +72,38 @@ export function useProgress() {
         return () => controller.abort()
     }, [fetchProgress])
 
-    // === Campaign State operations (new) ===
+    // === Task operations ===
 
-    const moveTaskLive = React.useCallback(async (taskId: string, fromDayIndex: number, toDayIndex: number) => {
+    const toggleTask = React.useCallback(async (taskId: string) => {
+        let newCompleted = false
+        setCampaignState(prev => {
+            if (!prev) return prev
+            return {
+                ...prev,
+                days: prev.days.map(d => ({
+                    ...d,
+                    tasks: d.tasks.map(t => {
+                        if (t.id === taskId) {
+                            newCompleted = !t.completed
+                            return { ...t, completed: newCompleted }
+                        }
+                        if (t.subtasks.some(st => st.id === taskId)) {
+                            newCompleted = !t.completedSubtasks[taskId]
+                            return { ...t, completedSubtasks: { ...t.completedSubtasks, [taskId]: newCompleted } }
+                        }
+                        return t
+                    })
+                }))
+            }
+        })
+        await fetch(API_URL, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'toggle-task', taskId, completed: newCompleted })
+        })
+    }, [])
+
+    const moveTask = React.useCallback(async (taskId: string, fromDayIndex: number, toDayIndex: number) => {
         setCampaignState(prev => {
             if (!prev) return prev
             const days = prev.days.map(d => ({ ...d, tasks: [...d.tasks] }))
@@ -68,9 +112,9 @@ export function useProgress() {
             if (fromDay && toDay) {
                 const idx = fromDay.tasks.findIndex(t => t.id === taskId)
                 if (idx !== -1) {
-                    const task = fromDay.tasks[idx]!
-                    fromDay.tasks = fromDay.tasks.filter((_, i) => i !== idx)
-                    toDay.tasks = [...toDay.tasks, task]
+                    const task = { ...fromDay.tasks[idx]!, dayNumber: String(toDayIndex), phaseNumber: toDay.phase }
+                    fromDay.tasks.splice(idx, 1)
+                    toDay.tasks.push(task)
                 }
             }
             return { ...prev, days }
@@ -82,7 +126,7 @@ export function useProgress() {
         })
     }, [])
 
-    const updateTaskLive = React.useCallback(async (taskId: string, patch: Partial<LiveTask>) => {
+    const updateTask = React.useCallback(async (taskId: string, patch: Partial<CampaignTask>) => {
         setCampaignState(prev => {
             if (!prev) return prev
             return {
@@ -100,7 +144,7 @@ export function useProgress() {
         })
     }, [])
 
-    const deleteTaskLive = React.useCallback(async (taskId: string) => {
+    const deleteTask = React.useCallback(async (taskId: string) => {
         setCampaignState(prev => {
             if (!prev) return prev
             return {
@@ -118,7 +162,7 @@ export function useProgress() {
         })
     }, [])
 
-    const createTaskLive = React.useCallback(async (dayIndex: number, task: LiveTask) => {
+    const createTask = React.useCallback(async (dayIndex: number, task: CampaignTask) => {
         setCampaignState(prev => {
             if (!prev) return prev
             return {
@@ -135,7 +179,9 @@ export function useProgress() {
         })
     }, [])
 
-    const updateDayLive = React.useCallback(async (dayIndex: number, patch: Partial<LiveDay>) => {
+    // === Day operations ===
+
+    const updateDay = React.useCallback(async (dayIndex: number, patch: Partial<CampaignDay>) => {
         setCampaignState(prev => {
             if (!prev) return prev
             return {
@@ -152,42 +198,11 @@ export function useProgress() {
         })
     }, [])
 
-    const toggleTaskLive = React.useCallback(async (taskId: string) => {
-        let newCompleted = false
-        setCampaignState(prev => {
-            if (!prev) return prev
-            return {
-                ...prev,
-                days: prev.days.map(d => ({
-                    ...d,
-                    tasks: d.tasks.map(t => {
-                        if (t.id === taskId) {
-                            newCompleted = !t.completed
-                            return { ...t, completed: newCompleted }
-                        }
-                        // Check subtasks
-                        if (t.subtasks.some(st => st.id === taskId)) {
-                            newCompleted = !(t.completedSubtasks?.[taskId])
-                            return { ...t, completedSubtasks: { ...t.completedSubtasks, [taskId]: newCompleted } }
-                        }
-                        return t
-                    })
-                }))
-            }
-        })
-        // Also update legacy completedTasks for backward compat
-        setProgress(prev => ({
-            ...prev,
-            completedTasks: { ...prev.completedTasks, [taskId]: newCompleted }
-        }))
-        await fetch(API_URL, {
-            method: 'PATCH',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ action: 'toggle-task', taskId, completed: newCompleted })
-        })
-    }, [])
+    const setNote = React.useCallback(async (dayIndex: number, note: string) => {
+        await updateDay(dayIndex, { note })
+    }, [updateDay])
 
-    // === Legacy operations (keep for non-campaign features) ===
+    // === Progress operations ===
 
     const setStartDate = React.useCallback(async (date: string) => {
         setProgress(prev => ({ ...prev, startDate: date }))
@@ -202,117 +217,60 @@ export function useProgress() {
         }
     }, [progress.startDate])
 
-    const setNote = React.useCallback(async (dayIndex: number, note: string) => {
-        // Update in campaignState
-        setCampaignState(prev => {
-            if (!prev) return prev
-            return {
-                ...prev,
-                days: prev.days.map(d => d.dayIndex === dayIndex ? { ...d, note } : d)
-            }
-        })
-        // Also keep legacy
-        setProgress(prev => ({ ...prev, notes: { ...prev.notes, [dayIndex]: note } }))
-        try {
-            await fetch(API_URL, {
-                method: 'PATCH',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ action: 'set-note', dayIndex: String(dayIndex), note })
-            })
-        } catch {
-            // revert
-        }
-    }, [])
-
     const isTaskCompleted = React.useCallback((taskId: string): boolean => {
-        // Check campaignState first
-        if (campaignState) {
-            for (const day of campaignState.days) {
-                const task = day.tasks.find(t => t.id === taskId)
-                if (task) return !!task.completed
-                for (const t of day.tasks) {
-                    if (t.completedSubtasks?.[taskId]) return true
-                    if (t.subtasks.some(st => st.id === taskId) && !t.completedSubtasks?.[taskId]) return false
-                }
+        if (!campaignState) return false
+        for (const day of campaignState.days) {
+            const task = day.tasks.find(t => t.id === taskId)
+            if (task) return task.completed
+            for (const t of day.tasks) {
+                if (t.subtasks.some(st => st.id === taskId)) return !!t.completedSubtasks[taskId]
             }
         }
-        // Fallback to legacy
-        return progress.completedTasks[taskId] === true
-    }, [campaignState, progress.completedTasks])
-
-    const saveTaskOverride = React.useCallback(async (taskId: string, override: any) => {
-        // Update in campaignState directly
-        await updateTaskLive(taskId, override)
-    }, [updateTaskLive])
-
-    const getTaskOverride = React.useCallback((_taskId: string) => {
-        return undefined // No longer needed — campaignState has merged data
-    }, [])
+        return false
+    }, [campaignState])
 
     const saveOverviewSection = React.useCallback(async (sectionKey: string, value: { en: string, ru: string }) => {
         setProgress(prev => ({
             ...prev,
             overviewOverrides: { ...(prev.overviewOverrides ?? {}), [sectionKey]: value }
         }))
-        try {
-            await fetch(API_URL, {
-                method: 'PATCH',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ action: 'set-overview-section', sectionKey, value })
-            })
-        } catch {
-            setProgress(prev => {
-                const overrides = { ...(prev.overviewOverrides ?? {}) }
-                delete overrides[sectionKey]
-                return { ...prev, overviewOverrides: overrides }
-            })
-        }
+        await fetch(API_URL, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'set-overview-section', sectionKey, value })
+        })
     }, [])
-
-    // Sources moved to useSources hook (/api/sources)
 
     const saveWeekInsights = React.useCallback(async (phase: string, insights: InsightEntry[]) => {
         setProgress(prev => ({
             ...prev,
             weekInsights: { ...(prev.weekInsights ?? {}), [phase]: insights }
         }))
-        try {
-            await fetch(API_URL, {
-                method: 'PATCH',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ action: 'set-week-insights', phase, insights })
-            })
-        } catch {
-            setProgress(prev => ({
-                ...prev,
-                weekInsights: { ...(prev.weekInsights ?? {}), [phase]: progress.weekInsights?.[phase] ?? [] }
-            }))
-        }
-    }, [progress.weekInsights])
-
-    // Team moved to useTeam hook (/api/team)
+        await fetch(API_URL, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'set-week-insights', phase, insights })
+        })
+    }, [])
 
     return {
         progress,
         isLoading,
         error,
-        toggleTask: toggleTaskLive,
+        campaignState,
+        toggleTask,
         setStartDate,
         setNote,
         isTaskCompleted,
-        saveTaskOverride,
-        getTaskOverride,
+        saveTaskOverride: updateTask,
         saveOverviewSection,
         overviewOverrides: progress.overviewOverrides ?? {},
         weekInsights: progress.weekInsights ?? {},
         saveWeekInsights,
-        // New campaign state
-        campaignState,
-        moveTaskLive,
-        updateTaskLive,
-        deleteTaskLive,
-        createTaskLive,
-        updateDayLive,
-        refetch: fetchProgress
+        moveTask,
+        updateTask,
+        deleteTask,
+        createTask,
+        updateDay,
     }
 }

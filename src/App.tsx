@@ -44,7 +44,7 @@ export function getInsightsIndex(phaseIdx: number): number {
 
 
 function App() {
-    const { progress, isLoading, error, toggleTask, setStartDate, setNote, isTaskCompleted, saveTaskOverride, saveOverviewSection, overviewOverrides, weekInsights, saveWeekInsights, campaignState, moveTaskLive, updateDayLive, updateTaskLive, deleteTaskLive, createTaskLive } = useProgress()
+    const { progress, isLoading, error, toggleTask, setStartDate, setNote, isTaskCompleted, saveTaskOverride, saveOverviewSection, overviewOverrides, weekInsights, saveWeekInsights, campaignState, moveTask, updateDay, updateTask, deleteTask, createTask } = useProgress()
     const { sources, saveSources } = useSources()
     const { team, saveTeam } = useTeam()
     const [currentDayIndex, setCurrentDayIndexRaw] = React.useState(() => {
@@ -88,7 +88,7 @@ function App() {
             return campaignState.days as CampaignDay[]
         }
         // Fallback: static template (before campaignState loads)
-        return CAMPAIGN_DAYS
+        return CAMPAIGN_DAYS as unknown as CampaignDay[]
     }, [campaignState])
 
     const overdueDays = React.useMemo((): OverdueDay[] => {
@@ -298,26 +298,28 @@ function App() {
                         isTaskCompleted={isTaskCompleted}
                         onToggleTask={toggleTask}
                         onEditTask={handleEditTask}
-                        note={progress.notes[currentDayIndex] ?? ''}
+                        note={currentDay?.note ?? ''}
                         onNoteChange={handleNoteChange}
                         overdueDays={overdueDays}
                         onGoToDay={setCurrentDayIndex}
                         allDays={mergedDays}
                         onMoveTask={(taskId: string, toDayIndex: number) => {
                             const fromDay = mergedDays.find(d => d.tasks.some(t => t.id === taskId))
-                            if (fromDay) moveTaskLive(taskId, fromDay.dayIndex, toDayIndex)
+                            if (fromDay) moveTask(taskId, fromDay.dayIndex, toDayIndex)
                         }}
                         onSaveDayOverride={(dayIndex: number, override: { title?: string, summary?: string }) => {
-                            updateDayLive(dayIndex, override)
+                            updateDay(dayIndex, override)
                         }}
-                        onUpdateTask={(taskId: string, patch: any) => updateTaskLive(taskId, patch)}
-                        onDeleteTask={(taskId: string) => deleteTaskLive(taskId)}
+                        onUpdateTask={(taskId: string, patch: any) => updateTask(taskId, patch)}
+                        onDeleteTask={(taskId: string) => deleteTask(taskId)}
                         onCreateTask={(dayIndex: number) => {
+                            const day = mergedDays.find(d => d.dayIndex === dayIndex)
                             const id = `custom-${Date.now()}`
-                            createTaskLive(dayIndex, {
-                                id, title: 'Новая задача', description: '', steps: [], subtasks: [],
+                            createTask(dayIndex, {
+                                id, dayNumber: String(dayIndex), phaseNumber: day?.phase ?? '',
+                                title: 'Новая задача', description: '', steps: [], subtasks: [],
                                 assignee: 'Кира' as any, estimate: '', priority: 'medium' as any, tags: [],
-                                completed: false, _edited: true
+                                completed: false, completedSubtasks: {}, _edited: true
                             })
                         }}
                     />
