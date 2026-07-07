@@ -29,6 +29,7 @@ export interface CampaignTask {
     tip?: string
     warning?: string
     copyBlocks?: CopyBlock[]
+    image?: string
 }
 
 export interface CampaignDay {
