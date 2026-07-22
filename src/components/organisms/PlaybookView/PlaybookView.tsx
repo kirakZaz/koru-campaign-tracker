@@ -212,7 +212,7 @@ We keep seeing a gap between ranking well and actually being cited. Curious if y
                     <Typography sx={{ fontSize: '0.8rem', color: 'text.primary', whiteSpace: 'pre-line' }}>
                         {`Hey [Name],
 
-I'm building an SEO platform that measures AI-citation readiness — a 14-rule GEO score per page, AI brand visibility tracking across OpenAI and Gemini, plus intent-first keyword intelligence.
+I'm building an SEO platform that measures AI-citation readiness — a 14-rule GEO score per page, Citation Gap (who ChatGPT, Gemini, Claude and Grok cite instead of you), plus intent-first keyword intelligence.
 
 Would love your input as an early tester. No strings attached — just want feedback from someone who actually does this work daily.
 
@@ -248,13 +248,13 @@ We're gearing up for launch and a few real voices would mean a lot. No pressure 
                 <Box sx={{ backgroundColor: '#ffffff06', borderRadius: 1, p: 2, mb: 1 }}>
                     <Typography sx={{ fontSize: '0.75rem', color: 'text.secondary', mb: 0.5 }}>Для фрилансеров / agency owners:</Typography>
                     <Typography sx={{ fontSize: '0.8rem', color: 'text.primary' }}>
-                        "Hi [Name], your recent post about [topic] really resonated. I'm building KORU — an SEO platform that audits for both Google and AI search. GEO score, AI brand visibility, intent-first keywords. Would love to connect."
+                        "Hi [Name], your recent post about [topic] really resonated. I'm building KORU — an SEO platform that audits for both Google and AI search. GEO score, Citation Gap, intent-first keywords. Would love to connect."
                     </Typography>
                 </Box>
                 <Box sx={{ backgroundColor: '#ffffff06', borderRadius: 1, p: 2, mb: 1 }}>
                     <Typography sx={{ fontSize: '0.75rem', color: 'text.secondary', mb: 0.5 }}>Для in-house SEO:</Typography>
                     <Typography sx={{ fontSize: '0.8rem', color: 'text.primary' }}>
-                        "Hi [Name], leading SEO at [Company] — impressive results. KORU adds an AI-search layer to your SEO stack: GEO score, AI brand visibility, agent readiness. The metrics your board will ask about next quarter. Would be great to connect."
+                        "Hi [Name], leading SEO at [Company] — impressive results. KORU adds an AI-search layer to your SEO stack: GEO score, Citation Gap, AI reputation. The metrics your board will ask about next quarter. Would be great to connect."
                     </Typography>
                 </Box>
                 <Box sx={{ backgroundColor: '#ffffff06', borderRadius: 1, p: 2 }}>

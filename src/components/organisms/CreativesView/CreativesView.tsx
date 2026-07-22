@@ -292,85 +292,118 @@ const POST_VISUALS: PostVisual[] = [
     {
         id: 'post8',
         postNumber: 8,
-        title: 'KORU Pipeline — full flow',
+        title: 'Toolkit — not one button',
         tall: true,
         card: (
-            <div id="card-post8" style={tallCardBase}>
-                <div style={{ textAlign: 'center', marginBottom: 20 }}>
-                    <div style={{ fontSize: 18, fontWeight: 800, color: '#2E3633' }}>The KORU Pipeline</div>
-                    <div style={{ fontSize: 13, color: '#6b6b6b', marginTop: 2 }}>Classical SEO + AI Search. Connected.</div>
-                </div>
-                {[
-                    { step: 'Site Audit', desc: 'Crawl + AI summary', color: '#3FB68E' },
-                    { step: 'GEO Score', desc: '14 rules, per page', color: '#3FB68E' },
-                    { step: 'AI Brand Visibility', desc: 'OpenAI + Gemini tracking', color: '#4a7fb5' },
-                    { step: 'Keywords', desc: 'Intent classification + relevance gate', color: '#B56B3F' },
-                    { step: 'Semantic Clustering', desc: 'By meaning, not word overlap', color: '#B56B3F' },
-                    { step: 'Briefs + Drafts', desc: 'From top-5 Google results', color: '#a371f7' },
-                    { step: 'Tasks', desc: '9 source types → action', color: '#a371f7' },
-                    { step: 'Agent Readiness', desc: 'llms.txt, JSON-LD, Content-Signal', color: '#4a7fb5' },
-                ].map((item, i) => (
-                    <div key={i} style={{ width: '100%', marginBottom: 2 }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 12px', backgroundColor: '#f0ede8', borderRadius: 6, border: `1px solid ${item.color}22` }}>
-                            <div style={{ width: 24, height: 24, borderRadius: 6, backgroundColor: item.color + '22', color: item.color, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 11, flexShrink: 0 }}>{i + 1}</div>
-                            <div>
-                                <div style={{ fontSize: 13, fontWeight: 700, color: '#2E3633' }}>{item.step}</div>
-                                <div style={{ fontSize: 11, color: '#6b6b6b' }}>{item.desc}</div>
-                            </div>
-                        </div>
-                        {i < 7 && <div style={{ width: 2, height: 8, backgroundColor: item.color + '33', marginLeft: 22 }} />}
+            <div id="card-post8" style={{ ...tallCardBase, justifyContent: 'space-between', alignItems: 'stretch', padding: 52 }}>
+                <div>
+                    <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: 2.5, color: '#B56B3F', textTransform: 'uppercase' }}>Six tools · one platform</div>
+                    <div style={{ fontSize: 44, fontWeight: 900, lineHeight: 1.03, color: '#2E3633', marginTop: 12, letterSpacing: -1.5 }}>
+                        Why AI cites them,<br /><span style={{ color: '#B5423F' }}>not you.</span>
                     </div>
-                ))}
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                    {[
+                        { tag: 'diagnose', name: 'GEO Score', desc: 'Why AI skips a page · 14 rules', color: '#3FB68E' },
+                        { tag: 'intel', name: 'Citation Gap', desc: 'Who AI cites instead of you', color: '#B5423F' },
+                        { tag: 'monitor', name: 'AI Reputation', desc: 'Per-engine brand radar', color: '#4a7fb5' },
+                        { tag: 'technical', name: 'Agent Readiness', desc: 'llms.txt · JSON-LD', color: '#B56B3F' },
+                        { tag: 'research', name: 'Keywords + Briefs', desc: 'Intent-first, on demand', color: '#36312E' },
+                        { tag: 'act', name: 'Tasks', desc: 'Every finding → action', color: '#2E3633' },
+                    ].map((t, i) => (
+                        <div key={i} style={{ backgroundColor: '#f0ede8', borderRadius: 10, padding: '15px 16px 17px', borderTop: `3px solid ${t.color}` }}>
+                            <div style={{ fontFamily: 'ui-monospace, Menlo, monospace', fontSize: 10, color: t.color, fontWeight: 700, letterSpacing: 0.5 }}>// {t.tag}</div>
+                            <div style={{ fontSize: 16, fontWeight: 800, color: '#2E3633', marginTop: 8 }}>{t.name}</div>
+                            <div style={{ fontSize: 12, color: '#6b6b6b', marginTop: 3, lineHeight: 1.3 }}>{t.desc}</div>
+                        </div>
+                    ))}
+                </div>
+
+                <div>
+                    <div style={{ backgroundColor: '#3FB68E', borderRadius: 10, padding: '13px 18px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <span style={{ fontSize: 15, fontWeight: 800, color: '#fbfbf3' }}>Every finding → a task.</span>
+                        <span style={{ fontSize: 12, color: '#fbfbf3cc', fontWeight: 600 }}>Reach for the tool you need.</span>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 16 }}>
+                        <div style={{ fontSize: 24, fontWeight: 900, letterSpacing: 3, color: '#3FB68E' }}>KORU</div>
+                        <div style={{ fontSize: 11, color: '#6b6b6b', fontWeight: 700 }}>Early access — DM me</div>
+                    </div>
+                </div>
             </div>
         ),
     },
     {
         id: 'post9',
         postNumber: 9,
-        title: 'AI Brand Visibility — ChatGPT vs Gemini',
+        title: 'Monitoring vs diagnosis',
         card: (
-            <div id="card-post9" style={cardBase}>
-                <div style={{ textAlign: 'center', marginBottom: 28 }}>
-                    <div style={{ fontSize: 20, fontWeight: 800, color: '#2E3633' }}>Is AI recommending your brand?</div>
+            <div id="card-post9" style={{ ...cardBase, justifyContent: 'space-between', alignItems: 'stretch', padding: 52 }}>
+                <div>
+                    <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: 2.5, color: '#B56B3F', textTransform: 'uppercase' }}>AI recommends them, not you</div>
+                    <div style={{ fontSize: 48, fontWeight: 900, lineHeight: 1.02, color: '#2E3633', marginTop: 16, letterSpacing: -1.5 }}>
+                        Knowing isn't<br /><span style={{ color: '#3FB68E' }}>fixing.</span>
+                    </div>
                 </div>
-                <div style={{ width: '100%', marginBottom: 16, padding: '14px 16px', backgroundColor: '#f0ede8', borderRadius: 8, border: '1px solid #3FB68E55' }}>
-                    <div style={{ fontSize: 12, color: '#6b6b6b', marginBottom: 6, fontWeight: 600 }}>ChatGPT: "Best SEO tool for freelancers?"</div>
-                    {['1. Ahrefs', '2. Semrush', '3. Surfer SEO', '4. SE Ranking', '5. Mangools'].map((item, i) => (
-                        <div key={i} style={{ fontSize: 13, color: '#2E3633', lineHeight: 1.6, paddingLeft: 8 }}>{item}</div>
-                    ))}
-                    <div style={{ fontSize: 13, color: '#B5423F', marginTop: 8, fontWeight: 600 }}>Your brand: not listed</div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+                    <div style={{ backgroundColor: '#f0ede8', borderRadius: 10, padding: '18px 16px', borderTop: '3px solid #B5423F' }}>
+                        <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: 1, color: '#B5423F', textTransform: 'uppercase' }}>Monitors say</div>
+                        <div style={{ fontSize: 18, fontWeight: 700, color: '#2E3633', marginTop: 10, lineHeight: 1.25 }}>"You're not in the answer."</div>
+                        <div style={{ fontSize: 13, color: '#6b6b6b', marginTop: 8 }}>…now what?</div>
+                    </div>
+                    <div style={{ backgroundColor: '#f0ede8', borderRadius: 10, padding: '18px 16px', borderTop: '3px solid #3FB68E' }}>
+                        <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: 1, color: '#3FB68E', textTransform: 'uppercase' }}>KORU says</div>
+                        <div style={{ fontSize: 18, fontWeight: 700, color: '#2E3633', marginTop: 10, lineHeight: 1.25 }}>This page. This rule. This fix.</div>
+                        <div style={{ fontSize: 13, color: '#6b6b6b', marginTop: 8 }}>→ as a task.</div>
+                    </div>
                 </div>
-                <div style={{ width: '100%', padding: '14px 16px', backgroundColor: '#f0ede8', borderRadius: 8, border: '1px solid #4a7fb555' }}>
-                    <div style={{ fontSize: 12, color: '#6b6b6b', marginBottom: 6, fontWeight: 600 }}>Gemini: same question</div>
-                    {['1. Semrush', '2. Ahrefs', '3. Moz', '4. Ubersuggest', '5. Surfer SEO'].map((item, i) => (
-                        <div key={i} style={{ fontSize: 13, color: '#2E3633', lineHeight: 1.6, paddingLeft: 8 }}>{item}</div>
-                    ))}
-                    <div style={{ fontSize: 13, color: '#B5423F', marginTop: 8, fontWeight: 600 }}>Your brand: not listed</div>
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div style={{ fontSize: 24, fontWeight: 900, letterSpacing: 3, color: '#3FB68E' }}>KORU</div>
+                    <div style={{ fontSize: 11, color: '#6b6b6b', fontWeight: 700 }}>Early access — DM me</div>
                 </div>
-                <div style={{ marginTop: 20, fontSize: 14, color: '#B56B3F', fontWeight: 600, textAlign: 'center' }}>You can't fix what you can't see.</div>
             </div>
         ),
     },
     {
         id: 'post10',
         postNumber: 10,
-        title: 'Meet KORU — reveal card',
+        title: 'Reveal — the shortlist you\'re not on',
+        tall: true,
         card: (
-            <div id="card-post10" style={cardBase}>
-                <div style={{ textAlign: 'center' }}>
-                    <div style={{ fontSize: 42, fontWeight: 900, color: '#3FB68E', letterSpacing: 6, lineHeight: 1 }}>KORU</div>
-                    <div style={{ fontSize: 15, color: '#2E3633', marginTop: 12, fontWeight: 500 }}>Rank in Google. Get cited by AI.</div>
-                    <div style={{ width: 60, height: 2, backgroundColor: '#3FB68E55', margin: '20px auto' }} />
-                    <div style={{ fontSize: 13, color: '#6b6b6b', lineHeight: 1.8, marginTop: 8 }}>
-                        GEO Score — 14-rule AI-citation readiness<br />
-                        AI Brand Visibility — OpenAI + Gemini tracking<br />
-                        Agent Readiness — llms.txt, JSON-LD<br />
-                        Intent-first keywords + briefs + tasks
+            <div id="card-post10" style={{ ...tallCardBase, justifyContent: 'space-between', alignItems: 'stretch', padding: 54 }}>
+                <div>
+                    <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: 2.5, color: '#B56B3F', textTransform: 'uppercase' }}>You asked ChatGPT · Gemini · Claude · Grok</div>
+                    <div style={{ fontSize: 40, fontWeight: 900, lineHeight: 1.08, color: '#2E3633', marginTop: 18, letterSpacing: -1.5 }}>
+                        AI has a shortlist.<br /><span style={{ color: '#B5423F' }}>You're not on it.</span>
                     </div>
-                    <div style={{ marginTop: 24, padding: '10px 24px', backgroundColor: '#3fb68e', borderRadius: 8, display: 'inline-block' }}>
-                        <div style={{ fontSize: 14, fontWeight: 700, color: '#fbfbf3' }}>GEO score starts free</div>
+                </div>
+
+                <div>
+                    <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: 0.5, color: '#6b6b6b', marginBottom: 6, fontStyle: 'italic' }}>"Best tool for [your niche]?"</div>
+                    {['Competitor A', 'Competitor B', 'Competitor C', 'Competitor D', 'Competitor E'].map((name, i) => (
+                        <div key={i} style={{ display: 'flex', alignItems: 'baseline', gap: 14, padding: '8px 0', borderBottom: '1px solid #2E363318' }}>
+                            <span style={{ fontSize: 14, fontWeight: 800, color: '#3FB68E', width: 18 }}>{i + 1}</span>
+                            <span style={{ fontSize: 18, fontWeight: 600, color: '#2E3633' }}>{name}</span>
+                        </div>
+                    ))}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 14, paddingTop: 12 }}>
+                        <span style={{ fontSize: 16, fontWeight: 800, color: '#B5423F', width: 18 }}>—</span>
+                        <span style={{ fontSize: 18, fontWeight: 700, color: '#B5423F', textDecoration: 'line-through' }}>yoursite.com</span>
+                        <span style={{ fontSize: 10, fontWeight: 800, letterSpacing: 1, color: '#fbfbf3', backgroundColor: '#B5423F', padding: '3px 8px', borderRadius: 4 }}>NOT CITED</span>
                     </div>
-                    <div style={{ marginTop: 12, fontSize: 12, color: '#6b6b6b' }}>koru-seo.com</div>
+                </div>
+
+                <div>
+                    <div style={{ height: 1, backgroundColor: '#2E363322', marginBottom: 16 }} />
+                    <div style={{ fontSize: 16, fontWeight: 600, color: '#2E3633', lineHeight: 1.4 }}>
+                        KORU shows what those pages have that yours doesn't — <span style={{ color: '#3FB68E', fontWeight: 800 }}>then hands you the fix.</span>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginTop: 20 }}>
+                        <div style={{ fontSize: 26, fontWeight: 900, letterSpacing: 3, color: '#3FB68E' }}>KORU</div>
+                        <div style={{ fontSize: 11, color: '#6b6b6b', fontWeight: 700 }}>First access — DM me</div>
+                    </div>
                 </div>
             </div>
         ),
@@ -380,28 +413,33 @@ const POST_VISUALS: PostVisual[] = [
         postNumber: 11,
         title: '4 out of 50 — AI readiness data',
         card: (
-            <div id="card-post11" style={cardBase}>
-                <div style={{ textAlign: 'center' }}>
-                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'baseline', gap: 8 }}>
-                        <div style={{ fontSize: 96, fontWeight: 900, color: '#B5423F', lineHeight: 1 }}>4</div>
-                        <div style={{ fontSize: 32, fontWeight: 600, color: '#6b6b6b' }}>/</div>
-                        <div style={{ fontSize: 96, fontWeight: 900, color: '#6b6b6b44', lineHeight: 1 }}>50</div>
+            <div id="card-post11" style={{ ...cardBase, justifyContent: 'space-between', alignItems: 'stretch', padding: 52 }}>
+                <div>
+                    <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: 2.5, color: '#B56B3F', textTransform: 'uppercase' }}>I checked 50 SEO agency sites</div>
+                    <div style={{ display: 'flex', alignItems: 'baseline', gap: 12, marginTop: 12 }}>
+                        <span style={{ fontSize: 120, fontWeight: 900, color: '#B5423F', lineHeight: 0.85, letterSpacing: -5 }}>4</span>
+                        <span style={{ fontSize: 44, fontWeight: 700, color: '#6b6b6b66' }}>/ 50</span>
                     </div>
-                    <div style={{ fontSize: 16, color: '#2E3633', marginTop: 8, fontWeight: 600 }}>SEO agency sites ready for AI crawlers</div>
-                    <div style={{ width: 60, height: 2, backgroundColor: '#B5423F44', margin: '20px auto' }} />
-                    <div style={{ textAlign: 'left', maxWidth: 380, margin: '0 auto' }}>
-                        {[
-                            { check: 'llms.txt', result: '0 / 50', color: '#B5423F' },
-                            { check: 'Markdown negotiation', result: '3 / 50', color: '#B5423F' },
-                            { check: 'robots.txt AI directives', result: '8 / 50', color: '#B56B3F' },
-                            { check: 'HTTP Link headers', result: '1 / 50', color: '#B5423F' },
-                        ].map((item, i) => (
-                            <div key={i} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 14, lineHeight: 2.2, color: '#2E3633' }}>
-                                <span>{item.check}</span>
-                                <span style={{ color: item.color, fontWeight: 700 }}>{item.result}</span>
-                            </div>
-                        ))}
-                    </div>
+                    <div style={{ fontSize: 20, color: '#2E3633', marginTop: 8, fontWeight: 800 }}>were ready for AI crawlers.</div>
+                </div>
+
+                <div>
+                    {[
+                        { check: 'llms.txt', result: '0 / 50' },
+                        { check: 'Markdown for AI', result: '3 / 50' },
+                        { check: 'robots.txt AI directives', result: '8 / 50' },
+                        { check: 'HTTP Link headers', result: '1 / 50' },
+                    ].map((item, i) => (
+                        <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', padding: '10px 0', borderBottom: '1px solid #2E363318' }}>
+                            <span style={{ fontSize: 16, color: '#2E3633', fontWeight: 600 }}>{item.check}</span>
+                            <span style={{ fontSize: 16, color: '#B5423F', fontWeight: 800 }}>{item.result}</span>
+                        </div>
+                    ))}
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div style={{ fontSize: 24, fontWeight: 900, letterSpacing: 3, color: '#3FB68E' }}>KORU</div>
+                    <div style={{ fontSize: 12, color: '#2E3633', fontWeight: 700 }}>The experts aren't ready either.</div>
                 </div>
             </div>
         ),
@@ -409,32 +447,24 @@ const POST_VISUALS: PostVisual[] = [
     {
         id: 'post12',
         postNumber: 12,
-        title: 'Demo — product screenshot',
+        title: 'Demo — 30-second look',
         card: (
-            <div id="card-post12" style={cardBase}>
-                <div style={{ textAlign: 'center' }}>
-                    <div style={{ fontSize: 42, fontWeight: 900, color: '#3FB68E', letterSpacing: 6, lineHeight: 1 }}>KORU</div>
-                    <div style={{ fontSize: 16, color: '#2E3633', marginTop: 16, fontWeight: 600 }}>30-second demo</div>
-                    <div style={{ width: 60, height: 2, backgroundColor: '#3FB68E55', margin: '20px auto' }} />
-                    <div style={{ textAlign: 'left', maxWidth: 380, margin: '0 auto' }}>
-                        {[
-                            'Paste URL',
-                            'Audit + AI summary',
-                            'GEO score — 14 rules',
-                            'AI Brand check — OpenAI + Gemini',
-                            'Keywords + intent + clusters',
-                            'Brief + content draft',
-                            'Every finding → task',
-                        ].map((step, i) => (
-                            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 14, color: '#2E3633', lineHeight: 2.2 }}>
-                                <div style={{ width: 22, height: 22, borderRadius: 6, backgroundColor: '#3FB68E22', color: '#3FB68E', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 11, flexShrink: 0 }}>{i + 1}</div>
-                                {step}
-                            </div>
-                        ))}
+            <div id="card-post12" style={{ ...cardBase, justifyContent: 'space-between', alignItems: 'stretch', padding: 52 }}>
+                <div>
+                    <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: 2.5, color: '#B56B3F', textTransform: 'uppercase' }}>30-second look</div>
+                    <div style={{ fontSize: 48, fontWeight: 900, lineHeight: 1.02, color: '#2E3633', marginTop: 14, letterSpacing: -1.5 }}>
+                        See it <span style={{ color: '#3FB68E' }}>run.</span>
                     </div>
-                    <div style={{ marginTop: 20, padding: '8px 20px', backgroundColor: '#3FB68E22', borderRadius: 6, display: 'inline-block', border: '1px solid #3FB68E55' }}>
-                        <div style={{ fontSize: 13, fontWeight: 600, color: '#3FB68E' }}>Attach demo GIF from task 060</div>
-                    </div>
+                    <div style={{ fontSize: 17, color: '#2E3633', marginTop: 12, fontWeight: 600, lineHeight: 1.4 }}>Drop a page. Run a tool. Get a task.</div>
+                </div>
+
+                <div style={{ flex: 1, margin: '22px 0', borderRadius: 12, border: '2px dashed #2E363333', backgroundColor: '#f0ede8', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <span style={{ fontSize: 13, color: '#6b6b6b', fontWeight: 700, letterSpacing: 1 }}>▶ DEMO GIF (task 060)</span>
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div style={{ fontSize: 24, fontWeight: 900, letterSpacing: 3, color: '#3FB68E' }}>KORU</div>
+                    <div style={{ fontSize: 11, color: '#6b6b6b', fontWeight: 700 }}>Early access — DM me</div>
                 </div>
             </div>
         ),

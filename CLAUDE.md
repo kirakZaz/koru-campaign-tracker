@@ -14,24 +14,28 @@ Campaign management app for KORU's LinkedIn/Twitter launch campaign. React + MUI
 
 **Competitive context:** The GEO market already exists. Profound ($120+/mo), Goodie AI ($495/mo), Bluefish, AirOps, Brandi AI — enterprise GEO platforms. SE Ranking, Semrush — hybrid SEO+GEO suites. Otterly ($39/mo) — lightweight monitor. KORU is NOT the first to do AI visibility. The market knows about GEO. Never position KORU as "nobody does this" — position as the accessible, per-page diagnostic + full pipeline tool.
 
-**Pitch:** GEO tools track whether AI mentions your brand. But they don't check WHY a specific page gets cited or skipped. KORU checks each page against 14 rules and tells you exactly what to fix. Enterprise GEO platforms start at $120/mo and only give you monitoring. KORU gives you per-page diagnosis, intent-first keywords, content briefs, and a task pipeline — starting free. Full stack from $19.
+**Pitch:** GEO tools track whether AI mentions your brand. But they don't check WHY a specific page gets cited or skipped — or who the engines cite instead of you. KORU checks each page against 14 rules and tells you exactly what to fix (GEO Score), shows which AI engines actually cite your site (AI Reputation), and reveals who they cite instead of you and what those pages have that yours don't (Citation Gap). Enterprise GEO platforms start at $120/mo and only give you monitoring. KORU gives you per-page diagnosis, intent-first keywords, content briefs, and a task pipeline — starting free. Full stack from $19.
 
 **Positioning vs competitors:**
 - Enterprise GEO monitors (Profound, Goodie, Bluefish) = brand-level monitoring, $120-$500+/mo. For big teams.
 - KORU = per-page diagnosis + full workflow (audit → keywords → briefs → tasks). For freelancers and small agencies. Free entry.
-- Key differentiator: competitors ask "does AI mention your brand?" KORU asks "why doesn't AI cite THIS page, and what do you fix?"
-- Second differentiator: most GEO tools are monitors only. KORU connects finding → action (9 task source types).
-- Third differentiator: price. Free tier includes GEO Score + AI Brand Visibility. Starter $19. Closest competitor Otterly starts at $39 with less functionality.
+- Key differentiator: competitors ask "does AI mention your brand?" KORU asks "why doesn't AI cite THIS page — and who does AI cite instead of you, and what do those pages have that yours don't?" (Citation Gap).
+- Second differentiator: most GEO tools are monitors only. KORU connects finding → action (every finding becomes a task).
+- Third differentiator: KORU probes four assistants people actually use — ChatGPT, Gemini, Claude and Grok — with live web search, not training memory. Most monitors check one or two.
+- Fourth differentiator: price. Free tier includes GEO Score + a taste of Citation Gap + one AI Reputation brand check. Starter $19. Closest competitor Otterly starts at $39 with less functionality.
 
 ## What to say
-- GEO Score: 14-rule per-page AI-citation readiness check (FAQ schema, inverted pyramid, citation-worthy claims, entity density, AI crawler access). Score 0-100 with evidence per rule. This is PER PAGE diagnosis — not brand-level monitoring like most GEO tools.
-- AI Brand Visibility: monitors whether OpenAI and Gemini recommend your brand. Per-provider trend charts, competitor detection, recommendations that convert to tasks.
-- Agent Readiness: checks llms.txt, markdown content negotiation, Content-Signal directives, JSON-LD coverage.
-- Intent-first keyword pipeline: AI reads site content first (not start from head-term), then finds opportunities with intent classification, relevance gate (core/adjacent/off_topic), semantic clustering by meaning.
-- Content briefs + content drafts via Claude AI.
+- These are SEPARATE tools inside one platform, each run on demand — not a single "paste a URL and everything flows automatically" pipeline. Say "one platform, several tools," never "one click — everything done."
+- GEO Score: 14-rule per-page AI-citation readiness check (FAQ schema, inverted pyramid, citation-worthy claims, entity density, AI crawler access). Score 0-100 with evidence per rule. This is PER PAGE diagnosis — not brand-level monitoring like most GEO tools. On-demand per page, not embedded in the base crawl.
+- Citation Gap: ask ChatGPT, Gemini, Claude and Grok your target question — with live web search — capture who they actually cite, then see what those cited pages have that yours doesn't. Answers "who does AI cite instead of me, and why?" Free plan gets a taste (3 questions).
+- AI Reputation: asks the same four engines — on live web search, not training memory — what they say about your brand, and shows which of them actually cite your site (a per-engine radar). Free plan gets one brand check per website. (Replaces the old "AI Brand Visibility" probe — retired.)
+- Agent Readiness: checks llms.txt, markdown content negotiation, Content-Signal directives, JSON-LD coverage, HTTP Link headers.
+- Readability: on-demand check of how readable your pages are to an AI ("what an AI can actually read"), with fixes that convert to tasks.
+- Intent-first keywords: AI reads site content first (not start from head-term), then finds opportunities with intent classification, relevance gate (core/adjacent/off_topic), semantic clustering by meaning.
+- Content briefs + content drafts via Claude AI (working drafts, not final copy).
 - AI Mode Rank Tracking: tracks positions in Google AI Mode (PRO+).
-- 9 task source types: audit → keywords → backlinks → rank drops → AI brand → agent readiness → competitor gap → brief → tasks.
-- Pricing: Free ($0, includes GEO + AI Brand), Starter ($19), Pro ($59), Agency ($179).
+- Tasks: every finding — from any of the tools above — becomes a task. Finding → action, not just monitoring.
+- Pricing: Free ($0, includes GEO Score + 3 Citation questions + 1 AI Reputation brand check), Starter ($19), Pro ($59), Agency ($179), Custom (metered).
 
 ## What NOT to say — guard rails
 - **Never say "nobody tracks AI visibility" or "most SEO tools don't measure this."** The GEO market exists (Profound, Goodie, SE Ranking, Semrush AI, Otterly, etc.). Saying "nobody does this" destroys credibility with anyone who knows the space.

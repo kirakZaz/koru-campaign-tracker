@@ -13,7 +13,7 @@ const content = {
         subtitle: 'What we do, who we\'re for, how to talk about it. Keep it open.',
         whatIs: {
             heading: 'KORU in one sentence',
-            text: 'You paste a URL. KORU audits the site, then lets you check your GEO score (how citable each page is to AI engines), monitor AI brand visibility across OpenAI and Gemini, run an agent readiness check, find keyword opportunities with intent classification, generate content briefs and drafts, and turn every finding into a task. One platform for SEO in the age of AI search.'
+            text: 'One platform, several tools you run when you need them — not one button that does everything. Check any page\'s GEO score (how citable it is to AI engines), run a Citation Gap to see who ChatGPT, Gemini, Claude and Grok cite instead of you, check your AI reputation across those engines, run an agent readiness check, find keyword opportunities with intent classification, generate content briefs and drafts, and turn every finding into a task. Built for SEO in the age of AI search.'
         },
         whoFor: {
             heading: 'Who we\'re building for',
@@ -39,20 +39,21 @@ const content = {
             steps: [
                 { step: 'Site audit', desc: 'We crawl the pages, check titles, metas, headings, speed, mobile, Core Web Vitals. AI summarizes what matters and what to fix first.' },
                 { step: 'GEO score', desc: 'Check any page\'s AI-citation readiness: 14 rules covering FAQ schema, inverted pyramid lead, citation-worthy claims, entity density, AI crawler access. Score 0-100 with evidence per rule.' },
-                { step: 'AI Brand Visibility', desc: 'Does OpenAI or Gemini mention your brand? Per-provider trend charts, competitor detection, actionable recommendations that convert to tasks.' },
+                { step: 'Citation Gap', desc: 'Ask ChatGPT, Gemini, Claude and Grok your question — with live web search — and see who they cite instead of you, plus what those pages have that yours doesn\'t. Every gap converts to a task.' },
+                { step: 'AI Reputation', desc: 'Which AI engines actually cite your brand? A per-engine radar across ChatGPT, Gemini, Claude and Grok — live web search, not training memory.' },
                 { step: 'Keyword discovery', desc: 'AI reads your site content first, then pulls keywords with volume, difficulty, and intent. Relevance gate filters out off-topic noise. Semantic clustering by meaning, not word overlap.' },
                 { step: 'Gap analysis', desc: 'Maps clusters to your pages. Shows what\'s covered, what\'s missing, where to write. Decision engine: OPTIMIZE, EXPAND, or CREATE.' },
                 { step: 'Briefs & drafts', desc: 'Brief based on real top-5 Google results. Full content draft via Claude AI — a working draft for editing, not a published article.' },
-                { step: 'Tasks', desc: 'Every finding becomes a task — from audit issues, keywords, backlinks, rank drops, AI brand recommendations. 9 source types. Assign, track, done.' }
+                { step: 'Tasks', desc: 'Every finding becomes a task — from audit issues, keywords, backlinks, rank drops, Citation Gap and AI reputation findings. Assign, track, done. Finding → action, not just monitoring.' }
             ]
         },
         keyFeatures: {
             heading: 'Why us (honestly)',
             subtitle: 'We checked. Here\'s what\'s actually true.',
             features: [
-                { name: 'Built for 2026 search', desc: 'GEO score measures how citable each page is to AI engines — 14 rules (FAQ schema, inverted pyramid, citation-worthy claims, entity density, AI crawler access). AI Brand Visibility tracks whether OpenAI and Gemini recommend your brand — per-provider trends, competitor detection, recommendations that convert to tasks. Agent Readiness checks if AI agents can discover your site (llms.txt, markdown negotiation, Content-Signal, JSON-LD). No other platform in this price range offers any of this.' },
+                { name: 'Built for 2026 search', desc: 'GEO score measures how citable each page is to AI engines — 14 rules (FAQ schema, inverted pyramid, citation-worthy claims, entity density, AI crawler access). Citation Gap asks ChatGPT, Gemini, Claude and Grok your question and shows who they cite instead of you, and what to fix. AI Reputation is a per-engine radar for your brand. Agent Readiness checks if AI agents can discover your site (llms.txt, markdown negotiation, Content-Signal, JSON-LD). Few tools at this price combine per-page diagnosis with live AI-engine citation checks.' },
                 { name: 'AI handles the analysis', desc: 'Intent classification, semantic clustering, relevance scoring, content briefs, content drafts — all through Claude AI. You skip the spreadsheet stage. Other tools give you data and say "figure it out." We give you a plan.' },
-                { name: '$0 for GEO + AI visibility. $19 for keywords.', desc: 'GEO score and AI Brand Visibility start at $0. Full keyword stack, rank tracking, and content briefs from $19. Comparable capability elsewhere runs $300+/mo across multiple subscriptions. We built for freelancers, not enterprises.' }
+                { name: '$0 to start. $19 for the full keyword stack.', desc: 'GEO score, a taste of Citation Gap (3 questions) and one AI Reputation brand check start at $0. Full keyword stack, rank tracking, and content briefs from $19. Comparable capability elsewhere runs $300+/mo across multiple subscriptions. We built for freelancers, not enterprises.' }
             ]
         },
         alsoIncludes: {
@@ -65,7 +66,8 @@ const content = {
                 'Content drafts — full article drafts generated from keyword + brief via Claude AI (working drafts for editing, not final copy)',
                 'Google Search Console sync — real click data, impressions, CTR',
                 'Agency kit — white-label PDFs, client portal, team seats',
-                'Agent readiness — llms.txt check, markdown content negotiation, Content-Signal directives, JSON-LD coverage',
+                'Agent readiness — llms.txt check, markdown content negotiation, Content-Signal directives, JSON-LD coverage, HTTP Link headers',
+                'Readability — on-demand check of how readable your pages are to an AI, with fixes that convert to tasks',
                 'llms.txt generator — AI generates a spec-compliant llms.txt for your site so AI agents can discover it'
             ]
         },
@@ -73,20 +75,21 @@ const content = {
             heading: 'What to say and what NOT to say',
             points: [
                 'Don\'t say "best audit tool." Dedicated crawlers run 300+ checks. We run ~20 + AI analysis. That\'s fine — our users need clarity, not 300 checks.',
-                'Do say "the only platform in this price range that measures AI-citation readiness." That\'s the gap. Everyone audits for Google. Nobody measures whether AI engines can cite your pages. We do — 14 rules, per page, with evidence.',
+                'Do say "per-page AI-citation diagnosis + Citation Gap." The GEO market already exists (Profound, Goodie, Otterly) — never claim "nobody does this." Our angle: most tools tell you IF AI mentions you; we tell you WHY a page gets skipped, WHO gets cited instead, and what to fix. 14 rules, per page, with evidence.',
                 'Do say "built for freelancers, not enterprises." That\'s not a weakness. That\'s a choice.',
-                'Do say "$0 for GEO score + AI visibility. $19 for the full keyword stack." That\'s real.',
+                'Do say "$0 to start. $19 for the full keyword stack." That\'s real.',
                 'Don\'t say "automatic GEO audit on every page." GEO Score is a separate check you run per page — not embedded in the base crawl.',
+                'Don\'t say "one click — everything done." KORU is several separate tools in one platform, not a single automatic pipeline.',
                 'Don\'t say "published articles" or "ready-to-publish." We generate content drafts — working material for editing, not final copy.',
-                'Don\'t say "Perplexity." That provider is not active yet. Say "OpenAI and Gemini" or "major AI engines."'
+                'We probe four engines — ChatGPT, Gemini, Claude and Grok. Don\'t claim we probe Perplexity (parked add-on, not live). Exception: Agent Readiness may name PerplexityBot — that\'s a crawler-access check on the customer\'s own server, not a probing claim.'
             ]
         },
         positioning: {
             heading: 'The pitch (memorize this)',
-            statement: 'SEO freelancers optimize for Google rankings. But 48% of searches now show an AI answer first — and most SEO tools don\'t measure that at all. KORU is the SEO platform that audits for both. GEO score for AI-citation readiness. AI brand visibility across major engines. Agent readiness checks. Intent-first keywords. Content briefs and drafts. Everything connected — from finding to task. GEO score and AI monitoring start free. Full keyword stack from $19.',
+            statement: 'SEO freelancers optimize for Google rankings. But 48% of searches now show an AI answer first. GEO tools track whether AI mentions your brand — KORU goes further: it shows WHY a page gets cited or skipped (GEO score), WHO the engines cite instead of you (Citation Gap), and your standing across ChatGPT, Gemini, Claude and Grok (AI reputation). Plus intent-first keywords, briefs and drafts. Every finding becomes a task — finding to action, not just monitoring. Free to start. Full keyword stack from $19.',
             tagline: 'Rank in Google. Get cited by AI.',
             notSaying: [
-                'Not a replacement for standalone data tools. Different thing. We connect the workflow and add the AI-search layer nobody else has at this price.',
+                'Not a replacement for standalone data tools. Different thing. We connect the workflow and add an AI-search layer few tools combine at this price.',
                 'Not the deepest audit on the market. The one that measures both Google readiness and AI-citation readiness.',
                 'Not for Fortune 500. For the freelancer who needs to answer "am I visible in AI search?" and doesn\'t have $300/mo for it.',
                 'GEO score is an on-demand check per page, not an automatic part of every crawl. Be honest about this.'
@@ -109,7 +112,7 @@ const content = {
         subtitle: 'Что делаем, для кого, как об этом говорить. Держи открытой.',
         whatIs: {
             heading: 'KORU в одном предложении',
-            text: 'Вставляешь URL. KORU проверяет сайт, потом можно запустить GEO score (насколько страница цитируема AI-движками), мониторинг AI brand visibility через OpenAI и Gemini, проверку agent readiness, найти ключевые слова с классификацией по intent, сгенерировать брифы и черновики контента, и превратить каждую находку в задачу. Одна платформа для SEO в эпоху AI-поиска.'
+            text: 'Одна платформа, несколько отдельных инструментов — не «одна кнопка, которая делает всё». Проверить GEO score любой страницы (насколько она цитируема AI-движками), запустить Citation Gap и увидеть, кого ChatGPT, Gemini, Claude и Grok цитируют вместо тебя, проверить AI reputation по этим движкам, запустить agent readiness, найти ключевые слова с классификацией по intent, сгенерировать брифы и черновики контента, и превратить каждую находку в задачу. Для SEO в эпоху AI-поиска.'
         },
         whoFor: {
             heading: 'Для кого строим',
@@ -135,20 +138,21 @@ const content = {
             steps: [
                 { step: 'Аудит сайта', desc: 'Проходим по страницам — заголовки, мета, скорость, мобилка, Core Web Vitals. AI резюмирует что важно и что чинить первым.' },
                 { step: 'GEO score', desc: 'Проверка AI-цитируемости любой страницы: 14 правил — FAQ schema, inverted pyramid lead, citation-worthy claims, entity density, AI crawler access. Оценка 0-100 с evidence по каждому правилу.' },
-                { step: 'AI Brand Visibility', desc: 'Упоминает ли OpenAI или Gemini твой бренд? Тренд по провайдерам, обнаружение конкурентов, рекомендации с конвертацией в задачи.' },
+                { step: 'Citation Gap', desc: 'Задай свой вопрос ChatGPT, Gemini, Claude и Grok — с живым веб-поиском — и увидь, кого они цитируют вместо тебя и что у тех страниц есть, чего нет у твоей. Каждый пробел → задача.' },
+                { step: 'AI Reputation', desc: 'Какие AI-движки реально цитируют твой бренд? Радар по движкам — ChatGPT, Gemini, Claude и Grok — живой веб-поиск, а не память модели.' },
                 { step: 'Поиск keywords', desc: 'AI сначала читает контент сайта, потом тянет ключевики с объёмом, сложностью и intent. Relevance gate фильтрует мусор. Семантическая кластеризация по смыслу, не по совпадению слов.' },
                 { step: 'Анализ пробелов', desc: 'Сопоставляем кластеры со страницами. Видно что покрыто, что нет, где нужен контент. Decision engine: OPTIMIZE, EXPAND или CREATE.' },
                 { step: 'Бриефы и драфты', desc: 'Бриф на основе реальных топ-5 Google. Полный черновик статьи через Claude AI — рабочий драфт для редактуры, не финальная публикация.' },
-                { step: 'Задачи', desc: 'Каждая находка = задача — из аудита, ключевиков, бэклинков, rank drops, AI brand рекомендаций. 9 типов источников. Назначил, трекаешь, закрыл.' }
+                { step: 'Задачи', desc: 'Каждая находка = задача — из аудита, ключевиков, бэклинков, rank drops, находок Citation Gap и AI reputation. Назначил, трекаешь, закрыл. От находки к действию, не просто мониторинг.' }
             ]
         },
         keyFeatures: {
             heading: 'Почему мы (честно)',
             subtitle: 'Мы проверили. Вот что правда.',
             features: [
-                { name: 'Построено для поиска 2026', desc: 'GEO score измеряет цитируемость каждой страницы AI-движками — 14 правил (FAQ schema, inverted pyramid, citation-worthy claims, entity density, AI crawler access). AI Brand Visibility следит, рекомендуют ли OpenAI и Gemini твой бренд — тренды по провайдерам, обнаружение конкурентов, рекомендации с конвертацией в задачи. Agent Readiness проверяет, могут ли AI-агенты найти твой сайт (llms.txt, markdown negotiation, Content-Signal, JSON-LD). Ни одна другая платформа в этом ценовом диапазоне ничего из этого не предлагает.' },
+                { name: 'Построено для поиска 2026', desc: 'GEO score измеряет цитируемость каждой страницы AI-движками — 14 правил (FAQ schema, inverted pyramid, citation-worthy claims, entity density, AI crawler access). Citation Gap задаёт твой вопрос ChatGPT, Gemini, Claude и Grok и показывает, кого они цитируют вместо тебя и что чинить. AI Reputation — радар по движкам для твоего бренда. Agent Readiness проверяет, могут ли AI-агенты найти твой сайт (llms.txt, markdown negotiation, Content-Signal, JSON-LD). Мало кто в этой цене совмещает per-page диагностику с живой проверкой цитирования в AI-движках.' },
                 { name: 'AI берёт анализ на себя', desc: 'Классификация intent, семантическая кластеризация, оценка релевантности, контент-бриефы, черновики контента — всё через Claude AI. Этап с таблицей пропускается. Другие дают данные и говорят «разбирайся.» Мы даём план.' },
-                { name: '$0 за GEO + AI visibility. $19 за ключевики.', desc: 'GEO score и AI Brand Visibility начинаются с $0. Полный keyword stack, rank tracking и контент-бриефы — от $19. Сопоставимые возможности в других местах — от $300/мес через несколько подписок. Мы строили для фрилансеров, не для корпораций.' }
+                { name: '$0 на старте. $19 за полный keyword stack.', desc: 'GEO score, дегустация Citation Gap (3 вопроса) и одна проверка бренда AI Reputation — с $0. Полный keyword stack, rank tracking и контент-бриефы — от $19. Сопоставимые возможности в других местах — от $300/мес через несколько подписок. Мы строили для фрилансеров, не для корпораций.' }
             ]
         },
         alsoIncludes: {
@@ -161,7 +165,8 @@ const content = {
                 'Черновики контента — полные черновики статей через Claude AI из ключевика + бриф (рабочие драфты для редактуры, не финальный контент)',
                 'Google Search Console — реальные данные по кликам, показам, CTR',
                 'Для агентств — white-label PDF, портал для клиентов, командные роли',
-                'Agent readiness — проверка llms.txt, markdown content negotiation, Content-Signal directives, JSON-LD coverage',
+                'Agent readiness — проверка llms.txt, markdown content negotiation, Content-Signal directives, JSON-LD coverage, HTTP Link headers',
+                'Readability — проверка по запросу, насколько твои страницы читаемы для AI, с фиксами в задачи',
                 'Генератор llms.txt — AI создаёт spec-compliant llms.txt для твоего сайта, чтобы AI-агенты могли его обнаружить'
             ]
         },
@@ -169,20 +174,21 @@ const content = {
             heading: 'Что говорить, а что нет',
             points: [
                 'Не говори «лучший аудит.» Узкоспециализированные краулеры проверяют 300+ правил. Мы — ~20 + AI-анализ. И это нормально — нашим юзерам нужна ясность, не 300 проверок.',
-                'Говори «единственная платформа в этом ценовом диапазоне, которая измеряет AI-цитируемость.» Вот где дыра. Все аудитят для Google. Никто не измеряет, может ли AI процитировать твои страницы. Мы — можем. 14 правил, per page, с evidence.',
+                'Говори «per-page диагностика AI-цитируемости + Citation Gap.» Рынок GEO уже есть (Profound, Goodie, Otterly) — никогда не говори «никто этого не делает». Наш угол: другие говорят ЕСТЬ ли ты в AI-ответе; мы говорим ПОЧЕМУ страницу пропустили, КОГО цитируют вместо тебя и что чинить. 14 правил, per page, с evidence.',
                 'Говори «сделано для фрилансеров, не для корпораций.» Это не слабость. Это выбор.',
-                'Говори «$0 за GEO score + AI visibility. $19 за полный keyword stack.» Это факт.',
+                'Говори «$0 на старте. $19 за полный keyword stack.» Это факт.',
                 'Не говори «автоматический GEO-аудит каждой страницы.» GEO Score — отдельная проверка per page, не встроена в базовый crawl.',
+                'Не говори «в один клик — всё готово.» KORU — это несколько отдельных инструментов в одной платформе, не единый автоматический пайплайн.',
                 'Не говори «готовые статьи» или «ready-to-publish.» Мы генерируем контент-драфты — рабочий материал для редактуры, не финальный контент.',
-                'Не говори «Perplexity.» Этот провайдер пока не активен. Говори «OpenAI и Gemini» или «основные AI-движки.»'
+                'Мы пробим четыре движка — ChatGPT, Gemini, Claude и Grok. Не заявляй, что пробим Perplexity (припаркованный add-on, не активен). Исключение: Agent Readiness может называть PerplexityBot — это проверка доступа краулера к серверу клиента, а не заявление о пробинге.'
             ]
         },
         positioning: {
             heading: 'Питч (запомни)',
-            statement: 'SEO-фрилансеры оптимизируют для позиций в Google. Но 48% поисков теперь показывают AI-ответ первым — и большинство SEO-инструментов это вообще не измеряют. KORU — SEO-платформа, которая аудитит для обоих. GEO score для AI-цитируемости. AI brand visibility через основные AI-движки. Проверки agent readiness. Intent-first ключевики. Контент-бриефы и драфты. Всё связано — от находки до задачи. GEO score и AI-мониторинг начинаются бесплатно. Полный keyword stack от $19.',
+            statement: 'SEO-фрилансеры оптимизируют для позиций в Google. Но 48% поисков теперь показывают AI-ответ первым. GEO-инструменты следят, упоминает ли AI твой бренд — KORU идёт дальше: показывает ПОЧЕМУ страницу цитируют или пропускают (GEO score), КОГО движки цитируют вместо тебя (Citation Gap) и твоё положение по ChatGPT, Gemini, Claude и Grok (AI reputation). Плюс intent-first ключевики, бриефы и драфты. Каждая находка → задача, от находки к действию, а не просто мониторинг. Бесплатно на старте. Полный keyword stack от $19.',
             tagline: 'Rank in Google. Get cited by AI.',
             notSaying: [
-                'Не замена для data-инструментов. Другая задача. Мы связываем workflow и добавляем AI-search слой, которого ни у кого нет за эту цену.',
+                'Не замена для data-инструментов. Другая задача. Мы связываем workflow и добавляем AI-search слой, который мало кто совмещает за эту цену.',
                 'Не самый глубокий аудит. Тот, который измеряет и Google-готовность, и AI-цитируемость.',
                 'Не для Fortune 500. Для фрилансера, которому нужно ответить «видим ли я в AI-поиске?» и у которого нет $300/мес на это.',
                 'GEO score — это проверка per page по запросу, не автоматическая часть каждого crawl. Будь честен.'

@@ -715,7 +715,7 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
         const templates = [
             {
                 label: 'Шаблон запроса',
-                text: `Hi ${firstName}, ${person.notes ? person.notes + '.' : ''} I'm building KORU \u2014 an SEO platform that audits for both Google and AI search engines. GEO score, AI brand visibility, intent-first keywords. Would love to connect.`
+                text: `Hi ${firstName}, ${person.notes ? person.notes + '.' : ''} I'm building KORU \u2014 an SEO platform that audits for both Google and AI search engines. GEO score, Citation Gap, intent-first keywords. Would love to connect.`
             },
             {
                 label: 'DM first touch',
