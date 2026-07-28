@@ -398,7 +398,7 @@ const POST_VISUALS: PostVisual[] = [
                 <div>
                     <div style={{ height: 1, backgroundColor: '#2E363322', marginBottom: 16 }} />
                     <div style={{ fontSize: 16, fontWeight: 600, color: '#2E3633', lineHeight: 1.4 }}>
-                        KORU shows what those pages have that yours doesn't — <span style={{ color: '#3FB68E', fontWeight: 800 }}>then hands you the fix.</span>
+                        KORU reads the pages AI cites and shows you exactly why — <span style={{ color: '#3FB68E', fontWeight: 800 }}>then hands you the fix.</span>
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginTop: 20 }}>
                         <div style={{ fontSize: 26, fontWeight: 900, letterSpacing: 3, color: '#3FB68E' }}>KORU</div>
