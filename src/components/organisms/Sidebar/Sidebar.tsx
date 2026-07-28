@@ -56,6 +56,43 @@ const Sidebar = React.memo(function Sidebar({
         return groups
     }, [days])
 
+    const activePhase = React.useMemo(
+        () => days.find((d) => d.dayIndex === currentDayIndex)?.phase ?? null,
+        [days, currentDayIndex]
+    )
+
+    const [collapsedPhases, setCollapsedPhases] = React.useState<Set<string>>(new Set())
+    const didInitCollapse = React.useRef(false)
+
+    // First load: collapse every week except the one holding the active day.
+    React.useEffect(() => {
+        if (didInitCollapse.current || daysByPhase.length === 0) return
+        didInitCollapse.current = true
+        const initial = new Set(daysByPhase.map((g) => g.phase))
+        if (activePhase) initial.delete(activePhase)
+        setCollapsedPhases(initial)
+    }, [daysByPhase, activePhase])
+
+    // When the active day moves to another week, auto-open that week.
+    React.useEffect(() => {
+        if (!didInitCollapse.current || !activePhase) return
+        setCollapsedPhases((prev) => {
+            if (!prev.has(activePhase)) return prev
+            const next = new Set(prev)
+            next.delete(activePhase)
+            return next
+        })
+    }, [activePhase])
+
+    const togglePhase = React.useCallback((phase: string) => {
+        setCollapsedPhases((prev) => {
+            const next = new Set(prev)
+            if (next.has(phase)) next.delete(phase)
+            else next.add(phase)
+            return next
+        })
+    }, [])
+
     const searchResults = React.useMemo(() => {
         if (!globalSearch.trim()) {
             return null
@@ -234,13 +271,21 @@ const Sidebar = React.memo(function Sidebar({
                         const phaseIdx = INSIGHTS_PHASES.indexOf(group.phase as typeof INSIGHTS_PHASES[number])
                         const insightsIndex = phaseIdx >= 0 ? getInsightsIndex(phaseIdx) : null
                         const insightsActive = insightsIndex !== null && currentDayIndex === insightsIndex
+                        const isCollapsed = collapsedPhases.has(group.phase)
+                        const phaseCompleted = group.days.reduce((n, d) => n + d.tasks.filter((t) => isTaskCompleted(t.id)).length, 0)
+                        const phaseTotal = group.days.reduce((n, d) => n + d.tasks.length, 0)
 
                         return (
                             <React.Fragment key={group.phase}>
-                                <Typography sx={styles.phaseHeader}>
-                                    {group.phase}
-                                </Typography>
-                                {group.days.map((day) => {
+                                <Box
+                                    sx={{ ...styles.phaseHeader, display: 'flex', alignItems: 'center', gap: 0.5, cursor: 'pointer', userSelect: 'none', '&:hover': { color: 'text.primary' } }}
+                                    onClick={() => togglePhase(group.phase)}
+                                >
+                                    {isCollapsed ? <ExpandMoreRoundedIcon sx={{ fontSize: '0.9rem' }} /> : <ExpandLessRoundedIcon sx={{ fontSize: '0.9rem' }} />}
+                                    <Box component="span" sx={{ flex: 1 }}>{group.phase}</Box>
+                                    <Box component="span" sx={{ fontWeight: 600, opacity: 0.85 }}>{phaseCompleted}/{phaseTotal}</Box>
+                                </Box>
+                                {!isCollapsed && group.days.map((day) => {
                                     const isActive = day.dayIndex === currentDayIndex
                                     const completedCount = day.tasks.filter((t) => isTaskCompleted(t.id)).length
                                     const totalCount = day.tasks.length
@@ -271,7 +316,7 @@ const Sidebar = React.memo(function Sidebar({
                                         </Box>
                                     )
                                 })}
-                                {insightsIndex !== null && (
+                                {!isCollapsed && insightsIndex !== null && (
                                     <Box
                                         sx={{
                                             ...styles.dayItem(insightsActive, false),

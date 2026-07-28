@@ -39,7 +39,7 @@ const content = {
             steps: [
                 { step: 'Site audit', desc: 'We crawl the pages, check titles, metas, headings, speed, mobile, Core Web Vitals. AI summarizes what matters and what to fix first.' },
                 { step: 'GEO score', desc: 'Check any page\'s AI-citation readiness: 14 rules covering FAQ schema, inverted pyramid lead, citation-worthy claims, entity density, AI crawler access. Score 0-100 with evidence per rule.' },
-                { step: 'Citation Gap', desc: 'Ask ChatGPT, Gemini, Claude and Grok your question — with live web search — and see who they cite instead of you, plus what those pages have that yours doesn\'t. Every gap converts to a task.' },
+                { step: 'Citation Gap', desc: 'Ask ChatGPT, Gemini, Claude and Grok your question — with live web search — and see who they cite instead of you, then read each of those pages for exactly why they got cited: the engines\' reasoning plus on-page signals (schema, depth, comparison, sources). Every finding converts to a task.' },
                 { step: 'AI Reputation', desc: 'Which AI engines actually cite your brand? A per-engine radar across ChatGPT, Gemini, Claude and Grok — live web search, not training memory.' },
                 { step: 'Keyword discovery', desc: 'AI reads your site content first, then pulls keywords with volume, difficulty, and intent. Relevance gate filters out off-topic noise. Semantic clustering by meaning, not word overlap.' },
                 { step: 'Gap analysis', desc: 'Maps clusters to your pages. Shows what\'s covered, what\'s missing, where to write. Decision engine: OPTIMIZE, EXPAND, or CREATE.' },
@@ -138,7 +138,7 @@ const content = {
             steps: [
                 { step: 'Аудит сайта', desc: 'Проходим по страницам — заголовки, мета, скорость, мобилка, Core Web Vitals. AI резюмирует что важно и что чинить первым.' },
                 { step: 'GEO score', desc: 'Проверка AI-цитируемости любой страницы: 14 правил — FAQ schema, inverted pyramid lead, citation-worthy claims, entity density, AI crawler access. Оценка 0-100 с evidence по каждому правилу.' },
-                { step: 'Citation Gap', desc: 'Задай свой вопрос ChatGPT, Gemini, Claude и Grok — с живым веб-поиском — и увидь, кого они цитируют вместо тебя и что у тех страниц есть, чего нет у твоей. Каждый пробел → задача.' },
+                { step: 'Citation Gap', desc: 'Задай свой вопрос ChatGPT, Gemini, Claude и Grok — с живым веб-поиском — и увидь, кого они цитируют вместо тебя, а затем прочитай эти страницы и узнай, ПОЧЕМУ их цитируют: собственную мотивировку движков плюс on-page сигналы (schema, глубина, сравнение, источники). Каждая находка → задача.' },
                 { step: 'AI Reputation', desc: 'Какие AI-движки реально цитируют твой бренд? Радар по движкам — ChatGPT, Gemini, Claude и Grok — живой веб-поиск, а не память модели.' },
                 { step: 'Поиск keywords', desc: 'AI сначала читает контент сайта, потом тянет ключевики с объёмом, сложностью и intent. Relevance gate фильтрует мусор. Семантическая кластеризация по смыслу, не по совпадению слов.' },
                 { step: 'Анализ пробелов', desc: 'Сопоставляем кластеры со страницами. Видно что покрыто, что нет, где нужен контент. Decision engine: OPTIMIZE, EXPAND или CREATE.' },
