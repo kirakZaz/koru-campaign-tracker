@@ -5,3 +5,4 @@ dist
 .vercel
 .idea
 data/progress.json
+data/uploads/

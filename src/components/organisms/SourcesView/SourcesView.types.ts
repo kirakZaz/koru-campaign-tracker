@@ -81,6 +81,9 @@ export interface ShortlistPerson {
     notes: string
     actions?: ShortlistAction[]
     completedActions?: ShortlistAction[]
+    checkRan?: boolean
+    resultSent?: boolean
+    resultImage?: string
     history?: HistoryEntry[]
     createdAt?: string
 }

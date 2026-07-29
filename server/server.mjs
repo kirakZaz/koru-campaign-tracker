@@ -1,6 +1,6 @@
 import express from 'express'
 import cors from 'cors'
-import { readFileSync, writeFileSync, existsSync } from 'fs'
+import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs'
 import { join, dirname } from 'path'
 import { fileURLToPath } from 'url'
 
@@ -9,11 +9,15 @@ const DATA_DIR = join(__dirname, '..', 'data')
 const PROGRESS_PATH = join(DATA_DIR, 'progress.json')
 const SOURCES_PATH = join(DATA_DIR, 'sources.json')
 const TEAM_PATH = join(DATA_DIR, 'team.json')
+const UPLOADS_DIR = join(DATA_DIR, 'uploads')
 const app = express()
 const PORT = 3101
 
 app.use(cors())
-app.use(express.json({ limit: '5mb' }))
+app.use(express.json({ limit: '15mb' }))
+
+if (!existsSync(UPLOADS_DIR)) mkdirSync(UPLOADS_DIR, { recursive: true })
+app.use('/api/uploads', express.static(UPLOADS_DIR))
 
 function readJSON(path, fallback) {
     if (!existsSync(path)) {
@@ -197,6 +201,26 @@ app.patch('/api/team', (req, res) => {
         res.json({ ok: true })
     } catch {
         res.status(500).json({ error: 'Failed to update team' })
+    }
+})
+
+// ── /api/upload ─────────────────────────────────────────────────────
+// Accepts an image as a base64 data URL, writes it to data/uploads/,
+// returns its URL (served under /api/uploads, which vite proxies).
+
+const EXT_BY_MIME = { 'image/png': 'png', 'image/jpeg': 'jpg', 'image/jpg': 'jpg', 'image/webp': 'webp', 'image/gif': 'gif' }
+
+app.post('/api/upload', (req, res) => {
+    try {
+        const { dataUrl } = req.body
+        const m = typeof dataUrl === 'string' && dataUrl.match(/^data:(image\/[a-zA-Z+]+);base64,(.+)$/)
+        if (!m) return res.status(400).json({ error: 'Expected an image data URL' })
+        const ext = EXT_BY_MIME[m[1]] || 'png'
+        const name = `${Date.now()}-${Math.round(Math.random() * 1e9)}.${ext}`
+        writeFileSync(join(UPLOADS_DIR, name), Buffer.from(m[2], 'base64'))
+        res.json({ url: `/api/uploads/${name}` })
+    } catch {
+        res.status(500).json({ error: 'Failed to upload' })
     }
 })
 

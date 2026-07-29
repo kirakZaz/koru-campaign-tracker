@@ -13,11 +13,10 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
 import ExpandLessRoundedIcon from '@mui/icons-material/ExpandLessRounded'
 import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded'
 import TableChartRoundedIcon from '@mui/icons-material/TableChartRounded'
-import BrushRoundedIcon from '@mui/icons-material/BrushRounded'
 import MenuBookRoundedIcon from '@mui/icons-material/MenuBookRounded'
 import LightbulbOutlinedIcon from '@mui/icons-material/LightbulbOutlined'
 import BarChartRoundedIcon from '@mui/icons-material/BarChartRounded'
-import { OVERVIEW_INDEX, SOURCES_INDEX, CREATIVES_INDEX, PLAYBOOK_INDEX, DASHBOARD_INDEX, INSIGHTS_PHASES, getInsightsIndex } from '@/App'
+import { OVERVIEW_INDEX, SOURCES_INDEX, PLAYBOOK_INDEX, DASHBOARD_INDEX, INSIGHTS_PHASES, getInsightsIndex } from '@/App'
 import { getCampaignDate, formatShortDate } from '@/utils/dateUtils'
 import ProgressBar from '@/components/molecules/ProgressBar/ProgressBar'
 import type { SidebarProps } from './Sidebar.types'
@@ -238,15 +237,6 @@ const Sidebar = React.memo(function Sidebar({
                         <TableChartRoundedIcon sx={{ fontSize: '0.9rem', color: currentDayIndex === SOURCES_INDEX ? 'primary.main' : 'text.secondary' }} />
                         <Typography sx={styles.dayTitle(currentDayIndex === SOURCES_INDEX)}>
                             Sources
-                        </Typography>
-                    </Box>
-                    <Box
-                        sx={styles.dayItem(currentDayIndex === CREATIVES_INDEX, false)}
-                        onClick={() => onDaySelect(CREATIVES_INDEX)}
-                    >
-                        <BrushRoundedIcon sx={{ fontSize: '0.9rem', color: currentDayIndex === CREATIVES_INDEX ? 'primary.main' : 'text.secondary' }} />
-                        <Typography sx={styles.dayTitle(currentDayIndex === CREATIVES_INDEX)}>
-                            Creatives
                         </Typography>
                     </Box>
                     <Box

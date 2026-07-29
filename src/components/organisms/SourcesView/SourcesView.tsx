@@ -939,6 +939,54 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
 
                     <Box sx={{ borderTop: '1px solid', borderColor: 'divider' }} />
 
+                    {/* Citation Gap section — outreach loop: прогнал / послал / скриншот */}
+                    <Box sx={{ p: 2.5, pb: 1.5 }}>
+                        <Typography sx={{ fontSize: '0.8rem', fontWeight: 700, mb: 1 }}>Citation Gap</Typography>
+                        {([['checkRan', 'Прогнал проверку'], ['resultSent', 'Послал результат']] as ['checkRan' | 'resultSent', string][]).map(([key, label]) => {
+                            const done = !!person[key]
+                            return (
+                                <Box
+                                    key={key}
+                                    sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mb: 0.25, cursor: 'pointer', '&:hover': { backgroundColor: '#ffffff06' }, borderRadius: 0.5, px: 0.5 }}
+                                    onClick={() => updateShortlistPerson(person.id, { [key]: !done } as Partial<ShortlistPerson>)}
+                                >
+                                    <Checkbox size="small" checked={done} sx={{ p: 0.25, color: done ? '#3fb68e' : '#8b949e', '&.Mui-checked': { color: '#3fb68e' } }} />
+                                    <Typography sx={{ fontSize: '0.8rem', color: done ? '#3fb68e' : 'text.primary' }}>{label}</Typography>
+                                </Box>
+                            )
+                        })}
+                        <Box sx={{ mt: 1 }}>
+                            {person.resultImage ? (
+                                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1 }}>
+                                    <Box component="a" href={person.resultImage} target="_blank" rel="noopener noreferrer" sx={{ display: 'block', lineHeight: 0 }}>
+                                        <Box component="img" src={person.resultImage} alt="результат" sx={{ maxWidth: 160, maxHeight: 120, borderRadius: 1, border: '1px solid', borderColor: 'divider' }} />
+                                    </Box>
+                                    <Button size="small" onClick={() => updateShortlistPerson(person.id, { resultImage: undefined })} sx={{ fontSize: '0.72rem', color: '#B5423F', minWidth: 0 }}>Удалить</Button>
+                                </Box>
+                            ) : (
+                                <Button component="label" size="small" variant="outlined" sx={{ fontSize: '0.75rem', textTransform: 'none', borderColor: 'divider', color: 'text.secondary' }}>
+                                    Загрузить скриншот
+                                    <input type="file" accept="image/*" hidden onChange={async (e) => {
+                                        const file = e.target.files?.[0]
+                                        e.target.value = ''
+                                        if (!file) return
+                                        const reader = new FileReader()
+                                        reader.onload = async () => {
+                                            try {
+                                                const res = await fetch('/api/upload', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ dataUrl: reader.result }) })
+                                                const data = await res.json()
+                                                if (data.url) updateShortlistPerson(person.id, { resultImage: data.url })
+                                            } catch { /* upload failed — ignore */ }
+                                        }
+                                        reader.readAsDataURL(file)
+                                    }} />
+                                </Button>
+                            )}
+                        </Box>
+                    </Box>
+
+                    <Box sx={{ borderTop: '1px solid', borderColor: 'divider' }} />
+
                     {/* Notes section */}
                     <Box sx={{ p: 2.5, pb: 1.5 }}>
                         <Typography sx={{ fontSize: '0.8rem', fontWeight: 700, mb: 1 }}>Заметки</Typography>

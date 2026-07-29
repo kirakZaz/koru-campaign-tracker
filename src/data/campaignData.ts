@@ -479,83 +479,77 @@ export const CAMPAIGN_DAYS: TemplateDay[] = [
     },
 
     // ==========================================
-    // WEEK 8 — LAUNCH WEEK (6 дней: Вс–Пт)
+    // WEEK 8 — НОВАЯ СТРАТЕГИЯ: проверялка + рассылка (с 3 августа)
+    // Круг Киры повторяется дальше каждую неделю. Настю не трогаем.
     // ==========================================
     {
         dayIndex: 1007, phase: 'Week 8', dayLabel: 'Week 8, Вс',
         calendarDayOffset: 48,
-        title: 'Макс: FINAL pre-launch check',
-        summary: 'Воскресенье = последний шанс Макса всё проверить перед launch.',
+        title: 'Кира: подготовка к запуску',
+        summary: 'Воскресенье. Кира готовит запуск новой стратегии: список компаний + шаблоны. Макс деплоит в понедельник.',
         tasks: [
-            { id: 'mx-w8-sun', title: '305. Макс: FINAL pre-launch — всё должно работать', description: 'Launch во вторник. Последний шанс проверить и пофиксить.', steps: ['Production: все endpoints?', 'Signup flow: end-to-end?', 'Landing page: быстро? Mobile?', 'Email capture: тестовый signup?', 'Twitter: ответить на всё', 'Баги → фиксить сегодня-завтра'], subtasks: [{ id: 'mx-w8-sun-st1', text: 'Production OK' }, { id: 'mx-w8-sun-st2', text: 'Signup flow OK' }, { id: 'mx-w8-sun-st3', text: 'Landing OK' }], assignee: 'Макс', estimate: '2 часа', priority: 'high', tags: ['review', 'monitoring'], warning: 'КРИТИЧЕСКИЙ ДЕНЬ. Launch через 2 дня.' }
+            { id: 'prep-list', title: '120. Кира: Собрать первый список 20–30 компаний', description: 'Кому будешь писать в первую очередь. Из базы, что собрала Настя (Sources → Люди). Брать агентства и B2B, чьи клиенты уже могут спрашивать «мы в ChatGPT?».', steps: ['Открыть Sources → Люди', 'Отобрать 20–30: агентства + B2B с клиентами', 'Отметить их (звёздочка / Outreach)'], subtasks: [{ id: 'prep-list-st1', text: '20–30 отобрано' }], assignee: 'Кира', estimate: '1 час', priority: 'high', tags: ['outreach', 'planning'] },
+            { id: 'prep-templates', title: '121. Кира: Заготовить шаблон письма + формат поста-находки', description: 'Два текста, чтобы потом не думать каждый раз. Тексты в copy blocks — подправишь под себя.', steps: ['Шаблон письма в личку с результатом (см. copy block)', 'Формат поста-находки (см. copy block)'], subtasks: [{ id: 'prep-templates-st1', text: 'Письмо готово' }, { id: 'prep-templates-st2', text: 'Формат поста готов' }], assignee: 'Кира', estimate: '45 мин', priority: 'high', tags: ['content', 'outreach'], copyBlocks: [{ label: 'Письмо в личку (LinkedIn) — шаблон', text: 'Hi [Name], I ran your site through an AI-search check — asked ChatGPT and Gemini a question your buyers ask, and looked at who they recommend.\n\nThey named [Competitor A], [Competitor B] and a few others. [their brand] wasn\'t in the answer.\n\nThe pages that got cited have a few things yours doesn\'t. Happy to send you the full breakdown + what to change. Want it?' }, { label: 'Пост-находка — формат', text: 'I checked [N] [niche] websites for AI-search visibility.\n\nAsked ChatGPT & Gemini what buyers actually ask — here\'s who the AI recommends, and who\'s invisible:\n\n[3–5 строк: кого называют часто / кого нет]\n\nThe cited ones share [1–2 concrete things]. The invisible ones don\'t.\n\nWant to see where your site lands? [ссылка на проверялку, когда будет]' }] }
         ]
     },
     {
         dayIndex: 35, phase: 'Week 8', dayLabel: 'Week 8, Пн',
-        title: 'TEASER + pre-launch',
-        summary: 'Кира учёба днём. Макс + Настя покрывают. Кира вечером: teaser "Tomorrow."',
+        title: 'Деплой + старт круга',
+        summary: 'Понедельник 3 августа: Макс деплоит платформу. Кира начинает круг — прогоны для рассылки. Настя: research.',
         tasks: [
             { id: 'n-w8-1', title: '218. Настя: Research — кто реагировал на посты но не в базе', description: 'Пройти все посты 7-12. Кто лайкнул/прокомментил но НЕ в Sources? Добавить.', steps: ['Посты 7-12 → лайки и комменты', 'Кто НЕ в Sources → добавить, Priority A'], subtasks: [{ id: 'n-w8-1-st1', text: 'Done' }], assignee: 'Настя', estimate: '2 часа', priority: 'medium', tags: ['research'] },
-            { id: '071c', title: '071c. Макс: Monday pre-launch мониторинг + final tech check', description: 'Launch завтра. Всё должно работать.', steps: ['LinkedIn: ответить на все комменты', 'Twitter: ответить на все mentions', 'FINAL tech check', 'Summary Кире'], subtasks: [{ id: '071c-st1', text: 'LinkedIn covered' }, { id: '071c-st2', text: 'Twitter covered' }, { id: '071c-st3', text: 'Tech check FINAL OK' }], assignee: 'Макс', estimate: '1.5 часа', priority: 'high', tags: ['engagement', 'monitoring'] },
-            { id: '071', title: '071. Кира: Teaser post ВЕЧЕРОМ + final checks', description: 'Кира учится днём, teaser вечером. "Tomorrow." Launch = завтра.', steps: ['Вечером: LinkedIn + Twitter: "Tomorrow."', 'Final check: всё работает?', 'Remind beta testers: "Tomorrow morning — comment in first 30 min"'], subtasks: [{ id: '071-st1', text: 'Teaser posted' }, { id: '071-st2', text: 'Beta testers reminded' }, { id: '071-st3', text: 'All checked' }], assignee: 'Кира', estimate: '1 час', priority: 'high', tags: ['content'], warning: 'Teaser ВЕЧЕРОМ после учёбы.' }
+            { id: 'mx-deploy', title: '306. Макс: Задеплоить платформу в прод', description: 'Единственная задача Макса в новой стратегии. Выкатить платформу, чтобы Кира могла прогонять отчёты, и чтобы работала публичная проверялка.', steps: ['Задеплоить в прод', 'Проверить: логин работает, прогон Citation Gap реально отрабатывает', 'Отдать Кире «готово»'], subtasks: [{ id: 'mx-deploy-st1', text: 'В проде' }, { id: 'mx-deploy-st2', text: 'Citation Gap работает' }], assignee: 'Макс', estimate: 'по готовности', priority: 'high', tags: ['setup'], warning: 'Вся стратегия завязана на это — проверить, что прогон отчёта реально работает.' },
+            { id: 'loop-run', title: '122. Кира: Прогнать 10 компаний, сохранить результаты', description: 'Шаг 1 недельного круга. В своём аккаунте KORU прогнать 10 компаний из списка через Citation Gap, сохранить скриншоты. Почта тут НЕ нужна — ты гоняешь изнутри, для себя.', steps: ['Взять 10 из списка (задача 120)', 'В своём аккаунте прогнать их сайты через Citation Gap', 'Сохранить скриншот результата по каждому'], subtasks: [{ id: 'loop-run-st1', text: '10 прогнано и сохранено' }], assignee: 'Кира', estimate: '1–1.5 часа', priority: 'high', tags: ['outreach'] },
+            { id: 'checker-build', title: '123. Кира: Доделать публичную проверялку (параллельно)', description: 'Не блокирует рассылку — делаешь параллельно. Отдельная страница для чужих: они проверяют свой сайт. Нужна для входящих.', steps: ['Страница «введи свой сайт» + поле почты', 'Почту спрашиваем ДО результата', '2 движка (ChatGPT + Gemini), не 4', 'Лимиты: 1 прогон на сайт/почту в неделю; дневной потолок ~25–30 (~$1/день); кэш на неделю', 'Результат — шарибельная картинка (кого ИИ советует, тебя нет); полный разбор — за регистрацию'], subtasks: [{ id: 'checker-build-st1', text: 'Страница + почта до результата' }, { id: 'checker-build-st2', text: '2 движка + лимиты + кэш' }, { id: 'checker-build-st3', text: 'Шарибельный результат' }], assignee: 'Кира', estimate: 'несколько сессий', priority: 'high', tags: ['landing', 'setup'] }
         ]
     },
     {
         dayIndex: 36, phase: 'Week 8', dayLabel: 'Week 8, Вт',
-        title: 'LAUNCH DAY!',
-        summary: 'ВТОРНИК = LAUNCH. Beta testers comment first. Кира online весь день.',
+        title: 'Письма в личку',
+        summary: 'Вторник: Кира пишет 10 компаниям их собственный результат в личку LinkedIn.',
         tasks: [
-            { id: '075', title: '075. Кира: Launch post LinkedIn', description: 'THE moment. ВТОРНИК = пик LinkedIn engagement. Время: 22:00 AEST = 15:00 IST = 08:00 EDT.', steps: ['22:00 AEST / 15:00 IST → опубликовать'], subtasks: [{ id: '075-st1', text: 'LinkedIn live' }], assignee: 'Кира', estimate: '5 мин', priority: 'high', tags: ['content'], copyBlocks: [{ label: 'LAUNCH POST LinkedIn', text: 'I asked ChatGPT which tool to use for my client\'s problem.\nIt named six competitors. My client wasn\'t one of them.\n\nEvery AI-visibility tool I tried told me I wasn\'t in the answer. None told me why — or who got cited instead, or what to fix.\n\nSo we built the one that does. Today it\'s live.\n\nMeet KORU — per-page AI-citation diagnosis + a full SEO toolkit.\n\n-> Citation Gap: ask ChatGPT, Gemini, Claude and Grok your question — see who they cite instead of you, and exactly why those pages got cited.\n-> GEO Score: 14-rule per-page check — why AI cites or skips a page, evidence each.\n-> AI Reputation: a per-engine radar for your brand.\n-> Agent Readiness: llms.txt, Content-Signal, JSON-LD.\n\nEvery finding becomes a task. Monitoring shows the score. KORU shows the play.\n\n"[QUOTE 1]" — [Name], [Role]\n"[QUOTE 2]" — [Name], [Role]\n\n[ATTACH DEMO GIF]\n\nGEO Score and your first Citation questions are free. Full stack from $19.\n\nkoru-seo.com\n\n#KORU #SEO #AISearch #GEO #Launch' }, { label: 'Первый комментарий', text: 'Try it free: koru-seo.com\n\nGEO Score and your first Citation questions are free. Happy to answer any questions below!' }] },
-            { id: '076', title: '076. Макс: Twitter launch thread', description: 'Через 5 мин после LinkedIn поста.', steps: ['15:05 IST → Thread → Twitter'], subtasks: [{ id: '076-st1', text: 'Twitter live' }], assignee: 'Макс', estimate: '5 мин', priority: 'high', tags: ['content'], copyBlocks: [{ label: 'Twitter thread', text: '1/ We launched KORU today.\n\nI asked ChatGPT which tool to use for my client\'s problem. It named six competitors. Not my client.\n\n2/ Every AI-visibility tool tells you you\'re not in the answer. KORU tells you WHY — and who got cited instead.\n\n3/ Citation Gap: ask ChatGPT, Gemini, Claude & Grok your question, see who they cite instead of you + why those pages got cited.\n\n4/ Plus GEO Score (14 rules/page), AI Reputation (per-engine brand radar), Agent Readiness. Every finding → a task.\n\n5/ GEO Score + first Citation questions free. Full stack from $19.\n\nkoru-seo.com\n\n#KORU #SEO #AISearch #Launch' }] },
-            { id: '077', title: '077. Кира: 2 ЧАСА engagement', description: 'САМЫЕ ВАЖНЫЕ 2 ЧАСА КАМПАНИИ. 22:00-00:00 AEST.', steps: ['Каждый коммент = ответ', 'Beta testers comment в первые 30 мин', 'Макс мониторит Twitter параллельно'], subtasks: [{ id: '077-st1', text: '2ч engagement' }], assignee: 'Кира', estimate: '2 часа', priority: 'high', tags: ['engagement'], warning: 'НИКАКИХ ОТВЛЕЧЕНИЙ. ЭТО ВСЁ РЕШАЕТ.' },
-            { id: '078', title: '078. Макс: Email waitlist', description: 'Через 1 час после поста. Макс отправляет, Кира в engagement.', steps: ['16:00 IST → Отправить email', 'Проверить delivery rate'], subtasks: [{ id: '078-st1', text: 'Email sent' }], assignee: 'Макс', estimate: '5 мин', priority: 'high', tags: ['outreach'] },
-            { id: '079', title: '079. Кира: Track reactions launch day', description: 'Мониторить кто реагирует. Обновлять статусы.', steps: ['Мониторить лайки/комменты', 'Обновить статусы в Sources'], subtasks: [{ id: '079-st1', text: 'Reactions tracked' }], assignee: 'Кира', estimate: '30 мин', priority: 'high', tags: ['monitoring'] }
+            { id: 'loop-dm', title: '124. Кира: Написать 10 в личку LinkedIn с их результатом', description: 'Шаг 2 круга. Каждому из 10 — его собственный результат, по шаблону (задача 121). Не реклама — их данные. Пишешь в LinkedIn, имейл не нужен.', steps: ['Каждому — персональное сообщение с его результатом + скриншот', 'Не питчить платформу — показать ЕГО проблему', 'Отметить в Sources: кому написала, дата'], subtasks: [{ id: 'loop-dm-st1', text: '10 сообщений отправлено' }], assignee: 'Кира', estimate: '1–1.5 часа', priority: 'high', tags: ['outreach'] }
         ]
     },
     {
         dayIndex: 37, phase: 'Week 8', dayLabel: 'Week 8, Ср',
-        title: 'Post-launch day 1 + PH launch',
-        summary: 'Continue engagement. DMs to interested. Product Hunt launch. Настя: реакции.',
+        title: 'Пост-находка + сообщества',
+        summary: 'Среда: пост-находка №1 с личной страницы + ответы в сообществах. Настя: research.',
         tasks: [
-            { id: '080', title: '080. Кира: Ответить на все комменты + DMs заинтересованным', description: 'Ответить на ВСЕ комменты. DMs с предложением walkthrough.', steps: ['Answer all comments', 'DMs to interested', 'Track signups'], subtasks: [{ id: '080-st1', text: 'Comments + DMs' }], assignee: 'Кира', estimate: '2 часа', priority: 'high', tags: ['engagement', 'outreach'], copyBlocks: [{ label: 'DM post-launch', text: 'Hey [Name],\n\nThanks for the kind words on the launch post!\n\nHappy to do a quick 15-minute walkthrough with your own site. No pitch — just a demo.\n\nWant me to send a calendar link?' }] },
-            { id: '081b', title: '081b. Макс: Product Hunt LAUNCH', description: 'Второй удар через 1 день после LinkedIn.', steps: ['00:01 PST → PH publish', 'Maker comment сразу', 'Расшарить PH ссылку', 'Мониторить комменты весь день'], subtasks: [{ id: '081b-st1', text: 'PH live' }, { id: '081b-st2', text: 'Maker comment' }, { id: '081b-st3', text: 'Cross-posted' }], assignee: 'Макс', estimate: '2 часа', priority: 'high', tags: ['launch', 'product-hunt'], warning: 'Отвечать на КАЖДЫЙ коммент на PH.' },
+            { id: 'loop-post1', title: '125. Кира: Пост-находка №1 + ответить в 2 сообществах', description: 'Шаг 3 круга. Пост с ЛИЧНОЙ страницы — не про продукт, а находка («прогнала N сайтов — вот кого ИИ советует»). Плюс ответить в 2 местах, где сидят клиенты, живым мини-результатом.', steps: ['Пост по формату (задача 121) с личной страницы', 'Картинка — скриншот реального отчёта Citation Gap (или твоей находки)', 'Ответить в r/SEO и одном SEO-чате: не ссылка, а мини-результат по их сайту'], subtasks: [{ id: 'loop-post1-st1', text: 'Пост опубликован' }, { id: 'loop-post1-st2', text: '2 ответа в сообществах' }], assignee: 'Кира', estimate: '1 час', priority: 'high', tags: ['content', 'outreach'] },
             { id: 'n-w8-2', title: '219. Настя: Research — кто реагировал на launch но не в базе', description: 'После launch поста — найти новых людей.', steps: ['Launch post → лайки и комменты', 'Кто НЕ в Sources → добавить, Priority A'], subtasks: [{ id: 'n-w8-2-st1', text: 'Done' }], assignee: 'Настя', estimate: '2 часа', priority: 'medium', tags: ['research'] }
         ]
     },
     {
         dayIndex: 38, phase: 'Week 8', dayLabel: 'Week 8, Чт',
-        title: 'Post-launch day 2 + PH + metrics',
-        summary: 'Follow-up engagement. Demo calls. PH day 2. Launch metrics.',
+        title: 'Follow-up (всё remote)',
+        summary: 'Четверг: дожать тех, кто ответил — асинхронно, без живых созвонов.',
         tasks: [
-            { id: '082', title: '082. Кира: Follow-up комменты + demo calls', description: 'Продолжить комменты. Demo calls. Twitter.', steps: ['Answer comments', 'Demo calls', 'Twitter engagement'], subtasks: [{ id: '082-st1', text: 'Follow-up done' }], assignee: 'Кира', estimate: '2 часа', priority: 'high', tags: ['engagement', 'outreach'] },
-            { id: '083b', title: '083b. Макс: Product Hunt day 2 + engagement', description: 'PH день 2 — активный engagement.', steps: ['Ответить на все PH комменты', 'Мониторить позицию'], subtasks: [{ id: '083b-st1', text: 'PH comments answered' }], assignee: 'Макс', estimate: '1 час', priority: 'high', tags: ['product-hunt'] },
-            { id: '085b', title: '085b. Макс: Launch week метрики — полная сводка', description: 'Точные цифры для ретро. GA + все платформы + PH.', steps: ['GA4: visits, signups, conversion rate', 'LinkedIn: impressions, engagement', 'Twitter: impressions, engagement', 'Product Hunt: upvotes, comments, traffic', 'Email: open rate, click rate', 'FUNNEL: impressions → visits → signups → active → demos'], subtasks: [{ id: '085b-st1', text: 'GA метрики' }, { id: '085b-st2', text: 'Social метрики' }, { id: '085b-st3', text: 'PH метрики' }, { id: '085b-st4', text: 'Funnel сводка' }], assignee: 'Макс', estimate: '1.5 часа', priority: 'high', tags: ['review'] },
-            { id: '085', title: '085. Кира + Макс: Launch Week Review', description: 'Понять результаты. Спланировать дальше.', steps: ['ALL metrics', 'FUNNEL analysis', 'Retro: что сработало, что нет', 'Next plan'], subtasks: [{ id: '085-st1', text: 'Metrics compiled' }, { id: '085-st2', text: 'Funnel analysis' }, { id: '085-st3', text: 'Retro done' }, { id: '085-st4', text: 'Next plan' }], assignee: 'Кира + Макс', estimate: '1 час', priority: 'high', tags: ['review'] }
+            { id: 'loop-followup', title: '126. Кира: Дожать ответивших — асинхронно, без звонков', description: 'Шаг 4 круга. Кто ответил на письма/посты — дожать БЕЗ живых созвонов. Всё remote: текстом, записанным видео экрана или ссылкой попробовать самим.', steps: ['Ответившим: прислать полный разбор текстом ИЛИ короткое записанное видео экрана (Loom-style)', 'Или дать ссылку на проверялку / регистрацию — пусть смотрят сами', 'Никаких живых звонков', 'Обновить статусы в Sources'], subtasks: [{ id: 'loop-followup-st1', text: 'Всем ответившим отправлено' }], assignee: 'Кира', estimate: '1–1.5 часа', priority: 'high', tags: ['outreach'] }
         ]
     },
     {
         dayIndex: 39, phase: 'Week 8', dayLabel: 'Week 8, Пт',
-        title: 'Launch Week — last push',
-        summary: 'Финальный push. Настя: community tracking. Макс выходной.',
+        title: 'Пост-находка №2 + цифры',
+        summary: 'Пятница: пост-находка №2 + посмотреть, что сработало за неделю. Настя: research.',
         tasks: [
-            { id: '084', title: '084. Кира: Последний день активного post-launch push', description: 'Ответить на комменты. DMs. Twitter.', steps: ['Answer remaining comments', 'DMs к interested', 'Twitter engagement'], subtasks: [{ id: '084-st1', text: 'Follow-up done' }], assignee: 'Кира', estimate: '1.5 часа', priority: 'high', tags: ['engagement', 'outreach'] },
+            { id: 'loop-post2', title: '127. Кира: Пост-находка №2 + посмотреть цифры', description: 'Шаг 5 круга. Ещё один пост-находка (другой угол/ниша) + честно посмотреть, что сработало за неделю.', steps: ['Пост-находка №2 с личной страницы', 'Посмотреть цифры: сколько ответов на письма, сколько прогонов на проверялке, сколько регистраций/разговоров', 'Записать, какое письмо/пост зашёл лучше — на следующую неделю'], subtasks: [{ id: 'loop-post2-st1', text: 'Пост опубликован' }, { id: 'loop-post2-st2', text: 'Цифры записаны' }], assignee: 'Кира', estimate: '1 час', priority: 'high', tags: ['content', 'review'] },
             { id: 'n-w8-3', title: '220. Настя: Research — SEO community discussions про launch', description: 'Проверить Reddit/Twitter — обсуждают ли launch.', steps: ['Reddit: r/SEO, r/bigseo — поиск "KORU"', 'Twitter: "KORU SEO"', 'Новые → Sources'], subtasks: [{ id: 'n-w8-3-st1', text: 'Done' }], assignee: 'Настя', estimate: '2 часа', priority: 'medium', tags: ['research'] }
         ],
-        keyMetric: 'LAUNCH: product signups, demo calls, email→signup conversion, PH upvotes, first paying users'
+        keyMetric: 'Неделя 8: платформа в проде, 10 писем с результатом, 2 поста-находки, первые ответы/прогоны/регистрации. Меряем ответы и прогоны, НЕ показы.'
     },
 
     // ==========================================
-    // POST-LAUNCH
+    // ДАЛЬШЕ — ПОВТОР КРУГА (Недели 9, 10, 11…)
     // ==========================================
     {
-        dayIndex: 40, phase: 'Post-launch', dayLabel: 'Post-launch',
-        title: 'Post-launch: convert → users',
-        summary: 'Priority C outreach. Convert engaged → paying users. Regular content.',
+        dayIndex: 40, phase: 'Post-launch', dayLabel: 'Дальше',
+        title: 'Дальше: повторяешь тот же круг',
+        summary: 'Недели 9, 10, 11… — тот же недельный круг. Растёт список, подправляешь тексты под то, что сработало, заинтересованных ведёшь к оплате.',
         tasks: [
-            { id: '090', title: '090. Кира: Outreach к Priority C — 10-15 requests/день', description: 'Теперь есть launch пост, demo, отзывы. Connection requests проще.', steps: ['10-15 requests/день из Priority C', 'Обновить статусы'], subtasks: [{ id: '090-st1', text: 'Priority C active' }], assignee: 'Кира', estimate: '1.5 часа/день', priority: 'medium', tags: ['outreach'] },
-            { id: '091', title: '091. Кира: DM всем кто среагировал + demo + контент', description: 'DMs to "Engaged". Demo calls. Продолжать постить 2 раза в неделю.', steps: ['DMs to ALL "Engaged" → demo offer', 'Demo calls', 'Content: 2 posts/week', 'Twitter: continue'], subtasks: [{ id: '091-st1', text: 'DMs to engaged' }, { id: '091-st2', text: 'Regular content' }], assignee: 'Кира', estimate: '2-3 часа/день', priority: 'high', tags: ['outreach', 'content'] }
+            { id: 'loop-repeat', title: '128. Кира: Повторять недельный круг', description: 'Каждую неделю тот же круг. Меняется только: список растёт (добавляешь из базы Насти), тексты подправляешь под то, что зашло, заинтересованных ведёшь к оплате/самостоятельной регистрации. Всё remote, без созвонов.', steps: ['Пн: прогнать 10 новых компаний, сохранить результаты', 'Вт: 10 писем с результатом в личку LinkedIn', 'Ср: пост-находка №1 + ответы в 2 сообществах', 'Чт: дожать ответивших (async, без звонков)', 'Пт: пост-находка №2 + посмотреть цифры', 'Заинтересованных — к оплате / самостоятельной регистрации'], subtasks: [{ id: 'loop-repeat-st1', text: 'Круг повторяется каждую неделю' }], assignee: 'Кира', estimate: '~5–6 часов/неделя', priority: 'high', tags: ['outreach', 'content'] }
         ],
-        keyMetric: 'Post-launch: signups→active users, demo→paid conversion, MRR target'
+        keyMetric: 'Повтор: растёт число ответов, прогонов на проверялке и платящих. Смотрим на разговоры и оплаты, НЕ на показы.'
     }
 ]
 
