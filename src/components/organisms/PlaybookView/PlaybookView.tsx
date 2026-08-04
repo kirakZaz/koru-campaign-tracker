@@ -21,6 +21,8 @@ const chipSx = (color: string) => ({
 })
 const tableCellSx = { fontSize: '0.8rem', py: 1.25, px: 1.5, borderColor: 'divider', verticalAlign: 'top' as const }
 const tableHeadSx = { ...tableCellSx, fontWeight: 700, color: 'text.secondary', fontSize: '0.7rem', textTransform: 'uppercase' as const, backgroundColor: '#ffffff06' }
+const templateBoxSx = { backgroundColor: '#ffffff06', borderRadius: 1, p: 2, mb: 2 }
+const templateTextSx = { fontSize: '0.8rem', color: 'text.primary', whiteSpace: 'pre-line' as const }
 
 export default function PlaybookView() {
     return (
@@ -29,39 +31,37 @@ export default function PlaybookView() {
                 Playbook
             </Typography>
             <Typography sx={{ fontSize: '0.85rem', color: 'text.secondary', mb: 3 }}>
-                Пошаговое руководство: что делать с людьми из базы на каждом этапе
+                Новый круг: прогнать проверку по компании → послать ей её же результат в личку → дожать. Всё remote, без звонков.
             </Typography>
 
             <Divider sx={{ mb: 3 }} />
 
-            {/* SECTION 1: Funnel */}
+            {/* SECTION 1: Loop */}
             <Box sx={sectionSx}>
-                <Typography sx={titleSx}>1. Воронка: путь от "незнакомец" до "клиент"</Typography>
+                <Typography sx={titleSx}>1. Круг: от «незнакомец» до «клиент»</Typography>
                 <Typography sx={textSx}>
-                    Каждый человек из базы проходит через стадии. Не все дойдут до конца — и это нормально. Задача — двигать людей по воронке, не перепрыгивая стадии.
+                    Ты не ждёшь, пока люди придут. Берёшь конкретные компании из базы, прогоняешь их сайт через проверку и присылаешь им их же результат. Никого не волнует твоя платформа — всех волнует их собственный результат.
                 </Typography>
 
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, my: 2, alignItems: 'center' }}>
                     {[
-                        { label: 'New', color: '#8b949e', desc: 'В базе, ещё не контактировали' },
+                        { label: 'В базе', color: '#8b949e', desc: 'Компания из Sources → Люди' },
                         { label: '→', color: '#8b949e' },
-                        { label: 'Connected', color: '#6c8eff', desc: 'Приняли connection request' },
+                        { label: 'Прогнал', color: '#6c8eff', desc: 'Citation Gap по их сайту' },
                         { label: '→', color: '#8b949e' },
-                        { label: 'DM sent', color: '#d29922', desc: 'Отправили личное сообщение' },
+                        { label: 'Послал', color: '#d29922', desc: 'Результат в личку LinkedIn' },
                         { label: '→', color: '#8b949e' },
-                        { label: 'Replied', color: '#3fb68e', desc: 'Ответили на DM' },
+                        { label: 'Ответил', color: '#3fb68e', desc: 'Заинтересовался' },
                         { label: '→', color: '#8b949e' },
-                        { label: 'Demo', color: '#a371f7', desc: 'Согласились на демо-звонок' },
+                        { label: 'Дожал', color: '#a371f7', desc: 'Полный разбор, async' },
                         { label: '→', color: '#8b949e' },
-                        { label: 'Beta', color: '#3fb68e', desc: 'Тестируют продукт' },
-                        { label: '→', color: '#8b949e' },
-                        { label: 'Client', color: '#3fb68e', desc: 'Платящий клиент' },
+                        { label: 'Клиент', color: '#3fb68e', desc: 'Зарегался / платит' },
                     ].map((item, i) => item.label === '→' ? (
                         <Typography key={i} sx={{ color: '#8b949e', fontSize: '0.8rem' }}>→</Typography>
                     ) : (
                         <Box key={i} sx={{ textAlign: 'center' }}>
                             <Box sx={chipSx(item.color)}>{item.label}</Box>
-                            {item.desc && <Typography sx={{ fontSize: '0.6rem', color: 'text.secondary', mt: 0.3, maxWidth: 80 }}>{item.desc}</Typography>}
+                            {item.desc && <Typography sx={{ fontSize: '0.6rem', color: 'text.secondary', mt: 0.3, maxWidth: 90 }}>{item.desc}</Typography>}
                         </Box>
                     ))}
                 </Box>
@@ -74,256 +74,127 @@ export default function PlaybookView() {
                 <Box component="table" sx={{ width: '100%', borderCollapse: 'collapse', border: '1px solid', borderColor: 'divider' }}>
                     <Box component="thead">
                         <Box component="tr">
-                            <Box component="th" sx={tableHeadSx}>Статус</Box>
+                            <Box component="th" sx={tableHeadSx}>Стадия</Box>
                             <Box component="th" sx={tableHeadSx}>Что делать</Box>
-                            <Box component="th" sx={tableHeadSx}>Когда</Box>
                             <Box component="th" sx={tableHeadSx}>Пример</Box>
                         </Box>
                     </Box>
                     <Box component="tbody">
                         <Box component="tr">
-                            <Box component="td" sx={tableCellSx}><Box sx={chipSx('#8b949e')}>New</Box></Box>
+                            <Box component="td" sx={tableCellSx}><Box sx={chipSx('#8b949e')}>В базе</Box> → <Box sx={chipSx('#6c8eff')}>Прогнал</Box></Box>
                             <Box component="td" sx={tableCellSx}>
-                                <strong>Отсвечивание:</strong> зайти на страницу (человек увидит "кто смотрел профиль"). Если он постит — прокомментировать его пост (умный комментарий, НЕ "Great post!").
+                                <strong>Взять 10 компаний</strong> (агентства / B2B, чьи клиенты могут спрашивать про ChatGPT). В своём аккаунте KORU прогнать их сайт через Citation Gap. Сохранить скриншот. Отметить в Outreach: «Прогнал».
                             </Box>
-                            <Box component="td" sx={tableCellSx}>W1-W3</Box>
-                            <Box component="td" sx={tableCellSx}>Заходим на профиль 2-3 раза за неделю. Если есть свежий пост — комментируем.</Box>
+                            <Box component="td" sx={tableCellSx}>Sources → Люди → взять 10 → прогнать в KORU → скрин в Outreach</Box>
                         </Box>
                         <Box component="tr">
-                            <Box component="td" sx={tableCellSx}><Box sx={chipSx('#8b949e')}>New</Box> → <Box sx={chipSx('#6c8eff')}>Connected</Box></Box>
+                            <Box component="td" sx={tableCellSx}><Box sx={chipSx('#6c8eff')}>Прогнал</Box> → <Box sx={chipSx('#d29922')}>Послал</Box></Box>
                             <Box component="td" sx={tableCellSx}>
-                                <strong>Connection Request:</strong> отправить с персонализированным сообщением. Упомянуть их недавний пост, компанию или роль. НЕ питчить KORU в CR.
+                                <strong>Написать в личку LinkedIn</strong> их результат + скриншот. Не питч — их данные. Имейл не нужен. Отметить в Outreach: «Послал».
                             </Box>
-                            <Box component="td" sx={tableCellSx}>С W4 (после reveal)</Box>
-                            <Box component="td" sx={tableCellSx}>"Hi [Name], your recent post about [topic] resonated. I'm building KORU — an SEO platform for Google + AI search. Would love to connect."</Box>
+                            <Box component="td" sx={tableCellSx}>"I ran your site — AI recommends [competitors], not you. Want the full breakdown + what to fix?"</Box>
                         </Box>
                         <Box component="tr">
-                            <Box component="td" sx={tableCellSx}><Box sx={chipSx('#6c8eff')}>Connected</Box> → <Box sx={chipSx('#d29922')}>DM sent</Box></Box>
+                            <Box component="td" sx={tableCellSx}><Box sx={chipSx('#d29922')}>Послал</Box> → <Box sx={chipSx('#3fb68e')}>Ответил</Box></Box>
                             <Box component="td" sx={tableCellSx}>
-                                <strong>Первый DM:</strong> через 1-2 дня после того как приняли CR. Задать вопрос про их работу. Упомянуть что-то конкретное из их профиля/постов. НЕ продавать.
+                                <strong>Кто ответил</strong> — ответить содержательно, предложить полный разбор. Без звонков — предложить прислать текстом/видео.
                             </Box>
-                            <Box component="td" sx={tableCellSx}>1-2 дня после принятия CR</Box>
-                            <Box component="td" sx={tableCellSx}>"Hey [Name], thanks for connecting! Curious — have you started measuring how your clients' content performs in AI search specifically? The gap between ranking and being cited is something I keep hearing about."</Box>
+                            <Box component="td" sx={tableCellSx}>"Happy to send it over — the pages that got cited share a few things yours doesn't."</Box>
                         </Box>
                         <Box component="tr">
-                            <Box component="td" sx={tableCellSx}><Box sx={chipSx('#d29922')}>DM sent</Box> → <Box sx={chipSx('#3fb68e')}>Replied</Box></Box>
+                            <Box component="td" sx={tableCellSx}><Box sx={chipSx('#3fb68e')}>Ответил</Box> → <Box sx={chipSx('#a371f7')}>Дожал</Box></Box>
                             <Box component="td" sx={tableCellSx}>
-                                <strong>Развивать разговор:</strong> ответить содержательно. Задать follow-up вопрос. Если человек проявляет интерес к теме AI search — мягко упомянуть что строишь инструмент.
+                                <strong>Дожать асинхронно.</strong> Прислать полный отчёт текстом ИЛИ короткое записанное видео экрана ИЛИ ссылку попробовать самим. <strong>Никаких живых звонков.</strong>
                             </Box>
-                            <Box component="td" sx={tableCellSx}>Сразу при ответе</Box>
-                            <Box component="td" sx={tableCellSx}>"That's exactly what we're seeing too. I've been building a 14-rule check for this — would you want to try it when it's ready?"</Box>
+                            <Box component="td" sx={tableCellSx}>"Recorded a 3-min walkthrough of your result — [link]. No call needed."</Box>
                         </Box>
                         <Box component="tr">
-                            <Box component="td" sx={tableCellSx}><Box sx={chipSx('#3fb68e')}>Replied</Box> → <Box sx={chipSx('#a371f7')}>Demo</Box></Box>
+                            <Box component="td" sx={tableCellSx}><Box sx={chipSx('#a371f7')}>Дожал</Box> → <Box sx={chipSx('#3fb68e')}>Клиент</Box></Box>
                             <Box component="td" sx={tableCellSx}>
-                                <strong>Предложить демо:</strong> если человек заинтересован — предложить 15-минутный звонок. "Могу показать на твоём сайте." Отправить ссылку на календарь.
+                                <strong>Довести до регистрации/оплаты.</strong> Дать ссылку попробовать полную проверку самим. Первые вопросы бесплатны.
                             </Box>
-                            <Box component="td" sx={tableCellSx}>Когда человек проявил интерес</Box>
-                            <Box component="td" sx={tableCellSx}>"Happy to do a quick 15-min walkthrough with your own site — want me to send a calendar link?"</Box>
-                        </Box>
-                        <Box component="tr">
-                            <Box component="td" sx={tableCellSx}><Box sx={chipSx('#a371f7')}>Demo</Box> → <Box sx={chipSx('#3fb68e')}>Beta</Box></Box>
-                            <Box component="td" sx={tableCellSx}>
-                                <strong>Предложить бета-тест:</strong> после демо или при сильном интересе — дать доступ к продукту. Через неделю спросить фидбек. Попросить 2-3 предложения отзыв.
-                            </Box>
-                            <Box component="td" sx={tableCellSx}>После демо или при явном интересе</Box>
-                            <Box component="td" sx={tableCellSx}>"I'd love to get your feedback as an early tester. No strings attached — just want input from someone who does this daily."</Box>
-                        </Box>
-                        <Box component="tr">
-                            <Box component="td" sx={tableCellSx}><Box sx={chipSx('#3fb68e')}>Beta</Box> → <Box sx={chipSx('#3fb68e')}>Client</Box></Box>
-                            <Box component="td" sx={tableCellSx}>
-                                <strong>Конвертировать в клиента:</strong> собрать фидбек, спросить "готовы ли вы продолжить на платном плане?". Предложить скидку для ранних пользователей.
-                            </Box>
-                            <Box component="td" sx={tableCellSx}>Через 1-2 недели бета-теста</Box>
-                            <Box component="td" sx={tableCellSx}>"Your feedback has been super valuable. We're launching next week — want me to set you up with a founder discount?"</Box>
+                            <Box component="td" sx={tableCellSx}>"You can run the full check yourself here — [link]. First questions are free."</Box>
                         </Box>
                     </Box>
                 </Box>
             </Box>
 
-            {/* SECTION 3: Comment strategy */}
+            {/* SECTION 3: How to write the result message */}
             <Box sx={sectionSx}>
-                <Typography sx={titleSx}>3. Как комментировать чужие посты</Typography>
+                <Typography sx={titleSx}>3. Как писать письмо-результат</Typography>
 
                 <Typography sx={subtitleSx}>Правила</Typography>
                 <Box component="ul" sx={listSx}>
-                    <li><strong>Никогда</strong> не писать "Great post!", "So true!", "Love this!" — это спам, не engagement.</li>
-                    <li><strong>Всегда</strong> добавлять ценность: факт, вопрос, альтернативную точку зрения, свой опыт.</li>
-                    <li><strong>Можно</strong> конструктивно не согласиться — это даже лучше чем соглашаться.</li>
-                    <li><strong>Не питчить</strong> KORU в комментариях (до W4 reveal). После reveal — только если уместно.</li>
-                    <li>Длина: 2-4 предложения. Не одно слово, не простыня.</li>
+                    <li>Веди <strong>их результатом</strong>, а не своей платформой. «Прогнала ваш сайт — вот что нашла».</li>
+                    <li>Конкретика: назови 2-3 конкурентов, которых цитирует ИИ, и что у них есть, чего нет у них.</li>
+                    <li><strong>Никаких звонков.</strong> Всё remote: текст, записанное видео, ссылка.</li>
+                    <li>Коротко. Один результат + одно предложение помочь. Не простыня.</li>
+                    <li>Пиши в LinkedIn — имейл тебе не нужен.</li>
                 </Box>
+            </Box>
 
-                <Typography sx={subtitleSx}>Примеры хороших комментариев</Typography>
-                <Box sx={{ backgroundColor: '#ffffff06', borderRadius: 1, p: 2, mb: 1.5 }}>
-                    <Typography sx={{ fontSize: '0.8rem', color: 'text.secondary', mb: 0.5 }}>Пост: "AI Overviews are killing organic CTR"</Typography>
-                    <Typography sx={{ fontSize: '0.8rem', color: '#3fb68e' }}>
-                        "The CTR drop is real, but the interesting part is what happens to cited brands — they actually get MORE clicks per impression than uncited brands on the same SERP. The game isn't position anymore, it's citation."
+            {/* SECTION 4: Templates */}
+            <Box sx={sectionSx}>
+                <Typography sx={titleSx}>4. Шаблоны</Typography>
+
+                <Typography sx={subtitleSx}>Письмо-результат (первое касание)</Typography>
+                <Box sx={templateBoxSx}>
+                    <Typography sx={templateTextSx}>
+                        {`Hi [Name], I ran your site through an AI-search check — asked ChatGPT and Gemini a question your buyers ask, and looked at who they recommend.
+
+They named [Competitor A], [Competitor B] and a few others. [their brand] wasn't in the answer.
+
+The pages that got cited have a few things yours doesn't. Happy to send you the full breakdown + what to change. Want it?`}
                     </Typography>
                 </Box>
-                <Box sx={{ backgroundColor: '#ffffff06', borderRadius: 1, p: 2, mb: 1.5 }}>
-                    <Typography sx={{ fontSize: '0.8rem', color: 'text.secondary', mb: 0.5 }}>Пост: "I don't trust AI for keyword research"</Typography>
-                    <Typography sx={{ fontSize: '0.8rem', color: '#3fb68e' }}>
-                        "The problem isn't AI — it's that most tools start from nothing. If the AI reads the site first and understands what the business does, the keywords are grounded in reality, not generated from thin air."
+
+                <Typography sx={subtitleSx}>Не ответил — follow-up (через 3-4 дня)</Typography>
+                <Box sx={templateBoxSx}>
+                    <Typography sx={templateTextSx}>
+                        {`Hi [Name], following up on the AI-search result I ran for [their brand].
+
+Quick recap: ChatGPT and Gemini recommend [competitors] for [their niche] — [their brand] isn't in the answer yet.
+
+Want the full breakdown of why, and the 3 things to change? Just say the word.`}
                     </Typography>
                 </Box>
 
-                <Typography sx={subtitleSx}>Примеры плохих комментариев</Typography>
-                <Box sx={{ backgroundColor: '#f8514911', borderRadius: 1, p: 2 }}>
-                    <Typography sx={{ fontSize: '0.8rem', color: '#f85149' }}>
-                        "Great insights!" / "So true, thanks for sharing!" / "Check out KORU — we solve this!" / "👏👏👏"
+                <Typography sx={subtitleSx}>Ответил с интересом — дожать (async, без звонков)</Typography>
+                <Box sx={templateBoxSx}>
+                    <Typography sx={templateTextSx}>
+                        {`Great — here's the full result for [their brand].
+
+I recorded a short screen walkthrough so you can see it without a call: [link].
+
+The 3 quickest wins are [X, Y, Z]. You can also run the full check yourself here: [link]. Happy to answer anything by message.`}
+                    </Typography>
+                </Box>
+
+                <Typography sx={subtitleSx}>Формат поста-находки (с личной страницы)</Typography>
+                <Box sx={templateBoxSx}>
+                    <Typography sx={templateTextSx}>
+                        {`I checked [N] [niche] websites for AI-search visibility.
+
+Asked ChatGPT & Gemini what buyers actually ask — here's who the AI recommends, and who's invisible:
+
+[3-5 строк: кого называют часто / кого нет]
+
+The cited ones share [1-2 concrete things]. The invisible ones don't.
+
+Want to see where your site lands? [ссылка на проверялку, когда будет]`}
                     </Typography>
                 </Box>
             </Box>
 
-            {/* SECTION 4: DM templates */}
+            {/* SECTION 5: What NOT to do */}
             <Box sx={sectionSx}>
-                <Typography sx={titleSx}>4. Шаблоны сообщений</Typography>
-                <Typography sx={textSx}>
-                    Все шаблоны — отправная точка. Персонализируй под каждого человека. Заменяй [Name], [topic], [Company] на реальные данные из Notes.
-                </Typography>
-
-                <Typography sx={subtitleSx}>DM после комментария к нашему посту</Typography>
-                <Box sx={{ backgroundColor: '#ffffff06', borderRadius: 1, p: 2, mb: 2, fontFamily: 'inherit' }}>
-                    <Typography sx={{ fontSize: '0.8rem', color: 'text.primary', whiteSpace: 'pre-line' }}>
-                        {`Hey [Name],
-
-Really appreciated your comment — especially the point about [their specific point].
-
-Curious: have you tried measuring your AI-citation readiness specifically? Things like whether your pages have FAQ schema, whether AI crawlers can access your content?
-
-I've been working on a checklist for this — 14 rules. Would you want to see it when it's ready?`}
-                    </Typography>
-                </Box>
-
-                <Typography sx={subtitleSx}>DM после принятия Connection Request</Typography>
-                <Box sx={{ backgroundColor: '#ffffff06', borderRadius: 1, p: 2, mb: 2 }}>
-                    <Typography sx={{ fontSize: '0.8rem', color: 'text.primary', whiteSpace: 'pre-line' }}>
-                        {`Hey [Name], thanks for connecting!
-
-Noticed your work on [specific thing from their profile]. Quick question — have you looked into how your content performs in AI answers specifically?
-
-We keep seeing a gap between ranking well and actually being cited. Curious if you've noticed the same.`}
-                    </Typography>
-                </Box>
-
-                <Typography sx={subtitleSx}>DM — предложение бета-теста</Typography>
-                <Box sx={{ backgroundColor: '#ffffff06', borderRadius: 1, p: 2, mb: 2 }}>
-                    <Typography sx={{ fontSize: '0.8rem', color: 'text.primary', whiteSpace: 'pre-line' }}>
-                        {`Hey [Name],
-
-I'm building an SEO platform that measures AI-citation readiness — a 14-rule GEO score per page, Citation Gap (who ChatGPT, Gemini, Claude and Grok cite instead of you), plus intent-first keyword intelligence.
-
-Would love your input as an early tester. No strings attached — just want feedback from someone who actually does this work daily.
-
-Interested?`}
-                    </Typography>
-                </Box>
-
-                <Typography sx={subtitleSx}>DM — предложение демо</Typography>
-                <Box sx={{ backgroundColor: '#ffffff06', borderRadius: 1, p: 2, mb: 2 }}>
-                    <Typography sx={{ fontSize: '0.8rem', color: 'text.primary', whiteSpace: 'pre-line' }}>
-                        {`Hey [Name],
-
-Thanks for the interest! Happy to do a quick 15-minute walkthrough — I can run KORU on your actual site so you see real results, not a generic demo.
-
-Want me to send a calendar link?`}
-                    </Typography>
-                </Box>
-
-                <Typography sx={subtitleSx}>DM — запрос отзыва от бета-тестера</Typography>
-                <Box sx={{ backgroundColor: '#ffffff06', borderRadius: 1, p: 2, mb: 2 }}>
-                    <Typography sx={{ fontSize: '0.8rem', color: 'text.primary', whiteSpace: 'pre-line' }}>
-                        {`Hey [Name],
-
-Thanks so much for testing KORU — your feedback on [specific thing] was really valuable.
-
-Quick favor: would you be ok sharing a sentence or two about your experience? Something genuine, in your own words.
-
-We're gearing up for launch and a few real voices would mean a lot. No pressure at all!`}
-                    </Typography>
-                </Box>
-
-                <Typography sx={subtitleSx}>Connection Request — шаблоны</Typography>
-                <Box sx={{ backgroundColor: '#ffffff06', borderRadius: 1, p: 2, mb: 1 }}>
-                    <Typography sx={{ fontSize: '0.75rem', color: 'text.secondary', mb: 0.5 }}>Для фрилансеров / agency owners:</Typography>
-                    <Typography sx={{ fontSize: '0.8rem', color: 'text.primary' }}>
-                        "Hi [Name], your recent post about [topic] really resonated. I'm building KORU — an SEO platform that audits for both Google and AI search. GEO score, Citation Gap, intent-first keywords. Would love to connect."
-                    </Typography>
-                </Box>
-                <Box sx={{ backgroundColor: '#ffffff06', borderRadius: 1, p: 2, mb: 1 }}>
-                    <Typography sx={{ fontSize: '0.75rem', color: 'text.secondary', mb: 0.5 }}>Для in-house SEO:</Typography>
-                    <Typography sx={{ fontSize: '0.8rem', color: 'text.primary' }}>
-                        "Hi [Name], leading SEO at [Company] — impressive results. KORU adds an AI-search layer to your SEO stack: GEO score, Citation Gap, AI reputation. The metrics your board will ask about next quarter. Would be great to connect."
-                    </Typography>
-                </Box>
-                <Box sx={{ backgroundColor: '#ffffff06', borderRadius: 1, p: 2 }}>
-                    <Typography sx={{ fontSize: '0.75rem', color: 'text.secondary', mb: 0.5 }}>Для спикеров конференций:</Typography>
-                    <Typography sx={{ fontSize: '0.8rem', color: 'text.primary' }}>
-                        "Hi [Name], your talk at [Conference] about [topic] was excellent. Building in the same space — KORU measures AI-citation readiness alongside classical rankings. Would love to connect."
-                    </Typography>
-                </Box>
-            </Box>
-
-            {/* SECTION 5: Timing */}
-            <Box sx={sectionSx}>
-                <Typography sx={titleSx}>5. Тайминг по неделям</Typography>
-
-                <Box component="table" sx={{ width: '100%', borderCollapse: 'collapse', border: '1px solid', borderColor: 'divider' }}>
-                    <Box component="thead">
-                        <Box component="tr">
-                            <Box component="th" sx={tableHeadSx}>Неделя</Box>
-                            <Box component="th" sx={tableHeadSx}>Что делаем с людьми</Box>
-                        </Box>
-                    </Box>
-                    <Box component="tbody">
-                        <Box component="tr">
-                            <Box component="td" sx={tableCellSx}><strong>W1-2</strong></Box>
-                            <Box component="td" sx={tableCellSx}>Только отсвечивание: заходим на профили, комментируем посты. Если кто-то комментирует НАШИ посты — пишем DM (вопрос про workflow, НЕ pitch). Не отправляем CR.</Box>
-                        </Box>
-                        <Box component="tr">
-                            <Box component="td" sx={tableCellSx}><strong>W3</strong></Box>
-                            <Box component="td" sx={tableCellSx}>Активнее комментируем. Первая ссылка на landing в посте. Начинаем искать бета-тестеров через DM. Пишем тем, кто проявил наибольший интерес.</Box>
-                        </Box>
-                        <Box component="tr">
-                            <Box component="td" sx={tableCellSx}><strong>W4</strong></Box>
-                            <Box component="td" sx={tableCellSx}>REVEAL — KORU публичен. Обновляем headline. Публикуем "Meet KORU". Можно упоминать продукт в DM и комментариях.</Box>
-                        </Box>
-                        <Box component="tr">
-                            <Box component="td" sx={tableCellSx}><strong>W5</strong></Box>
-                            <Box component="td" sx={tableCellSx}>Connection Requests → Priority A (8-10/день). Демо-звонки. Сбор отзывов от бета-тестеров.</Box>
-                        </Box>
-                        <Box component="tr">
-                            <Box component="td" sx={tableCellSx}><strong>W6</strong></Box>
-                            <Box component="td" sx={tableCellSx}>Connection Requests → Priority B (12-15/день). Продолжаем демо. Персонализация каждого CR.</Box>
-                        </Box>
-                        <Box component="tr">
-                            <Box component="td" sx={tableCellSx}><strong>W7</strong></Box>
-                            <Box component="td" sx={tableCellSx}>Финальные CR перед launch. Уведомить бета-тестеров: "Запуск во вторник, прокомментируй первым." Подготовка launch email.</Box>
-                        </Box>
-                        <Box component="tr">
-                            <Box component="td" sx={tableCellSx}><strong>W8</strong></Box>
-                            <Box component="td" sx={tableCellSx}>LAUNCH. Отвечать на КАЖДЫЙ комментарий. DM всем кто написал "круто" → предложить демо. Трекать реакции.</Box>
-                        </Box>
-                        <Box component="tr">
-                            <Box component="td" sx={tableCellSx}><strong>W9+</strong></Box>
-                            <Box component="td" sx={tableCellSx}>Priority C outreach. Convert engaged → paying. Регулярный контент 2 поста/неделю.</Box>
-                        </Box>
-                    </Box>
-                </Box>
-            </Box>
-
-            {/* SECTION 6: Rules */}
-            <Box sx={sectionSx}>
-                <Typography sx={titleSx}>6. Главные правила</Typography>
+                <Typography sx={titleSx}>5. Чего НЕ делать</Typography>
                 <Box component="ul" sx={listSx}>
-                    <li><strong>Никогда не питчить в первом сообщении.</strong> Первое сообщение = вопрос про их работу.</li>
-                    <li><strong>Персонализация обязательна.</strong> Каждый CR, каждый DM должен содержать что-то конкретное про этого человека (недавний пост, компания, роль).</li>
-                    <li><strong>2 часа engagement после каждого поста — не обсуждается.</strong> Алгоритм LinkedIn решает в первые 2 часа.</li>
-                    <li><strong>Не спамить.</strong> Максимум 12-15 CR в день. 3-5 DMs в день. Если LinkedIn предупреждает — снизить темп.</li>
-                    <li><strong>Обновлять статусы в Sources.</strong> После каждого действия — менять статус человека. Это наша CRM.</li>
-                    <li><strong>DM follow-up через 3 дня.</strong> Если не ответили — одно повторное сообщение через 3 дня. Если снова нет — оставить.</li>
-                    <li><strong>Записывать "How?" комментарии.</strong> Если кто-то спросил "How?", "When?", "I want to try" — это горячий лид. DM сразу.</li>
+                    <li>Не звать на созвон или демо — всё асинхронно.</li>
+                    <li>Не питчить платформу — вести результатом человека.</li>
+                    <li>Не постить «у нас есть фича» — постить находки.</li>
+                    <li>Не ждать входящих — идти к конкретным людям самой.</li>
+                    <li>Не мерить показы — мерить ответы, прогоны и регистрации.</li>
                 </Box>
             </Box>
         </Box>

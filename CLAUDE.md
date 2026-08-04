@@ -1,12 +1,12 @@
 # KORU Campaign Tracker
 
 ## What this is
-Campaign management app for KORU's LinkedIn/Twitter launch campaign. React + MUI frontend, Express backend, deployed on Vercel.
+Campaign management app for KORU's go-to-market. Current strategy (from Aug 2026, after the LinkedIn-broadcast/launch plan failed): a free public AI-citation checker + founder-led LinkedIn outreach — Kira runs the checker on target companies and DMs each prospect their own "who does AI cite instead of you" result. Everything remote (no live calls). Twitter and the big-launch/Product-Hunt play are dropped. React + MUI frontend, Express backend, deployed on Vercel.
 
 ## Campaign roles
-- **Кира:** LinkedIn posts, engagement, DMs, connection requests, all outreach
-- **Макс:** Twitter cross-posts, Twitter monitoring, landing page, GA/analytics, demo recording, product/tech tasks
-- **Настя:** Research ONLY — find people, build database (Sources → Люди), categorize, Friday metrics via Dashboard. No engagement, no connection requests, no DMs.
+- **Кира:** runs the AI-citation checker on target companies, DMs each prospect their own result on LinkedIn, posts findings from her personal profile, async follow-up (send full report or a recorded walkthrough — NO live calls). All remote.
+- **Макс:** deploy only — ship the platform to production. Nothing else.
+- **Настя:** Research ONLY — find people, build the database (Sources → Люди), categorize. No engagement, no DMs, no outreach.
 
 ## Messaging — source of truth
 
@@ -55,11 +55,11 @@ Campaign management app for KORU's LinkedIn/Twitter launch campaign. React + MUI
 - 1 in 6 US searches is voice or image
 
 ## App structure
-- **Sidebar:** Overview, Sources, Creatives + day list with collapsible header
+- **Sidebar:** Overview, Sources, Playbook, Dashboard + collapsible weekly day list (weeks collapse/expand; active week open)
 - **Overview:** Team cheat sheet (EN/RU) — positioning, pain points, features, tone
-- **Sources:** People, Groups (with priority #), Companies, Top-5, Dashboard (auto-calculated stats)
-- **Creatives:** 12 HTML visual cards for posts, ready to screenshot
-- **Day views:** Tasks with copy blocks, steps, subtasks, assignees
+- **Sources:** People, Groups (with priority #), Companies, Outreach, Competitors, Dashboard (auto-calculated stats). Outreach tracks per person: «Прогнал»/«Послал» + result screenshot (uploaded to data/uploads via /api/upload)
+- **Day views:** Tasks with copy blocks, steps, subtasks, assignees. The new-strategy weekly loop lives in Week 8 (from 3 Aug) and repeats under "Дальше"
+- (Creatives section removed — post visuals are now real report screenshots, not designed cards)
 
 ## Tech
 - React + TypeScript + MUI
