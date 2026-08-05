@@ -6,7 +6,7 @@ Campaign management app for KORU's go-to-market. Current strategy (from Aug 2026
 ## Campaign roles
 - **Кира:** runs the AI-citation checker on target companies, DMs each prospect their own result on LinkedIn, posts findings from her personal profile, async follow-up (send full report or a recorded walkthrough — NO live calls). All remote.
 - **Макс:** deploy only — ship the platform to production. Nothing else.
-- **Настя:** Research ONLY — find people, build the database (Sources → Люди), categorize. No engagement, no DMs, no outreach.
+- **Настя:** Research + tester recruitment — finds people (Sources → Люди), and runs warm outreach from Kira's account: a short personal note on a LinkedIn connection request → once accepted/replied, offer beta testing. Shared effort with Kira (KORU is a team project, not solo).
 
 ## Messaging — source of truth
 

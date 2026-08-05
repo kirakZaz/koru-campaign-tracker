@@ -84,6 +84,9 @@ export interface ShortlistPerson {
     checkRan?: boolean
     resultSent?: boolean
     resultImage?: string
+    agreedToTest?: boolean
+    loggedIn?: boolean
+    feedbackReceived?: boolean
     history?: HistoryEntry[]
     createdAt?: string
 }

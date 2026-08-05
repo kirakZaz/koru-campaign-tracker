@@ -691,7 +691,6 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
         const crAccepted = person.connectionStatus === 'accepted'
         const dmDone = person.dmStatus === 'sent' || person.dmStatus === 'replied' || person.dmStatus === 'no_reply'
         const dmReplied = person.dmStatus === 'replied'
-        const isDemo = person.status === 'demo' || person.status === 'beta' || person.status === 'client'
         const isBeta = person.status === 'beta' || person.status === 'client'
 
         const funnelChip = (label: string, done: boolean, onClick: () => void) => (
@@ -866,13 +865,6 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
                                     updateShortlistWithHistory(person.id, { dmStatus: 'replied' })
                                 }
                             })}
-                            {funnelChip('Demo', isDemo, () => {
-                                if (isDemo && person.status === 'demo') {
-                                    updateShortlistWithHistory(person.id, { status: 'new' })
-                                } else if (!isDemo) {
-                                    updateShortlistWithHistory(person.id, { status: 'demo' })
-                                }
-                            })}
                             {funnelChip('Beta / Client', isBeta, () => {
                                 if (isBeta && person.status === 'beta') {
                                     updateShortlistWithHistory(person.id, { status: 'demo' })
@@ -983,6 +975,26 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
                                 </Button>
                             )}
                         </Box>
+                    </Box>
+
+                    <Box sx={{ borderTop: '1px solid', borderColor: 'divider' }} />
+
+                    {/* Tester status section */}
+                    <Box sx={{ p: 2.5, pb: 1.5 }}>
+                        <Typography sx={{ fontSize: '0.8rem', fontWeight: 700, mb: 1 }}>Тестер</Typography>
+                        {([['agreedToTest', 'Согласился тестить'], ['loggedIn', 'Залогинился'], ['feedbackReceived', 'Дал фидбек']] as ['agreedToTest' | 'loggedIn' | 'feedbackReceived', string][]).map(([key, label]) => {
+                            const done = !!person[key]
+                            return (
+                                <Box
+                                    key={key}
+                                    sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mb: 0.25, cursor: 'pointer', '&:hover': { backgroundColor: '#ffffff06' }, borderRadius: 0.5, px: 0.5 }}
+                                    onClick={() => updateShortlistPerson(person.id, { [key]: !done } as Partial<ShortlistPerson>)}
+                                >
+                                    <Checkbox size="small" checked={done} sx={{ p: 0.25, color: done ? '#3fb68e' : '#8b949e', '&.Mui-checked': { color: '#3fb68e' } }} />
+                                    <Typography sx={{ fontSize: '0.8rem', color: done ? '#3fb68e' : 'text.primary' }}>{label}</Typography>
+                                </Box>
+                            )
+                        })}
                     </Box>
 
                     <Box sx={{ borderTop: '1px solid', borderColor: 'divider' }} />
