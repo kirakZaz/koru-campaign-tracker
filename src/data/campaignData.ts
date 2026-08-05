@@ -556,7 +556,7 @@ export const CAMPAIGN_DAYS: TemplateDay[] = [
 
 export const TOTAL_CAMPAIGN_DAYS = CAMPAIGN_DAYS.length
 
-export const CAMPAIGN_VERSION = 5
+export const CAMPAIGN_VERSION = 6
 
 export function buildInitialState(): CampaignState {
     const days: CampaignDay[] = CAMPAIGN_DAYS.map(day => ({
