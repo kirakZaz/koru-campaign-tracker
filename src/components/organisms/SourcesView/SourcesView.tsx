@@ -4,41 +4,29 @@ import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
-import Table from '@mui/material/Table'
-import TableBody from '@mui/material/TableBody'
-import TableCell from '@mui/material/TableCell'
-import TableContainer from '@mui/material/TableContainer'
-import TableHead from '@mui/material/TableHead'
-import TableRow from '@mui/material/TableRow'
-import IconButton from '@mui/material/IconButton'
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 import Chip from '@mui/material/Chip'
 import Checkbox from '@mui/material/Checkbox'
 // ListItemText kept available for future use
 import Badge from '@mui/material/Badge'
-import Tooltip from '@mui/material/Tooltip'
 import Snackbar from '@mui/material/Snackbar'
-import AddRoundedIcon from '@mui/icons-material/AddRounded'
 import PeopleRoundedIcon from '@mui/icons-material/PeopleRounded'
 import GroupsRoundedIcon from '@mui/icons-material/GroupsRounded'
 import BusinessRoundedIcon from '@mui/icons-material/BusinessRounded'
 import TrendingUpRoundedIcon from '@mui/icons-material/TrendingUpRounded'
-import FilterAltOffRoundedIcon from '@mui/icons-material/FilterAltOffRounded'
-import SearchRoundedIcon from '@mui/icons-material/SearchRounded'
-import InputAdornment from '@mui/material/InputAdornment'
-import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded'
 import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
 import CompareArrowsRoundedIcon from '@mui/icons-material/CompareArrowsRounded'
-import OutreachSignals from './components/OutreachSignals'
 import PersonModal from './components/PersonModal'
 import PeopleTab from './tabs/PeopleTab'
 import GroupsTab from './tabs/GroupsTab'
 import CompaniesTab from './tabs/CompaniesTab'
 import CompetitorsTab from './tabs/CompetitorsTab'
+import OutreachTab from './tabs/OutreachTab'
+import DashboardTab from './tabs/DashboardTab'
 import type {
     SourcesViewProps,
     SourcePerson,
@@ -57,23 +45,14 @@ import type {
     ConnectionStatus,
     ShortlistAction,
     HistoryEntry,
-    FollowStatus
 } from './SourcesView.types'
 
-import StatusChip from './components/StatusChip'
-import SortHeader from './components/SortHeader'
-import FilterSelect from './components/FilterSelect'
 import {
-    DM_STATUS_LABELS,
-    CONNECTION_STATUS_LABELS,
-    FOLLOW_STATUS_LABELS,
     ICP_LABELS,
     NEXT_ACTION_LABELS,
-    cellSx,
-    headCellSx,
     DEFAULT_COUNTRIES,
 } from './sources.constants'
-import { generateId, getNextAction, isWithinLastWeek, getAutoActions } from './sources.utils'
+import { generateId, isWithinLastWeek, getAutoActions } from './sources.utils'
 
 export default function SourcesView({ sources, onSaveSources, startDate, initialTab }: SourcesViewProps) {
     const [tab, setTab] = React.useState(initialTab ?? 0)
@@ -536,240 +515,39 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
             )}
 
             {tab === 3 && (
-                <Box>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1, flexWrap: 'wrap' }}>
-                        <TextField size="small" placeholder="Поиск..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
-                            InputProps={{ startAdornment: <InputAdornment position="start"><SearchRoundedIcon sx={{ fontSize: '0.9rem', color: 'text.secondary' }} /></InputAdornment> }}
-                            sx={{ width: 160, '& .MuiInputBase-input': { fontSize: '0.8rem', py: 0.5 }, '& .MuiOutlinedInput-notchedOutline': { borderColor: searchQuery ? 'primary.main' : 'divider' } }}
-                        />
-                        <Button
-                            size="small"
-                            variant={needsActionFilter ? 'contained' : 'outlined'}
-                            onClick={() => setNeedsActionFilter(prev => !prev)}
-                            sx={{ textTransform: 'none', fontSize: '0.75rem', height: 28 }}
-                        >
-                            Нужно действие
-                        </Button>
-                        <FilterSelect label="Priority" value={filters.priority || ''} options={['A', 'B', 'C']} onChange={v => setFilter('priority', v)} />
-                        <FilterSelect label="Запрос" value={filters.connectionStatus || ''} options={['not_sent', 'sent', 'accepted', 'declined']} onChange={v => setFilter('connectionStatus', v)} />
-                        <FilterSelect label="DM" value={filters.dmStatus || ''} options={['not_sent', 'sent', 'replied', 'no_reply']} onChange={v => setFilter('dmStatus', v)} />
-                        {Object.keys(filters).length > 0 && (
-                            <IconButton size="small" onClick={clearFilters} sx={{ color: 'text.secondary', '&:hover': { color: 'error.main' } }} title="Сбросить все фильтры">
-                                <FilterAltOffRoundedIcon sx={{ fontSize: '1rem' }} />
-                            </IconButton>
-                        )}
-                        {selectedIds.size > 0 && (
-                            <>
-                                <Button size="small" variant="outlined" onClick={() => bulkUpdate({ connectionStatus: 'sent' })} sx={{ textTransform: 'none', fontSize: '0.7rem', height: 26 }}>
-                                    Запрос отпр. ({selectedIds.size})
-                                </Button>
-                                <Button size="small" variant="outlined" onClick={() => bulkUpdate({ connectionStatus: 'accepted' })} sx={{ textTransform: 'none', fontSize: '0.7rem', height: 26 }}>
-                                    Запрос принят ({selectedIds.size})
-                                </Button>
-                                <Button size="small" variant="outlined" onClick={() => bulkUpdate({ dmStatus: 'sent' })} sx={{ textTransform: 'none', fontSize: '0.7rem', height: 26 }}>
-                                    DM отпр. ({selectedIds.size})
-                                </Button>
-                                <Button size="small" variant="outlined" onClick={() => bulkUpdate({ dmStatus: 'replied' })} sx={{ textTransform: 'none', fontSize: '0.7rem', height: 26 }}>
-                                    DM ответил ({selectedIds.size})
-                                </Button>
-                                <Button size="small" variant="outlined" onClick={() => setSelectedIds(new Set())} sx={{ textTransform: 'none', fontSize: '0.7rem', height: 26, color: 'text.secondary' }}>
-                                    Снять выбор
-                                </Button>
-                            </>
-                        )}
-                        <Box sx={{ flex: 1 }} />
-                        <Button size="small" variant="outlined" onClick={() => {
-                            const now = new Date().toISOString().slice(0, 10)
-                            let updated = 0
-                            const nextShortlist = local.shortlist.map(s => {
-                                const newActions = getAutoActions(campaignWeek, s.priority)
-                                const existing = s.actions || []
-                                const toAdd = newActions.filter(a => !existing.includes(a))
-                                if (toAdd.length === 0) return s
-                                updated++
-                                return { ...s, actions: [...existing, ...toAdd], history: [...(s.history || []), { date: now, text: `Обновлено на W${campaignWeek}: +${toAdd.map(a => NEXT_ACTION_LABELS[a]).join(', ')}`, auto: true }] }
-                            })
-                            if (updated > 0) { save({ ...local, shortlist: nextShortlist }); setSnackbarMsg(`Обновлено: ${updated} человек (W${campaignWeek})`) }
-                            else setSnackbarMsg(`Все задачи актуальны (W${campaignWeek})`)
-                        }} sx={{ textTransform: 'none', fontSize: '0.75rem', height: 28, mr: 0.5, borderColor: '#6c8eff44', color: '#6c8eff', '&:hover': { borderColor: '#6c8eff', backgroundColor: '#6c8eff11' } }}>
-                            Обновить задачи (W{campaignWeek})
-                        </Button>
-                        {local.shortlist.length > 0 && (
-                            <Button size="small" variant="outlined" onClick={() => {
-                                if (window.confirm(`Удалить всех ${local.shortlist.length} человек из Outreach? Это не удалит их из People.`)) {
-                                    save({ ...local, shortlist: [] })
-                                    setSelectedIds(new Set())
-                                    setSnackbarMsg('Outreach очищен')
-                                }
-                            }} sx={{ textTransform: 'none', fontSize: '0.7rem', height: 26, mr: 0.5, borderColor: '#f8514944', color: '#f85149', '&:hover': { borderColor: '#f85149', backgroundColor: '#f8514911' } }}>
-                                Сбросить всё ({local.shortlist.length})
-                            </Button>
-                        )}
-                        {(() => {
-                            const seen = new Set<string>()
-                            const dups = local.shortlist.filter(s => {
-                                const key = (s.linkedinUrl || s.name || '').toLowerCase().replace(/\/$/, '')
-                                if (!key) return false
-                                if (seen.has(key)) return true
-                                seen.add(key)
-                                return false
-                            })
-                            return dups.length > 0 ? (
-                                <Button size="small" variant="outlined" onClick={() => {
-                                    const seen2 = new Set<string>()
-                                    const deduped = local.shortlist.filter(s => {
-                                        const key = (s.linkedinUrl || s.name || '').toLowerCase().replace(/\/$/, '')
-                                        if (!key) return true
-                                        if (seen2.has(key)) return false
-                                        seen2.add(key)
-                                        return true
-                                    })
-                                    save({ ...local, shortlist: deduped })
-                                    setSnackbarMsg(`Удалено ${local.shortlist.length - deduped.length} дубликатов`)
-                                }} sx={{ textTransform: 'none', fontSize: '0.7rem', height: 26, mr: 0.5, borderColor: '#d2992244', color: '#d29922' }}>
-                                    Убрать дубликаты ({dups.length})
-                                </Button>
-                            ) : null
-                        })()}
-                        {outreachCandidates.length > 0 && (
-                            <Button size="small" variant={canAddNextWave ? 'contained' : 'outlined'} onClick={() => {
-                                const top = outreachCandidates.slice(0, WAVE_SIZE)
-                                setBestPickIds(new Set(top.map(p => p.id)))
-                                setAddBestDialogOpen(true)
-                            }} sx={{ textTransform: 'none', fontSize: '0.8rem', mr: 0.5, ...(canAddNextWave ? { backgroundColor: '#3fb68e', '&:hover': { backgroundColor: '#2d9e72' } } : { borderColor: '#3fb68e44', color: '#3fb68e', '&:hover': { borderColor: '#3fb68e', backgroundColor: '#3fb68e11' } }) }}>
-                                {canAddNextWave ? `Следующая волна (${Math.min(WAVE_SIZE, outreachCandidates.length)})` : `+ Волна из People (${Math.min(WAVE_SIZE, outreachCandidates.length)})`}
-                            </Button>
-                        )}
-                        <Button size="small" startIcon={<AddRoundedIcon />} onClick={addShortlistPerson} variant="outlined" sx={{ textTransform: 'none', fontSize: '0.8rem' }}>
-                            Добавить
-                        </Button>
-                    </Box>
-                    {local.shortlist.length > 0 && (
-                        <Box sx={{ display: 'flex', gap: 2, mb: 1.5, px: 1 }}>
-                            <Typography sx={{ fontSize: '0.75rem', color: '#6c8eff' }}>
-                                Активных: <b>{activeInOutreach.length}</b>
-                            </Typography>
-                            <Typography sx={{ fontSize: '0.75rem', color: '#3fb68e' }}>
-                                Завершено: <b>{doneInOutreach.length}</b>
-                            </Typography>
-                            <Typography sx={{ fontSize: '0.75rem', color: '#8b949e' }}>
-                                Всего: <b>{local.shortlist.length}</b>
-                            </Typography>
-                            <Typography sx={{ fontSize: '0.75rem', color: '#8b949e' }}>
-                                W{campaignWeek}
-                            </Typography>
-                        </Box>
-                    )}
-                    {displayShortlist.length === 0 ? (
-                        <Box sx={{ border: '1px solid', borderColor: 'divider', borderRadius: 1, py: 4, textAlign: 'center' }}>
-                            <Typography sx={{ color: 'text.secondary', fontSize: '0.85rem' }}>
-                                {needsActionFilter
-                                    ? 'Нет людей, требующих действия.'
-                                    : 'Пока пусто. Добавляй лучших людей \u2014 они появятся здесь.'}
-                            </Typography>
-                        </Box>
-                    ) : (
-                        <TableContainer sx={{ border: '1px solid', borderColor: 'divider', borderRadius: 1 }}>
-                            <Table size="small">
-                                <TableHead>
-                                    <TableRow sx={{ backgroundColor: '#ffffff06' }}>
-                                        <TableCell sx={{ ...headCellSx, width: 36, px: 0.5 }}>
-                                            <Checkbox
-                                                size="small"
-                                                checked={allSelected}
-                                                indeterminate={someSelected && !allSelected}
-                                                onChange={() => {
-                                                    if (allSelected) {
-                                                        setSelectedIds(new Set())
-                                                    } else {
-                                                        setSelectedIds(new Set(allVisibleIds))
-                                                    }
-                                                }}
-                                                sx={{ p: 0.25 }}
-                                            />
-                                        </TableCell>
-                                        <SortHeader label="Имя" field="name" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
-                                        <SortHeader label="Priority" field="priority" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
-                                        <SortHeader label="Follow" field="followStatus" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
-                                        <SortHeader label="Запрос" field="connectionStatus" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
-                                        <SortHeader label="DM" field="dmStatus" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
-                                        <TableCell sx={headCellSx}>Next</TableCell>
-                                        <TableCell sx={headCellSx}>Отметки</TableCell>
-                                        <TableCell sx={{ ...headCellSx, width: 40 }} />
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {sorted(displayShortlist).map((s) => {
-                                        const nextAction = getNextAction(s)
-                                        const prColor = s.priority === 'A' ? '#3fb68e' : s.priority === 'B' ? '#d29922' : '#8b949e'
-                                        return (
-                                            <TableRow
-                                                key={s.id}
-                                                sx={{ '&:hover': { backgroundColor: '#ffffff04' }, backgroundColor: selectedIds.has(s.id) ? '#6c8eff08' : undefined, cursor: 'pointer' }}
-                                                onClick={(e) => {
-                                                    // Don't open modal when clicking on checkbox cell
-                                                    const target = e.target as HTMLElement
-                                                    if (target.closest('[data-checkbox-cell]')) return
-                                                    setModalPersonId(s.id)
-                                                }}
-                                            >
-                                                <TableCell sx={{ ...cellSx, px: 0.5 }} data-checkbox-cell>
-                                                    <Checkbox
-                                                        size="small"
-                                                        checked={selectedIds.has(s.id)}
-                                                        onChange={() => {
-                                                            setSelectedIds(prev => {
-                                                                const next = new Set(prev)
-                                                                if (next.has(s.id)) next.delete(s.id)
-                                                                else next.add(s.id)
-                                                                return next
-                                                            })
-                                                        }}
-                                                        sx={{ p: 0.25 }}
-                                                    />
-                                                </TableCell>
-                                                <TableCell sx={{ ...cellSx, fontWeight: 600 }}>{s.name || '\u2014'}</TableCell>
-                                                <TableCell sx={cellSx}>
-                                                    <Chip
-                                                        label={s.priority || 'B'}
-                                                        size="small"
-                                                        sx={{ fontSize: '0.7rem', fontWeight: 800, height: 20, minWidth: 24, backgroundColor: prColor + '22', color: prColor, border: `1px solid ${prColor}44` }}
-                                                    />
-                                                </TableCell>
-                                                <TableCell sx={cellSx}>
-                                                    <StatusChip {...FOLLOW_STATUS_LABELS[(s.followStatus || 'not_followed') as FollowStatus]} />
-                                                </TableCell>
-                                                <TableCell sx={cellSx}>
-                                                    <StatusChip {...CONNECTION_STATUS_LABELS[s.connectionStatus || 'not_sent']} />
-                                                </TableCell>
-                                                <TableCell sx={cellSx}>
-                                                    <StatusChip {...DM_STATUS_LABELS[s.dmStatus || 'not_sent']} />
-                                                </TableCell>
-                                                <TableCell sx={cellSx}>
-                                                    <StatusChip label={nextAction.label} color={nextAction.color} />
-                                                </TableCell>
-                                                <TableCell sx={cellSx}>
-                                                    <OutreachSignals person={s} />
-                                                </TableCell>
-                                                <TableCell sx={cellSx}>
-                                                    <Tooltip title="Открыть карточку">
-                                                        <IconButton
-                                                            size="small"
-                                                            onClick={(e) => { e.stopPropagation(); setModalPersonId(s.id) }}
-                                                            sx={{ color: 'text.secondary', '&:hover': { color: 'primary.main' } }}
-                                                        >
-                                                            <ChevronRightRoundedIcon sx={{ fontSize: '1.1rem' }} />
-                                                        </IconButton>
-                                                    </Tooltip>
-                                                </TableCell>
-                                            </TableRow>
-                                        )
-                                    })}
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
-                    )}
-                </Box>
+                <OutreachTab
+                    local={local}
+                    save={save}
+                    setSnackbarMsg={setSnackbarMsg}
+                    campaignWeek={campaignWeek}
+                    searchQuery={searchQuery}
+                    setSearchQuery={setSearchQuery}
+                    needsActionFilter={needsActionFilter}
+                    setNeedsActionFilter={setNeedsActionFilter}
+                    filters={filters}
+                    setFilter={setFilter}
+                    clearFilters={clearFilters}
+                    selectedIds={selectedIds}
+                    setSelectedIds={setSelectedIds}
+                    bulkUpdate={bulkUpdate}
+                    outreachCandidates={outreachCandidates}
+                    canAddNextWave={canAddNextWave}
+                    waveSize={WAVE_SIZE}
+                    setBestPickIds={setBestPickIds}
+                    setAddBestDialogOpen={setAddBestDialogOpen}
+                    addShortlistPerson={addShortlistPerson}
+                    activeInOutreach={activeInOutreach}
+                    doneInOutreach={doneInOutreach}
+                    displayShortlist={displayShortlist}
+                    allSelected={allSelected}
+                    someSelected={someSelected}
+                    allVisibleIds={allVisibleIds}
+                    setModalPersonId={setModalPersonId}
+                    sortKey={sortKey}
+                    sortDir={sortDir}
+                    toggleSort={toggleSort}
+                    sorted={sorted}
+                />
             )}
 
             {tab === 2 && (
@@ -789,152 +567,7 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
                 />
             )}
 
-            {tab === 99 && (() => {
-                const totalPeople = local.people.length
-                const priorityA = local.people.filter(p => p.priority === 'A').length
-                const priorityB = local.people.filter(p => p.priority === 'B').length
-                const priorityC = local.people.filter(p => p.priority === 'C').length
-                const bySegment = {
-                    freelancer: local.people.filter(p => p.icpSegment === 'freelancer').length,
-                    small_agency: local.people.filter(p => p.icpSegment === 'small_agency').length,
-                    in_house: local.people.filter(p => p.icpSegment === 'in_house').length,
-                    other: local.people.filter(p => p.icpSegment === 'other').length,
-                }
-                const byActivity = {
-                    high: local.people.filter(p => p.activityLevel === 'high').length,
-                    medium: local.people.filter(p => p.activityLevel === 'medium').length,
-                    low: local.people.filter(p => p.activityLevel === 'low').length,
-                }
-                const groupsApproved = local.groups.filter(g => g.status === 'approved').length
-                const groupsPending = local.groups.filter(g => g.status === 'pending').length
-                const groupsRejected = local.groups.filter(g => g.status === 'rejected').length
-                const shortlistTotal = local.shortlist.length
-                const crSent = local.shortlist.filter(s => s.connectionStatus === 'sent').length
-                const crAccepted = local.shortlist.filter(s => s.connectionStatus === 'accepted').length
-                const crDeclined = local.shortlist.filter(s => s.connectionStatus === 'declined').length
-                const dmSent = local.shortlist.filter(s => s.dmStatus === 'sent').length
-                const dmReplied = local.shortlist.filter(s => s.dmStatus === 'replied').length
-                const dmNoReply = local.shortlist.filter(s => s.dmStatus === 'no_reply').length
-                const demoCount = local.shortlist.filter(s => s.status === 'demo').length
-                const betaCount = local.shortlist.filter(s => s.status === 'beta').length
-                const clientCount = local.shortlist.filter(s => s.status === 'client').length
-                const countryCounts: Record<string, number> = {}
-                for (const p of local.people) { if (p.country) countryCounts[p.country] = (countryCounts[p.country] || 0) + 1 }
-                const topCountries = Object.entries(countryCounts).sort((a, b) => b[1] - a[1]).slice(0, 8)
-                const addedThisWeek = local.people.filter(p => isWithinLastWeek(p.createdAt)).length
-
-                const statBox = { p: 2, borderRadius: 2, backgroundColor: '#ffffff05', border: '1px solid', borderColor: 'divider' }
-                const statNum = { fontSize: '1.8rem', fontWeight: 800, color: 'primary.main', lineHeight: 1 }
-                const statLabel = { fontSize: '0.7rem', color: 'text.secondary', textTransform: 'uppercase' as const, fontWeight: 600, mt: 0.5 }
-                const barSx = (color: string, pct: number) => ({ height: 6, borderRadius: 3, backgroundColor: color + '22', position: 'relative' as const, overflow: 'hidden', '&::after': { content: '""', position: 'absolute', left: 0, top: 0, height: '100%', width: `${Math.min(pct, 100)}%`, backgroundColor: color, borderRadius: 3 } })
-
-                return (
-                    <Box>
-                        <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 1.5, mb: 3 }}>
-                            <Box sx={statBox}><Typography sx={statNum}>{totalPeople}</Typography><Typography sx={statLabel}>People total</Typography></Box>
-                            <Box sx={statBox}><Typography sx={{ ...statNum, color: '#3fb68e' }}>{priorityA}</Typography><Typography sx={statLabel}>Priority A</Typography></Box>
-                            <Box sx={statBox}><Typography sx={{ ...statNum, color: '#d29922' }}>{priorityB}</Typography><Typography sx={statLabel}>Priority B</Typography></Box>
-                            <Box sx={statBox}><Typography sx={{ ...statNum, color: '#8b949e' }}>{priorityC}</Typography><Typography sx={statLabel}>Priority C</Typography></Box>
-                            <Box sx={statBox}><Typography sx={{ ...statNum, color: '#6c8eff' }}>{shortlistTotal}</Typography><Typography sx={statLabel}>Outreach</Typography></Box>
-                            <Box sx={statBox}><Typography sx={{ ...statNum, color: '#a371f7' }}>{local.groups.length}</Typography><Typography sx={statLabel}>Groups total</Typography></Box>
-                            <Box sx={statBox}><Typography sx={{ ...statNum, color: '#3fb68e' }}>{addedThisWeek}</Typography><Typography sx={statLabel}>Добавлено за неделю</Typography></Box>
-                        </Box>
-
-                        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2, mb: 3 }}>
-                            <Box sx={statBox}>
-                                <Typography sx={{ fontSize: '0.8rem', fontWeight: 700, mb: 1.5 }}>Outreach Funnel</Typography>
-                                {[
-                                    { label: 'In Outreach', count: shortlistTotal, color: '#6c8eff' },
-                                    { label: 'Запрос отпр.', count: crSent, color: '#d29922' },
-                                    { label: `Запрос принят${crSent + crAccepted + crDeclined > 0 ? ` (${Math.round((crAccepted / (crSent + crAccepted + crDeclined)) * 100)}%)` : ''}`, count: crAccepted, color: '#3fb68e' },
-                                    { label: 'DM отпр.', count: dmSent, color: '#a371f7' },
-                                    { label: `DM ответил${dmSent + dmReplied + dmNoReply > 0 ? ` (${Math.round((dmReplied / (dmSent + dmReplied + dmNoReply)) * 100)}%)` : ''}`, count: dmReplied, color: '#3fb68e' },
-                                    { label: 'Demo', count: demoCount, color: '#a371f7' },
-                                    { label: 'Beta', count: betaCount, color: '#3fb68e' },
-                                    { label: 'Client', count: clientCount, color: '#3fb68e' },
-                                ].map(r => (
-                                    <Box key={r.label} sx={{ mb: 1 }}>
-                                        <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.3 }}>
-                                            <Typography sx={{ fontSize: '0.75rem', color: 'text.secondary' }}>{r.label}</Typography>
-                                            <Typography sx={{ fontSize: '0.75rem', fontWeight: 700, color: r.color }}>{r.count}</Typography>
-                                        </Box>
-                                        <Box sx={barSx(r.color, shortlistTotal > 0 ? (r.count / shortlistTotal) * 100 : 0)} />
-                                    </Box>
-                                ))}
-                            </Box>
-
-                            <Box sx={statBox}>
-                                <Typography sx={{ fontSize: '0.8rem', fontWeight: 700, mb: 1.5 }}>ICP Segments</Typography>
-                                {[
-                                    { label: 'Freelancer', count: bySegment.freelancer, color: '#3fb68e' },
-                                    { label: 'Small Agency', count: bySegment.small_agency, color: '#6c8eff' },
-                                    { label: 'In-House', count: bySegment.in_house, color: '#d29922' },
-                                    { label: 'Other', count: bySegment.other, color: '#8b949e' },
-                                ].filter(r => r.count > 0).map(r => (
-                                    <Box key={r.label} sx={{ mb: 1 }}>
-                                        <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.3 }}>
-                                            <Typography sx={{ fontSize: '0.75rem', color: 'text.secondary' }}>{r.label}</Typography>
-                                            <Typography sx={{ fontSize: '0.75rem', fontWeight: 700, color: r.color }}>{r.count}</Typography>
-                                        </Box>
-                                        <Box sx={barSx(r.color, totalPeople > 0 ? (r.count / totalPeople) * 100 : 0)} />
-                                    </Box>
-                                ))}
-                            </Box>
-                        </Box>
-
-                        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr 1fr' }, gap: 2 }}>
-                            <Box sx={statBox}>
-                                <Typography sx={{ fontSize: '0.8rem', fontWeight: 700, mb: 1.5 }}>Groups</Typography>
-                                <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-                                    <Chip label={`Approved ${groupsApproved}`} size="small" sx={{ fontSize: '0.7rem', backgroundColor: '#3fb68e22', color: '#3fb68e' }} />
-                                    <Chip label={`Pending ${groupsPending}`} size="small" sx={{ fontSize: '0.7rem', backgroundColor: '#d2992222', color: '#d29922' }} />
-                                    {groupsRejected > 0 && <Chip label={`Rejected ${groupsRejected}`} size="small" sx={{ fontSize: '0.7rem', backgroundColor: '#f8514922', color: '#f85149' }} />}
-                                </Box>
-                            </Box>
-
-                            <Box sx={statBox}>
-                                <Typography sx={{ fontSize: '0.8rem', fontWeight: 700, mb: 1.5 }}>Запросы на связь (Outreach)</Typography>
-                                <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-                                    <Chip label={`Sent ${crSent}`} size="small" sx={{ fontSize: '0.7rem', backgroundColor: '#d2992222', color: '#d29922' }} />
-                                    <Chip label={`Accepted ${crAccepted}`} size="small" sx={{ fontSize: '0.7rem', backgroundColor: '#3fb68e22', color: '#3fb68e' }} />
-                                    {crDeclined > 0 && <Chip label={`Declined ${crDeclined}`} size="small" sx={{ fontSize: '0.7rem', backgroundColor: '#f8514922', color: '#f85149' }} />}
-                                </Box>
-                                {crSent + crAccepted > 0 && <Typography sx={{ fontSize: '0.7rem', color: 'text.secondary', mt: 1 }}>Accept rate: {crAccepted + crSent > 0 ? Math.round((crAccepted / (crAccepted + crSent + crDeclined)) * 100) : 0}%</Typography>}
-                            </Box>
-
-                            <Box sx={statBox}>
-                                <Typography sx={{ fontSize: '0.8rem', fontWeight: 700, mb: 1.5 }}>DMs (Outreach)</Typography>
-                                <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-                                    <Chip label={`Sent ${dmSent}`} size="small" sx={{ fontSize: '0.7rem', backgroundColor: '#d2992222', color: '#d29922' }} />
-                                    <Chip label={`Replied ${dmReplied}`} size="small" sx={{ fontSize: '0.7rem', backgroundColor: '#3fb68e22', color: '#3fb68e' }} />
-                                    {dmNoReply > 0 && <Chip label={`No reply ${dmNoReply}`} size="small" sx={{ fontSize: '0.7rem', backgroundColor: '#f8514922', color: '#f85149' }} />}
-                                </Box>
-                                {dmSent + dmReplied > 0 && <Typography sx={{ fontSize: '0.7rem', color: 'text.secondary', mt: 1 }}>Reply rate: {dmReplied + dmSent + dmNoReply > 0 ? Math.round((dmReplied / (dmReplied + dmSent + dmNoReply)) * 100) : 0}%</Typography>}
-                            </Box>
-                        </Box>
-
-                        {topCountries.length > 0 && (
-                            <Box sx={{ ...statBox, mt: 2 }}>
-                                <Typography sx={{ fontSize: '0.8rem', fontWeight: 700, mb: 1.5 }}>Top Countries</Typography>
-                                <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-                                    {topCountries.map(([country, count]) => (
-                                        <Chip key={country} label={`${country} (${count})`} size="small" sx={{ fontSize: '0.7rem' }} />
-                                    ))}
-                                </Box>
-                            </Box>
-                        )}
-
-                        <Box sx={{ ...statBox, mt: 2 }}>
-                            <Typography sx={{ fontSize: '0.8rem', fontWeight: 700, mb: 1 }}>Activity Level</Typography>
-                            <Box sx={{ display: 'flex', gap: 2 }}>
-                                <Typography sx={{ fontSize: '0.75rem', color: '#3fb68e' }}>High: {byActivity.high}</Typography>
-                                <Typography sx={{ fontSize: '0.75rem', color: '#d29922' }}>Medium: {byActivity.medium}</Typography>
-                                <Typography sx={{ fontSize: '0.75rem', color: '#8b949e' }}>Low: {byActivity.low}</Typography>
-                            </Box>
-                        </Box>
-                    </Box>
-                )
-            })()}
+            {tab === 99 && <DashboardTab local={local} />}
 
             {tab === 4 && (
                 <CompetitorsTab
