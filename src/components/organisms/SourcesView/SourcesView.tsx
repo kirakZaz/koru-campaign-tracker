@@ -29,8 +29,6 @@ import BusinessRoundedIcon from '@mui/icons-material/BusinessRounded'
 import StarRoundedIcon from '@mui/icons-material/StarRounded'
 import TrendingUpRoundedIcon from '@mui/icons-material/TrendingUpRounded'
 import EditRoundedIcon from '@mui/icons-material/EditRounded'
-import ArrowUpwardRoundedIcon from '@mui/icons-material/ArrowUpwardRounded'
-import ArrowDownwardRoundedIcon from '@mui/icons-material/ArrowDownwardRounded'
 import OpenInNewRoundedIcon from '@mui/icons-material/OpenInNewRounded'
 import FilterAltOffRoundedIcon from '@mui/icons-material/FilterAltOffRounded'
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded'
@@ -43,6 +41,7 @@ import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
 import CompareArrowsRoundedIcon from '@mui/icons-material/CompareArrowsRounded'
+import OutreachSignals from './components/OutreachSignals'
 import type {
     SourcesViewProps,
     SourcePerson,
@@ -64,226 +63,28 @@ import type {
     FollowStatus
 } from './SourcesView.types'
 
-const DM_STATUS_LABELS: Record<DmStatus, { label: string, color: string }> = {
-    not_sent: { label: '--', color: '#8b949e' },
-    sent: { label: 'Sent', color: '#d29922' },
-    replied: { label: 'Replied', color: '#3fb68e' },
-    no_reply: { label: 'No reply', color: '#f85149' }
-}
-
-const CONNECTION_STATUS_LABELS: Record<ConnectionStatus, { label: string, color: string }> = {
-    not_sent: { label: '--', color: '#8b949e' },
-    sent: { label: 'Sent', color: '#d29922' },
-    accepted: { label: 'Accepted', color: '#3fb68e' },
-    declined: { label: 'Declined', color: '#f85149' }
-}
-
-const FOLLOW_STATUS_LABELS: Record<FollowStatus, { label: string, color: string }> = {
-    not_followed: { label: '--', color: '#8b949e' },
-    followed: { label: 'Followed', color: '#d29922' },
-    follow_back: { label: 'Follow-back', color: '#3fb68e' }
-}
-
-const PERSON_STATUS_LABELS: Record<PersonStatus, { label: string, color: string }> = {
-    new: { label: 'New', color: '#8b949e' },
-    connected: { label: 'Connected', color: '#6c8eff' },
-    dm_sent: { label: 'DM отпр.', color: '#d29922' },
-    replied: { label: 'Replied', color: '#3fb68e' },
-    demo: { label: 'Demo', color: '#a371f7' },
-    beta: { label: 'Beta', color: '#3fb68e' },
-    client: { label: 'Client', color: '#3fb68e' },
-    declined: { label: 'Declined', color: '#f85149' }
-}
-
-const GROUP_STATUS_LABELS: Record<GroupStatus, { label: string, color: string }> = {
-    pending: { label: 'Pending', color: '#d29922' },
-    approved: { label: 'Approved', color: '#3fb68e' },
-    rejected: { label: 'Rejected', color: '#f85149' }
-}
-
-const COMPANY_STATUS_LABELS: Record<CompanyStatus, { label: string, color: string }> = {
-    research: { label: 'Research', color: '#8b949e' },
-    contacted: { label: 'Contacted', color: '#d29922' },
-    in_talks: { label: 'In talks', color: '#6c8eff' },
-    partner: { label: 'Partner', color: '#3fb68e' },
-    declined: { label: 'Declined', color: '#f85149' }
-}
-
-const THREAT_LABELS: Record<CompetitorThreatLevel, { label: string, color: string }> = {
-    direct: { label: 'Direct', color: '#f85149' },
-    indirect: { label: 'Indirect', color: '#d29922' },
-    adjacent: { label: 'Adjacent', color: '#8b949e' }
-}
-
-const ICP_LABELS: Record<IcpSegment, string> = {
-    freelancer: 'Freelancer',
-    small_agency: 'Small Agency',
-    in_house: 'In-House',
-    other: 'Other'
-}
-
-const SHORTLIST_ACTION_LABELS: Record<ShortlistAction, string> = {
-    comment_post: 'Прокомментировать пост',
-    send_dm: 'Написать DM',
-    send_cr: 'Отправить запрос',
-    invite_demo: 'Пригласить на демо',
-    invite_beta: 'Предложить бета-тест',
-    send_email: 'Отправить email',
-    add_to_mailing: 'Добавить в рассылку',
-    tweet_reply: 'Ответить в Twitter',
-    mention_in_post: 'Упомянуть в посте'
-}
-
-const cellSx = { fontSize: '0.8rem', py: 0.75, px: 1, borderColor: 'divider' }
-const headCellSx = { ...cellSx, fontWeight: 700, color: 'text.secondary', fontSize: '0.7rem', textTransform: 'uppercase' as const, whiteSpace: 'nowrap' as const }
-const inputSx = { '& .MuiInputBase-input': { fontSize: '0.8rem', py: 0.5, px: 0.75 }, '& .MuiOutlinedInput-notchedOutline': { borderColor: 'transparent' }, '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: 'divider' }, '& .Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: 'primary.main' } }
-const selectSx = { fontSize: '0.8rem', '& .MuiSelect-select': { py: 0.5, px: 0.75 }, '& .MuiOutlinedInput-notchedOutline': { borderColor: 'transparent' }, '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: 'divider' } }
-
-function generateId() {
-    return Date.now().toString(36) + Math.random().toString(36).slice(2, 7)
-}
-
-function InlineInput({ value, onChange, placeholder }: { value: string, onChange: (v: string) => void, placeholder?: string }) {
-    return (
-        <TextField
-            size="small"
-            fullWidth
-            variant="outlined"
-            value={value}
-            onChange={(e) => onChange(e.target.value)}
-            placeholder={placeholder}
-            sx={inputSx}
-        />
-    )
-}
-
-function StatusChip({ label, color }: { label: string, color: string }) {
-    return <Chip label={label} size="small" sx={{ fontSize: '0.7rem', height: 22, fontWeight: 600, backgroundColor: color + '22', color, border: `1px solid ${color}44` }} />
-}
-
-function SortHeader({ label, field, activeField, direction, onSort, children }: { label: string, field: string, activeField: string, direction: 'asc' | 'desc', onSort: (f: string) => void, children?: React.ReactNode }) {
-    const active = activeField === field
-    return (
-        <TableCell sx={headCellSx}>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, cursor: 'pointer', userSelect: 'none', '&:hover': { color: 'text.primary' } }} onClick={() => onSort(field)}>
-                {label}
-                {children}
-                {active && (direction === 'asc'
-                    ? <ArrowUpwardRoundedIcon sx={{ fontSize: '0.65rem' }} />
-                    : <ArrowDownwardRoundedIcon sx={{ fontSize: '0.65rem' }} />
-                )}
-            </Box>
-        </TableCell>
-    )
-}
-
-function FilterSelect({ label, value, options, onChange }: { label: string, value: string, options: string[], onChange: (v: string) => void }) {
-    return (
-        <Select
-            size="small"
-            value={value}
-            onChange={e => onChange(e.target.value)}
-            displayEmpty
-            endAdornment={value ? (
-                <IconButton size="small" onClick={(e) => { e.stopPropagation(); onChange('') }} sx={{ p: 0, mr: 1.5, color: 'text.secondary', '&:hover': { color: 'error.main' } }}>
-                    <CloseRoundedIcon sx={{ fontSize: '0.75rem' }} />
-                </IconButton>
-            ) : null}
-            sx={{ fontSize: '0.75rem', minWidth: 90, height: 28, '& .MuiSelect-select': { py: 0.25, px: 1, pr: value ? '32px !important' : undefined }, '& .MuiOutlinedInput-notchedOutline': { borderColor: value ? 'primary.main' : 'divider' } }}
-        >
-            <MenuItem value="" sx={{ fontSize: '0.75rem' }}>{label}: все</MenuItem>
-            {options.map(o => <MenuItem key={o} value={o} sx={{ fontSize: '0.75rem' }}>{o}</MenuItem>)}
-        </Select>
-    )
-}
-
-const NEXT_ACTION_LABELS: Record<ShortlistAction, string> = {
-    comment_post: 'Коммент к посту',
-    send_cr: 'Отправить запрос',
-    send_dm: 'Написать DM',
-    invite_demo: 'Пригласить на демо',
-    invite_beta: 'Предложить бета',
-    send_email: 'Отправить email',
-    add_to_mailing: 'В рассылку',
-    tweet_reply: 'Ответить в Twitter',
-    mention_in_post: 'Упомянуть в посте'
-}
-
-function getNextAction(s: ShortlistPerson): { label: string, color: string } {
-    // Terminal states
-    if (s.status === 'client') return { label: 'Клиент ✓', color: '#3fb68e' }
-    if (s.status === 'beta') return { label: 'В бете ✓', color: '#3fb68e' }
-    if (s.status === 'declined') return { label: 'Отказ', color: '#f85149' }
-
-    // Follow-only path
-    const fs = s.followStatus || 'not_followed'
-    if (fs === 'not_followed' && s.connectionStatus === 'not_sent') return { label: 'Follow / Отправить запрос', color: '#6c8eff' }
-    if (fs === 'followed' && s.connectionStatus === 'not_sent') return { label: 'Комментировать посты', color: '#d29922' }
-    if (fs === 'follow_back' && s.connectionStatus === 'not_sent') return { label: 'Отправить запрос (follow-back!)', color: '#3fb68e' }
-
-    // Waiting states from funnel
-    if (s.connectionStatus === 'sent') return { label: 'Ждём ответ', color: '#d29922' }
-    if (s.dmStatus === 'sent') return { label: 'Ждём DM', color: '#d29922' }
-    if (s.dmStatus === 'no_reply') return { label: 'Follow up!', color: '#f85149' }
-    if (s.dmStatus === 'replied') return { label: 'Назначить demo', color: '#3fb68e' }
-    if (s.status === 'demo') return { label: 'Провести demo', color: '#a371f7' }
-
-    // Connected but no DM yet
-    if (s.connectionStatus === 'accepted' && s.dmStatus === 'not_sent') return { label: 'Написать DM', color: '#6c8eff' }
-
-    // Next from checklist — first uncompleted planned action
-    const planned = s.actions || []
-    const completed = s.completedActions || []
-    const uncompleted = planned.filter(a => !completed.includes(a))
-    if (uncompleted.length > 0) return { label: NEXT_ACTION_LABELS[uncompleted[0]!] || uncompleted[0]!, color: '#6c8eff' }
-
-    // All planned done but funnel not started
-    if (planned.length > 0 && uncompleted.length === 0) return { label: 'Все сделано ✓', color: '#3fb68e' }
-
-    // Nothing planned yet
-    return { label: 'Запланировать', color: '#8b949e' }
-}
-
-function isWithinLastWeek(dateStr?: string): boolean {
-    if (!dateStr) return false
-    const d = new Date(dateStr)
-    const now = new Date()
-    const diff = now.getTime() - d.getTime()
-    return diff >= 0 && diff <= 7 * 24 * 60 * 60 * 1000
-}
-
-const DEFAULT_COUNTRIES = ['US', 'UK', 'Israel', 'Канада', 'Австралия', 'Германия', 'Индия', 'Нидерланды']
-
-// Auto-assign actions based on campaign week + priority
-function getAutoActions(week: number, priority: IcpPriority): ShortlistAction[] {
-    if (week <= 2) {
-        // W1-W2: warm up — comment on their posts
-        return ['comment_post']
-    }
-    if (week === 3) {
-        // W3: building in public — comment + DM for A, comment for B
-        if (priority === 'A') return ['comment_post', 'send_dm']
-        return ['comment_post']
-    }
-    if (week === 4) {
-        // W4: reveal + outreach — CR + DM + demo for A, comment + CR for B
-        if (priority === 'A') return ['send_cr', 'send_dm', 'invite_demo']
-        if (priority === 'B') return ['comment_post', 'send_cr']
-        return ['comment_post']
-    }
-    if (week === 5) {
-        // W5: pre-launch — CR + DM + beta for A, CR + DM for B
-        if (priority === 'A') return ['send_cr', 'send_dm', 'invite_beta']
-        if (priority === 'B') return ['send_cr', 'send_dm']
-        return ['send_cr']
-    }
-    // W6+: launch — DM + demo for all
-    if (priority === 'A') return ['send_cr', 'send_dm', 'invite_demo', 'invite_beta']
-    if (priority === 'B') return ['send_cr', 'send_dm', 'invite_demo']
-    return ['send_cr', 'send_dm']
-}
-
-// getCampaignWeek imported from @/utils/dateUtils
+import InlineInput from './components/InlineInput'
+import StatusChip from './components/StatusChip'
+import SortHeader from './components/SortHeader'
+import FilterSelect from './components/FilterSelect'
+import {
+    DM_STATUS_LABELS,
+    CONNECTION_STATUS_LABELS,
+    FOLLOW_STATUS_LABELS,
+    PERSON_STATUS_LABELS,
+    GROUP_STATUS_LABELS,
+    COMPANY_STATUS_LABELS,
+    THREAT_LABELS,
+    ICP_LABELS,
+    SHORTLIST_ACTION_LABELS,
+    NEXT_ACTION_LABELS,
+    cellSx,
+    headCellSx,
+    inputSx,
+    selectSx,
+    DEFAULT_COUNTRIES,
+} from './sources.constants'
+import { generateId, getNextAction, isWithinLastWeek, getAutoActions } from './sources.utils'
 
 export default function SourcesView({ sources, onSaveSources, startDate, initialTab }: SourcesViewProps) {
     const [tab, setTab] = React.useState(initialTab ?? 0)
@@ -1613,6 +1414,7 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
                                         <SortHeader label="Запрос" field="connectionStatus" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
                                         <SortHeader label="DM" field="dmStatus" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
                                         <TableCell sx={headCellSx}>Next</TableCell>
+                                        <TableCell sx={headCellSx}>Отметки</TableCell>
                                         <TableCell sx={{ ...headCellSx, width: 40 }} />
                                     </TableRow>
                                 </TableHead>
@@ -1665,6 +1467,9 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
                                                 </TableCell>
                                                 <TableCell sx={cellSx}>
                                                     <StatusChip label={nextAction.label} color={nextAction.color} />
+                                                </TableCell>
+                                                <TableCell sx={cellSx}>
+                                                    <OutreachSignals person={s} />
                                                 </TableCell>
                                                 <TableCell sx={cellSx}>
                                                     <Tooltip title="Открыть карточку">

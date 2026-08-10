@@ -1,0 +1,79 @@
+import { NEXT_ACTION_LABELS } from './sources.constants'
+
+import type { ShortlistPerson, IcpPriority, ShortlistAction } from './SourcesView.types'
+
+export function generateId() {
+    return Date.now().toString(36) + Math.random().toString(36).slice(2, 7)
+}
+
+export function getNextAction(s: ShortlistPerson): { label: string, color: string } {
+    // Terminal states
+    if (s.status === 'client') return { label: 'Клиент ✓', color: '#3fb68e' }
+    if (s.status === 'beta') return { label: 'В бете ✓', color: '#3fb68e' }
+    if (s.status === 'declined') return { label: 'Отказ', color: '#f85149' }
+
+    // Follow-only path
+    const fs = s.followStatus || 'not_followed'
+    if (fs === 'not_followed' && s.connectionStatus === 'not_sent') return { label: 'Follow / Отправить запрос', color: '#6c8eff' }
+    if (fs === 'followed' && s.connectionStatus === 'not_sent') return { label: 'Комментировать посты', color: '#d29922' }
+    if (fs === 'follow_back' && s.connectionStatus === 'not_sent') return { label: 'Отправить запрос (follow-back!)', color: '#3fb68e' }
+
+    // Waiting states from funnel
+    if (s.connectionStatus === 'sent') return { label: 'Ждём ответ', color: '#d29922' }
+    if (s.dmStatus === 'sent') return { label: 'Ждём DM', color: '#d29922' }
+    if (s.dmStatus === 'no_reply') return { label: 'Follow up!', color: '#f85149' }
+    if (s.dmStatus === 'replied') return { label: 'Назначить demo', color: '#3fb68e' }
+    if (s.status === 'demo') return { label: 'Провести demo', color: '#a371f7' }
+
+    // Connected but no DM yet
+    if (s.connectionStatus === 'accepted' && s.dmStatus === 'not_sent') return { label: 'Написать DM', color: '#6c8eff' }
+
+    // Next from checklist — first uncompleted planned action
+    const planned = s.actions || []
+    const completed = s.completedActions || []
+    const uncompleted = planned.filter(a => !completed.includes(a))
+    if (uncompleted.length > 0) return { label: NEXT_ACTION_LABELS[uncompleted[0]!] || uncompleted[0]!, color: '#6c8eff' }
+
+    // All planned done but funnel not started
+    if (planned.length > 0 && uncompleted.length === 0) return { label: 'Все сделано ✓', color: '#3fb68e' }
+
+    // Nothing planned yet
+    return { label: 'Запланировать', color: '#8b949e' }
+}
+
+export function isWithinLastWeek(dateStr?: string): boolean {
+    if (!dateStr) return false
+    const d = new Date(dateStr)
+    const now = new Date()
+    const diff = now.getTime() - d.getTime()
+    return diff >= 0 && diff <= 7 * 24 * 60 * 60 * 1000
+}
+
+// Auto-assign actions based on campaign week + priority
+export function getAutoActions(week: number, priority: IcpPriority): ShortlistAction[] {
+    if (week <= 2) {
+        // W1-W2: warm up — comment on their posts
+        return ['comment_post']
+    }
+    if (week === 3) {
+        // W3: building in public — comment + DM for A, comment for B
+        if (priority === 'A') return ['comment_post', 'send_dm']
+        return ['comment_post']
+    }
+    if (week === 4) {
+        // W4: reveal + outreach — CR + DM + demo for A, comment + CR for B
+        if (priority === 'A') return ['send_cr', 'send_dm', 'invite_demo']
+        if (priority === 'B') return ['comment_post', 'send_cr']
+        return ['comment_post']
+    }
+    if (week === 5) {
+        // W5: pre-launch — CR + DM + beta for A, CR + DM for B
+        if (priority === 'A') return ['send_cr', 'send_dm', 'invite_beta']
+        if (priority === 'B') return ['send_cr', 'send_dm']
+        return ['send_cr']
+    }
+    // W6+: launch — DM + demo for all
+    if (priority === 'A') return ['send_cr', 'send_dm', 'invite_demo', 'invite_beta']
+    if (priority === 'B') return ['send_cr', 'send_dm', 'invite_demo']
+    return ['send_cr', 'send_dm']
+}
