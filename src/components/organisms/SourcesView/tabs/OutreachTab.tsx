@@ -4,13 +4,6 @@ import Typography from '@mui/material/Typography'
 import TextField from '@mui/material/TextField'
 import IconButton from '@mui/material/IconButton'
 import Button from '@mui/material/Button'
-import Table from '@mui/material/Table'
-import TableBody from '@mui/material/TableBody'
-import TableCell from '@mui/material/TableCell'
-import TableContainer from '@mui/material/TableContainer'
-import TableHead from '@mui/material/TableHead'
-import TableRow from '@mui/material/TableRow'
-import Checkbox from '@mui/material/Checkbox'
 import Chip from '@mui/material/Chip'
 import Tooltip from '@mui/material/Tooltip'
 import InputAdornment from '@mui/material/InputAdornment'
@@ -18,19 +11,18 @@ import AddRoundedIcon from '@mui/icons-material/AddRounded'
 import FilterAltOffRoundedIcon from '@mui/icons-material/FilterAltOffRounded'
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded'
 import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded'
+import { DataGrid, type GridColDef, type GridRowSelectionModel } from '@mui/x-data-grid'
 
 import {
     DM_STATUS_LABELS,
     CONNECTION_STATUS_LABELS,
     FOLLOW_STATUS_LABELS,
     NEXT_ACTION_LABELS,
-    cellSx,
-    headCellSx,
 } from '../sources.constants'
+import { dataGridSx, hideFooterIfFits } from '../sources.dataGrid'
 import { getAutoActions, getNextAction } from '../sources.utils'
 import FilterSelect from '../components/FilterSelect'
 import StatusChip from '../components/StatusChip'
-import SortHeader from '../components/SortHeader'
 import OutreachSignals from '../components/OutreachSignals'
 
 import type { SourcesData, SourcePerson, ShortlistPerson, FollowStatus } from '../SourcesView.types'
@@ -59,15 +51,7 @@ interface OutreachTabProps {
     activeInOutreach: ShortlistPerson[]
     doneInOutreach: ShortlistPerson[]
     displayShortlist: ShortlistPerson[]
-    allSelected: boolean
-    someSelected: boolean
-    allVisibleIds: string[]
     setModalPersonId: (v: string | null) => void
-    sortKey: string
-    sortDir: 'asc' | 'desc'
-    toggleSort: (key: string) => void
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    sorted: <T extends Record<string, any>>(items: T[]) => T[]
 }
 
 export default function OutreachTab({
@@ -76,9 +60,37 @@ export default function OutreachTab({
     filters, setFilter, clearFilters, selectedIds, setSelectedIds, bulkUpdate,
     outreachCandidates, canAddNextWave, waveSize, setBestPickIds, setAddBestDialogOpen,
     addShortlistPerson, activeInOutreach, doneInOutreach, displayShortlist,
-    allSelected, someSelected, allVisibleIds, setModalPersonId,
-    sortKey, sortDir, toggleSort, sorted,
+    setModalPersonId,
 }: OutreachTabProps) {
+    const columns: GridColDef<ShortlistPerson>[] = [
+        { field: 'name', headerName: 'Имя', width: 160, renderCell: p => <Box sx={{ fontWeight: 600 }}>{p.row.name || '—'}</Box> },
+        {
+            field: 'priority', headerName: 'Priority', width: 90, renderCell: p => {
+                const prColor = p.row.priority === 'A' ? '#3fb68e' : p.row.priority === 'B' ? '#d29922' : '#8b949e'
+                return <Chip label={p.row.priority || 'B'} size="small" sx={{ fontSize: '0.7rem', fontWeight: 800, height: 20, minWidth: 24, backgroundColor: prColor + '22', color: prColor, border: `1px solid ${prColor}44` }} />
+            }
+        },
+        { field: 'followStatus', headerName: 'Follow', width: 120, renderCell: p => <StatusChip {...FOLLOW_STATUS_LABELS[(p.row.followStatus || 'not_followed') as FollowStatus]} /> },
+        { field: 'connectionStatus', headerName: 'Запрос', width: 120, renderCell: p => <StatusChip {...CONNECTION_STATUS_LABELS[p.row.connectionStatus || 'not_sent']} /> },
+        { field: 'dmStatus', headerName: 'DM', width: 110, renderCell: p => <StatusChip {...DM_STATUS_LABELS[p.row.dmStatus || 'not_sent']} /> },
+        {
+            field: 'next', headerName: 'Next', width: 150, sortable: false, renderCell: p => {
+                const nextAction = getNextAction(p.row)
+                return <StatusChip label={nextAction.label} color={nextAction.color} />
+            }
+        },
+        { field: 'signals', headerName: 'Отметки', width: 140, sortable: false, renderCell: p => <OutreachSignals person={p.row} /> },
+        {
+            field: 'actions', headerName: '', width: 56, sortable: false, resizable: false, filterable: false, disableColumnMenu: true, renderCell: p => (
+                <Tooltip title="Открыть карточку">
+                    <IconButton size="small" onClick={(e) => { e.stopPropagation(); setModalPersonId(p.row.id) }} sx={{ color: 'text.secondary', '&:hover': { color: 'primary.main' } }}>
+                        <ChevronRightRoundedIcon sx={{ fontSize: '1.1rem' }} />
+                    </IconButton>
+                </Tooltip>
+            )
+        },
+    ]
+
     return (
         <Box>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1, flexWrap: 'wrap' }}>
@@ -213,104 +225,24 @@ export default function OutreachTab({
                     </Typography>
                 </Box>
             ) : (
-                <TableContainer sx={{ border: '1px solid', borderColor: 'divider', borderRadius: 1 }}>
-                    <Table size="small">
-                        <TableHead>
-                            <TableRow sx={{ backgroundColor: '#ffffff06' }}>
-                                <TableCell sx={{ ...headCellSx, width: 36, px: 0.5 }}>
-                                    <Checkbox
-                                        size="small"
-                                        checked={allSelected}
-                                        indeterminate={someSelected && !allSelected}
-                                        onChange={() => {
-                                            if (allSelected) {
-                                                setSelectedIds(new Set())
-                                            } else {
-                                                setSelectedIds(new Set(allVisibleIds))
-                                            }
-                                        }}
-                                        sx={{ p: 0.25 }}
-                                    />
-                                </TableCell>
-                                <SortHeader label="Имя" field="name" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
-                                <SortHeader label="Priority" field="priority" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
-                                <SortHeader label="Follow" field="followStatus" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
-                                <SortHeader label="Запрос" field="connectionStatus" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
-                                <SortHeader label="DM" field="dmStatus" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
-                                <TableCell sx={headCellSx}>Next</TableCell>
-                                <TableCell sx={headCellSx}>Отметки</TableCell>
-                                <TableCell sx={{ ...headCellSx, width: 40 }} />
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {sorted(displayShortlist).map((s) => {
-                                const nextAction = getNextAction(s)
-                                const prColor = s.priority === 'A' ? '#3fb68e' : s.priority === 'B' ? '#d29922' : '#8b949e'
-                                return (
-                                    <TableRow
-                                        key={s.id}
-                                        sx={{ '&:hover': { backgroundColor: '#ffffff04' }, backgroundColor: selectedIds.has(s.id) ? '#6c8eff08' : undefined, cursor: 'pointer' }}
-                                        onClick={(e) => {
-                                            const target = e.target as HTMLElement
-                                            if (target.closest('[data-checkbox-cell]')) return
-                                            setModalPersonId(s.id)
-                                        }}
-                                    >
-                                        <TableCell sx={{ ...cellSx, px: 0.5 }} data-checkbox-cell>
-                                            <Checkbox
-                                                size="small"
-                                                checked={selectedIds.has(s.id)}
-                                                onChange={() => {
-                                                    setSelectedIds(prev => {
-                                                        const next = new Set(prev)
-                                                        if (next.has(s.id)) next.delete(s.id)
-                                                        else next.add(s.id)
-                                                        return next
-                                                    })
-                                                }}
-                                                sx={{ p: 0.25 }}
-                                            />
-                                        </TableCell>
-                                        <TableCell sx={{ ...cellSx, fontWeight: 600 }}>{s.name || '—'}</TableCell>
-                                        <TableCell sx={cellSx}>
-                                            <Chip
-                                                label={s.priority || 'B'}
-                                                size="small"
-                                                sx={{ fontSize: '0.7rem', fontWeight: 800, height: 20, minWidth: 24, backgroundColor: prColor + '22', color: prColor, border: `1px solid ${prColor}44` }}
-                                            />
-                                        </TableCell>
-                                        <TableCell sx={cellSx}>
-                                            <StatusChip {...FOLLOW_STATUS_LABELS[(s.followStatus || 'not_followed') as FollowStatus]} />
-                                        </TableCell>
-                                        <TableCell sx={cellSx}>
-                                            <StatusChip {...CONNECTION_STATUS_LABELS[s.connectionStatus || 'not_sent']} />
-                                        </TableCell>
-                                        <TableCell sx={cellSx}>
-                                            <StatusChip {...DM_STATUS_LABELS[s.dmStatus || 'not_sent']} />
-                                        </TableCell>
-                                        <TableCell sx={cellSx}>
-                                            <StatusChip label={nextAction.label} color={nextAction.color} />
-                                        </TableCell>
-                                        <TableCell sx={cellSx}>
-                                            <OutreachSignals person={s} />
-                                        </TableCell>
-                                        <TableCell sx={cellSx}>
-                                            <Tooltip title="Открыть карточку">
-                                                <IconButton
-                                                    size="small"
-                                                    onClick={(e) => { e.stopPropagation(); setModalPersonId(s.id) }}
-                                                    sx={{ color: 'text.secondary', '&:hover': { color: 'primary.main' } }}
-                                                >
-                                                    <ChevronRightRoundedIcon sx={{ fontSize: '1.1rem' }} />
-                                                </IconButton>
-                                            </Tooltip>
-                                        </TableCell>
-                                    </TableRow>
-                                )
-                            })}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
+                <DataGrid
+                    rows={displayShortlist}
+                    columns={columns}
+                    density="compact"
+                    autoHeight
+                    checkboxSelection
+                    disableRowSelectionOnClick
+                    rowSelectionModel={Array.from(selectedIds)}
+                    onRowSelectionModelChange={(model: GridRowSelectionModel) => setSelectedIds(new Set(model as string[]))}
+                    onRowClick={(params, event) => {
+                        if ((event.target as HTMLElement).closest('.MuiDataGrid-cellCheckbox')) return
+                        setModalPersonId(params.row.id)
+                    }}
+                    hideFooter={hideFooterIfFits(displayShortlist.length)}
+                    pageSizeOptions={[25, 50, 100]}
+                    initialState={{ pagination: { paginationModel: { pageSize: 100 } } }}
+                    sx={{ ...dataGridSx, '& .MuiDataGrid-row': { cursor: 'pointer' } }}
+                />
             )}
         </Box>
     )

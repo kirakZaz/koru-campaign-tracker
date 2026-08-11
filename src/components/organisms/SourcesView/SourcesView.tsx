@@ -84,29 +84,7 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
         setDeleteConfirm(null)
     }
 
-    const [sortKey, setSortKey] = React.useState<string>('')
-    const [sortDir, setSortDir] = React.useState<'asc' | 'desc'>('asc')
-
-    const toggleSort = React.useCallback((key: string) => {
-        if (sortKey === key) {
-            setSortDir(prev => prev === 'asc' ? 'desc' : 'asc')
-        } else {
-            setSortKey(key)
-            setSortDir('asc')
-        }
-    }, [sortKey])
-
-    function sorted<T extends Record<string, any>>(items: T[]): T[] {
-        if (!sortKey) return items
-        return [...items].sort((a, b) => {
-            const va = a[sortKey] ?? ''
-            const vb = b[sortKey] ?? ''
-            const cmp = typeof va === 'number' && typeof vb === 'number'
-                ? va - vb
-                : String(va).localeCompare(String(vb), undefined, { sensitivity: 'base' })
-            return sortDir === 'asc' ? cmp : -cmp
-        })
-    }
+    // Sorting is handled per-column by each tab's DataGrid.
 
     // Filters
     const [filters, setFilters] = React.useState<Record<string, string>>({})
@@ -140,8 +118,8 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
         return Array.from(set).sort()
     }
 
-    // Reset sort, filters, selection, search, and needsAction filter when switching tabs
-    React.useEffect(() => { setSortKey(''); setSortDir('asc'); setFilters({}); setSelectedIds(new Set()); setNeedsActionFilter(false); setSearchQuery(''); setSelectedPeopleIds(new Set()) }, [tab])
+    // Reset filters, selection, search, and needsAction filter when switching tabs
+    React.useEffect(() => { setFilters({}); setSelectedIds(new Set()); setNeedsActionFilter(false); setSearchQuery(''); setSelectedPeopleIds(new Set()) }, [tab])
 
     // Search filter — matches name, notes, source, country, linkedinUrl
     function searched<T extends Record<string, any>>(items: T[]): T[] {
@@ -395,10 +373,7 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
         return result
     }, [local.shortlist, needsActionFilter, searchQuery, filters])
 
-    // All visible IDs for select-all checkbox
-    const allVisibleIds = React.useMemo(() => displayShortlist.map(s => s.id), [displayShortlist])
-    const allSelected = allVisibleIds.length > 0 && allVisibleIds.every(id => selectedIds.has(id))
-    const someSelected = allVisibleIds.some(id => selectedIds.has(id))
+    // Select-all is handled by the Outreach DataGrid's built-in checkbox column.
 
     // Copy to clipboard helper
     const copyToClipboard = (text: string, personId?: string) => {
@@ -477,9 +452,6 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
                     clearFilters={clearFilters}
                     selectedPeopleIds={selectedPeopleIds}
                     setSelectedPeopleIds={setSelectedPeopleIds}
-                    sortKey={sortKey}
-                    sortDir={sortDir}
-                    toggleSort={toggleSort}
                     countries={countries}
                     setCountriesDialogOpen={setCountriesDialogOpen}
                     setSnackbarMsg={setSnackbarMsg}
@@ -490,7 +462,6 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
                     updatePerson={updatePerson}
                     togglePersonShortlist={togglePersonShortlist}
                     uniqueVals={uniqueVals}
-                    sorted={sorted}
                     filtered={filtered}
                     searched={searched}
                 />
@@ -505,11 +476,7 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
                     addGroup={addGroup}
                     updateGroup={updateGroup}
                     setDeleteConfirm={setDeleteConfirm}
-                    sortKey={sortKey}
-                    sortDir={sortDir}
-                    toggleSort={toggleSort}
                     uniqueVals={uniqueVals}
-                    sorted={sorted}
                     filtered={filtered}
                 />
             )}
@@ -539,14 +506,7 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
                     activeInOutreach={activeInOutreach}
                     doneInOutreach={doneInOutreach}
                     displayShortlist={displayShortlist}
-                    allSelected={allSelected}
-                    someSelected={someSelected}
-                    allVisibleIds={allVisibleIds}
                     setModalPersonId={setModalPersonId}
-                    sortKey={sortKey}
-                    sortDir={sortDir}
-                    toggleSort={toggleSort}
-                    sorted={sorted}
                 />
             )}
 
@@ -559,10 +519,6 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
                     addCompany={addCompany}
                     updateCompany={updateCompany}
                     setDeleteConfirm={setDeleteConfirm}
-                    sortKey={sortKey}
-                    sortDir={sortDir}
-                    toggleSort={toggleSort}
-                    sorted={sorted}
                     filtered={filtered}
                 />
             )}
@@ -578,10 +534,6 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
                     addCompetitor={addCompetitor}
                     updateCompetitor={updateCompetitor}
                     setDeleteConfirm={setDeleteConfirm}
-                    sortKey={sortKey}
-                    sortDir={sortDir}
-                    toggleSort={toggleSort}
-                    sorted={sorted}
                     filtered={filtered}
                 />
             )}

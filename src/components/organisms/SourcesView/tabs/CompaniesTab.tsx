@@ -1,23 +1,18 @@
 import Box from '@mui/material/Box'
 import IconButton from '@mui/material/IconButton'
 import Button from '@mui/material/Button'
-import Table from '@mui/material/Table'
-import TableBody from '@mui/material/TableBody'
-import TableCell from '@mui/material/TableCell'
-import TableContainer from '@mui/material/TableContainer'
-import TableHead from '@mui/material/TableHead'
-import TableRow from '@mui/material/TableRow'
 import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
 import AddRoundedIcon from '@mui/icons-material/AddRounded'
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded'
 import FilterAltOffRoundedIcon from '@mui/icons-material/FilterAltOffRounded'
+import { DataGrid, type GridColDef } from '@mui/x-data-grid'
 
-import { ICP_LABELS, COMPANY_STATUS_LABELS, cellSx, headCellSx, selectSx } from '../sources.constants'
+import { ICP_LABELS, COMPANY_STATUS_LABELS, selectSx } from '../sources.constants'
+import { dataGridSx, hideFooterIfFits, editable } from '../sources.dataGrid'
 import FilterSelect from '../components/FilterSelect'
 import InlineInput from '../components/InlineInput'
 import StatusChip from '../components/StatusChip'
-import SortHeader from '../components/SortHeader'
 
 import type { SourcesData, SourceCompany, IcpSegment, CompanyStatus } from '../SourcesView.types'
 
@@ -31,19 +26,52 @@ interface CompaniesTabProps {
     addCompany: () => void
     updateCompany: (id: string, patch: Partial<SourceCompany>) => void
     setDeleteConfirm: (v: DeleteConfirm | null) => void
-    sortKey: string
-    sortDir: 'asc' | 'desc'
-    toggleSort: (key: string) => void
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    sorted: <T extends Record<string, any>>(items: T[]) => T[]
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     filtered: <T extends Record<string, any>>(items: T[]) => T[]
 }
 
 export default function CompaniesTab({
-    local, filters, setFilter, clearFilters, addCompany, updateCompany, setDeleteConfirm,
-    sortKey, sortDir, toggleSort, sorted, filtered,
+    local, filters, setFilter, clearFilters, addCompany, updateCompany, setDeleteConfirm, filtered,
 }: CompaniesTabProps) {
+    const rows = filtered(local.companies as SourceCompany[])
+    const columns: GridColDef<SourceCompany>[] = [
+        { field: 'name', headerName: 'Название', width: 160, renderCell: p => editable(<InlineInput value={p.row.name} onChange={v => updateCompany(p.row.id, { name: v })} placeholder="Agency X" />) },
+        { field: 'website', headerName: 'Сайт', width: 180, renderCell: p => editable(<InlineInput value={p.row.website} onChange={v => updateCompany(p.row.id, { website: v })} placeholder="https://..." />) },
+        {
+            field: 'segment', headerName: 'Сегмент', width: 140, renderCell: p => editable(
+                <Select size="small" value={p.row.segment} onChange={e => updateCompany(p.row.id, { segment: e.target.value as IcpSegment })} sx={selectSx} fullWidth>
+                    {Object.entries(ICP_LABELS).map(([k, v]) => <MenuItem key={k} value={k} sx={{ fontSize: '0.8rem' }}>{v}</MenuItem>)}
+                </Select>
+            )
+        },
+        { field: 'size', headerName: 'Размер', width: 90, renderCell: p => editable(<InlineInput value={p.row.size} onChange={v => updateCompany(p.row.id, { size: v })} placeholder="3-15" />) },
+        { field: 'contactPerson', headerName: 'Контакт', width: 140, renderCell: p => editable(<InlineInput value={p.row.contactPerson} onChange={v => updateCompany(p.row.id, { contactPerson: v })} placeholder="Имя" />) },
+        {
+            field: 'status', headerName: 'Статус', width: 150, renderCell: p => editable(
+                <Select
+                    size="small"
+                    value={p.row.status}
+                    onChange={e => updateCompany(p.row.id, { status: e.target.value as CompanyStatus })}
+                    sx={selectSx}
+                    fullWidth
+                    renderValue={(val) => <StatusChip {...COMPANY_STATUS_LABELS[val as CompanyStatus]} />}
+                >
+                    {Object.entries(COMPANY_STATUS_LABELS).map(([k, v]) => (
+                        <MenuItem key={k} value={k} sx={{ fontSize: '0.8rem' }}><StatusChip {...v} /></MenuItem>
+                    ))}
+                </Select>
+            )
+        },
+        { field: 'notes', headerName: 'Заметки', flex: 1, minWidth: 120, renderCell: p => editable(<InlineInput value={p.row.notes} onChange={v => updateCompany(p.row.id, { notes: v })} placeholder="..." />) },
+        {
+            field: 'actions', headerName: '', width: 56, sortable: false, resizable: false, filterable: false, disableColumnMenu: true, renderCell: p => (
+                <IconButton size="small" onClick={e => { e.stopPropagation(); setDeleteConfirm({ id: p.row.id, name: p.row.name || 'без названия', type: 'company' }) }} sx={{ color: 'text.secondary', '&:hover': { color: 'error.main' } }}>
+                    <DeleteRoundedIcon sx={{ fontSize: '0.9rem' }} />
+                </IconButton>
+            )
+        },
+    ]
+
     return (
         <Box>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1, flexWrap: 'wrap' }}>
@@ -59,63 +87,18 @@ export default function CompaniesTab({
                     Добавить
                 </Button>
             </Box>
-            <TableContainer sx={{ border: '1px solid', borderColor: 'divider', borderRadius: 1 }}>
-                <Table size="small">
-                    <TableHead>
-                        <TableRow sx={{ backgroundColor: '#ffffff06' }}>
-                            <SortHeader label="Название" field="name" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
-                            <TableCell sx={headCellSx}>Сайт</TableCell>
-                            <SortHeader label="Сегмент" field="segment" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
-                            <TableCell sx={headCellSx}>Размер</TableCell>
-                            <SortHeader label="Контакт" field="contactPerson" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
-                            <SortHeader label="Статус" field="status" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
-                            <TableCell sx={headCellSx}>Заметки</TableCell>
-                            <TableCell sx={{ ...headCellSx, width: 40 }} />
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {local.companies.length === 0 && (
-                            <TableRow>
-                                <TableCell colSpan={8} sx={{ ...cellSx, textAlign: 'center', color: 'text.secondary', py: 4 }}>
-                                    Пока пусто. Нажми "Добавить" чтобы внести компанию.
-                                </TableCell>
-                            </TableRow>
-                        )}
-                        {sorted(filtered(local.companies as SourceCompany[])).map((c) => (
-                            <TableRow key={c.id} sx={{ '&:hover': { backgroundColor: '#ffffff04' } }}>
-                                <TableCell sx={cellSx}><InlineInput value={c.name} onChange={v => updateCompany(c.id, { name: v })} placeholder="Agency X" /></TableCell>
-                                <TableCell sx={cellSx}><InlineInput value={c.website} onChange={v => updateCompany(c.id, { website: v })} placeholder="https://..." /></TableCell>
-                                <TableCell sx={cellSx}>
-                                    <Select size="small" value={c.segment} onChange={e => updateCompany(c.id, { segment: e.target.value as IcpSegment })} sx={selectSx}>
-                                        {Object.entries(ICP_LABELS).map(([k, v]) => <MenuItem key={k} value={k} sx={{ fontSize: '0.8rem' }}>{v}</MenuItem>)}
-                                    </Select>
-                                </TableCell>
-                                <TableCell sx={cellSx}><InlineInput value={c.size} onChange={v => updateCompany(c.id, { size: v })} placeholder="3-15" /></TableCell>
-                                <TableCell sx={cellSx}><InlineInput value={c.contactPerson} onChange={v => updateCompany(c.id, { contactPerson: v })} placeholder="Имя" /></TableCell>
-                                <TableCell sx={cellSx}>
-                                    <Select
-                                        size="small"
-                                        value={c.status}
-                                        onChange={e => updateCompany(c.id, { status: e.target.value as CompanyStatus })}
-                                        sx={selectSx}
-                                        renderValue={(val) => <StatusChip {...COMPANY_STATUS_LABELS[val as CompanyStatus]} />}
-                                    >
-                                        {Object.entries(COMPANY_STATUS_LABELS).map(([k, v]) => (
-                                            <MenuItem key={k} value={k} sx={{ fontSize: '0.8rem' }}><StatusChip {...v} /></MenuItem>
-                                        ))}
-                                    </Select>
-                                </TableCell>
-                                <TableCell sx={cellSx}><InlineInput value={c.notes} onChange={v => updateCompany(c.id, { notes: v })} placeholder="..." /></TableCell>
-                                <TableCell sx={cellSx}>
-                                    <IconButton size="small" onClick={() => setDeleteConfirm({ id: c.id, name: c.name || 'без названия', type: 'company' })} sx={{ color: 'text.secondary', '&:hover': { color: 'error.main' } }}>
-                                        <DeleteRoundedIcon sx={{ fontSize: '0.9rem' }} />
-                                    </IconButton>
-                                </TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
+            <DataGrid
+                rows={rows}
+                columns={columns}
+                density="compact"
+                autoHeight
+                disableRowSelectionOnClick
+                hideFooter={hideFooterIfFits(rows.length)}
+                pageSizeOptions={[25, 50, 100]}
+                initialState={{ pagination: { paginationModel: { pageSize: 100 } } }}
+                localeText={{ noRowsLabel: 'Пока пусто. Нажми "Добавить" чтобы внести компанию.' }}
+                sx={dataGridSx}
+            />
         </Box>
     )
 }

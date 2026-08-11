@@ -3,13 +3,6 @@ import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
 import IconButton from '@mui/material/IconButton'
 import Button from '@mui/material/Button'
-import Table from '@mui/material/Table'
-import TableBody from '@mui/material/TableBody'
-import TableCell from '@mui/material/TableCell'
-import TableContainer from '@mui/material/TableContainer'
-import TableHead from '@mui/material/TableHead'
-import TableRow from '@mui/material/TableRow'
-import Checkbox from '@mui/material/Checkbox'
 import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
 import InputAdornment from '@mui/material/InputAdornment'
@@ -20,16 +13,19 @@ import EditRoundedIcon from '@mui/icons-material/EditRounded'
 import OpenInNewRoundedIcon from '@mui/icons-material/OpenInNewRounded'
 import FilterAltOffRoundedIcon from '@mui/icons-material/FilterAltOffRounded'
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded'
+import { DataGrid, type GridColDef, type GridRowSelectionModel } from '@mui/x-data-grid'
 
-import { ICP_LABELS, PERSON_STATUS_LABELS, cellSx, headCellSx, selectSx } from '../sources.constants'
+import { ICP_LABELS, PERSON_STATUS_LABELS, selectSx } from '../sources.constants'
+import { dataGridSx, hideFooterIfFits, editable } from '../sources.dataGrid'
 import FilterSelect from '../components/FilterSelect'
 import InlineInput from '../components/InlineInput'
 import StatusChip from '../components/StatusChip'
-import SortHeader from '../components/SortHeader'
 
 import type { SourcesData, SourcePerson, IcpSegment, IcpPriority, PersonStatus } from '../SourcesView.types'
 
 type DeleteConfirm = { id: string, name: string, type: 'person' | 'group' | 'company' | 'shortlist' | 'competitor' }
+
+const headerLabelSx = { fontSize: '0.7rem', fontWeight: 700, textTransform: 'uppercase' as const, color: 'text.secondary' }
 
 interface PeopleTabProps {
     local: SourcesData
@@ -41,9 +37,6 @@ interface PeopleTabProps {
     clearFilters: () => void
     selectedPeopleIds: Set<string>
     setSelectedPeopleIds: React.Dispatch<React.SetStateAction<Set<string>>>
-    sortKey: string
-    sortDir: 'asc' | 'desc'
-    toggleSort: (key: string) => void
     countries: string[]
     setCountriesDialogOpen: (v: boolean) => void
     setSnackbarMsg: (v: string | null) => void
@@ -56,8 +49,6 @@ interface PeopleTabProps {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     uniqueVals: <T extends Record<string, any>>(items: T[], key: string) => string[]
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    sorted: <T extends Record<string, any>>(items: T[]) => T[]
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     filtered: <T extends Record<string, any>>(items: T[]) => T[]
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     searched: <T extends Record<string, any>>(items: T[]) => T[]
@@ -65,11 +56,102 @@ interface PeopleTabProps {
 
 export default function PeopleTab({
     local, save, searchQuery, setSearchQuery, filters, setFilter, clearFilters,
-    selectedPeopleIds, setSelectedPeopleIds, sortKey, sortDir, toggleSort, countries,
+    selectedPeopleIds, setSelectedPeopleIds, countries,
     setCountriesDialogOpen, setSnackbarMsg, setDeleteConfirm, isInShortlist,
     addPeopleToOutreach, addPerson, updatePerson, togglePersonShortlist,
-    uniqueVals, sorted, filtered, searched,
+    uniqueVals, filtered, searched,
 }: PeopleTabProps) {
+    const rows = searched(filtered(local.people as SourcePerson[]))
+
+    const columns: GridColDef<SourcePerson>[] = [
+        { field: 'name', headerName: 'Имя', width: 140, renderCell: p => editable(<InlineInput value={p.row.name} onChange={v => updatePerson(p.row.id, { name: v })} placeholder="Имя" />) },
+        { field: 'title', headerName: 'Должность', width: 140, renderCell: p => editable(<InlineInput value={p.row.title || ''} onChange={v => updatePerson(p.row.id, { title: v })} placeholder="Должность" />) },
+        {
+            field: 'linkedinUrl', headerName: 'LinkedIn', width: 150, renderCell: p => editable(
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.25, width: '100%' }}>
+                    <InlineInput value={p.row.linkedinUrl} onChange={v => updatePerson(p.row.id, { linkedinUrl: v })} placeholder="URL" />
+                    {p.row.linkedinUrl && (
+                        <IconButton size="small" onClick={() => window.open(p.row.linkedinUrl.startsWith('http') ? p.row.linkedinUrl : `https://${p.row.linkedinUrl}`, '_blank')} sx={{ color: 'primary.main', p: 0.25 }}>
+                            <OpenInNewRoundedIcon sx={{ fontSize: '0.85rem' }} />
+                        </IconButton>
+                    )}
+                </Box>
+            )
+        },
+        {
+            field: 'country', headerName: 'Страна', width: 120,
+            renderHeader: () => (
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                    <Box component="span" sx={headerLabelSx}>Страна</Box>
+                    <IconButton size="small" onClick={(e) => { e.stopPropagation(); setCountriesDialogOpen(true) }} sx={{ color: 'text.secondary', p: 0 }}>
+                        <EditRoundedIcon sx={{ fontSize: '0.7rem' }} />
+                    </IconButton>
+                </Box>
+            ),
+            renderCell: p => editable(
+                <Select size="small" value={p.row.country || ''} onChange={e => updatePerson(p.row.id, { country: e.target.value })} sx={selectSx} fullWidth displayEmpty>
+                    <MenuItem value="" sx={{ fontSize: '0.8rem', color: '#8b949e' }}>{'—'}</MenuItem>
+                    {countries.map(c => <MenuItem key={c} value={c} sx={{ fontSize: '0.8rem' }}>{c}</MenuItem>)}
+                </Select>
+            )
+        },
+        {
+            field: 'icpSegment', headerName: 'ICP', width: 120, renderCell: p => editable(
+                <Select size="small" value={p.row.icpSegment} onChange={e => updatePerson(p.row.id, { icpSegment: e.target.value as IcpSegment })} sx={selectSx} fullWidth>
+                    {Object.entries(ICP_LABELS).map(([k, v]) => <MenuItem key={k} value={k} sx={{ fontSize: '0.8rem' }}>{v}</MenuItem>)}
+                </Select>
+            )
+        },
+        {
+            field: 'priority', headerName: 'Priority', width: 90, renderCell: p => editable(
+                <Select size="small" value={p.row.priority} onChange={e => updatePerson(p.row.id, { priority: e.target.value as IcpPriority })} sx={selectSx} fullWidth>
+                    {(['A', 'B', 'C'] as IcpPriority[]).map(v => (
+                        <MenuItem key={v} value={v} sx={{ fontSize: '0.8rem', fontWeight: 700, color: v === 'A' ? '#3fb68e' : v === 'B' ? '#d29922' : '#8b949e' }}>{v}</MenuItem>
+                    ))}
+                </Select>
+            )
+        },
+        {
+            field: 'activityLevel', headerName: 'Activity', width: 100, renderCell: p => editable(
+                <Select size="small" value={p.row.activityLevel} onChange={e => updatePerson(p.row.id, { activityLevel: e.target.value as 'high' | 'medium' | 'low' })} sx={selectSx} fullWidth>
+                    <MenuItem value="high" sx={{ fontSize: '0.8rem' }}>High</MenuItem>
+                    <MenuItem value="medium" sx={{ fontSize: '0.8rem' }}>Medium</MenuItem>
+                    <MenuItem value="low" sx={{ fontSize: '0.8rem' }}>Low</MenuItem>
+                </Select>
+            )
+        },
+        { field: 'source', headerName: 'Источник', width: 130, renderCell: p => editable(<InlineInput value={p.row.source} onChange={v => updatePerson(p.row.id, { source: v })} placeholder="Группа, поиск..." />) },
+        {
+            field: 'status', headerName: 'Статус', width: 130, renderCell: p => editable(
+                <Select
+                    size="small"
+                    value={p.row.status}
+                    onChange={e => updatePerson(p.row.id, { status: e.target.value as PersonStatus })}
+                    sx={selectSx}
+                    fullWidth
+                    renderValue={(val) => <StatusChip {...PERSON_STATUS_LABELS[val as PersonStatus]} />}
+                >
+                    {Object.entries(PERSON_STATUS_LABELS).map(([k, v]) => (
+                        <MenuItem key={k} value={k} sx={{ fontSize: '0.8rem' }}><StatusChip {...v} /></MenuItem>
+                    ))}
+                </Select>
+            )
+        },
+        { field: 'notes', headerName: 'Заметки', flex: 1, minWidth: 120, renderCell: p => editable(<InlineInput value={p.row.notes} onChange={v => updatePerson(p.row.id, { notes: v })} placeholder="..." />) },
+        {
+            field: 'actions', headerName: '', width: 80, sortable: false, resizable: false, filterable: false, disableColumnMenu: true, renderCell: p => (
+                <Box sx={{ display: 'flex', gap: 0.25 }}>
+                    <IconButton size="small" onClick={e => { e.stopPropagation(); togglePersonShortlist(p.row) }} sx={{ color: isInShortlist(p.row) ? 'warning.main' : 'text.secondary', '&:hover': { color: 'warning.main' } }} title="В Outreach">
+                        <StarRoundedIcon sx={{ fontSize: '0.9rem' }} />
+                    </IconButton>
+                    <IconButton size="small" onClick={e => { e.stopPropagation(); setDeleteConfirm({ id: p.row.id, name: p.row.name || 'без имени', type: 'person' }) }} sx={{ color: 'text.secondary', '&:hover': { color: 'error.main' } }}>
+                        <DeleteRoundedIcon sx={{ fontSize: '0.9rem' }} />
+                    </IconButton>
+                </Box>
+            )
+        },
+    ]
+
     return (
         <Box>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1, flexWrap: 'wrap' }}>
@@ -128,119 +210,22 @@ export default function PeopleTab({
                     Добавить
                 </Button>
             </Box>
-            <TableContainer sx={{ border: '1px solid', borderColor: 'divider', borderRadius: 1 }}>
-                <Table size="small">
-                    <TableHead>
-                        <TableRow sx={{ backgroundColor: '#ffffff06' }}>
-                            <TableCell sx={{ ...headCellSx, width: 36, px: 0.5 }}>
-                                <Checkbox size="small" sx={{ p: 0.25 }}
-                                    checked={sorted(filtered(local.people as SourcePerson[])).length > 0 && sorted(filtered(local.people as SourcePerson[])).every(p => selectedPeopleIds.has(p.id))}
-                                    indeterminate={sorted(filtered(local.people as SourcePerson[])).some(p => selectedPeopleIds.has(p.id)) && !sorted(filtered(local.people as SourcePerson[])).every(p => selectedPeopleIds.has(p.id))}
-                                    onChange={(_, checked) => {
-                                        const visible = sorted(filtered(local.people as SourcePerson[])).map(p => p.id)
-                                        setSelectedPeopleIds(checked ? new Set(visible) : new Set())
-                                    }}
-                                />
-                            </TableCell>
-                            <SortHeader label="Имя" field="name" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
-                            <SortHeader label="Должность" field="title" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
-                            <TableCell sx={headCellSx}>LinkedIn</TableCell>
-                            <SortHeader label="Страна" field="country" activeField={sortKey} direction={sortDir} onSort={toggleSort}>
-                                <IconButton size="small" onClick={(e) => { e.stopPropagation(); setCountriesDialogOpen(true) }} sx={{ color: 'text.secondary', p: 0 }}>
-                                    <EditRoundedIcon sx={{ fontSize: '0.7rem' }} />
-                                </IconButton>
-                            </SortHeader>
-                            <SortHeader label="ICP" field="icpSegment" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
-                            <SortHeader label="Priority" field="priority" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
-                            <SortHeader label="Activity" field="activityLevel" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
-                            <SortHeader label="Источник" field="source" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
-                            <SortHeader label="Статус" field="status" activeField={sortKey} direction={sortDir} onSort={toggleSort} />
-                            <TableCell sx={headCellSx}>Заметки</TableCell>
-                            <TableCell sx={{ ...headCellSx, width: 40 }} />
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {local.people.length === 0 && (
-                            <TableRow>
-                                <TableCell colSpan={12} sx={{ ...cellSx, textAlign: 'center', color: 'text.secondary', py: 4 }}>
-                                    Пока пусто. Нажми "Добавить" чтобы внести первый контакт.
-                                </TableCell>
-                            </TableRow>
-                        )}
-                        {sorted(searched(filtered(local.people as SourcePerson[]))).map((p) => (
-                            <TableRow key={p.id} sx={{ '&:hover': { backgroundColor: '#ffffff04' }, backgroundColor: isInShortlist(p) ? '#3fb68e08' : undefined }}>
-                                <TableCell sx={{ ...cellSx, px: 0.5, width: 36 }}>
-                                    <Checkbox size="small" sx={{ p: 0.25 }} checked={selectedPeopleIds.has(p.id)} onChange={(_, checked) => {
-                                        setSelectedPeopleIds(prev => { const n = new Set(prev); if (checked) n.add(p.id); else n.delete(p.id); return n })
-                                    }} />
-                                </TableCell>
-                                <TableCell sx={cellSx}><InlineInput value={p.name} onChange={v => updatePerson(p.id, { name: v })} placeholder="Имя" /></TableCell>
-                                <TableCell sx={cellSx}><InlineInput value={p.title || ''} onChange={v => updatePerson(p.id, { title: v })} placeholder="Должность" /></TableCell>
-                                <TableCell sx={cellSx}>
-                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.25 }}>
-                                        <InlineInput value={p.linkedinUrl} onChange={v => updatePerson(p.id, { linkedinUrl: v })} placeholder="URL" />
-                                        {p.linkedinUrl && (
-                                            <IconButton size="small" onClick={() => window.open(p.linkedinUrl.startsWith('http') ? p.linkedinUrl : `https://${p.linkedinUrl}`, '_blank')} sx={{ color: 'primary.main', p: 0.25 }}>
-                                                <OpenInNewRoundedIcon sx={{ fontSize: '0.85rem' }} />
-                                            </IconButton>
-                                        )}
-                                    </Box>
-                                </TableCell>
-                                <TableCell sx={cellSx}>
-                                    <Select size="small" value={p.country || ''} onChange={e => updatePerson(p.id, { country: e.target.value })} sx={selectSx} displayEmpty>
-                                        <MenuItem value="" sx={{ fontSize: '0.8rem', color: '#8b949e' }}>{'—'}</MenuItem>
-                                        {countries.map(c => <MenuItem key={c} value={c} sx={{ fontSize: '0.8rem' }}>{c}</MenuItem>)}
-                                    </Select>
-                                </TableCell>
-                                <TableCell sx={cellSx}>
-                                    <Select size="small" value={p.icpSegment} onChange={e => updatePerson(p.id, { icpSegment: e.target.value as IcpSegment })} sx={selectSx}>
-                                        {Object.entries(ICP_LABELS).map(([k, v]) => <MenuItem key={k} value={k} sx={{ fontSize: '0.8rem' }}>{v}</MenuItem>)}
-                                    </Select>
-                                </TableCell>
-                                <TableCell sx={cellSx}>
-                                    <Select size="small" value={p.priority} onChange={e => updatePerson(p.id, { priority: e.target.value as IcpPriority })} sx={selectSx}>
-                                        {(['A', 'B', 'C'] as IcpPriority[]).map(v => (
-                                            <MenuItem key={v} value={v} sx={{ fontSize: '0.8rem', fontWeight: 700, color: v === 'A' ? '#3fb68e' : v === 'B' ? '#d29922' : '#8b949e' }}>{v}</MenuItem>
-                                        ))}
-                                    </Select>
-                                </TableCell>
-                                <TableCell sx={cellSx}>
-                                    <Select size="small" value={p.activityLevel} onChange={e => updatePerson(p.id, { activityLevel: e.target.value as 'high' | 'medium' | 'low' })} sx={selectSx}>
-                                        <MenuItem value="high" sx={{ fontSize: '0.8rem' }}>High</MenuItem>
-                                        <MenuItem value="medium" sx={{ fontSize: '0.8rem' }}>Medium</MenuItem>
-                                        <MenuItem value="low" sx={{ fontSize: '0.8rem' }}>Low</MenuItem>
-                                    </Select>
-                                </TableCell>
-                                <TableCell sx={cellSx}><InlineInput value={p.source} onChange={v => updatePerson(p.id, { source: v })} placeholder="Группа, поиск..." /></TableCell>
-                                <TableCell sx={cellSx}>
-                                    <Select
-                                        size="small"
-                                        value={p.status}
-                                        onChange={e => updatePerson(p.id, { status: e.target.value as PersonStatus })}
-                                        sx={selectSx}
-                                        renderValue={(val) => <StatusChip {...PERSON_STATUS_LABELS[val as PersonStatus]} />}
-                                    >
-                                        {Object.entries(PERSON_STATUS_LABELS).map(([k, v]) => (
-                                            <MenuItem key={k} value={k} sx={{ fontSize: '0.8rem' }}><StatusChip {...v} /></MenuItem>
-                                        ))}
-                                    </Select>
-                                </TableCell>
-                                <TableCell sx={cellSx}><InlineInput value={p.notes} onChange={v => updatePerson(p.id, { notes: v })} placeholder="..." /></TableCell>
-                                <TableCell sx={cellSx}>
-                                    <Box sx={{ display: 'flex', gap: 0.25 }}>
-                                        <IconButton size="small" onClick={() => togglePersonShortlist(p)} sx={{ color: isInShortlist(p) ? 'warning.main' : 'text.secondary', '&:hover': { color: 'warning.main' } }} title="В Outreach">
-                                            <StarRoundedIcon sx={{ fontSize: '0.9rem' }} />
-                                        </IconButton>
-                                        <IconButton size="small" onClick={() => setDeleteConfirm({ id: p.id, name: p.name || 'без имени', type: 'person' })} sx={{ color: 'text.secondary', '&:hover': { color: 'error.main' } }}>
-                                            <DeleteRoundedIcon sx={{ fontSize: '0.9rem' }} />
-                                        </IconButton>
-                                    </Box>
-                                </TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
+            <DataGrid
+                rows={rows}
+                columns={columns}
+                density="compact"
+                autoHeight
+                checkboxSelection
+                disableRowSelectionOnClick
+                rowSelectionModel={Array.from(selectedPeopleIds)}
+                onRowSelectionModelChange={(model: GridRowSelectionModel) => setSelectedPeopleIds(new Set(model as string[]))}
+                getRowClassName={p => isInShortlist(p.row) ? 'row-in-shortlist' : ''}
+                hideFooter={hideFooterIfFits(rows.length)}
+                pageSizeOptions={[25, 50, 100]}
+                initialState={{ pagination: { paginationModel: { pageSize: 100 } } }}
+                localeText={{ noRowsLabel: 'Пока пусто. Нажми "Добавить" чтобы внести первый контакт.' }}
+                sx={{ ...dataGridSx, '& .row-in-shortlist': { backgroundColor: '#3fb68e08' } }}
+            />
         </Box>
     )
 }
