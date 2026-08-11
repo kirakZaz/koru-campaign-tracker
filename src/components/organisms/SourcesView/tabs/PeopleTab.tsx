@@ -9,6 +9,7 @@ import InputAdornment from '@mui/material/InputAdornment'
 import AddRoundedIcon from '@mui/icons-material/AddRounded'
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded'
 import StarRoundedIcon from '@mui/icons-material/StarRounded'
+import VisibilityRoundedIcon from '@mui/icons-material/VisibilityRounded'
 import EditRoundedIcon from '@mui/icons-material/EditRounded'
 import OpenInNewRoundedIcon from '@mui/icons-material/OpenInNewRounded'
 import FilterAltOffRoundedIcon from '@mui/icons-material/FilterAltOffRounded'
@@ -42,6 +43,8 @@ interface PeopleTabProps {
     setSnackbarMsg: (v: string | null) => void
     setDeleteConfirm: (v: DeleteConfirm | null) => void
     isInShortlist: (person: SourcePerson) => boolean
+    isReviewed: (person: SourcePerson) => boolean
+    openReadOnly: (person: SourcePerson) => void
     addPeopleToOutreach: (people: SourcePerson[]) => void
     addPerson: () => void
     updatePerson: (id: string, patch: Partial<SourcePerson>) => void
@@ -57,7 +60,7 @@ interface PeopleTabProps {
 export default function PeopleTab({
     local, save, searchQuery, setSearchQuery, filters, setFilter, clearFilters,
     selectedPeopleIds, setSelectedPeopleIds, countries,
-    setCountriesDialogOpen, setSnackbarMsg, setDeleteConfirm, isInShortlist,
+    setCountriesDialogOpen, setSnackbarMsg, setDeleteConfirm, isInShortlist, isReviewed, openReadOnly,
     addPeopleToOutreach, addPerson, updatePerson, togglePersonShortlist,
     uniqueVals, filtered, searched,
 }: PeopleTabProps) {
@@ -139,9 +142,12 @@ export default function PeopleTab({
         },
         { field: 'notes', headerName: 'Заметки', flex: 1, minWidth: 120, renderCell: p => editable(<InlineInput value={p.row.notes} onChange={v => updatePerson(p.row.id, { notes: v })} placeholder="..." />) },
         {
-            field: 'actions', headerName: '', width: 80, sortable: false, resizable: false, filterable: false, disableColumnMenu: true, renderCell: p => (
+            field: 'actions', headerName: '', width: 110, sortable: false, resizable: false, filterable: false, disableColumnMenu: true, renderCell: p => (
                 <Box sx={{ display: 'flex', gap: 0.25 }}>
-                    <IconButton size="small" onClick={e => { e.stopPropagation(); togglePersonShortlist(p.row) }} sx={{ color: isInShortlist(p.row) ? 'warning.main' : 'text.secondary', '&:hover': { color: 'warning.main' } }} title="В Outreach">
+                    <IconButton size="small" onClick={e => { e.stopPropagation(); openReadOnly(p.row) }} sx={{ color: 'text.secondary', '&:hover': { color: 'primary.main' } }} title="Посмотреть карточку">
+                        <VisibilityRoundedIcon sx={{ fontSize: '0.95rem' }} />
+                    </IconButton>
+                    <IconButton size="small" onClick={e => { e.stopPropagation(); togglePersonShortlist(p.row) }} sx={{ color: isInShortlist(p.row) ? 'warning.main' : 'text.secondary', '&:hover': { color: 'warning.main' } }} title={isReviewed(p.row) ? 'Вернуть в Outreach' : 'В Outreach'}>
                         <StarRoundedIcon sx={{ fontSize: '0.9rem' }} />
                     </IconButton>
                     <IconButton size="small" onClick={e => { e.stopPropagation(); setDeleteConfirm({ id: p.row.id, name: p.row.name || 'без имени', type: 'person' }) }} sx={{ color: 'text.secondary', '&:hover': { color: 'error.main' } }}>
@@ -219,12 +225,16 @@ export default function PeopleTab({
                 disableRowSelectionOnClick
                 rowSelectionModel={Array.from(selectedPeopleIds)}
                 onRowSelectionModelChange={(model: GridRowSelectionModel) => setSelectedPeopleIds(new Set(model as string[]))}
-                getRowClassName={p => isInShortlist(p.row) ? 'row-in-shortlist' : ''}
+                getRowClassName={p => isReviewed(p.row) ? 'row-reviewed' : isInShortlist(p.row) ? 'row-in-shortlist' : ''}
                 hideFooter={hideFooterIfFits(rows.length)}
                 pageSizeOptions={[25, 50, 100]}
                 initialState={{ pagination: { paginationModel: { pageSize: 100 } } }}
                 localeText={{ noRowsLabel: 'Пока пусто. Нажми "Добавить" чтобы внести первый контакт.' }}
-                sx={{ ...dataGridSx, '& .row-in-shortlist': { backgroundColor: '#3fb68e08' } }}
+                sx={{
+                    ...dataGridSx,
+                    '& .row-in-shortlist': { backgroundColor: '#3fb68e08' },
+                    '& .row-reviewed': { backgroundColor: '#8b949e14', opacity: 0.72 },
+                }}
             />
         </Box>
     )

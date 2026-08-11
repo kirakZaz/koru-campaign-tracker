@@ -89,6 +89,10 @@ export interface ShortlistPerson {
     feedbackReceived?: boolean
     history?: HistoryEntry[]
     createdAt?: string
+    /** Archived ("проверен"): kept out of the active Outreach list, shown read-only
+     *  in the Архив tab. All outreach data is preserved. */
+    reviewed?: boolean
+    reviewedAt?: string
 }
 
 export type CompetitorThreatLevel = 'direct' | 'indirect' | 'adjacent'

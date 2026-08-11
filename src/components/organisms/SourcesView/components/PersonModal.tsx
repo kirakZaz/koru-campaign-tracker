@@ -13,6 +13,8 @@ import CloseRoundedIcon from '@mui/icons-material/CloseRounded'
 import OpenInNewRoundedIcon from '@mui/icons-material/OpenInNewRounded'
 import ContentCopyRoundedIcon from '@mui/icons-material/ContentCopyRounded'
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded'
+import ArchiveRoundedIcon from '@mui/icons-material/ArchiveRounded'
+import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded'
 
 import { ICP_LABELS, SHORTLIST_ACTION_LABELS } from '../sources.constants'
 import { getNextAction } from '../sources.utils'
@@ -31,6 +33,8 @@ interface PersonModalProps {
     addHistory: (id: string, text: string, auto?: boolean) => void
     onRemoveFromOutreach: () => void
     onDeleteCompletely: () => void
+    /** View-only card (no edits, no destructive footer) — used from People and Архив. */
+    readOnly?: boolean
 }
 
 /** The person detail card (was renderContactModal). Self-contained: funnel,
@@ -49,6 +53,7 @@ export default function PersonModal({
     addHistory,
     onRemoveFromOutreach,
     onDeleteCompletely,
+    readOnly = false,
 }: PersonModalProps) {
     const nextAction = getNextAction(person)
     const firstName = person.name.split(' ')[0] || person.name
@@ -68,16 +73,16 @@ export default function PersonModal({
         <Chip
             label={label}
             size="small"
-            onClick={onClick}
+            onClick={readOnly ? undefined : onClick}
             sx={{
                 fontSize: '0.75rem',
                 fontWeight: 600,
                 height: 28,
-                cursor: 'pointer',
+                cursor: readOnly ? 'default' : 'pointer',
                 backgroundColor: done ? '#3fb68e22' : '#8b949e15',
                 color: done ? '#3fb68e' : '#8b949e',
                 border: `1px solid ${done ? '#3fb68e44' : '#8b949e33'}`,
-                '&:hover': { backgroundColor: done ? '#3fb68e33' : '#8b949e25' }
+                '&:hover': readOnly ? {} : { backgroundColor: done ? '#3fb68e33' : '#8b949e25' }
             }}
         />
     )
@@ -130,6 +135,14 @@ export default function PersonModal({
                             size="small"
                             sx={{ fontSize: '0.7rem', fontWeight: 800, height: 22, backgroundColor: priorityColor + '22', color: priorityColor, border: `1px solid ${priorityColor}44` }}
                         />
+                        {person.reviewed && (
+                            <Chip
+                                icon={<CheckCircleRoundedIcon sx={{ fontSize: '0.85rem !important', color: '#3fb68e !important' }} />}
+                                label={person.reviewedAt ? `Проверен · ${person.reviewedAt}` : 'Проверен'}
+                                size="small"
+                                sx={{ fontSize: '0.7rem', fontWeight: 700, height: 22, backgroundColor: '#3fb68e18', color: '#3fb68e', border: '1px solid #3fb68e44' }}
+                            />
+                        )}
                     </Box>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap' }}>
                         {person.linkedinUrl && (
@@ -259,8 +272,8 @@ export default function PersonModal({
                         return (
                             <Box
                                 key={action}
-                                sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mb: 0.25, cursor: 'pointer', '&:hover': { backgroundColor: '#ffffff06' }, borderRadius: 0.5, px: 0.5 }}
-                                onClick={() => {
+                                sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mb: 0.25, cursor: readOnly ? 'default' : 'pointer', '&:hover': readOnly ? {} : { backgroundColor: '#ffffff06' }, borderRadius: 0.5, px: 0.5 }}
+                                onClick={readOnly ? undefined : () => {
                                     const current = person.completedActions || []
                                     const next = completed
                                         ? current.filter(a => a !== action)
@@ -271,6 +284,7 @@ export default function PersonModal({
                                 <Checkbox
                                     size="small"
                                     checked={completed}
+                                    disabled={readOnly}
                                     sx={{ p: 0.25, color: completed ? '#3fb68e' : '#8b949e', '&.Mui-checked': { color: '#3fb68e' } }}
                                 />
                                 <Typography sx={{ fontSize: '0.8rem', color: completed ? '#3fb68e' : 'text.primary', textDecoration: completed ? 'line-through' : 'none' }}>
@@ -279,25 +293,27 @@ export default function PersonModal({
                             </Box>
                         )
                     })}
-                    <Select
-                        size="small"
-                        value=""
-                        displayEmpty
-                        onChange={e => {
-                            const action = e.target.value as ShortlistAction
-                            if (action && !(person.actions || []).includes(action)) {
-                                updateShortlistPerson(person.id, { actions: [...(person.actions || []), action] })
-                            }
-                        }}
-                        sx={{ fontSize: '0.75rem', mt: 0.5, height: 28, minWidth: 160, '& .MuiSelect-select': { py: 0.25, px: 1 }, '& .MuiOutlinedInput-notchedOutline': { borderColor: 'divider' } }}
-                    >
-                        <MenuItem value="" sx={{ fontSize: '0.75rem', color: '#8b949e' }}>+ Добавить действие</MenuItem>
-                        {(Object.entries(SHORTLIST_ACTION_LABELS) as [ShortlistAction, string][])
-                            .filter(([key]) => !(person.actions || []).includes(key))
-                            .map(([key, label]) => (
-                                <MenuItem key={key} value={key} sx={{ fontSize: '0.75rem' }}>{label}</MenuItem>
-                            ))}
-                    </Select>
+                    {!readOnly && (
+                        <Select
+                            size="small"
+                            value=""
+                            displayEmpty
+                            onChange={e => {
+                                const action = e.target.value as ShortlistAction
+                                if (action && !(person.actions || []).includes(action)) {
+                                    updateShortlistPerson(person.id, { actions: [...(person.actions || []), action] })
+                                }
+                            }}
+                            sx={{ fontSize: '0.75rem', mt: 0.5, height: 28, minWidth: 160, '& .MuiSelect-select': { py: 0.25, px: 1 }, '& .MuiOutlinedInput-notchedOutline': { borderColor: 'divider' } }}
+                        >
+                            <MenuItem value="" sx={{ fontSize: '0.75rem', color: '#8b949e' }}>+ Добавить действие</MenuItem>
+                            {(Object.entries(SHORTLIST_ACTION_LABELS) as [ShortlistAction, string][])
+                                .filter(([key]) => !(person.actions || []).includes(key))
+                                .map(([key, label]) => (
+                                    <MenuItem key={key} value={key} sx={{ fontSize: '0.75rem' }}>{label}</MenuItem>
+                                ))}
+                        </Select>
+                    )}
                 </Box>
 
                 <Box sx={{ borderTop: '1px solid', borderColor: 'divider' }} />
@@ -310,10 +326,10 @@ export default function PersonModal({
                         return (
                             <Box
                                 key={key}
-                                sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mb: 0.25, cursor: 'pointer', '&:hover': { backgroundColor: '#ffffff06' }, borderRadius: 0.5, px: 0.5 }}
-                                onClick={() => updateShortlistPerson(person.id, { [key]: !done } as Partial<ShortlistPerson>)}
+                                sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mb: 0.25, cursor: readOnly ? 'default' : 'pointer', '&:hover': readOnly ? {} : { backgroundColor: '#ffffff06' }, borderRadius: 0.5, px: 0.5 }}
+                                onClick={readOnly ? undefined : () => updateShortlistPerson(person.id, { [key]: !done } as Partial<ShortlistPerson>)}
                             >
-                                <Checkbox size="small" checked={done} sx={{ p: 0.25, color: done ? '#3fb68e' : '#8b949e', '&.Mui-checked': { color: '#3fb68e' } }} />
+                                <Checkbox size="small" checked={done} disabled={readOnly} sx={{ p: 0.25, color: done ? '#3fb68e' : '#8b949e', '&.Mui-checked': { color: '#3fb68e' } }} />
                                 <Typography sx={{ fontSize: '0.8rem', color: done ? '#3fb68e' : 'text.primary' }}>{label}</Typography>
                             </Box>
                         )
@@ -324,8 +340,12 @@ export default function PersonModal({
                                 <Box component="a" href={person.resultImage} target="_blank" rel="noopener noreferrer" sx={{ display: 'block', lineHeight: 0 }}>
                                     <Box component="img" src={person.resultImage} alt="результат" sx={{ maxWidth: 160, maxHeight: 120, borderRadius: 1, border: '1px solid', borderColor: 'divider' }} />
                                 </Box>
-                                <Button size="small" onClick={() => updateShortlistPerson(person.id, { resultImage: undefined })} sx={{ fontSize: '0.72rem', color: '#B5423F', minWidth: 0 }}>Удалить</Button>
+                                {!readOnly && (
+                                    <Button size="small" onClick={() => updateShortlistPerson(person.id, { resultImage: undefined })} sx={{ fontSize: '0.72rem', color: '#B5423F', minWidth: 0 }}>Удалить</Button>
+                                )}
                             </Box>
+                        ) : readOnly ? (
+                            <Typography sx={{ fontSize: '0.75rem', color: 'text.secondary' }}>Скриншот не загружен</Typography>
                         ) : (
                             <Button component="label" size="small" variant="outlined" sx={{ fontSize: '0.75rem', textTransform: 'none', borderColor: 'divider', color: 'text.secondary' }}>
                                 Загрузить скриншот
@@ -358,10 +378,10 @@ export default function PersonModal({
                         return (
                             <Box
                                 key={key}
-                                sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mb: 0.25, cursor: 'pointer', '&:hover': { backgroundColor: '#ffffff06' }, borderRadius: 0.5, px: 0.5 }}
-                                onClick={() => updateShortlistPerson(person.id, { [key]: !done } as Partial<ShortlistPerson>)}
+                                sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mb: 0.25, cursor: readOnly ? 'default' : 'pointer', '&:hover': readOnly ? {} : { backgroundColor: '#ffffff06' }, borderRadius: 0.5, px: 0.5 }}
+                                onClick={readOnly ? undefined : () => updateShortlistPerson(person.id, { [key]: !done } as Partial<ShortlistPerson>)}
                             >
-                                <Checkbox size="small" checked={done} sx={{ p: 0.25, color: done ? '#3fb68e' : '#8b949e', '&.Mui-checked': { color: '#3fb68e' } }} />
+                                <Checkbox size="small" checked={done} disabled={readOnly} sx={{ p: 0.25, color: done ? '#3fb68e' : '#8b949e', '&.Mui-checked': { color: '#3fb68e' } }} />
                                 <Typography sx={{ fontSize: '0.8rem', color: done ? '#3fb68e' : 'text.primary' }}>{label}</Typography>
                             </Box>
                         )
@@ -382,7 +402,8 @@ export default function PersonModal({
                         variant="outlined"
                         value={person.notes}
                         onChange={e => updateShortlistPerson(person.id, { notes: e.target.value })}
-                        placeholder="Заметки о контакте..."
+                        placeholder={readOnly ? '—' : 'Заметки о контакте...'}
+                        InputProps={{ readOnly }}
                         sx={{ '& .MuiInputBase-input': { fontSize: '0.8rem' }, '& .MuiOutlinedInput-notchedOutline': { borderColor: 'divider' } }}
                     />
                 </Box>
@@ -413,37 +434,39 @@ export default function PersonModal({
                 {/* History section */}
                 <Box sx={{ p: 2.5, pb: 2.5 }}>
                     <Typography sx={{ fontSize: '0.8rem', fontWeight: 700, mb: 1 }}>История</Typography>
-                    <Box sx={{ display: 'flex', gap: 0.75, mb: 1.5 }}>
-                        <TextField
-                            size="small"
-                            fullWidth
-                            variant="outlined"
-                            value={historyInput}
-                            onChange={e => setHistoryInput(e.target.value)}
-                            placeholder="Добавить запись..."
-                            onKeyDown={e => {
-                                if (e.key === 'Enter' && historyInput.trim()) {
-                                    addHistory(person.id, historyInput.trim(), false)
-                                    setHistoryInput('')
-                                }
-                            }}
-                            sx={{ '& .MuiInputBase-input': { fontSize: '0.8rem', py: 0.75 }, '& .MuiOutlinedInput-notchedOutline': { borderColor: 'divider' } }}
-                        />
-                        <Button
-                            size="small"
-                            variant="outlined"
-                            disabled={!historyInput.trim()}
-                            onClick={() => {
-                                if (historyInput.trim()) {
-                                    addHistory(person.id, historyInput.trim(), false)
-                                    setHistoryInput('')
-                                }
-                            }}
-                            sx={{ textTransform: 'none', fontSize: '0.75rem', whiteSpace: 'nowrap' }}
-                        >
-                            Добавить
-                        </Button>
-                    </Box>
+                    {!readOnly && (
+                        <Box sx={{ display: 'flex', gap: 0.75, mb: 1.5 }}>
+                            <TextField
+                                size="small"
+                                fullWidth
+                                variant="outlined"
+                                value={historyInput}
+                                onChange={e => setHistoryInput(e.target.value)}
+                                placeholder="Добавить запись..."
+                                onKeyDown={e => {
+                                    if (e.key === 'Enter' && historyInput.trim()) {
+                                        addHistory(person.id, historyInput.trim(), false)
+                                        setHistoryInput('')
+                                    }
+                                }}
+                                sx={{ '& .MuiInputBase-input': { fontSize: '0.8rem', py: 0.75 }, '& .MuiOutlinedInput-notchedOutline': { borderColor: 'divider' } }}
+                            />
+                            <Button
+                                size="small"
+                                variant="outlined"
+                                disabled={!historyInput.trim()}
+                                onClick={() => {
+                                    if (historyInput.trim()) {
+                                        addHistory(person.id, historyInput.trim(), false)
+                                        setHistoryInput('')
+                                    }
+                                }}
+                                sx={{ textTransform: 'none', fontSize: '0.75rem', whiteSpace: 'nowrap' }}
+                            >
+                                Добавить
+                            </Button>
+                        </Box>
+                    )}
                     {historyEntries.length === 0 ? (
                         <Typography sx={{ fontSize: '0.75rem', color: 'text.secondary' }}>Пока нет записей.</Typography>
                     ) : (
@@ -462,31 +485,35 @@ export default function PersonModal({
                     )}
                 </Box>
 
-                <Box sx={{ borderTop: '1px solid', borderColor: 'divider' }} />
+                {!readOnly && (
+                    <>
+                        <Box sx={{ borderTop: '1px solid', borderColor: 'divider' }} />
 
-                {/* Delete actions */}
-                <Box sx={{ p: 2.5, display: 'flex', gap: 1 }}>
-                    <Button
-                        size="small"
-                        variant="outlined"
-                        color="warning"
-                        startIcon={<DeleteRoundedIcon sx={{ fontSize: '0.8rem' }} />}
-                        onClick={onRemoveFromOutreach}
-                        sx={{ textTransform: 'none', fontSize: '0.75rem', borderColor: '#d2992244', color: '#d29922', '&:hover': { borderColor: '#d29922', backgroundColor: '#d2992211' } }}
-                    >
-                        Убрать из Outreach
-                    </Button>
-                    <Button
-                        size="small"
-                        variant="outlined"
-                        color="error"
-                        startIcon={<DeleteRoundedIcon sx={{ fontSize: '0.8rem' }} />}
-                        onClick={onDeleteCompletely}
-                        sx={{ textTransform: 'none', fontSize: '0.75rem', borderColor: '#f8514944', color: '#f85149', '&:hover': { borderColor: '#f85149', backgroundColor: '#f8514911' } }}
-                    >
-                        Удалить совсем
-                    </Button>
-                </Box>
+                        {/* Archive / delete actions */}
+                        <Box sx={{ p: 2.5, display: 'flex', gap: 1 }}>
+                            <Button
+                                size="small"
+                                variant="outlined"
+                                color="warning"
+                                startIcon={<ArchiveRoundedIcon sx={{ fontSize: '0.8rem' }} />}
+                                onClick={onRemoveFromOutreach}
+                                sx={{ textTransform: 'none', fontSize: '0.75rem', borderColor: '#d2992244', color: '#d29922', '&:hover': { borderColor: '#d29922', backgroundColor: '#d2992211' } }}
+                            >
+                                В архив (проверен)
+                            </Button>
+                            <Button
+                                size="small"
+                                variant="outlined"
+                                color="error"
+                                startIcon={<DeleteRoundedIcon sx={{ fontSize: '0.8rem' }} />}
+                                onClick={onDeleteCompletely}
+                                sx={{ textTransform: 'none', fontSize: '0.75rem', borderColor: '#f8514944', color: '#f85149', '&:hover': { borderColor: '#f85149', backgroundColor: '#f8514911' } }}
+                            >
+                                Удалить совсем
+                            </Button>
+                        </Box>
+                    </>
+                )}
             </DialogContent>
         </Dialog>
     )

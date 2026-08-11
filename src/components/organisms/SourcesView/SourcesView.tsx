@@ -20,12 +20,14 @@ import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
 import CompareArrowsRoundedIcon from '@mui/icons-material/CompareArrowsRounded'
+import Inventory2RoundedIcon from '@mui/icons-material/Inventory2Rounded'
 import PersonModal from './components/PersonModal'
 import PeopleTab from './tabs/PeopleTab'
 import GroupsTab from './tabs/GroupsTab'
 import CompaniesTab from './tabs/CompaniesTab'
 import CompetitorsTab from './tabs/CompetitorsTab'
 import OutreachTab from './tabs/OutreachTab'
+import ArchiveTab from './tabs/ArchiveTab'
 import DashboardTab from './tabs/DashboardTab'
 import type {
     SourcesViewProps,
@@ -66,6 +68,7 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
     const [needsActionFilter, setNeedsActionFilter] = React.useState(false)
     const [_copiedId, setCopiedId] = React.useState<string | null>(null)
     const [modalPersonId, setModalPersonId] = React.useState<string | null>(null)
+    const [viewPerson, setViewPerson] = React.useState<ShortlistPerson | null>(null)
     const [selectedPeopleIds, setSelectedPeopleIds] = React.useState<Set<string>>(new Set())
     const [addBestDialogOpen, setAddBestDialogOpen] = React.useState(false)
     const [bestPickIds, setBestPickIds] = React.useState<Set<string>>(new Set())
@@ -213,17 +216,18 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
         return currentBatchCount >= 5 ? String(max + 1) : String(Math.max(max, 1))
     }, [local.shortlist])
 
-    const isInShortlist = (person: SourcePerson) => local.shortlist.some(s => (s.linkedinUrl && s.linkedinUrl === person.linkedinUrl) || (s.name && s.name === person.name))
+    const shortlistRecordFor = (person: SourcePerson) => local.shortlist.find(s => (s.linkedinUrl && s.linkedinUrl === person.linkedinUrl) || (s.name && s.name === person.name))
+    // "In Outreach" = has an ACTIVE record. Archived ("проверен") records don't count as active.
+    const isInShortlist = (person: SourcePerson) => { const r = shortlistRecordFor(person); return !!r && !r.reviewed }
+    const isReviewed = (person: SourcePerson) => { const r = shortlistRecordFor(person); return !!r && !!r.reviewed }
     const togglePersonShortlist = (person: SourcePerson) => {
-        if (isInShortlist(person)) {
-            const next = { ...local, shortlist: local.shortlist.filter(s => !((s.linkedinUrl && s.linkedinUrl === person.linkedinUrl) || (s.name && s.name === person.name))) }
-            save(next)
-        } else {
-            const autoActions = getAutoActions(campaignWeek, person.priority)
-            const now = new Date().toISOString()
-            const next = { ...local, shortlist: [...local.shortlist, { id: generateId(), batch: nextBatch, name: person.name, linkedinUrl: person.linkedinUrl, priority: person.priority, dmStatus: 'not_sent' as DmStatus, connectionStatus: 'not_sent' as ConnectionStatus, source: person.source, status: person.status, notes: person.notes, actions: autoActions, completedActions: [] as ShortlistAction[], country: person.country, icpSegment: person.icpSegment, createdAt: now, history: [{ date: now.slice(0, 10), text: `Добавлен в Outreach (W${campaignWeek})`, auto: true }] as HistoryEntry[] }] }
-            save(next)
-        }
+        const record = shortlistRecordFor(person)
+        if (record && !record.reviewed) { archiveShortlistPerson(record.id); return }
+        if (record && record.reviewed) { reactivateShortlistPerson(record.id); return }
+        const autoActions = getAutoActions(campaignWeek, person.priority)
+        const now = new Date().toISOString()
+        const next = { ...local, shortlist: [...local.shortlist, { id: generateId(), batch: nextBatch, name: person.name, linkedinUrl: person.linkedinUrl, priority: person.priority, dmStatus: 'not_sent' as DmStatus, connectionStatus: 'not_sent' as ConnectionStatus, source: person.source, status: person.status, notes: person.notes, actions: autoActions, completedActions: [] as ShortlistAction[], country: person.country, icpSegment: person.icpSegment, createdAt: now, history: [{ date: now.slice(0, 10), text: `Добавлен в Outreach (W${campaignWeek})`, auto: true }] as HistoryEntry[] }] }
+        save(next)
     }
     const addShortlistPerson = () => {
         if (local.shortlist.length > 0 && !local.shortlist[0]!.name?.trim()) { setSnackbarMsg('Заполни имя в предыдущей строке'); return }
@@ -237,6 +241,56 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
     const deleteShortlistPerson = (id: string) => {
         const next = { ...local, shortlist: local.shortlist.filter(s => s.id !== id) }
         save(next)
+    }
+
+    // --- Archive ("проверен") helpers ---
+    const matchesPerson = (p: SourcePerson, s: ShortlistPerson) =>
+        (!!p.linkedinUrl && !!s.linkedinUrl && p.linkedinUrl.replace(/\/$/, '').toLowerCase() === s.linkedinUrl.replace(/\/$/, '').toLowerCase()) ||
+        (!!p.name && !!s.name && p.name.toLowerCase() === s.name.toLowerCase())
+
+    const archiveShortlistPerson = (id: string) => {
+        const now = new Date().toISOString().slice(0, 10)
+        const next = { ...local, shortlist: local.shortlist.map(s => s.id === id ? { ...s, reviewed: true, reviewedAt: now, history: [...(s.history || []), { date: now, text: 'В архив (проверен)', auto: true }] } : s) }
+        save(next)
+    }
+    const reactivateShortlistPerson = (id: string) => {
+        const now = new Date().toISOString().slice(0, 10)
+        const next = { ...local, shortlist: local.shortlist.map(s => s.id === id ? { ...s, reviewed: false, reviewedAt: undefined, history: [...(s.history || []), { date: now, text: 'Возвращён в Outreach', auto: true }] } : s) }
+        save(next)
+    }
+    // Return an archived person to People: drop the shortlist record; recreate a People
+    // row if none matches (e.g. added directly in Outreach).
+    const returnArchivedToPeople = (id: string) => {
+        const record = local.shortlist.find(s => s.id === id)
+        if (!record) return
+        const existing = local.people.find(p => matchesPerson(p, record))
+        const people = existing ? local.people : [{
+            id: generateId(), name: record.name, title: '', linkedinUrl: record.linkedinUrl,
+            country: record.country || '', icpSegment: record.icpSegment || 'other' as IcpSegment,
+            priority: record.priority || 'C' as IcpPriority, activityLevel: 'low' as const,
+            source: record.source || '', status: record.status || 'new' as PersonStatus,
+            notes: record.notes || '', createdAt: new Date().toISOString(),
+        }, ...local.people]
+        save({ ...local, people, shortlist: local.shortlist.filter(s => s.id !== id) })
+    }
+    // Fully delete an archived person from both People and the shortlist.
+    const deleteArchivedCompletely = (id: string) => {
+        const record = local.shortlist.find(s => s.id === id)
+        const people = record ? local.people.filter(p => !matchesPerson(p, record)) : local.people
+        save({ ...local, people, shortlist: local.shortlist.filter(s => s.id !== id) })
+    }
+
+    // Open the read-only card for a People row: show its outreach record if it has one,
+    // otherwise a minimal view synthesized from the People fields.
+    const openReadOnlyForPerson = (person: SourcePerson) => {
+        const record = shortlistRecordFor(person)
+        setViewPerson(record ?? {
+            id: person.id, batch: '', name: person.name, linkedinUrl: person.linkedinUrl,
+            country: person.country, icpSegment: person.icpSegment, priority: person.priority,
+            dmStatus: 'not_sent', connectionStatus: 'not_sent', source: person.source,
+            status: person.status, notes: person.notes, actions: [], completedActions: [],
+            history: [], createdAt: person.createdAt,
+        })
     }
 
     // --- History helpers ---
@@ -319,23 +373,37 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
         if (planned.length === 0) return false
         return planned.every(a => completed.includes(a))
     }
-    const activeInOutreach = local.shortlist.filter(s => !isPersonDone(s) && s.status !== 'declined' && s.status !== 'client')
-    const doneInOutreach = local.shortlist.filter(s => isPersonDone(s) || s.status === 'declined' || s.status === 'client')
+    // Archived ("проверен") people live in local.shortlist too — split them out.
+    const activeShortlist = local.shortlist.filter(s => !s.reviewed)
+    const reviewedList = React.useMemo(
+        () => local.shortlist.filter(s => s.reviewed).sort((a, b) => (b.reviewedAt || '').localeCompare(a.reviewedAt || '')),
+        [local.shortlist]
+    )
+    const activeInOutreach = activeShortlist.filter(s => !isPersonDone(s) && s.status !== 'declined' && s.status !== 'client')
+    const doneInOutreach = activeShortlist.filter(s => isPersonDone(s) || s.status === 'declined' || s.status === 'client')
     const canAddNextWave = activeInOutreach.length <= 3 && outreachCandidates.length > 0
 
     const addPeopleToOutreach = (people: SourcePerson[]) => {
-        // Deduplicate: skip people already in Outreach (by LinkedIn URL or name)
-        const filtered = people.filter(p =>
-            !local.shortlist.some(s =>
-                (s.linkedinUrl && p.linkedinUrl && s.linkedinUrl.replace(/\/$/, '').toLowerCase() === p.linkedinUrl.replace(/\/$/, '').toLowerCase()) ||
-                (s.name && p.name && s.name.toLowerCase() === p.name.toLowerCase())
-            )
-        )
-        if (filtered.length === 0) { setSnackbarMsg('Все уже в Outreach (дубликаты)'); return }
-        if (filtered.length < people.length) setSnackbarMsg(`Пропущено ${people.length - filtered.length} дубликатов`)
-
         const now = new Date().toISOString()
-        const newEntries: ShortlistPerson[] = filtered.map(p => {
+        const today = now.slice(0, 10)
+        const shortlist = [...local.shortlist]
+        const toCreate: SourcePerson[] = []
+        let reactivated = 0
+        let skipped = 0
+        for (const p of people) {
+            const idx = shortlist.findIndex(s => matchesPerson(p, s))
+            if (idx === -1) { toCreate.push(p); continue }
+            if (shortlist[idx]!.reviewed) {
+                // Was archived — bring it back to the active list.
+                shortlist[idx] = { ...shortlist[idx]!, reviewed: false, reviewedAt: undefined, history: [...(shortlist[idx]!.history || []), { date: today, text: 'Возвращён в Outreach', auto: true }] }
+                reactivated++
+            } else {
+                skipped++ // already active
+            }
+        }
+        if (toCreate.length === 0 && reactivated === 0) { setSnackbarMsg('Все уже в Outreach (дубликаты)'); return }
+
+        const newEntries: ShortlistPerson[] = toCreate.map(p => {
             const autoActions = getAutoActions(campaignWeek, p.priority)
             return {
                 id: generateId(), batch: nextBatch, name: p.name, linkedinUrl: p.linkedinUrl,
@@ -343,12 +411,16 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
                 dmStatus: 'not_sent' as DmStatus, connectionStatus: 'not_sent' as ConnectionStatus,
                 source: p.source, status: p.status, notes: p.notes,
                 actions: autoActions, completedActions: [],
-                history: [{ date: now.slice(0, 10), text: `Добавлен в Outreach (W${campaignWeek}). Авто-задачи: ${autoActions.map(a => NEXT_ACTION_LABELS[a]).join(', ')}`, auto: true }],
+                history: [{ date: today, text: `Добавлен в Outreach (W${campaignWeek}). Авто-задачи: ${autoActions.map(a => NEXT_ACTION_LABELS[a]).join(', ')}`, auto: true }],
                 createdAt: now
             }
         })
-        const next = { ...local, shortlist: [...local.shortlist, ...newEntries] }
-        save(next)
+        save({ ...local, shortlist: [...shortlist, ...newEntries] })
+        const parts: string[] = []
+        if (toCreate.length) parts.push(`добавлено ${toCreate.length}`)
+        if (reactivated) parts.push(`возвращено из архива ${reactivated}`)
+        if (skipped) parts.push(`пропущено ${skipped}`)
+        setSnackbarMsg(parts.join(', '))
     }
 
     // Needs action filter logic
@@ -357,9 +429,9 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
         (s.connectionStatus === 'accepted' && s.dmStatus === 'not_sent') ||
         s.dmStatus === 'no_reply'
 
-    // Filtered shortlist for display
+    // Filtered shortlist for display (active only — archived live in the Архив tab)
     const displayShortlist = React.useMemo(() => {
-        let result = local.shortlist
+        let result = local.shortlist.filter(s => !s.reviewed)
         if (needsActionFilter) result = result.filter(needsAction)
         // Apply search
         if (searchQuery.trim()) {
@@ -437,8 +509,9 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
                 } />
                 <Tab icon={<GroupsRoundedIcon sx={{ fontSize: '1rem' }} />} iconPosition="start" label={`Группы (${local.groups.length})`} />
                 <Tab icon={<BusinessRoundedIcon sx={{ fontSize: '1rem' }} />} iconPosition="start" label={`Компании (${local.companies.length})`} />
-                <Tab icon={<TrendingUpRoundedIcon sx={{ fontSize: '1rem' }} />} iconPosition="start" label={`Outreach (${local.shortlist.length})`} />
+                <Tab icon={<TrendingUpRoundedIcon sx={{ fontSize: '1rem' }} />} iconPosition="start" label={`Outreach (${activeShortlist.length})`} />
                 <Tab icon={<CompareArrowsRoundedIcon sx={{ fontSize: '1rem' }} />} iconPosition="start" label={`Конкуренты (${local.competitors.length})`} />
+                <Tab icon={<Inventory2RoundedIcon sx={{ fontSize: '1rem' }} />} iconPosition="start" label={`Архив (${reviewedList.length})`} />
             </Tabs>
 
             {tab === 0 && (
@@ -457,6 +530,8 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
                     setSnackbarMsg={setSnackbarMsg}
                     setDeleteConfirm={setDeleteConfirm}
                     isInShortlist={isInShortlist}
+                    isReviewed={isReviewed}
+                    openReadOnly={openReadOnlyForPerson}
                     addPeopleToOutreach={addPeopleToOutreach}
                     addPerson={addPerson}
                     updatePerson={updatePerson}
@@ -535,6 +610,17 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
                     updateCompetitor={updateCompetitor}
                     setDeleteConfirm={setDeleteConfirm}
                     filtered={filtered}
+                />
+            )}
+
+            {tab === 5 && (
+                <ArchiveTab
+                    reviewed={reviewedList}
+                    searchQuery={searchQuery}
+                    setSearchQuery={setSearchQuery}
+                    onView={setViewPerson}
+                    onReturnToPeople={returnArchivedToPeople}
+                    onDeleteCompletely={deleteArchivedCompletely}
                 />
             )}
 
@@ -642,16 +728,7 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
                         updateShortlistPerson={updateShortlistPerson}
                         addHistory={addHistory}
                         onRemoveFromOutreach={() => {
-                            const personInPeople = local.people.find(p => (p.linkedinUrl && person.linkedinUrl && p.linkedinUrl.replace(/\/$/, '').toLowerCase() === person.linkedinUrl.replace(/\/$/, '').toLowerCase()) || (p.name && person.name && p.name.toLowerCase() === person.name.toLowerCase()))
-                            if (personInPeople) {
-                                const withoutPerson = local.people.filter(p => p.id !== personInPeople.id)
-                                const next = { ...local, people: [...withoutPerson, { ...personInPeople, status: 'declined' as PersonStatus }], shortlist: local.shortlist.filter(s => s.id !== person.id) }
-                                save(next)
-                            } else {
-                                const newPerson = { id: generateId(), name: person.name, title: '', linkedinUrl: person.linkedinUrl, country: person.country || '', icpSegment: person.icpSegment || 'other' as IcpSegment, priority: person.priority || 'C' as IcpPriority, activityLevel: 'low' as const, source: person.source || '', status: 'declined' as PersonStatus, notes: person.notes || '' }
-                                const next = { ...local, people: [...local.people, newPerson], shortlist: local.shortlist.filter(s => s.id !== person.id) }
-                                save(next)
-                            }
+                            archiveShortlistPerson(person.id)
                             closeModal()
                         }}
                         onDeleteCompletely={() => {
@@ -663,6 +740,23 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
                     />
                 )
             })()}
+
+            {viewPerson && (
+                <PersonModal
+                    person={viewPerson}
+                    open={!!viewPerson}
+                    readOnly
+                    onClose={() => setViewPerson(null)}
+                    historyInput=""
+                    setHistoryInput={() => { /* read-only */ }}
+                    copyToClipboard={copyToClipboard}
+                    updateShortlistWithHistory={() => { /* read-only */ }}
+                    updateShortlistPerson={() => { /* read-only */ }}
+                    addHistory={() => { /* read-only */ }}
+                    onRemoveFromOutreach={() => { /* read-only */ }}
+                    onDeleteCompletely={() => { /* read-only */ }}
+                />
+            )}
 
             <Snackbar
                 open={!!snackbarMsg}
