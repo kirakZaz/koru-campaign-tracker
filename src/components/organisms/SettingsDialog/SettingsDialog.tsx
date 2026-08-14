@@ -45,11 +45,11 @@ const REMINDER_TIMES = [
     '09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00'
 ]
 
-// Maps a team member's display name to their login username.
+// Maps a team member's display name to their login username (email).
 const USERNAME_BY_NAME: Record<string, string> = {
-    'Кира': 'kira',
-    'Настя': 'nastya',
-    'Макс': 'max'
+    'Кира': 'kirka.zaz@gmail.com',
+    'Настя': 'ad.ak091988@gmail.com',
+    'Макс': 'max@koru-seo.com'
 }
 
 const DEFAULT_TEAM: TeamMember[] = [

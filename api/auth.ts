@@ -18,11 +18,23 @@ interface StoredUser {
     hash: string
 }
 
-const SEED_USERS = [
-    { username: 'kira', name: 'Кира', password: 'REMOVED' },
-    { username: 'max', name: 'Макс', password: 'REMOVED' },
-    { username: 'nastya', name: 'Настя', password: 'REMOVED' }
+// Usernames are emails. Initial passwords come from env (never committed).
+// A user is seeded only if its SEED_PASSWORD_* env var is set.
+const SEED_SPEC = [
+    { username: 'kirka.zaz@gmail.com', name: 'Кира', envKey: 'SEED_PASSWORD_KIRA' },
+    { username: 'max@koru-seo.com', name: 'Макс', envKey: 'SEED_PASSWORD_MAX' },
+    { username: 'ad.ak091988@gmail.com', name: 'Настя', envKey: 'SEED_PASSWORD_NASTYA' }
 ]
+
+function buildSeedUsers(): StoredUser[] {
+    const out: StoredUser[] = []
+    for (const s of SEED_SPEC) {
+        const pw = process.env[s.envKey]
+        if (!pw) continue
+        out.push(makeUser({ username: s.username, name: s.name, password: pw }))
+    }
+    return out
+}
 
 function hashPassword(password: string, salt: string): string {
     return scryptSync(password, salt, 64).toString('hex')
@@ -56,8 +68,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
         let users = await redis.get<StoredUser[]>(USERS_KEY)
         if (!users || users.length === 0) {
-            users = SEED_USERS.map(makeUser)
-            await redis.set(USERS_KEY, users)
+            users = buildSeedUsers()
+            if (users.length) await redis.set(USERS_KEY, users)
         }
 
         const uname = String(username ?? '').trim().toLowerCase()

@@ -12,6 +12,16 @@ const SOURCES_PATH = join(DATA_DIR, 'sources.json')
 const TEAM_PATH = join(DATA_DIR, 'team.json')
 const USERS_PATH = join(DATA_DIR, 'users.json')
 const UPLOADS_DIR = join(DATA_DIR, 'uploads')
+
+// Load .env for local dev so secrets (seed passwords, KV keys) stay out of code.
+const ENV_PATH = join(__dirname, '..', '.env')
+if (existsSync(ENV_PATH)) {
+    for (const line of readFileSync(ENV_PATH, 'utf-8').split('\n')) {
+        const m = line.match(/^\s*([A-Za-z0-9_]+)\s*=\s*(.*?)\s*$/)
+        if (m && process.env[m[1]] === undefined) process.env[m[1]] = m[2].replace(/^['"]|['"]$/g, '')
+    }
+}
+
 const app = express()
 const PORT = 3101
 
@@ -36,10 +46,12 @@ function saveJSON(path, data) {
 // ── /api/auth ──────────────────────────────────────────────────────
 // Simple login gate. Users are seeded once (hashed, never plaintext).
 
-const SEED_USERS = [
-    { username: 'kira', name: 'Кира', password: 'REMOVED' },
-    { username: 'max', name: 'Макс', password: 'REMOVED' },
-    { username: 'nastya', name: 'Настя', password: 'REMOVED' }
+// Usernames are emails. Initial passwords come from env (never committed).
+// A user is seeded only if its SEED_PASSWORD_* env var is set.
+const SEED_SPEC = [
+    { username: 'kirka.zaz@gmail.com', name: 'Кира', envKey: 'SEED_PASSWORD_KIRA' },
+    { username: 'max@koru-seo.com', name: 'Макс', envKey: 'SEED_PASSWORD_MAX' },
+    { username: 'ad.ak091988@gmail.com', name: 'Настя', envKey: 'SEED_PASSWORD_NASTYA' }
 ]
 
 function hashPassword(password, salt) {
@@ -51,9 +63,15 @@ function makeUser({ username, name, password }) {
     return { username, name, salt, hash: hashPassword(password, salt) }
 }
 
+function buildSeedUsers() {
+    return SEED_SPEC
+        .filter((s) => process.env[s.envKey])
+        .map((s) => makeUser({ username: s.username, name: s.name, password: process.env[s.envKey] }))
+}
+
 function getUsers() {
     if (!existsSync(USERS_PATH)) {
-        const seeded = SEED_USERS.map(makeUser)
+        const seeded = buildSeedUsers()
         saveJSON(USERS_PATH, seeded)
         return seeded
     }

@@ -49,7 +49,8 @@ export default function LoginView({ onLogin }: LoginViewProps) {
                 </Typography>
                 <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                     <TextField
-                        label="Логин"
+                        label="Email"
+                        type="email"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
                         autoFocus
