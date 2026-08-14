@@ -3,12 +3,14 @@ import cors from 'cors'
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs'
 import { join, dirname } from 'path'
 import { fileURLToPath } from 'url'
+import { randomBytes, scryptSync, timingSafeEqual } from 'crypto'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const DATA_DIR = join(__dirname, '..', 'data')
 const PROGRESS_PATH = join(DATA_DIR, 'progress.json')
 const SOURCES_PATH = join(DATA_DIR, 'sources.json')
 const TEAM_PATH = join(DATA_DIR, 'team.json')
+const USERS_PATH = join(DATA_DIR, 'users.json')
 const UPLOADS_DIR = join(DATA_DIR, 'uploads')
 const app = express()
 const PORT = 3101
@@ -30,6 +32,74 @@ function readJSON(path, fallback) {
 function saveJSON(path, data) {
     writeFileSync(path, JSON.stringify(data, null, 4))
 }
+
+// ── /api/auth ──────────────────────────────────────────────────────
+// Simple login gate. Users are seeded once (hashed, never plaintext).
+
+const SEED_USERS = [
+    { username: 'kira', name: 'Кира', password: 'REMOVED' },
+    { username: 'max', name: 'Макс', password: 'REMOVED' },
+    { username: 'nastya', name: 'Настя', password: 'REMOVED' }
+]
+
+function hashPassword(password, salt) {
+    return scryptSync(password, salt, 64).toString('hex')
+}
+
+function makeUser({ username, name, password }) {
+    const salt = randomBytes(16).toString('hex')
+    return { username, name, salt, hash: hashPassword(password, salt) }
+}
+
+function getUsers() {
+    if (!existsSync(USERS_PATH)) {
+        const seeded = SEED_USERS.map(makeUser)
+        saveJSON(USERS_PATH, seeded)
+        return seeded
+    }
+    return JSON.parse(readFileSync(USERS_PATH, 'utf-8'))
+}
+
+function verifyPassword(user, password) {
+    const attempt = Buffer.from(hashPassword(password, user.salt), 'hex')
+    const stored = Buffer.from(user.hash, 'hex')
+    return attempt.length === stored.length && timingSafeEqual(attempt, stored)
+}
+
+app.post('/api/auth', (req, res) => {
+    try {
+        const { action, username, password, newPassword } = req.body
+        const users = getUsers()
+        const uname = String(username ?? '').trim().toLowerCase()
+
+        if (action === 'login') {
+            const user = users.find((u) => u.username === uname)
+            if (!user || !verifyPassword(user, String(password ?? ''))) {
+                return res.status(401).json({ error: 'Invalid username or password' })
+            }
+            const token = randomBytes(24).toString('hex')
+            return res.json({ ok: true, token, user: { username: user.username, name: user.name } })
+        }
+
+        if (action === 'set-password') {
+            const user = users.find((u) => u.username === uname)
+            // Same generic 401 for missing user or wrong password — don't leak which.
+            if (!user || !verifyPassword(user, String(password ?? ''))) {
+                return res.status(401).json({ error: 'Invalid current password' })
+            }
+            const np = String(newPassword ?? '')
+            if (np.length < 4) return res.status(400).json({ error: 'Password too short' })
+            user.salt = randomBytes(16).toString('hex')
+            user.hash = hashPassword(np, user.salt)
+            saveJSON(USERS_PATH, users)
+            return res.json({ ok: true })
+        }
+
+        return res.status(400).json({ error: 'Unknown action' })
+    } catch {
+        res.status(500).json({ error: 'Auth failed' })
+    }
+})
 
 // ── /api/progress ──────────────────────────────────────────────────
 

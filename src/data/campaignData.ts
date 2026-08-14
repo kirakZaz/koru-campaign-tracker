@@ -1,4 +1,4 @@
-import type { CampaignDay, CampaignState, TemplateDay } from './campaignData.types'
+import type { CampaignDay, CampaignState, TemplateDay, TemplateTask } from './campaignData.types'
 
 // Template — dayNumber/phaseNumber/completed/note/_edited are added by buildInitialState
 export const CAMPAIGN_DAYS: TemplateDay[] = [
@@ -541,23 +541,100 @@ export const CAMPAIGN_DAYS: TemplateDay[] = [
     },
 
     // ==========================================
-    // ДАЛЬШЕ — ПОВТОР КРУГА (Недели 9, 10, 11…)
+    // ПАЙПЛАЙН — недельный оборот лид-машины, размноженный на реальные недели до релиза 10.10.
+    // Генератор: 9 недель Пн–Пт (dayIndex 40..84). Пн интейк → Вт пост+проверка → Ср контакт → Чт активация → Пт разбор.
+    // Цель: 15 активных тестеров. Активация важнее набора. См. buildPipelineWeeks() ниже.
     // ==========================================
+    ...buildPipelineWeeks(),
     {
-        dayIndex: 40, phase: 'Post-launch', dayLabel: 'Дальше',
-        title: 'Дальше: повторяешь тот же круг',
-        summary: 'Недели 9, 10, 11… — тот же недельный круг. Растёт список, подправляешь тексты под то, что сработало, заинтересованных ведёшь к оплате.',
+        dayIndex: 1010, phase: 'Релиз', dayLabel: 'Релиз · 10.10', calendarDayOffset: 117,
+        title: '🚀 Релиз KORU — 10 октября',
+        summary: 'Публичный запуск. К этому дню: URL от Макса поставлен, лендинг и деплой готовы, цель — 15 активных тестеров с фидбеком.',
         tasks: [
-            { id: 'loop-repeat', title: '128. Кира: Повторять недельный круг', description: 'Каждую неделю тот же круг. Меняется только: список растёт (добавляешь из базы Насти), тексты подправляешь под то, что зашло, заинтересованных ведёшь к оплате/самостоятельной регистрации. Всё remote, без созвонов.', steps: ['Пн: прогнать 10 новых компаний, сохранить результаты', 'Вт: 10 писем с результатом в личку LinkedIn', 'Ср: пост-находка №1 + ответы в 2 сообществах', 'Чт: дожать ответивших (async, без звонков)', 'Пт: пост-находка №2 + посмотреть цифры', 'Заинтересованных — к оплате / самостоятельной регистрации'], subtasks: [{ id: 'loop-repeat-st1', text: 'Круг повторяется каждую неделю' }], assignee: 'Кира', estimate: '~5–6 часов/неделя', priority: 'high', tags: ['outreach', 'content'] },
-            { id: 'inbound-tester-post', title: '129. Кира: Пост на входящих — набор в ранний доступ', description: 'Пост с личной страницы: показать разрыв «ранжируешься в Google, но AI цитирует не тебя» и открыть несколько мест в ранний доступ. Люди приходят сами (коммент/DM) — теплее холодных DM. Текст на английском — в copy block ниже. Картинка — реальный скриншот результата, не рисованная карточка.', steps: ['Сделать скриншот реального результата Citation Gap из своего аккаунта KORU (имя клиента можно замазать)', 'LinkedIn → Start a post → вставить текст из copy block', 'Прикрепить скриншот', 'Опубликовать, первые 1-2 часа отвечать на комментарии', 'Написавшим «cited» / в личку — отправить ссылку на ранний доступ', 'Заинтересованных отметить в Sources → Outreach'], subtasks: [{ id: 'inbound-tester-post-st1', text: 'Пост опубликован' }, { id: 'inbound-tester-post-st2', text: 'Ответившим отправлен доступ' }], assignee: 'Кира', estimate: '30–40 мин + ответы', priority: 'high', tags: ['content', 'outreach'], tip: 'Входящий канал теплее холодных DM — человек сам поднимает руку. Такой пост можно повторять раз в неделю с новым примером.', image: 'Реальный скриншот результата Citation Gap из твоего аккаунта KORU: движки (ChatGPT, Gemini, Claude, Grok) и кого они цитируют по вопросу твоей ниши. Имя клиента можно замазать. НЕ рисованная карточка — настоящий экран продукта.', copyBlocks: [{ label: 'Пост LinkedIn (copy-paste)', text: 'I asked ChatGPT to recommend a tool for something one of my clients does better than almost anyone.\n\nIt named five competitors. Not my client.\n\nThat\'s the gap that matters now: you can rank #1 in Google and still be invisible to the AI engines people ask first. Ranking and getting cited are two different games.\n\nSo I\'ve been building KORU to answer the uncomfortable question — when someone asks ChatGPT, Gemini, Claude or Grok about your space, who gets cited instead of you, and why do their pages get picked when yours don\'t?\n\nIt checks a page against what actually makes AI engines cite or skip it, and shows you who they cite in your place.\n\nI\'m opening a handful of early-access spots. No cost and no pitch — I just want people to run it on their own site and tell me what\'s off.\n\nIf that\'s you, comment "cited" below or DM me and I\'ll send access.' }] }
+            { id: 'release-launch', title: 'Релиз: публичный запуск', description: 'Финальная веха. Проверить готовность: production URL, вход, лендинг, оплата tester plan. Объявить запуск постом (личный + Company Page), сообщить тестерам.', steps: ['Проверить: URL, вход, лендинг, tester plan', 'Пост-анонс запуска (личный + Company Page)', 'Сообщить тестерам'], subtasks: [{ id: 'release-launch-1', text: 'Продукт готов к публичному входу' }, { id: 'release-launch-2', text: 'Анонс опубликован' }], assignee: 'Кира + Макс', estimate: '—', priority: 'high', tags: ['milestone', 'launch'] }
         ],
-        keyMetric: 'Повтор: растёт число ответов, прогонов на проверялке и платящих. Смотрим на разговоры и оплаты, НЕ на показы.'
+        keyMetric: '15 активных тестеров к запуску.'
     }
 ]
 
+// Генерит 9 недель пайплайна (Пн–Пт), dayIndex 40..84. Задачи одинаковые каждую неделю,
+// у интейка — свои слоты-«места» на каждую неделю (уникальные id). Задача Максу про URL —
+// только на неделе 2 (её Чт = dayIndex 48 = 20.08).
+function buildPipelineWeeks(): TemplateDay[] {
+    const WD = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт']
+    const starts = [40, 45, 50, 55, 60, 65, 70, 75, 80]
+    const out: TemplateDay[] = []
+
+    starts.forEach((monIdx, i) => {
+        const wk = i + 1
+        const phase = `Пайплайн ${wk}`
+        const id = (s: string) => `pl-w${wk}-${s}`
+
+        out.push({
+            dayIndex: monIdx, phase, dayLabel: `Пайплайн, ${WD[0]}`,
+            title: 'Пн — ИНТЕЙК: взять из списка и записать',
+            summary: 'Верх воронки. Берёшь 6-8 из Настиного списка, записываешь СЮДА (чтобы не потерять), дублируешь в Outreach и отправляешь заходы.',
+            tasks: [
+                { id: id('mon-intake'), title: 'Интейк: выбрать 6-8 и записать сюда', description: 'МЕСТО для тех, кого ты выбрала на эту неделю. Берёшь из Sources → Люди 6-8 под правильный ICP (мини-агентство/фрилансер, у кого ЕСТЬ клиенты и боль по AI-поиску), вписываешь каждого в пункты ниже и дублируешь в Sources → Outreach. Галочка = записан + заведён в Outreach.', steps: ['Открыть Sources → Люди', 'Выбрать 6-8 под ICP: есть клиенты + боль «AI цитирует не их»', 'Вписать каждого в пункты ниже (имя + ссылка + сегмент)', 'Продублировать в Sources → Outreach'], subtasks: [1, 2, 3, 4, 5, 6, 7, 8].map((n) => ({ id: id(`mon-intake-${n}`), text: `Лид ${n} — имя + ссылка + сегмент${n > 6 ? ' (опц.)' : ''}` })), assignee: 'Кира', estimate: '30–40 мин', priority: 'high', tags: ['outreach', 'intake'], tip: 'Твой журнал недели. Каждый понедельник — свой день, список недели хранится отдельно и не теряется.' },
+                { id: id('mon-connect'), title: 'Заход: CR с персональной нотой', description: 'Каждому из записанных — connection request с короткой персональной нотой (не питч). Цель — принятие и тёплый вход.', steps: ['Отправить CR каждому из списка выше', 'Нота персональная, про них/их работу, без питча', 'Отметить «CR отправлен» в Outreach'], subtasks: [{ id: id('mon-connect-1'), text: 'CR отправлены всем из списка' }], assignee: 'Кира', estimate: '20–30 мин', priority: 'high', tags: ['outreach'], copyBlocks: [{ label: 'Connection note', text: 'Hi {name} — came across your work with {agency/clients}. I dig into how AI engines (ChatGPT, Gemini, Claude, Grok) decide which pages to cite for a query, and your niche keeps coming up. Would be glad to connect.' }] }
+            ],
+            keyMetric: '6-8 записано + в Outreach, CR отправлены.'
+        })
+
+        out.push({
+            dayIndex: monIdx + 1, phase, dayLabel: `Пайплайн, ${WD[1]}`,
+            title: 'Вт — ПОСТ + ПРОВЕРКА',
+            summary: 'Пост №1 (текст+картинка) + репост на Company Page. Потом проходишь по всем в Outreach и обновляешь статусы.',
+            tasks: [
+                { id: id('tue-post'), title: 'Пост №1 + репост на страницу KORU', description: 'Пост с личного профиля — входящий магнит. Картинка — реальный скриншот результата, не карточка. В тот же день репост на Company Page KORU.', steps: ['Скриншот реального результата из своего аккаунта KORU', 'LinkedIn (личный) → Start a post → текст из copy block', 'Прикрепить скриншот, опубликовать', 'Отвечать на комментарии', 'Репост на Company Page KORU'], subtasks: [{ id: id('tue-post-1'), text: 'Пост опубликован' }, { id: id('tue-post-2'), text: 'Репост на Page' }], assignee: 'Кира', estimate: '30–40 мин + ответы', priority: 'high', tags: ['content'], image: 'Реальный скриншот результата из аккаунта KORU (Citation Gap: ChatGPT/Gemini/Claude/Grok и кого они цитируют). Настоящий экран продукта, не карточка.', copyBlocks: [{ label: 'Пост LinkedIn (copy-paste)', text: 'I asked ChatGPT to recommend a tool for something one of my clients does better than almost anyone.\n\nIt named five competitors. Not my client.\n\nYou can rank #1 in Google and still be invisible to the AI engines people ask first. Ranking and getting cited are two different games.\n\nI\'ve been checking client pages against what makes ChatGPT, Gemini, Claude and Grok cite or skip them — and showing who they cite instead, and why.\n\nOpening a few early-access spots. No cost, no pitch — run it on one client page and tell me what\'s off.\n\nComment "cited" or DM me and I\'ll send access.' }, { label: 'Что прогнать для скрина (ротация — бери новую каждую неделю)', text: 'Прогоняй, скринь результат с самым большим разрывом:\n\n1. Citation Gap — вопрос «best tool to track if AI mentions my brand» (своя категория, виден разброс движков).\n2. Citation Gap — «best SEO tool for small agencies» (мир твоей аудитории — агентства/фрилансеры).\n3. Citation Gap — «how do I get my page cited by ChatGPT» (цитируют блоги, не тулзы — образовательный угол).\n4. Cross-engine — один вопрос из ниши реального клиента всем 4 движкам, скрин как они цитируют РАЗНОЕ (расхождение — сильный хук).\n5. GEO Score — загугли запрос, возьми URL №1 из выдачи, прогони: «даже топ-1 Google = N/100 для AI».\n6. (Остро, по желанию) Citation Gap — «best AI visibility tool»: кого называют (Profound, Otterly, Goodie) — гэп даже в горячей категории.\n\nРеальные сайты под GEO Score, если нужен конкретный URL: ahrefs.com/blog, backlinko.com, hubspot.com/blog, zapier.com/blog (высоко в Google — интересно, цитирует ли их AI). Спорный вариант — лендинг конкурента: otterly.ai, tryprofound.com.\n\nПравило: не «X плохой», а «вот разрыв». Имя клиента на скрине можно замазать.' }] },
+                { id: id('tue-review'), title: 'Проверка: пройтись по всем в Outreach', description: 'Обновить статусы: кто принял CR, кто ответил, кто сделал первое действие. Ответивших — в план на Ср.', steps: ['Открыть Sources → Outreach', 'Отметить принятые CR / ответы / первое действие', 'Ответивших пометить для Ср'], subtasks: [{ id: id('tue-review-1'), text: 'Статусы обновлены по всем' }], assignee: 'Кира', estimate: '15–20 мин', priority: 'medium', tags: ['review'] }
+            ],
+            keyMetric: 'Пост + репост, статусы актуальны.'
+        })
+
+        out.push({
+            dayIndex: monIdx + 2, phase, dayLabel: `Пайплайн, ${WD[2]}`,
+            title: 'Ср — КОНТАКТ: 5 диалогов',
+            summary: 'Принявшим/ответившим — хук «челлендж одного клиента». Двигаешь 5 диалогов.',
+            tasks: [
+                { id: id('wed-contact'), title: '5 человек: хук «челлендж одного клиента»', description: 'Заход не про продукт, а про их работу: пусть выберут одного клиента/проспекта и прогонят страницу, ты дашь главный фикс. Им — инсайт для клиента, тебе — они что-то сделали.', steps: ['Выбрать 5 из принявших/ответивших', 'Отправить хук-челлендж (copy block)', 'Отметить «послан» в Outreach', 'Кто отвечает — в Чт'], subtasks: [1, 2, 3, 4, 5].map((n) => ({ id: id(`wed-contact-${n}`), text: `Диалог ${n}` })), assignee: 'Кира', estimate: '30–40 мин', priority: 'high', tags: ['outreach'], copyBlocks: [{ label: 'Hook — challenge one client', text: 'Quick one, {name}. Pick one client (or a prospect you\'re pitching) and I\'ll run their top page through KORU — you\'ll get a GEO score and the single biggest reason AI engines skip it, plus who they cite instead. Something you can take straight to that client. Want me to, or want to run it yourself? I\'ll send access.' }] }
+            ],
+            keyMetric: '5 живых диалогов.'
+        })
+
+        const thu: TemplateTask[] = [
+            { id: id('thu-activate'), title: 'Довести до первого действия + оффер beta', description: 'Цель — чтобы человек РЕАЛЬНО прогнал 1 клиентскую страницу. После — оффер tester plan (месяц free, дальше по вкладу). Первое действие важнее подписки.', steps: ['Довести до запуска 1 страницы (прямая ссылка)', 'Сделал → оффер tester plan', 'Объяснить: дальше по вкладу (фидбек/баг/реферал)', 'Отметить стадию в Outreach'], subtasks: [{ id: id('thu-activate-1'), text: 'Кто-то сделал первое действие' }, { id: id('thu-activate-2'), text: 'Оффер tester plan отправлен' }], assignee: 'Кира', estimate: '40–50 мин', priority: 'high', tags: ['activation'], copyBlocks: [{ label: 'Beta / tester plan offer', text: 'Nice — that\'s exactly the gap worth fixing. Want to keep going? I can put you on the tester plan: a month free with full access. After that it\'s based on what you put in — a bit of feedback, a bug, or a referral keeps it going. All async, no calls. Want in?' }] },
+            { id: id('thu-reactivate'), title: 'Реанимация мёртвых тестеров', description: 'Кто завёл аккаунт, но молчит — не проси «залогинься», дай повод: их челлендж + прямая ссылка. Молчит 2 дня → 2-мин Loom по их кейсу (async, без звонков).', steps: ['Список неактивных (Outreach)', 'Отправить повод-челлендж + прямую ссылку', 'Молчит 2 дня → Loom по их кейсу'], subtasks: [{ id: id('thu-reactivate-1'), text: 'Неактивным отправлен повод' }], assignee: 'Кира', estimate: '20–30 мин', priority: 'high', tags: ['activation'], tip: 'Мёртвый тестер часто = не тот ICP или продукт дали пустым. Лечим поводом, не напоминанием верифнуть.', copyBlocks: [{ label: 'Reactivation DM', text: 'Hey {name} — set up your access a bit ago but I don\'t want it to sit unused. Give me one client (or prospect) and I\'ll run their page myself and send you the result — one surprising thing about how AI engines treat it. Curious? Here\'s your direct login: {link}' }] },
+            { id: id('thu-post2'), title: 'Пост №2 + репост на страницу', description: 'Второй пост недели — другой угол (статистика AI-поиска или соц-пруф). Репост на Company Page.', steps: ['Пост №2 (38% AI-цитируемых не в топ-10 / соц-пруф)', 'Опубликовать с личного', 'Репост на Company Page'], subtasks: [{ id: id('thu-post2-1'), text: 'Пост №2 опубликован' }, { id: id('thu-post2-2'), text: 'Репост на Page' }], assignee: 'Кира', estimate: '25–30 мин', priority: 'medium', tags: ['content'], copyBlocks: [{ label: 'Пост №2 — банк концептов (бери один в неделю)', text: 'Хук афористичный, одна мысль, картинка = реальный скрин, мягкий CTA (коммент/DM/место в тестеры).\n\n1. RANK vs CITED.\n"Ranking #1 in Google does not buy you the citation. Only about 1 in 3 pages AI engines cite also sit in the top 10. Two different games — and most sites play only one."\n→ скрин Citation Gap. CTA: "Run one page, see its gap — DM me."\n\n2. WHO, NOT WHETHER.\n"Most AI-visibility tools tell you IF AI mentions your brand. Almost none tell you WHY a page gets skipped — or who gets cited instead. Monitoring is not fixing."\n→ скрин радара AI Reputation. Позиционирование против мониторов.\n\n3. THE CLIENT SCREENSHOT.\n"Ran a client page today. #2 in Google. 41/100 for AI citation-readiness. Same page, two very different scores — and only one decides whether ChatGPT quotes them."\n→ скрин GEO Score. Продаёт диагностику.\n\n4. FOUR ENGINES, FOUR ANSWERS.\n"Asked ChatGPT, Gemini, Claude and Grok the same question. They agreed on almost nothing about who to cite. Getting cited by AI is not one target — it is four."\n→ скрин расхождения движков.\n\n5. EARNED, NOT OWNED.\n"About 84% of pages AI cites are earned media, not your own site. Your homepage is not the battlefield — being referenced everywhere else is."\n→ образовательный угол.\n\n6. THE QUIET REROUTE.\n"Nearly half of Google searches now show an AI Overview, and they cut clicks to the top result by about a third. The traffic you optimize for is being rerouted — quietly."\n→ ургентность.\n\n7. THE 2027 FREELANCER.\n"The freelancers still billing in two years will not be the ones ranking pages. They will be the ones who can tell a client exactly why AI skips them — and fix it."\n→ продаёт KORU как услугу для агентств/фрилансеров.\n\n8. BUILD IN PUBLIC (ближе к 10.10).\n"Shipping KORU to the public on Oct 10. Until then I am running it on real client pages with a few testers — no cost, a month on the tester plan. Want a spot? DM cited."\n→ прямой набор тестеров.\n\nГайд-рейлы: без "5 минут", "никто не делает", "готовых статей", Perplexity, "один клик".' }] }
+        ]
+        if (monIdx === 45) {
+            thu.push({ id: id('thu-max-url'), title: 'Напомнить Максу: правильный URL (сегодня 20.08)', description: 'Разовая веха: Макс ставит правильный production URL до релиза. После — проверить, что вход/лендинг открывается по нему.', steps: ['Написать Максу: поставить правильный URL', 'Проверить вход/лендинг по нему', 'Отметить выполнено'], subtasks: [{ id: id('thu-max-url-1'), text: 'Макс поставил URL' }, { id: id('thu-max-url-2'), text: 'Ссылки проверены' }], assignee: 'Макс', estimate: '15 мин', priority: 'high', tags: ['milestone'], warning: 'Разовая веха на 20.08 — не еженедельная.' })
+        }
+        out.push({
+            dayIndex: monIdx + 3, phase, dayLabel: `Пайплайн, ${WD[3]}`,
+            title: 'Чт — АКТИВАЦИЯ',
+            summary: 'Доводишь ответивших до первого действия → оффер beta + tester plan. Реанимация мёртвых. Пост №2.',
+            tasks: thu,
+            keyMetric: '1–2 первых действия + оффер, мёртвым дан повод, пост №2.'
+        })
+
+        out.push({
+            dayIndex: monIdx + 4, phase, dayLabel: `Пайплайн, ${WD[4]}`,
+            title: 'Пт — РАЗБОР',
+            summary: 'Метрики недели по воронке, реактивация, выводы, список на следующий Пн. Обратный отсчёт до 10.10.',
+            tasks: [
+                { id: id('fri-review'), title: 'Воронка + выводы + план на след. Пн', description: 'Считаешь неделю по воронке (Sources → Dashboard). Записываешь, какой сегмент/хук зашёл (Insights). Готовишь список на следующий понедельник.', steps: ['Dashboard: снять воронку недели', 'Записать выводы (Insights)', 'Сверить прогресс к цели: 15 активных тестеров', 'Наметить список на след. Пн'], subtasks: [{ id: id('fri-review-1'), text: 'Воронка снята' }, { id: id('fri-review-2'), text: 'Выводы записаны' }, { id: id('fri-review-3'), text: 'Список на след. неделю готов' }], assignee: 'Кира', estimate: '30–40 мин', priority: 'high', tags: ['review'], tip: 'Смотрим на разговоры, первые действия и активных тестеров — НЕ на показы.' }
+            ],
+            keyMetric: 'Цель: 15 активных тестеров к 10.10.'
+        })
+    })
+
+    return out
+}
+
 export const TOTAL_CAMPAIGN_DAYS = CAMPAIGN_DAYS.length
 
-export const CAMPAIGN_VERSION = 6
+export const CAMPAIGN_VERSION = 10
 
 export function buildInitialState(): CampaignState {
     const days: CampaignDay[] = CAMPAIGN_DAYS.map(day => ({

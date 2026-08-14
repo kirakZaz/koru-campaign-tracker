@@ -1,4 +1,5 @@
 import type { CampaignDay } from '@/data/campaignData.types'
+import type { AuthUser } from '@/hooks/useAuth'
 
 export interface SidebarProps {
     days: CampaignDay[]
@@ -9,4 +10,6 @@ export interface SidebarProps {
     onOpenSettings: () => void
     globalAssigneeFilter: string | null
     onGlobalAssigneeFilterChange: (assignee: string | null) => void
+    currentUser: AuthUser
+    onLogout: () => void
 }

@@ -25,6 +25,7 @@ import SourcesView from '@/components/organisms/SourcesView/SourcesView'
 import type { SourcesData } from '@/components/organisms/SourcesView/SourcesView.types'
 import PlaybookView from '@/components/organisms/PlaybookView/PlaybookView'
 import InsightsView from '@/components/organisms/InsightsView/InsightsView'
+import type { AuthUser } from '@/hooks/useAuth'
 
 export const OVERVIEW_INDEX = -100
 export const SOURCES_INDEX = -200
@@ -41,7 +42,13 @@ export function getInsightsIndex(phaseIdx: number): number {
 }
 
 
-function App() {
+interface AppProps {
+    currentUser: AuthUser
+    onLogout: () => void
+    onChangePassword: (username: string, currentPassword: string, newPassword: string) => Promise<void>
+}
+
+function App({ currentUser, onLogout, onChangePassword }: AppProps) {
     const { progress, isLoading, error, toggleTask, setStartDate, setNote, isTaskCompleted, saveTaskOverride, saveOverviewSection, overviewOverrides, weekInsights, saveWeekInsights, campaignState, moveTask, updateDay, updateTask, deleteTask, createTask } = useProgress()
     const { sources, saveSources } = useSources()
     const { team, saveTeam } = useTeam()
@@ -214,6 +221,8 @@ function App() {
             onOpenSettings={handleOpenSettings}
             globalAssigneeFilter={globalAssigneeFilter}
             onGlobalAssigneeFilterChange={setGlobalAssigneeFilter}
+            currentUser={currentUser}
+            onLogout={onLogout}
         />
     )
 
@@ -329,6 +338,7 @@ function App() {
                 onSetStartDate={setStartDate}
                 team={team}
                 onSaveTeam={saveTeam}
+                onChangePassword={onChangePassword}
             />
 
             {editingTask && (

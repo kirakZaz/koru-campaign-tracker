@@ -16,11 +16,24 @@ import TableChartRoundedIcon from '@mui/icons-material/TableChartRounded'
 import MenuBookRoundedIcon from '@mui/icons-material/MenuBookRounded'
 import LightbulbOutlinedIcon from '@mui/icons-material/LightbulbOutlined'
 import BarChartRoundedIcon from '@mui/icons-material/BarChartRounded'
+import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded'
+import KeyboardDoubleArrowLeftRoundedIcon from '@mui/icons-material/KeyboardDoubleArrowLeftRounded'
+import KeyboardDoubleArrowRightRoundedIcon from '@mui/icons-material/KeyboardDoubleArrowRightRounded'
+import Tooltip from '@mui/material/Tooltip'
+import Button from '@mui/material/Button'
 import { OVERVIEW_INDEX, SOURCES_INDEX, PLAYBOOK_INDEX, DASHBOARD_INDEX, INSIGHTS_PHASES, getInsightsIndex } from '@/App'
-import { getCampaignDate, formatShortDate } from '@/utils/dateUtils'
+import { formatShortDate, getViewerTimezone, getCampaignDate } from '@/utils/dateUtils'
 import ProgressBar from '@/components/molecules/ProgressBar/ProgressBar'
+import SidebarCalendar from './SidebarCalendar'
 import type { SidebarProps } from './Sidebar.types'
 import { styles } from './Sidebar.styles'
+
+/** Date as "10/08" (DD/MM) for week-range labels. */
+const formatDayMonth = (date: Date) =>
+    new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: '2-digit', timeZone: getViewerTimezone() }).format(date)
+
+/** Forward (пайплайн + релиз) weeks sit on top; historical campaign is archived below. */
+const isForwardPhase = (phase: string) => phase.startsWith('Пайплайн') || phase === 'Релиз'
 
 const Sidebar = React.memo(function Sidebar({
     days,
@@ -30,10 +43,13 @@ const Sidebar = React.memo(function Sidebar({
     onDaySelect,
     onOpenSettings,
     globalAssigneeFilter,
-    onGlobalAssigneeFilterChange
+    onGlobalAssigneeFilterChange,
+    currentUser,
+    onLogout
 }: SidebarProps) {
     const activeRef = React.useRef<HTMLDivElement>(null)
     const [headerCollapsed, setHeaderCollapsed] = React.useState(false)
+    const [railCollapsed, setRailCollapsed] = React.useState(false)
     const [globalSearch, setGlobalSearch] = React.useState('')
 
     React.useEffect(() => {
@@ -54,6 +70,14 @@ const Sidebar = React.memo(function Sidebar({
         }
         return groups
     }, [days])
+
+    // Forward weeks (пайплайн + релиз) on top in chronological order; the finished
+    // campaign (Story 0 → Week 8) is archived below, newest-first.
+    const orderedPhases = React.useMemo(() => {
+        const forward = daysByPhase.filter((g) => isForwardPhase(g.phase))
+        const past = daysByPhase.filter((g) => !isForwardPhase(g.phase))
+        return [...forward, ...past.reverse()]
+    }, [daysByPhase])
 
     const activePhase = React.useMemo(
         () => days.find((d) => d.dayIndex === currentDayIndex)?.phase ?? null,
@@ -132,19 +156,34 @@ const Sidebar = React.memo(function Sidebar({
         setGlobalSearch('')
     }, [onDaySelect])
 
+    const railNav = (index: number, Icon: typeof InfoOutlinedIcon, label: string) => (
+        <Tooltip title={label} placement="right" key={label}>
+            <IconButton
+                onClick={() => onDaySelect(index)}
+                size="small"
+                sx={{ color: currentDayIndex === index ? 'primary.main' : 'text.secondary' }}
+            >
+                <Icon fontSize="small" />
+            </IconButton>
+        </Tooltip>
+    )
+
     return (
-        <Box sx={styles.root}>
+        <Box sx={{ position: 'relative', height: '100%', flexShrink: 0, overflow: 'hidden', width: railCollapsed ? 56 : { xs: '100%', md: 300 }, transition: 'width 240ms cubic-bezier(0.4, 0, 0.2, 1)', borderRight: (t) => `1px solid ${t.palette.divider}` }}>
+            <Box sx={{ ...styles.root, width: { xs: '100%', md: 300 }, borderRight: 'none', opacity: railCollapsed ? 0 : 1, transition: 'opacity 140ms ease', pointerEvents: railCollapsed ? 'none' : 'auto' }}>
             <Box sx={styles.header}>
                 <Box>
                     <Typography sx={styles.logo}>KORU</Typography>
                     <Typography sx={styles.subtitle}>Campaign Tracker</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                    <Tooltip title="Свернуть в полоску">
+                        <IconButton size="small" onClick={() => setRailCollapsed(true)} sx={{ color: 'text.secondary' }}>
+                            <KeyboardDoubleArrowLeftRoundedIcon fontSize="small" />
+                        </IconButton>
+                    </Tooltip>
                     <IconButton size="small" onClick={() => setHeaderCollapsed(c => !c)} sx={{ color: 'text.secondary' }}>
                         {headerCollapsed ? <ExpandMoreRoundedIcon fontSize="small" /> : <ExpandLessRoundedIcon fontSize="small" />}
-                    </IconButton>
-                    <IconButton onClick={onOpenSettings} size="small" sx={{ color: 'text.secondary' }}>
-                        <SettingsRoundedIcon />
                     </IconButton>
                 </Box>
             </Box>
@@ -220,7 +259,8 @@ const Sidebar = React.memo(function Sidebar({
                     ))}
                 </Box>
             ) : (
-                <Box sx={styles.daysList}>
+                <>
+                <Box sx={styles.pinnedNav}>
                     <Box
                         sx={styles.dayItem(currentDayIndex === OVERVIEW_INDEX, false)}
                         onClick={() => onDaySelect(OVERVIEW_INDEX)}
@@ -257,13 +297,29 @@ const Sidebar = React.memo(function Sidebar({
                             Dashboard
                         </Typography>
                     </Box>
-                    {daysByPhase.map((group) => {
+                </Box>
+                <SidebarCalendar
+                    days={days}
+                    startDate={startDate}
+                    currentDayIndex={currentDayIndex}
+                    onDaySelect={onDaySelect}
+                />
+                <Box sx={styles.daysList}>
+                    {orderedPhases.map((group) => {
                         const phaseIdx = INSIGHTS_PHASES.indexOf(group.phase as typeof INSIGHTS_PHASES[number])
                         const insightsIndex = phaseIdx >= 0 ? getInsightsIndex(phaseIdx) : null
                         const insightsActive = insightsIndex !== null && currentDayIndex === insightsIndex
                         const isCollapsed = collapsedPhases.has(group.phase)
                         const phaseCompleted = group.days.reduce((n, d) => n + d.tasks.filter((t) => isTaskCompleted(t.id)).length, 0)
                         const phaseTotal = group.days.reduce((n, d) => n + d.tasks.length, 0)
+
+                        // Week range from the real campaign dates of this group's days.
+                        const groupDates = startDate ? group.days.map((d) => getCampaignDate(startDate, d.dayIndex, d.calendarDayOffset)) : []
+                        let weekRange = ''
+                        if (groupDates.length) {
+                            const times = groupDates.map((d) => d.getTime())
+                            weekRange = `${formatDayMonth(new Date(Math.min(...times)))}-${formatDayMonth(new Date(Math.max(...times)))}`
+                        }
 
                         return (
                             <React.Fragment key={group.phase}>
@@ -272,7 +328,7 @@ const Sidebar = React.memo(function Sidebar({
                                     onClick={() => togglePhase(group.phase)}
                                 >
                                     {isCollapsed ? <ExpandMoreRoundedIcon sx={{ fontSize: '0.9rem' }} /> : <ExpandLessRoundedIcon sx={{ fontSize: '0.9rem' }} />}
-                                    <Box component="span" sx={{ flex: 1 }}>{group.phase}</Box>
+                                    <Box component="span" sx={{ flex: 1 }}>{group.phase}{weekRange ? ` · ${weekRange}` : ''}</Box>
                                     <Box component="span" sx={{ fontWeight: 600, opacity: 0.85 }}>{phaseCompleted}/{phaseTotal}</Box>
                                 </Box>
                                 {!isCollapsed && group.days.map((day) => {
@@ -280,6 +336,9 @@ const Sidebar = React.memo(function Sidebar({
                                     const completedCount = day.tasks.filter((t) => isTaskCompleted(t.id)).length
                                     const totalCount = day.tasks.length
                                     const allDone = completedCount === totalCount && totalCount > 0
+
+                                    // Real campaign date for this day (matches the calendar + week title).
+                                    const dayDate = startDate ? getCampaignDate(startDate, day.dayIndex, day.calendarDayOffset) : null
 
                                     return (
                                         <Box
@@ -292,7 +351,7 @@ const Sidebar = React.memo(function Sidebar({
                                                 <CheckCircleRoundedIcon sx={{ fontSize: '0.9rem', color: 'success.main' }} />
                                             ) : (
                                                 <Typography sx={styles.dayNumber}>
-                                                    {startDate ? formatShortDate(getCampaignDate(startDate, day.dayIndex, day.calendarDayOffset)) : day.dayIndex + 1}
+                                                    {dayDate ? formatShortDate(dayDate) : day.dayIndex + 1}
                                                 </Typography>
                                             )}
                                             <Box sx={{ flex: 1, minWidth: 0 }}>
@@ -330,7 +389,55 @@ const Sidebar = React.memo(function Sidebar({
                         )
                     })}
                 </Box>
+                </>
             )}
+
+            <Box
+                sx={{
+                    p: 1.5,
+                    borderTop: (t) => `1px solid ${t.palette.divider}`,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 1
+                }}
+            >
+                <Tooltip title="Настройки">
+                    <IconButton onClick={onOpenSettings} size="small" sx={{ color: 'text.secondary' }}>
+                        <SettingsRoundedIcon fontSize="small" />
+                    </IconButton>
+                </Tooltip>
+                <Typography sx={{ flex: 1, fontSize: '0.8rem', fontWeight: 600, color: 'text.secondary', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    {currentUser.name}
+                </Typography>
+                <Button
+                    size="small"
+                    onClick={onLogout}
+                    startIcon={<LogoutRoundedIcon sx={{ fontSize: '0.9rem' }} />}
+                    sx={{ color: 'text.secondary', fontSize: '0.7rem', textTransform: 'none' }}
+                >
+                    Выйти
+                </Button>
+            </Box>
+            </Box>
+
+            <Box sx={{ position: 'absolute', top: 0, left: 0, bottom: 0, width: 56, display: 'flex', flexDirection: 'column', alignItems: 'center', py: 1, gap: 0.5, backgroundColor: 'background.default', opacity: railCollapsed ? 1 : 0, transition: 'opacity 180ms ease', pointerEvents: railCollapsed ? 'auto' : 'none' }}>
+                <Tooltip title="Развернуть" placement="right">
+                    <IconButton onClick={() => setRailCollapsed(false)} size="small" sx={{ color: 'text.secondary' }}>
+                        <KeyboardDoubleArrowRightRoundedIcon fontSize="small" />
+                    </IconButton>
+                </Tooltip>
+                <Box sx={{ height: 8 }} />
+                {railNav(OVERVIEW_INDEX, InfoOutlinedIcon, 'Overview')}
+                {railNav(SOURCES_INDEX, TableChartRoundedIcon, 'Sources')}
+                {railNav(PLAYBOOK_INDEX, MenuBookRoundedIcon, 'Playbook')}
+                {railNav(DASHBOARD_INDEX, BarChartRoundedIcon, 'Dashboard')}
+                <Box sx={{ flex: 1 }} />
+                <Tooltip title="Настройки" placement="right">
+                    <IconButton onClick={onOpenSettings} size="small" sx={{ color: 'text.secondary' }}>
+                        <SettingsRoundedIcon fontSize="small" />
+                    </IconButton>
+                </Tooltip>
+            </Box>
         </Box>
     )
 })

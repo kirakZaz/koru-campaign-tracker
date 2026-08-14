@@ -29,6 +29,12 @@ export const styles = {
         letterSpacing: '0.06em',
         textTransform: 'uppercase' as const
     },
+    pinnedNav: {
+        flexShrink: 0,
+        pt: 0,
+        pb: 0.5,
+        borderBottom: (theme: Theme) => `1px solid ${theme.palette.divider}`
+    },
     daysList: {
         flex: 1,
         overflow: 'auto',

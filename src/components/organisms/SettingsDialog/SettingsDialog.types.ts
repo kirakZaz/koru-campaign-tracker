@@ -7,4 +7,5 @@ export interface SettingsDialogProps {
     onSetStartDate: (date: string) => void
     team: TeamMember[]
     onSaveTeam: (team: TeamMember[]) => void
+    onChangePassword: (username: string, currentPassword: string, newPassword: string) => Promise<void>
 }

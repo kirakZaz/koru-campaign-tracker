@@ -14,6 +14,7 @@ import FormControl from '@mui/material/FormControl'
 import InputLabel from '@mui/material/InputLabel'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
+import Alert from '@mui/material/Alert'
 import { getCampaignDate, formatCampaignDate, getViewerTimezone, getTimezoneAbbr } from '@/utils/dateUtils'
 import { CAMPAIGN_DAYS } from '@/data/campaignData'
 import type { TeamMember, Assignee } from '@/data/campaignData.types'
@@ -44,6 +45,13 @@ const REMINDER_TIMES = [
     '09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00'
 ]
 
+// Maps a team member's display name to their login username.
+const USERNAME_BY_NAME: Record<string, string> = {
+    'Кира': 'kira',
+    'Настя': 'nastya',
+    'Макс': 'max'
+}
+
 const DEFAULT_TEAM: TeamMember[] = [
     { name: 'Кира', assigneeKey: 'Кира' as Assignee, email: '', timezone: 'Australia/Sydney', reminderTime: '09:00', remindersEnabled: false },
     { name: 'Настя', assigneeKey: 'Настя' as Assignee, email: '', timezone: 'Europe/Lisbon', reminderTime: '09:00', remindersEnabled: false },
@@ -56,13 +64,18 @@ const SettingsDialog = React.memo(function SettingsDialog({
     startDate,
     onSetStartDate,
     team,
-    onSaveTeam
+    onSaveTeam,
+    onChangePassword
 }: SettingsDialogProps) {
     const [activeTab, setActiveTab] = React.useState(0)
     const [dateValue, setDateValue] = React.useState(startDate ?? '')
     const [teamState, setTeamState] = React.useState<TeamMember[]>(
         team.length > 0 ? team : DEFAULT_TEAM
     )
+    const [passwords, setPasswords] = React.useState<Record<string, string>>({})
+    const [currentPasswords, setCurrentPasswords] = React.useState<Record<string, string>>({})
+    const [pwError, setPwError] = React.useState('')
+    const [saving, setSaving] = React.useState(false)
 
     React.useEffect(() => {
         setDateValue(startDate ?? '')
@@ -90,13 +103,55 @@ const SettingsDialog = React.memo(function SettingsDialog({
         })
     }, [])
 
-    const handleSave = React.useCallback(() => {
+    const handlePasswordChange = React.useCallback((name: string, value: string) => {
+        setPwError('')
+        setPasswords((prev) => ({ ...prev, [name]: value }))
+    }, [])
+
+    const handleCurrentPasswordChange = React.useCallback((name: string, value: string) => {
+        setPwError('')
+        setCurrentPasswords((prev) => ({ ...prev, [name]: value }))
+    }, [])
+
+    const handleSave = React.useCallback(async () => {
+        // Collect non-empty password changes for members that map to a login.
+        const pending = Object.entries(passwords)
+            .filter(([name, pw]) => pw.trim() && USERNAME_BY_NAME[name])
+            .map(([name, pw]) => ({
+                username: USERNAME_BY_NAME[name]!,
+                currentPassword: currentPasswords[name] ?? '',
+                newPassword: pw
+            }))
+
+        if (pending.some((p) => p.newPassword.length < 4)) {
+            setPwError('Новый пароль должен быть минимум 4 символа')
+            return
+        }
+        if (pending.some((p) => !p.currentPassword)) {
+            setPwError('Введи текущий пароль, чтобы сменить его')
+            return
+        }
+
+        setSaving(true)
+        try {
+            for (const p of pending) {
+                await onChangePassword(p.username, p.currentPassword, p.newPassword)
+            }
+        } catch {
+            setPwError('Текущий пароль неверный или смена не удалась.')
+            setSaving(false)
+            return
+        }
+
         if (dateValue) {
             onSetStartDate(dateValue)
         }
         onSaveTeam(teamState)
+        setPasswords({})
+        setCurrentPasswords({})
+        setSaving(false)
         onClose()
-    }, [dateValue, teamState, onSetStartDate, onSaveTeam, onClose])
+    }, [passwords, currentPasswords, dateValue, teamState, onChangePassword, onSetStartDate, onSaveTeam, onClose])
 
     const endDate = dateValue
         ? formatCampaignDate(getCampaignDate(dateValue, CAMPAIGN_DAYS[CAMPAIGN_DAYS.length - 1]!.dayIndex))
@@ -223,6 +278,33 @@ const SettingsDialog = React.memo(function SettingsDialog({
                             </Select>
                         </FormControl>
 
+                        {USERNAME_BY_NAME[member.name] && (
+                            <Box sx={{ mb: 2.5, p: 2, borderRadius: 2, border: '1px solid', borderColor: 'divider' }}>
+                                <Typography sx={{ fontWeight: 600, fontSize: '0.9rem', mb: 1.5 }}>
+                                    Смена пароля · логин {USERNAME_BY_NAME[member.name]}
+                                </Typography>
+                                <TextField
+                                    label="Текущий пароль"
+                                    type="password"
+                                    value={currentPasswords[member.name] ?? ''}
+                                    onChange={(e) => handleCurrentPasswordChange(member.name, e.target.value)}
+                                    fullWidth
+                                    sx={{ mb: 2 }}
+                                    autoComplete="current-password"
+                                />
+                                <TextField
+                                    label="Новый пароль"
+                                    type="password"
+                                    value={passwords[member.name] ?? ''}
+                                    onChange={(e) => handlePasswordChange(member.name, e.target.value)}
+                                    fullWidth
+                                    autoComplete="new-password"
+                                    placeholder="Оставь пустым чтобы не менять"
+                                    helperText="Минимум 4 символа. Нужен текущий пароль."
+                                />
+                            </Box>
+                        )}
+
                         <FormControl fullWidth sx={{ mb: 2.5 }}>
                             <InputLabel>Время напоминания</InputLabel>
                             <Select
@@ -271,12 +353,17 @@ const SettingsDialog = React.memo(function SettingsDialog({
                     </Box>
                 ))}
             </DialogContent>
+            {pwError && (
+                <Alert severity="error" sx={{ mx: 3, mb: 1 }}>
+                    {pwError}
+                </Alert>
+            )}
             <DialogActions sx={{ px: 3, pb: 2 }}>
-                <Button onClick={onClose} color="inherit">
+                <Button onClick={onClose} color="inherit" disabled={saving}>
                     Отмена
                 </Button>
-                <Button onClick={handleSave} variant="contained">
-                    Сохранить
+                <Button onClick={handleSave} variant="contained" disabled={saving}>
+                    {saving ? 'Сохранение…' : 'Сохранить'}
                 </Button>
             </DialogActions>
         </Dialog>
