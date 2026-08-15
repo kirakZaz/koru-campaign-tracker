@@ -4,6 +4,7 @@ import TextField from '@mui/material/TextField'
 import IconButton from '@mui/material/IconButton'
 import Chip from '@mui/material/Chip'
 import Tooltip from '@mui/material/Tooltip'
+import LockRoundedIcon from '@mui/icons-material/LockRounded'
 import InputAdornment from '@mui/material/InputAdornment'
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded'
 import VisibilityRoundedIcon from '@mui/icons-material/VisibilityRounded'
@@ -35,7 +36,12 @@ export default function ArchiveTab({
         : reviewed
 
     const columns: GridColDef<ShortlistPerson>[] = [
-        { field: 'name', headerName: 'Имя', width: 160, renderCell: p => <Box sx={{ fontWeight: 600 }}>{p.row.name || '—'}</Box> },
+        { field: 'name', headerName: 'Имя', width: 170, renderCell: p => (
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, fontWeight: 600, minWidth: 0 }}>
+                {p.row.cantDm && <Tooltip title="Premium — нельзя написать"><LockRoundedIcon sx={{ fontSize: '0.9rem', color: '#f85149', flexShrink: 0 }} /></Tooltip>}
+                <Box component="span" sx={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{p.row.name || '—'}</Box>
+            </Box>
+        ) },
         {
             field: 'priority', headerName: 'Priority', width: 90, renderCell: p => {
                 const prColor = p.row.priority === 'A' ? '#3fb68e' : p.row.priority === 'B' ? '#d29922' : '#8b949e'
