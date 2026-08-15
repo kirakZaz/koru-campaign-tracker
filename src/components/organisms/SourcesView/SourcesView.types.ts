@@ -17,6 +17,8 @@ export interface SourcePerson {
     source: string
     status: PersonStatus
     notes: string
+    /** Premium-locked: can't DM / add a CR note (LinkedIn blocks it for free accounts). */
+    cantDm?: boolean
     createdAt?: string
 }
 
@@ -87,6 +89,8 @@ export interface ShortlistPerson {
     agreedToTest?: boolean
     loggedIn?: boolean
     feedbackReceived?: boolean
+    /** Premium-locked: can't DM / add a CR note (their LinkedIn blocks it for free accounts). */
+    cantDm?: boolean
     history?: HistoryEntry[]
     createdAt?: string
     /** Archived ("проверен"): kept out of the active Outreach list, shown read-only

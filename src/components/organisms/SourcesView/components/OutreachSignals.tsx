@@ -11,6 +11,7 @@ import ImageRoundedIcon from '@mui/icons-material/ImageRounded'
 import ScienceRoundedIcon from '@mui/icons-material/ScienceRounded'
 import LoginRoundedIcon from '@mui/icons-material/LoginRounded'
 import StarRoundedIcon from '@mui/icons-material/StarRounded'
+import LockRoundedIcon from '@mui/icons-material/LockRounded'
 
 import type { ShortlistPerson } from '../SourcesView.types'
 
@@ -37,12 +38,19 @@ export default function OutreachSignals({ person }: { person: ShortlistPerson })
     ]
 
     const active = signals.filter(s => s.on)
-    if (active.length === 0) {
+    if (active.length === 0 && !person.cantDm) {
         return <Box component="span" sx={{ color: 'text.disabled', fontSize: '0.75rem' }}>—</Box>
     }
 
     return (
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, flexWrap: 'wrap' }}>
+            {person.cantDm && (
+                <Tooltip title="Premium — нельзя написать (нет DM / ноты к запросу)">
+                    <Box component="span" sx={{ display: 'inline-flex', alignItems: 'center', px: 0.4, height: 18, borderRadius: 0.75, backgroundColor: '#f85149', color: '#fff' }}>
+                        <LockRoundedIcon sx={{ fontSize: '0.8rem' }} />
+                    </Box>
+                </Tooltip>
+            )}
             {active.map(({ key, label, color, Icon }) => (
                 <Tooltip key={key} title={label}>
                     <Box component="span" sx={{ display: 'inline-flex', color }}>

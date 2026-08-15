@@ -103,7 +103,8 @@ const content = {
                 'Industry words, not buzzwords. Say "GEO score," "intent classification," "citation-worthy claims." Never say "leverage" or "synergy."',
                 'Ask questions in posts. "Do you know if AI engines cite your content?" gets more replies than "Our tool monitors AI."',
                 'In comments: add something useful. A stat about AI Overviews. A question about their workflow. Never "Great post! Check out KORU."',
-                'About competitors: be straight. "They have more data on classical SEO. We measure AI-citation readiness too — and they don\'t." People respect that.'
+                'About competitors: be straight. "They have more data on classical SEO. We measure AI-citation readiness too — and they don\'t." People respect that.',
+                'Premium-locked prospects (🔒 in the table): if LinkedIn won\'t let you add a note or DM them, send a plain connection request (no note) and message once they accept — or warm them up by commenting on their posts first, or reach them via their site/email. True InMail-to-strangers needs Premium/Sales Navigator (there\'s a free 1-month trial).'
             ]
         },
     },
@@ -202,7 +203,8 @@ const content = {
                 'Слова из индустрии, не из маркетинга. «GEO score,» «intent classification,» «citation-worthy claims.» Никогда «синергия.»',
                 'В постах задавай вопросы. «Знаете ли вы, цитирует ли AI ваш контент?» цепляет больше, чем «Наш инструмент мониторит AI.»',
                 'В комментариях — дай что-то полезное. Факт про AI Overviews. Вопрос про их workflow. Никогда «Классный пост! Попробуй KORU.»',
-                'Про конкурентов — прямо. «У них больше данных по классическому SEO. Мы ещё измеряем AI-цитируемость — а они нет.» Люди это уважают.'
+                'Про конкурентов — прямо. «У них больше данных по классическому SEO. Мы ещё измеряем AI-цитируемость — а они нет.» Люди это уважают.',
+                'Заблокированные Premium-ом (🔒 в таблице): если LinkedIn не даёт добавить ноту или написать DM — шли пустой запрос (без ноты) и пиши после принятия; либо сначала прогрей комментами под их постами; либо через сайт/почту. Полный InMail незнакомцам — только с Premium/Sales Navigator (есть бесплатный триал на месяц).'
             ]
         },
     }

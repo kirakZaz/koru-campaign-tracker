@@ -15,6 +15,7 @@ import ContentCopyRoundedIcon from '@mui/icons-material/ContentCopyRounded'
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded'
 import ArchiveRoundedIcon from '@mui/icons-material/ArchiveRounded'
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded'
+import LockRoundedIcon from '@mui/icons-material/LockRounded'
 
 import { ICP_LABELS, SHORTLIST_ACTION_LABELS } from '../sources.constants'
 import { getNextAction } from '../sources.utils'
@@ -167,6 +168,27 @@ export default function PersonModal({
                             Источник: {person.source}
                         </Typography>
                     )}
+                </Box>
+
+                {/* Premium / can't-DM flag */}
+                <Box sx={{ mx: 2.5, mb: 2 }}>
+                    <Button
+                        fullWidth
+                        variant={person.cantDm ? 'contained' : 'outlined'}
+                        startIcon={<LockRoundedIcon sx={{ fontSize: '1rem' }} />}
+                        onClick={readOnly ? undefined : () => updateShortlistPerson(person.id, { cantDm: !person.cantDm })}
+                        disableElevation
+                        sx={{
+                            textTransform: 'none',
+                            fontWeight: 700,
+                            fontSize: '0.8rem',
+                            ...(person.cantDm
+                                ? { backgroundColor: '#f85149', color: '#fff', '&:hover': { backgroundColor: '#e5484d' } }
+                                : { color: '#f85149', borderColor: '#f85149', '&:hover': { borderColor: '#e5484d', backgroundColor: '#f8514912' } })
+                        }}
+                    >
+                        {person.cantDm ? 'Premium — нельзя написать (снять флаг)' : 'Отметить: Premium — нельзя написать'}
+                    </Button>
                 </Box>
 
                 {/* Next action block */}
