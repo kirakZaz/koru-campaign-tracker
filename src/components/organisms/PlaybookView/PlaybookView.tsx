@@ -7,18 +7,6 @@ const titleSx = { fontSize: '1.1rem', fontWeight: 700, color: 'text.primary', mb
 const subtitleSx = { fontSize: '0.95rem', fontWeight: 600, color: 'text.primary', mb: 1, mt: 2.5 }
 const textSx = { fontSize: '0.85rem', color: 'text.secondary', lineHeight: 1.7, mb: 1 }
 const listSx = { fontSize: '0.85rem', color: 'text.secondary', lineHeight: 1.7, pl: 2, mb: 1 }
-const chipSx = (color: string) => ({
-    display: 'inline-block',
-    fontSize: '0.7rem',
-    fontWeight: 700,
-    px: 1,
-    py: 0.2,
-    borderRadius: 1,
-    backgroundColor: color + '22',
-    color,
-    border: `1px solid ${color}44`,
-    mr: 0.5
-})
 const tableCellSx = { fontSize: '0.8rem', py: 1.25, px: 1.5, borderColor: 'divider', verticalAlign: 'top' as const }
 const tableHeadSx = { ...tableCellSx, fontWeight: 700, color: 'text.secondary', fontSize: '0.7rem', textTransform: 'uppercase' as const, backgroundColor: '#ffffff06' }
 const templateBoxSx = { backgroundColor: '#ffffff06', borderRadius: 1, p: 2, mb: 2 }
@@ -31,171 +19,140 @@ export default function PlaybookView() {
                 Playbook
             </Typography>
             <Typography sx={{ fontSize: '0.85rem', color: 'text.secondary', mb: 3 }}>
-                Новый круг: прогнать проверку по компании → послать ей её же результат в личку → дожать. Всё remote, без звонков.
+                Как мы набираем тестеров: недельный круг, тёплый заход, активация. Цель — 15 активных тестеров к релизу 10.10. Всё remote, без звонков. Активация важнее набора.
             </Typography>
 
             <Divider sx={{ mb: 3 }} />
 
-            {/* SECTION 1: Loop */}
+            {/* 1. Weekly loop */}
             <Box sx={sectionSx}>
-                <Typography sx={titleSx}>1. Круг: от «незнакомец» до «клиент»</Typography>
-                <Typography sx={textSx}>
-                    Ты не ждёшь, пока люди придут. Берёшь конкретные компании из базы, прогоняешь их сайт через проверку и присылаешь им их же результат. Никого не волнует твоя платформа — всех волнует их собственный результат.
-                </Typography>
-
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, my: 2, alignItems: 'center' }}>
-                    {[
-                        { label: 'В базе', color: '#8b949e', desc: 'Компания из Sources → Люди' },
-                        { label: '→', color: '#8b949e' },
-                        { label: 'Прогнал', color: '#6c8eff', desc: 'Citation Gap по их сайту' },
-                        { label: '→', color: '#8b949e' },
-                        { label: 'Послал', color: '#d29922', desc: 'Результат в личку LinkedIn' },
-                        { label: '→', color: '#8b949e' },
-                        { label: 'Ответил', color: '#3fb68e', desc: 'Заинтересовался' },
-                        { label: '→', color: '#8b949e' },
-                        { label: 'Дожал', color: '#a371f7', desc: 'Полный разбор, async' },
-                        { label: '→', color: '#8b949e' },
-                        { label: 'Клиент', color: '#3fb68e', desc: 'Зарегался / платит' },
-                    ].map((item, i) => item.label === '→' ? (
-                        <Typography key={i} sx={{ color: '#8b949e', fontSize: '0.8rem' }}>→</Typography>
-                    ) : (
-                        <Box key={i} sx={{ textAlign: 'center' }}>
-                            <Box sx={chipSx(item.color)}>{item.label}</Box>
-                            {item.desc && <Typography sx={{ fontSize: '0.6rem', color: 'text.secondary', mt: 0.3, maxWidth: 90 }}>{item.desc}</Typography>}
-                        </Box>
-                    ))}
-                </Box>
-            </Box>
-
-            {/* SECTION 2: What to do at each stage */}
-            <Box sx={sectionSx}>
-                <Typography sx={titleSx}>2. Что делать на каждой стадии</Typography>
-
+                <Typography sx={titleSx}>1. Недельный круг (один оборот лид-машины)</Typography>
                 <Box component="table" sx={{ width: '100%', borderCollapse: 'collapse', border: '1px solid', borderColor: 'divider' }}>
-                    <Box component="thead">
-                        <Box component="tr">
-                            <Box component="th" sx={tableHeadSx}>Стадия</Box>
-                            <Box component="th" sx={tableHeadSx}>Что делать</Box>
-                            <Box component="th" sx={tableHeadSx}>Пример</Box>
-                        </Box>
-                    </Box>
+                    <Box component="thead"><Box component="tr">
+                        <Box component="th" sx={tableHeadSx}>День</Box>
+                        <Box component="th" sx={tableHeadSx}>Что делаешь</Box>
+                    </Box></Box>
                     <Box component="tbody">
                         <Box component="tr">
-                            <Box component="td" sx={tableCellSx}><Box sx={chipSx('#8b949e')}>В базе</Box> → <Box sx={chipSx('#6c8eff')}>Прогнал</Box></Box>
-                            <Box component="td" sx={tableCellSx}>
-                                <strong>Взять 10 компаний</strong> (агентства / B2B, чьи клиенты могут спрашивать про ChatGPT). В своём аккаунте KORU прогнать их сайт через Citation Gap. Сохранить скриншот. Отметить в Outreach: «Прогнал».
-                            </Box>
-                            <Box component="td" sx={tableCellSx}>Sources → Люди → взять 10 → прогнать в KORU → скрин в Outreach</Box>
+                            <Box component="td" sx={tableCellSx}><strong>Пн — Интейк</strong></Box>
+                            <Box component="td" sx={tableCellSx}>Берёшь 6-8 из Sources → Люди (агентства/фрилансеры с клиентами), записываешь в интейк-задачу и в Outreach. Отправляешь заходы (CR).</Box>
                         </Box>
                         <Box component="tr">
-                            <Box component="td" sx={tableCellSx}><Box sx={chipSx('#6c8eff')}>Прогнал</Box> → <Box sx={chipSx('#d29922')}>Послал</Box></Box>
-                            <Box component="td" sx={tableCellSx}>
-                                <strong>Написать в личку LinkedIn</strong> их результат + скриншот. Не питч — их данные. Имейл не нужен. Отметить в Outreach: «Послал».
-                            </Box>
-                            <Box component="td" sx={tableCellSx}>"I ran your site — AI recommends [competitors], not you. Want the full breakdown + what to fix?"</Box>
+                            <Box component="td" sx={tableCellSx}><strong>Вт — Пост + проверка</strong></Box>
+                            <Box component="td" sx={tableCellSx}>Пост №1 (текст + реальный скрин) + репост на Company Page. Проходишь по Outreach, обновляешь статусы.</Box>
                         </Box>
                         <Box component="tr">
-                            <Box component="td" sx={tableCellSx}><Box sx={chipSx('#d29922')}>Послал</Box> → <Box sx={chipSx('#3fb68e')}>Ответил</Box></Box>
-                            <Box component="td" sx={tableCellSx}>
-                                <strong>Кто ответил</strong> — ответить содержательно, предложить полный разбор. Без звонков — предложить прислать текстом/видео.
-                            </Box>
-                            <Box component="td" sx={tableCellSx}>"Happy to send it over — the pages that got cited share a few things yours doesn't."</Box>
+                            <Box component="td" sx={tableCellSx}><strong>Ср — Контакт</strong></Box>
+                            <Box component="td" sx={tableCellSx}>5 диалогов. Хук «челлендж одного клиента» — про их работу, не про продукт.</Box>
                         </Box>
                         <Box component="tr">
-                            <Box component="td" sx={tableCellSx}><Box sx={chipSx('#3fb68e')}>Ответил</Box> → <Box sx={chipSx('#a371f7')}>Дожал</Box></Box>
-                            <Box component="td" sx={tableCellSx}>
-                                <strong>Дожать асинхронно.</strong> Прислать полный отчёт текстом ИЛИ короткое записанное видео экрана ИЛИ ссылку попробовать самим. <strong>Никаких живых звонков.</strong>
-                            </Box>
-                            <Box component="td" sx={tableCellSx}>"Recorded a 3-min walkthrough of your result — [link]. No call needed."</Box>
+                            <Box component="td" sx={tableCellSx}><strong>Чт — Активация</strong></Box>
+                            <Box component="td" sx={tableCellSx}>Довести ответивших до первого действия → оффер tester plan. Реанимация мёртвых. Пост №2.</Box>
                         </Box>
                         <Box component="tr">
-                            <Box component="td" sx={tableCellSx}><Box sx={chipSx('#a371f7')}>Дожал</Box> → <Box sx={chipSx('#3fb68e')}>Клиент</Box></Box>
-                            <Box component="td" sx={tableCellSx}>
-                                <strong>Довести до регистрации/оплаты.</strong> Дать ссылку попробовать полную проверку самим. Первые вопросы бесплатны.
-                            </Box>
-                            <Box component="td" sx={tableCellSx}>"You can run the full check yourself here — [link]. First questions are free."</Box>
+                            <Box component="td" sx={tableCellSx}><strong>Пт — Разбор</strong></Box>
+                            <Box component="td" sx={tableCellSx}>Воронка в Dashboard, выводы в Insights, список на следующий Пн.</Box>
                         </Box>
                     </Box>
                 </Box>
             </Box>
 
-            {/* SECTION 3: How to write the result message */}
+            {/* 2. LinkedIn note limit */}
             <Box sx={sectionSx}>
-                <Typography sx={titleSx}>3. Как писать письмо-результат</Typography>
-
-                <Typography sx={subtitleSx}>Правила</Typography>
+                <Typography sx={titleSx}>2. LinkedIn: лимит нот и как обходить</Typography>
+                <Typography sx={textSx}>
+                    Free-аккаунт = <strong>~5 персональных нот к запросам в месяц</strong>. Дальше запросы уходят только без ноты. Лимит месячный, сбрасывается в начале месяца. Обход:
+                </Typography>
                 <Box component="ul" sx={listSx}>
-                    <li>Веди <strong>их результатом</strong>, а не своей платформой. «Прогнала ваш сайт — вот что нашла».</li>
-                    <li>Конкретика: назови 2-3 конкурентов, которых цитирует ИИ, и что у них есть, чего нет у них.</li>
-                    <li><strong>Никаких звонков.</strong> Всё remote: текст, записанное видео, ссылка.</li>
-                    <li>Коротко. Один результат + одно предложение помочь. Не простыня.</li>
-                    <li>Пиши в LinkedIn — имейл тебе не нужен.</li>
+                    <li><strong>Пустой запрос (главное).</strong> Лимит на ноты ≠ лимит на коннекты. Пустой запрос уходит нормально и часто принимают даже лучше. Приняли → пишешь в DM.</li>
+                    <li><strong>Сначала прогрев.</strong> Пару дней комментируй их посты → узнают → пустой запрос принимают охотнее.</li>
+                    <li><strong>Ноты — только на топ.</strong> 5/мес береги для самых важных, где нота реально решает.</li>
+                    <li><strong>Мимо LinkedIn.</strong> У владельцев агентств есть контакт на сайте / почта.</li>
+                    <li><strong>Premium/Sales Navigator</strong> — безлимит нот + InMail незнакомцам. Есть бесплатный триал на месяц (взять под спринт, потом отменить).</li>
                 </Box>
             </Box>
 
-            {/* SECTION 4: Templates */}
+            {/* 3. Premium-locked */}
             <Box sx={sectionSx}>
-                <Typography sx={titleSx}>4. Шаблоны</Typography>
+                <Typography sx={titleSx}>3. Premium-заблокированные (🔒)</Typography>
+                <Typography sx={textSx}>
+                    Некоторым LinkedIn не даёт добавить ноту или написать DM. Помечай их 🔒 в карточке/таблице и веди иначе:
+                </Typography>
+                <Box component="ul" sx={listSx}>
+                    <li>Пустой запрос + прогрев комментами → пиши после принятия.</li>
+                    <li>Или сразу через сайт/почту.</li>
+                    <li>InMail незнакомцу — только с Premium.</li>
+                </Box>
+            </Box>
 
-                <Typography sx={subtitleSx}>Письмо-результат (первое касание)</Typography>
+            {/* 4. How to reach out */}
+            <Box sx={sectionSx}>
+                <Typography sx={titleSx}>4. Как заходить</Typography>
+                <Typography sx={textSx}>
+                    Основной режим сейчас — <strong>пустой запрос</strong> (ноты береги). После принятия — короткий first-DM про их работу, не питч. Хук — «челлендж одного клиента»: пусть выберут клиента, ты покажешь, кого AI цитирует вместо него.
+                </Typography>
+
+                <Typography sx={subtitleSx}>Нота к запросу (когда есть лимит / на топ)</Typography>
                 <Box sx={templateBoxSx}>
                     <Typography sx={templateTextSx}>
-                        {`Hi [Name], I ran your site through an AI-search check — asked ChatGPT and Gemini a question your buyers ask, and looked at who they recommend.
-
-They named [Competitor A], [Competitor B] and a few others. [their brand] wasn't in the answer.
-
-The pages that got cited have a few things yours doesn't. Happy to send you the full breakdown + what to change. Want it?`}
+                        {`Hi {name} — came across your work with {agency/clients}. I dig into how AI engines (ChatGPT, Gemini, Claude, Grok) decide which pages to cite, and your niche keeps coming up. Would be glad to connect.`}
                     </Typography>
                 </Box>
 
-                <Typography sx={subtitleSx}>Не ответил — follow-up (через 3-4 дня)</Typography>
+                <Typography sx={subtitleSx}>Хук после принятия — челлендж одного клиента</Typography>
                 <Box sx={templateBoxSx}>
                     <Typography sx={templateTextSx}>
-                        {`Hi [Name], following up on the AI-search result I ran for [their brand].
-
-Quick recap: ChatGPT and Gemini recommend [competitors] for [their niche] — [their brand] isn't in the answer yet.
-
-Want the full breakdown of why, and the 3 things to change? Just say the word.`}
-                    </Typography>
-                </Box>
-
-                <Typography sx={subtitleSx}>Ответил с интересом — дожать (async, без звонков)</Typography>
-                <Box sx={templateBoxSx}>
-                    <Typography sx={templateTextSx}>
-                        {`Great — here's the full result for [their brand].
-
-I recorded a short screen walkthrough so you can see it without a call: [link].
-
-The 3 quickest wins are [X, Y, Z]. You can also run the full check yourself here: [link]. Happy to answer anything by message.`}
-                    </Typography>
-                </Box>
-
-                <Typography sx={subtitleSx}>Формат поста-находки (с личной страницы)</Typography>
-                <Box sx={templateBoxSx}>
-                    <Typography sx={templateTextSx}>
-                        {`I checked [N] [niche] websites for AI-search visibility.
-
-Asked ChatGPT & Gemini what buyers actually ask — here's who the AI recommends, and who's invisible:
-
-[3-5 строк: кого называют часто / кого нет]
-
-The cited ones share [1-2 concrete things]. The invisible ones don't.
-
-Want to see where your site lands? [ссылка на проверялку, когда будет]`}
+                        {`Quick one, {name}. Pick one client (or a prospect you're pitching) and I'll run their top page through KORU — you'll get a GEO score and the single biggest reason AI engines skip it, plus who they cite instead. Something you can take straight to that client. Want me to, or want to run it yourself? I'll send access.`}
                     </Typography>
                 </Box>
             </Box>
 
-            {/* SECTION 5: What NOT to do */}
+            {/* 5. Activation */}
             <Box sx={sectionSx}>
-                <Typography sx={titleSx}>5. Чего НЕ делать</Typography>
+                <Typography sx={titleSx}>5. Активация тестеров (главная проблема)</Typography>
+                <Typography sx={textSx}>
+                    Согласиться — не значит пользоваться. Мёртвый тестер = не тот ICP или продукт дали «пустым». Лечим <strong>поводом</strong>, а не напоминанием верифнуть.
+                </Typography>
                 <Box component="ul" sx={listSx}>
-                    <li>Не звать на созвон или демо — всё асинхронно.</li>
-                    <li>Не питчить платформу — вести результатом человека.</li>
-                    <li>Не постить «у нас есть фича» — постить находки.</li>
-                    <li>Не ждать входящих — идти к конкретным людям самой.</li>
-                    <li>Не мерить показы — мерить ответы, прогоны и регистрации.</li>
+                    <li><strong>Первое действие</strong> важнее подписки: доведи до запуска <strong>одной клиентской страницы</strong> (прямая ссылка на вход).</li>
+                    <li>Сделал → оффер <strong>tester plan</strong> (месяц free, дальше по вкладу: фидбек / баг / реферал).</li>
+                    <li><strong>Реанимация:</strong> не проси «залогинься» — дай повод (их же челлендж + прямая ссылка). Молчит 2 дня → 2-мин Loom по их кейсу.</li>
                 </Box>
+            </Box>
+
+            {/* 6. Competitors */}
+            <Box sx={sectionSx}>
+                <Typography sx={titleSx}>6. Конкуренты — не тратим циклы</Typography>
+                <Typography sx={textSx}>
+                    Фаундеры AI-visibility сервисов (Verticality, Profound-подобные) — не тестеры и не платящие. Не пишем как лидам. В карточке жми <strong>«→ В конкуренты»</strong> — уйдёт из People/Outreach в таблицу Конкуренты.
+                </Typography>
+            </Box>
+
+            {/* 7. Messaging guard rails */}
+            <Box sx={sectionSx}>
+                <Typography sx={titleSx}>7. Что говорим / чего НЕ говорим</Typography>
+                <Typography sx={subtitleSx}>Говорим</Typography>
+                <Box component="ul" sx={listSx}>
+                    <li>Их результатом, не платформой. «Вот кого AI цитирует вместо твоего клиента».</li>
+                    <li>Цифры: 48% поисков — AI Overviews; только 38% AI-цитируемых в топ-10 Google.</li>
+                    <li>4 движка: ChatGPT, Gemini, Claude, Grok — на живом веб-поиске.</li>
+                    <li>Per-page диагностика + пайплайн (находка → задача). Бесплатный старт, полный стек от $19.</li>
+                </Box>
+                <Typography sx={subtitleSx}>НЕ говорим</Typography>
+                <Box component="ul" sx={listSx}>
+                    <li>«Никто не делает» / «мы первые» — GEO-рынок существует (Profound, Goodie, Otterly…).</li>
+                    <li>«5 минут», «готовые статьи», «в один клик — всё готово».</li>
+                    <li>Не упоминаем Perplexity как то, что мы проверяем.</li>
+                    <li>Не зовём на звонки/демо — всё async (текст / Loom / ссылка).</li>
+                </Box>
+            </Box>
+
+            {/* 8. Metrics */}
+            <Box sx={sectionSx}>
+                <Typography sx={titleSx}>8. Метрики</Typography>
+                <Typography sx={textSx}>
+                    Смотрим на разговоры, первые действия и <strong>активных тестеров</strong> — НЕ на показы постов. Воронка: Нашёл → CR → Ответ → Первое действие → Активный. Цель — 15 активных к 10.10.
+                </Typography>
             </Box>
         </Box>
     )

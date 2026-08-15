@@ -18,6 +18,7 @@ import MenuItem from '@mui/material/MenuItem'
 import DeleteOutlineRoundedIcon from '@mui/icons-material/DeleteOutlineRounded'
 import TextField from '@mui/material/TextField'
 import AssigneeChip from '@/components/atoms/AssigneeChip/AssigneeChip'
+import { PLAYBOOK_INDEX } from '@/App'
 import type { TaskCardProps } from './TaskCard.types'
 import { styles } from './TaskCard.styles'
 
@@ -126,6 +127,15 @@ const TaskCard = React.memo(function TaskCard({ task, isTaskCompleted, onToggleT
                     <Box sx={styles.chips}>
                         <AssigneeChip assignee={task.assignee} />
                         <Box component="span" sx={styles.estimate}>{task.estimate}</Box>
+                        <Box
+                            component="a"
+                            href={`#${PLAYBOOK_INDEX}`}
+                            onClick={(e) => e.stopPropagation()}
+                            title="Как это делать — открыть Playbook"
+                            sx={{ fontSize: '0.7rem', fontWeight: 600, color: '#6c8eff', textDecoration: 'none', '&:hover': { textDecoration: 'underline' } }}
+                        >
+                            📖 Playbook
+                        </Box>
                         {totalSubtasks > 0 && (
                             <Box component="span" sx={styles.progressText}>
                                 {completedSubtasks}/{totalSubtasks}
