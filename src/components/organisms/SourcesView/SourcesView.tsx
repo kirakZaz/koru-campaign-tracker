@@ -54,7 +54,7 @@ import {
     NEXT_ACTION_LABELS,
     DEFAULT_COUNTRIES,
 } from './sources.constants'
-import { generateId, isWithinLastWeek, getAutoActions, movePersonToCompetitors, personToMoveOpts, type MoveToCompetitorOpts } from './sources.utils'
+import { generateId, isWithinLastWeek, getAutoActions, movePersonToCompetitors, personToMoveOpts, sourcePersonToShortlistView, PEOPLE_EDIT_KEYS, type MoveToCompetitorOpts } from './sources.utils'
 
 export default function SourcesView({ sources, onSaveSources, startDate, initialTab }: SourcesViewProps) {
     const [tab, setTab] = React.useState(initialTab ?? 0)
@@ -69,6 +69,8 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
     const [_copiedId, setCopiedId] = React.useState<string | null>(null)
     const [modalPersonId, setModalPersonId] = React.useState<string | null>(null)
     const [viewPerson, setViewPerson] = React.useState<ShortlistPerson | null>(null)
+    // People card is editable; the Архив card stays read-only.
+    const [viewEditable, setViewEditable] = React.useState(false)
     const [selectedPeopleIds, setSelectedPeopleIds] = React.useState<Set<string>>(new Set())
     const [addBestDialogOpen, setAddBestDialogOpen] = React.useState(false)
     const [bestPickIds, setBestPickIds] = React.useState<Set<string>>(new Set())
@@ -282,15 +284,9 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
 
     // Open the read-only card for a People row: show its outreach record if it has one,
     // otherwise a minimal view synthesized from the People fields.
-    const openReadOnlyForPerson = (person: SourcePerson) => {
-        const record = shortlistRecordFor(person)
-        setViewPerson(record ?? {
-            id: person.id, batch: '', name: person.name, linkedinUrl: person.linkedinUrl,
-            country: person.country, icpSegment: person.icpSegment, priority: person.priority,
-            dmStatus: 'not_sent', connectionStatus: 'not_sent', source: person.source,
-            status: person.status, notes: person.notes, actions: [], completedActions: [],
-            history: [], createdAt: person.createdAt,
-        })
+    const openPersonCard = (person: SourcePerson) => {
+        setViewPerson(shortlistRecordFor(person) ?? sourcePersonToShortlistView(person))
+        setViewEditable(true)
     }
 
     // --- History helpers ---
@@ -537,7 +533,7 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
                     setDeleteConfirm={setDeleteConfirm}
                     isInShortlist={isInShortlist}
                     isReviewed={isReviewed}
-                    openReadOnly={openReadOnlyForPerson}
+                    openReadOnly={openPersonCard}
                     addPeopleToOutreach={addPeopleToOutreach}
                     addPerson={addPerson}
                     updatePerson={updatePerson}
@@ -625,7 +621,7 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
                     reviewed={reviewedList}
                     searchQuery={searchQuery}
                     setSearchQuery={setSearchQuery}
-                    onView={setViewPerson}
+                    onView={(p) => { setViewPerson(p); setViewEditable(false) }}
                     onReturnToPeople={returnArchivedToPeople}
                     onDeleteCompletely={deleteArchivedCompletely}
                 />
@@ -752,22 +748,40 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
                 )
             })()}
 
-            {viewPerson && (
-                <PersonModal
-                    person={viewPerson}
-                    open={!!viewPerson}
-                    readOnly
-                    onClose={() => setViewPerson(null)}
-                    historyInput=""
-                    setHistoryInput={() => { /* read-only */ }}
-                    copyToClipboard={copyToClipboard}
-                    updateShortlistWithHistory={() => { /* read-only */ }}
-                    updateShortlistPerson={() => { /* read-only */ }}
-                    addHistory={() => { /* read-only */ }}
-                    onRemoveFromOutreach={() => { /* read-only */ }}
-                    onDeleteCompletely={() => { /* read-only */ }}
-                />
-            )}
+            {viewPerson && (() => {
+                const shortlistRec = local.shortlist.find(s => s.id === viewPerson.id)
+                const peopleRec = local.people.find(p => p.id === viewPerson.id)
+                const isPeople = !shortlistRec && !!peopleRec
+                // Re-derive live so edits show immediately (viewPerson is only the opening snapshot).
+                const person = shortlistRec ?? (peopleRec ? sourcePersonToShortlistView(peopleRec) : viewPerson)
+                const closeView = () => setViewPerson(null)
+                const update = (id: string, patch: Partial<ShortlistPerson>) => {
+                    if (isPeople) {
+                        const clean: Record<string, unknown> = {}
+                        for (const k of PEOPLE_EDIT_KEYS) if (k in patch) clean[k] = (patch as Record<string, unknown>)[k]
+                        if (Object.keys(clean).length) updatePerson(id, clean as Partial<SourcePerson>)
+                    } else {
+                        updateShortlistPerson(id, patch)
+                    }
+                }
+                return (
+                    <PersonModal
+                        person={person}
+                        open
+                        readOnly={!viewEditable}
+                        onClose={closeView}
+                        historyInput={historyInput}
+                        setHistoryInput={setHistoryInput}
+                        copyToClipboard={copyToClipboard}
+                        updateShortlistWithHistory={updateShortlistWithHistory}
+                        updateShortlistPerson={update}
+                        addHistory={addHistory}
+                        onRemoveFromOutreach={closeView}
+                        onDeleteCompletely={() => { if (isPeople) deletePerson(viewPerson.id); else deleteShortlistPerson(viewPerson.id); closeView() }}
+                        onMoveToCompetitors={() => { moveToCompetitors(personToMoveOpts(person)); closeView() }}
+                    />
+                )
+            })()}
 
             <Snackbar
                 open={!!snackbarMsg}

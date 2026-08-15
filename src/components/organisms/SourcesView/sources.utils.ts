@@ -1,6 +1,20 @@
 import { NEXT_ACTION_LABELS } from './sources.constants'
 
-import type { ShortlistPerson, IcpPriority, ShortlistAction, SourcesData, SourceCompetitor } from './SourcesView.types'
+import type { ShortlistPerson, IcpPriority, ShortlistAction, SourcesData, SourceCompetitor, SourcePerson } from './SourcesView.types'
+
+/** Fields that belong to a People record — used to keep People edits clean of funnel data. */
+export const PEOPLE_EDIT_KEYS = ['name', 'title', 'linkedinUrl', 'country', 'icpSegment', 'priority', 'activityLevel', 'source', 'status', 'notes', 'cantDm'] as const
+
+/** View a People record through the person-card (ShortlistPerson) shape. */
+export function sourcePersonToShortlistView(p: SourcePerson): ShortlistPerson {
+    return {
+        id: p.id, batch: '', name: p.name, linkedinUrl: p.linkedinUrl,
+        country: p.country, icpSegment: p.icpSegment, priority: p.priority,
+        dmStatus: 'not_sent', connectionStatus: 'not_sent', source: p.source,
+        status: p.status, notes: p.notes, actions: [], completedActions: [],
+        history: [], createdAt: p.createdAt, cantDm: p.cantDm
+    }
+}
 
 export function generateId() {
     return Date.now().toString(36) + Math.random().toString(36).slice(2, 7)
