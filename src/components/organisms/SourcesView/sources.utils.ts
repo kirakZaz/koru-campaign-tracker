@@ -1,9 +1,47 @@
 import { NEXT_ACTION_LABELS } from './sources.constants'
 
-import type { ShortlistPerson, IcpPriority, ShortlistAction } from './SourcesView.types'
+import type { ShortlistPerson, IcpPriority, ShortlistAction, SourcesData, SourceCompetitor } from './SourcesView.types'
 
 export function generateId() {
     return Date.now().toString(36) + Math.random().toString(36).slice(2, 7)
+}
+
+export interface MoveToCompetitorOpts {
+    name: string
+    linkedinUrl?: string
+    notes?: string
+    type?: string
+}
+
+/** Build move-to-competitor opts from either a People (title) or Outreach (source) record. */
+export function personToMoveOpts(p: { name: string, linkedinUrl?: string, notes?: string, title?: string, source?: string, icpSegment?: string }): MoveToCompetitorOpts {
+    return {
+        name: p.name,
+        linkedinUrl: p.linkedinUrl,
+        notes: [p.title || p.source, p.notes].filter(Boolean).join(' — '),
+        type: p.icpSegment
+    }
+}
+
+/** Pure: new SourcesData with the person turned into a competitor and dropped
+ *  from both people and shortlist (matched by LinkedIn URL or name). */
+export function movePersonToCompetitors(data: SourcesData, opts: MoveToCompetitorOpts): SourcesData {
+    const urlKey = (u?: string) => (u || '').replace(/\/$/, '').toLowerCase()
+    const nameKey = (n?: string) => (n || '').trim().toLowerCase()
+    const same = (x: { name?: string, linkedinUrl?: string }) =>
+        (!!urlKey(x.linkedinUrl) && urlKey(x.linkedinUrl) === urlKey(opts.linkedinUrl)) ||
+        (!!nameKey(x.name) && nameKey(x.name) === nameKey(opts.name))
+    const competitor: SourceCompetitor = {
+        id: generateId(), name: opts.name || '', url: '', type: opts.type || '', pricing: '',
+        features: '', missingVsKoru: '', linkedinPerson: opts.linkedinUrl || opts.name || '',
+        threatLevel: 'direct', notes: opts.notes || ''
+    }
+    return {
+        ...data,
+        competitors: [competitor, ...data.competitors],
+        people: data.people.filter(p => !same(p)),
+        shortlist: data.shortlist.filter(s => !same(s))
+    }
 }
 
 export function getNextAction(s: ShortlistPerson): { label: string, color: string } {

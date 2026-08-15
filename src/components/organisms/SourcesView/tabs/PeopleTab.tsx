@@ -11,6 +11,7 @@ import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded'
 import StarRoundedIcon from '@mui/icons-material/StarRounded'
 import VisibilityRoundedIcon from '@mui/icons-material/VisibilityRounded'
 import LockRoundedIcon from '@mui/icons-material/LockRounded'
+import CompareArrowsRoundedIcon from '@mui/icons-material/CompareArrowsRounded'
 import EditRoundedIcon from '@mui/icons-material/EditRounded'
 import OpenInNewRoundedIcon from '@mui/icons-material/OpenInNewRounded'
 import FilterAltOffRoundedIcon from '@mui/icons-material/FilterAltOffRounded'
@@ -50,6 +51,7 @@ interface PeopleTabProps {
     addPerson: () => void
     updatePerson: (id: string, patch: Partial<SourcePerson>) => void
     togglePersonShortlist: (person: SourcePerson) => void
+    moveToCompetitors: (person: SourcePerson) => void
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     uniqueVals: <T extends Record<string, any>>(items: T[], key: string) => string[]
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -62,7 +64,7 @@ export default function PeopleTab({
     local, save, searchQuery, setSearchQuery, filters, setFilter, clearFilters,
     selectedPeopleIds, setSelectedPeopleIds, countries,
     setCountriesDialogOpen, setSnackbarMsg, setDeleteConfirm, isInShortlist, isReviewed, openReadOnly,
-    addPeopleToOutreach, addPerson, updatePerson, togglePersonShortlist,
+    addPeopleToOutreach, addPerson, updatePerson, togglePersonShortlist, moveToCompetitors,
     uniqueVals, filtered, searched,
 }: PeopleTabProps) {
     const rows = searched(filtered(local.people as SourcePerson[]))
@@ -143,10 +145,13 @@ export default function PeopleTab({
         },
         { field: 'notes', headerName: 'Заметки', flex: 1, minWidth: 120, renderCell: p => editable(<InlineInput value={p.row.notes} onChange={v => updatePerson(p.row.id, { notes: v })} placeholder="..." />) },
         {
-            field: 'actions', headerName: '', width: 136, sortable: false, resizable: false, filterable: false, disableColumnMenu: true, renderCell: p => (
+            field: 'actions', headerName: '', width: 162, sortable: false, resizable: false, filterable: false, disableColumnMenu: true, renderCell: p => (
                 <Box sx={{ display: 'flex', gap: 0.25 }}>
                     <IconButton size="small" onClick={e => { e.stopPropagation(); updatePerson(p.row.id, { cantDm: !p.row.cantDm }) }} sx={{ color: p.row.cantDm ? '#f85149' : 'text.secondary', '&:hover': { color: '#f85149' } }} title={p.row.cantDm ? 'Premium — нельзя написать (снять)' : 'Отметить: Premium — нельзя написать'}>
                         <LockRoundedIcon sx={{ fontSize: '0.9rem' }} />
+                    </IconButton>
+                    <IconButton size="small" onClick={e => { e.stopPropagation(); moveToCompetitors(p.row) }} sx={{ color: 'text.secondary', '&:hover': { color: '#6c8eff' } }} title="В конкуренты">
+                        <CompareArrowsRoundedIcon sx={{ fontSize: '0.9rem' }} />
                     </IconButton>
                     <IconButton size="small" onClick={e => { e.stopPropagation(); openReadOnly(p.row) }} sx={{ color: 'text.secondary', '&:hover': { color: 'primary.main' } }} title="Посмотреть карточку">
                         <VisibilityRoundedIcon sx={{ fontSize: '0.95rem' }} />

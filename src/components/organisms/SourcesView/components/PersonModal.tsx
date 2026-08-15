@@ -14,6 +14,7 @@ import OpenInNewRoundedIcon from '@mui/icons-material/OpenInNewRounded'
 import ContentCopyRoundedIcon from '@mui/icons-material/ContentCopyRounded'
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded'
 import ArchiveRoundedIcon from '@mui/icons-material/ArchiveRounded'
+import CompareArrowsRoundedIcon from '@mui/icons-material/CompareArrowsRounded'
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded'
 import LockRoundedIcon from '@mui/icons-material/LockRounded'
 
@@ -34,6 +35,7 @@ interface PersonModalProps {
     addHistory: (id: string, text: string, auto?: boolean) => void
     onRemoveFromOutreach: () => void
     onDeleteCompletely: () => void
+    onMoveToCompetitors?: () => void
     /** View-only card (no edits, no destructive footer) — used from People and Архив. */
     readOnly?: boolean
 }
@@ -54,6 +56,7 @@ export default function PersonModal({
     addHistory,
     onRemoveFromOutreach,
     onDeleteCompletely,
+    onMoveToCompetitors,
     readOnly = false,
 }: PersonModalProps) {
     const nextAction = getNextAction(person)
@@ -533,6 +536,17 @@ export default function PersonModal({
                             >
                                 Удалить совсем
                             </Button>
+                            {onMoveToCompetitors && (
+                                <Button
+                                    size="small"
+                                    variant="outlined"
+                                    startIcon={<CompareArrowsRoundedIcon sx={{ fontSize: '0.8rem' }} />}
+                                    onClick={onMoveToCompetitors}
+                                    sx={{ textTransform: 'none', fontSize: '0.75rem', borderColor: '#6c8eff44', color: '#6c8eff', '&:hover': { borderColor: '#6c8eff', backgroundColor: '#6c8eff11' } }}
+                                >
+                                    В конкуренты
+                                </Button>
+                            )}
                         </Box>
                     </>
                 )}

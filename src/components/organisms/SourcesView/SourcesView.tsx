@@ -54,7 +54,7 @@ import {
     NEXT_ACTION_LABELS,
     DEFAULT_COUNTRIES,
 } from './sources.constants'
-import { generateId, isWithinLastWeek, getAutoActions } from './sources.utils'
+import { generateId, isWithinLastWeek, getAutoActions, movePersonToCompetitors, personToMoveOpts, type MoveToCompetitorOpts } from './sources.utils'
 
 export default function SourcesView({ sources, onSaveSources, startDate, initialTab }: SourcesViewProps) {
     const [tab, setTab] = React.useState(initialTab ?? 0)
@@ -490,6 +490,12 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
         save(next)
     }
 
+    // Move a person (People or Outreach) into Competitors — they're a rival, not a lead.
+    const moveToCompetitors = React.useCallback((opts: MoveToCompetitorOpts) => {
+        save(movePersonToCompetitors(local, opts))
+        setSnackbarMsg(`${opts.name || 'Человек'} → в Конкуренты`)
+    }, [local, save])
+
     return (
         <Box sx={{ flex: 1, overflow: 'auto', px: { xs: 2, md: 4 }, py: 3 }}>
             <Typography variant="h5" sx={{ fontWeight: 700, mb: 0.5 }}>Sources</Typography>
@@ -536,6 +542,7 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
                     addPerson={addPerson}
                     updatePerson={updatePerson}
                     togglePersonShortlist={togglePersonShortlist}
+                    moveToCompetitors={(p) => moveToCompetitors(personToMoveOpts(p))}
                     uniqueVals={uniqueVals}
                     filtered={filtered}
                     searched={searched}
@@ -735,6 +742,10 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
                             deleteShortlistPerson(person.id)
                             const personInPeople = local.people.find(p => (p.linkedinUrl && person.linkedinUrl && p.linkedinUrl.replace(/\/$/, '').toLowerCase() === person.linkedinUrl.replace(/\/$/, '').toLowerCase()) || (p.name && person.name && p.name.toLowerCase() === person.name.toLowerCase()))
                             if (personInPeople) deletePerson(personInPeople.id)
+                            closeModal()
+                        }}
+                        onMoveToCompetitors={() => {
+                            moveToCompetitors(personToMoveOpts(person))
                             closeModal()
                         }}
                     />
