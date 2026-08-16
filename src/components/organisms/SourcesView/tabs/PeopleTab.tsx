@@ -52,6 +52,7 @@ interface PeopleTabProps {
     updatePerson: (id: string, patch: Partial<SourcePerson>) => void
     togglePersonShortlist: (person: SourcePerson) => void
     moveToCompetitors: (person: SourcePerson) => void
+    onBulkImport: () => void
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     uniqueVals: <T extends Record<string, any>>(items: T[], key: string) => string[]
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -64,7 +65,7 @@ export default function PeopleTab({
     local, save, searchQuery, setSearchQuery, filters, setFilter, clearFilters,
     selectedPeopleIds, setSelectedPeopleIds, countries,
     setCountriesDialogOpen, setSnackbarMsg, setDeleteConfirm, isInShortlist, isReviewed, openReadOnly,
-    addPeopleToOutreach, addPerson, updatePerson, togglePersonShortlist, moveToCompetitors,
+    addPeopleToOutreach, addPerson, updatePerson, togglePersonShortlist, moveToCompetitors, onBulkImport,
     uniqueVals, filtered, searched,
 }: PeopleTabProps) {
     const rows = searched(filtered(local.people as SourcePerson[]))
@@ -223,6 +224,9 @@ export default function PeopleTab({
                 })()}
                 <Button size="small" startIcon={<AddRoundedIcon />} onClick={addPerson} variant="outlined" sx={{ textTransform: 'none', fontSize: '0.8rem' }}>
                     Добавить
+                </Button>
+                <Button size="small" onClick={onBulkImport} variant="outlined" sx={{ textTransform: 'none', fontSize: '0.8rem' }}>
+                    Импорт списком
                 </Button>
             </Box>
             <DataGrid

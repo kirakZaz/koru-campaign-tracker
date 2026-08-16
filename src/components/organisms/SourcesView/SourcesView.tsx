@@ -54,7 +54,8 @@ import {
     NEXT_ACTION_LABELS,
     DEFAULT_COUNTRIES,
 } from './sources.constants'
-import { generateId, isWithinLastWeek, getAutoActions, movePersonToCompetitors, personToMoveOpts, sourcePersonToShortlistView, PEOPLE_EDIT_KEYS, type MoveToCompetitorOpts } from './sources.utils'
+import { generateId, isWithinLastWeek, getAutoActions, movePersonToCompetitors, personToMoveOpts, sourcePersonToShortlistView, personDedupKey, PEOPLE_EDIT_KEYS, type MoveToCompetitorOpts } from './sources.utils'
+import BulkImportModal from './components/BulkImportModal'
 
 export default function SourcesView({ sources, onSaveSources, startDate, initialTab }: SourcesViewProps) {
     const [tab, setTab] = React.useState(initialTab ?? 0)
@@ -71,6 +72,7 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
     const [viewPerson, setViewPerson] = React.useState<ShortlistPerson | null>(null)
     // People card is editable; the Архив card stays read-only.
     const [viewEditable, setViewEditable] = React.useState(false)
+    const [bulkOpen, setBulkOpen] = React.useState(false)
     const [selectedPeopleIds, setSelectedPeopleIds] = React.useState<Set<string>>(new Set())
     const [addBestDialogOpen, setAddBestDialogOpen] = React.useState(false)
     const [bestPickIds, setBestPickIds] = React.useState<Set<string>>(new Set())
@@ -180,6 +182,21 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
         const next = { ...local, people: [{ id: generateId(), name: '', title: '', linkedinUrl: '', country: '', icpSegment: 'freelancer' as IcpSegment, priority: 'B' as IcpPriority, activityLevel: 'medium' as const, source: '', status: 'new' as PersonStatus, notes: '', createdAt: new Date().toISOString() }, ...local.people] }
         save(next)
     }
+
+    const peopleKeys = React.useMemo(() => new Set(local.people.map(personDedupKey)), [local.people])
+    const bulkAddPeople = React.useCallback((rows: Array<Omit<SourcePerson, 'id'>>) => {
+        const seen = new Set(local.people.map(personDedupKey))
+        const now = new Date().toISOString()
+        const fresh: SourcePerson[] = []
+        for (const r of rows) {
+            const key = personDedupKey(r)
+            if (!key || seen.has(key)) continue
+            seen.add(key)
+            fresh.push({ ...r, id: generateId(), createdAt: now })
+        }
+        if (fresh.length) { save({ ...local, people: [...fresh, ...local.people] }); setSnackbarMsg(`Добавлено ${fresh.length} в Люди`) }
+        return fresh.length
+    }, [local, save])
     const updatePerson = (id: string, patch: Partial<SourcePerson>) => {
         // Duplicate check on linkedinUrl
         if (patch.linkedinUrl) {
@@ -539,6 +556,7 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
                     updatePerson={updatePerson}
                     togglePersonShortlist={togglePersonShortlist}
                     moveToCompetitors={(p) => moveToCompetitors(personToMoveOpts(p))}
+                    onBulkImport={() => setBulkOpen(true)}
                     uniqueVals={uniqueVals}
                     filtered={filtered}
                     searched={searched}
@@ -782,6 +800,14 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
                     />
                 )
             })()}
+
+            <BulkImportModal
+                open={bulkOpen}
+                onClose={() => setBulkOpen(false)}
+                existingKeys={peopleKeys}
+                sourceTag={`import ${new Date().toISOString().slice(8, 10)}.${new Date().toISOString().slice(5, 7)}`}
+                onAdd={bulkAddPeople}
+            />
 
             <Snackbar
                 open={!!snackbarMsg}

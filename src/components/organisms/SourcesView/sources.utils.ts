@@ -27,6 +27,50 @@ export interface MoveToCompetitorOpts {
     type?: string
 }
 
+// ── Bulk import: paste "Имя | Ссылка | Должность | Страна | Сегмент | Заметки" ──
+// Positional pipe format. Имя + Ссылка required. Fields 6+ fold into notes.
+
+export interface BulkParsedRow {
+    lineNo: number
+    raw: string
+    valid: boolean
+    reason?: string
+    person: Omit<SourcePerson, 'id'>
+}
+
+const SEGMENT_MAP: Record<string, SourcePerson['icpSegment']> = {
+    'agency': 'small_agency', 'agencies': 'small_agency', 'small agency': 'small_agency', 'small_agency': 'small_agency',
+    'freelancer': 'freelancer', 'freelance': 'freelancer',
+    'in-house': 'in_house', 'in house': 'in_house', 'inhouse': 'in_house', 'in_house': 'in_house',
+    'other': 'other'
+}
+
+/** Parse a pasted bulk list into People rows (pure — no dedup, no ids, no dates). */
+export function parsePeopleBulk(text: string, sourceTag: string): BulkParsedRow[] {
+    const lines = text.split('\n').map((l) => l.trim()).filter(Boolean)
+    return lines.map((raw, i) => {
+        const parts = raw.split('|').map((p) => p.trim())
+        const name = parts[0] || ''
+        const link = parts[1] || ''
+        const title = parts[2] || ''
+        const country = parts[3] || ''
+        const segRaw = (parts[4] || '').toLowerCase()
+        const notes = parts.slice(5).map((p) => p.trim()).filter(Boolean).join(' · ')
+        const person: Omit<SourcePerson, 'id'> = {
+            name, title, linkedinUrl: link, country,
+            icpSegment: SEGMENT_MAP[segRaw] ?? 'freelancer',
+            priority: 'B', activityLevel: 'medium', source: sourceTag, status: 'new', notes
+        }
+        const valid = !!name && !!link
+        return { lineNo: i + 1, raw, valid, reason: valid ? undefined : (!name ? 'нет имени' : 'нет ссылки'), person }
+    })
+}
+
+/** Dedup key for a person — by link, else by name (lowercased). */
+export function personDedupKey(p: { name?: string, linkedinUrl?: string }): string {
+    return (p.linkedinUrl || '').replace(/\/$/, '').toLowerCase() || (p.name || '').trim().toLowerCase()
+}
+
 /** Build move-to-competitor opts from either a People (title) or Outreach (source) record. */
 export function personToMoveOpts(p: { name: string, linkedinUrl?: string, notes?: string, title?: string, source?: string, icpSegment?: string }): MoveToCompetitorOpts {
     return {
