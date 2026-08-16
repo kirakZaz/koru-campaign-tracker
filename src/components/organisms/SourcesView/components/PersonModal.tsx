@@ -133,12 +133,30 @@ export default function PersonModal({
                 {/* Header */}
                 <Box sx={{ p: 2.5, pb: 1.5 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-                        <Typography sx={{ fontSize: '1.25rem', fontWeight: 800 }}>{person.name || 'Без имени'}</Typography>
-                        <Chip
-                            label={person.priority}
-                            size="small"
-                            sx={{ fontSize: '0.7rem', fontWeight: 800, height: 22, backgroundColor: priorityColor + '22', color: priorityColor, border: `1px solid ${priorityColor}44` }}
-                        />
+                        <Typography
+                            sx={{ fontSize: '1.25rem', fontWeight: 800, cursor: readOnly ? 'default' : 'text', '&:hover': readOnly ? {} : { outline: '1px solid #30363d', borderRadius: 1, px: 0.5, mx: -0.5 } }}
+                            contentEditable={!readOnly}
+                            suppressContentEditableWarning
+                            onBlur={readOnly ? undefined : (e) => { const v = e.currentTarget.textContent || ''; if (v !== person.name) updateShortlistPerson(person.id, { name: v }) }}
+                        >
+                            {person.name || 'Без имени'}
+                        </Typography>
+                        {readOnly ? (
+                            <Chip
+                                label={person.priority}
+                                size="small"
+                                sx={{ fontSize: '0.7rem', fontWeight: 800, height: 22, backgroundColor: priorityColor + '22', color: priorityColor, border: `1px solid ${priorityColor}44` }}
+                            />
+                        ) : (
+                            <Select
+                                value={person.priority}
+                                onChange={(e) => updateShortlistPerson(person.id, { priority: e.target.value as ShortlistPerson['priority'] })}
+                                size="small"
+                                sx={{ height: 24, fontSize: '0.7rem', fontWeight: 800, color: priorityColor, '& .MuiSelect-select': { py: 0, pl: 1, pr: '20px !important' }, '& .MuiOutlinedInput-notchedOutline': { borderColor: priorityColor + '44' } }}
+                            >
+                                {(['A', 'B', 'C'] as const).map((p) => <MenuItem key={p} value={p} sx={{ fontSize: '0.75rem' }}>{p}</MenuItem>)}
+                            </Select>
+                        )}
                         {person.reviewed && (
                             <Chip
                                 icon={<CheckCircleRoundedIcon sx={{ fontSize: '0.85rem !important', color: '#3fb68e !important' }} />}
@@ -162,8 +180,17 @@ export default function PersonModal({
                         {person.country && (
                             <Chip label={person.country} size="small" sx={{ fontSize: '0.7rem', height: 22 }} />
                         )}
-                        {person.icpSegment && (
-                            <Chip label={ICP_LABELS[person.icpSegment]} size="small" sx={{ fontSize: '0.7rem', height: 22, backgroundColor: '#6c8eff22', color: '#6c8eff' }} />
+                        {readOnly ? (
+                            person.icpSegment && <Chip label={ICP_LABELS[person.icpSegment]} size="small" sx={{ fontSize: '0.7rem', height: 22, backgroundColor: '#6c8eff22', color: '#6c8eff' }} />
+                        ) : (
+                            <Select
+                                value={person.icpSegment || 'freelancer'}
+                                onChange={(e) => updateShortlistPerson(person.id, { icpSegment: e.target.value as ShortlistPerson['icpSegment'] })}
+                                size="small"
+                                sx={{ height: 24, fontSize: '0.7rem', color: '#6c8eff', '& .MuiSelect-select': { py: 0, pl: 1, pr: '20px !important' }, '& .MuiOutlinedInput-notchedOutline': { borderColor: '#6c8eff44' } }}
+                            >
+                                {(Object.keys(ICP_LABELS) as Array<keyof typeof ICP_LABELS>).map((k) => <MenuItem key={k} value={k} sx={{ fontSize: '0.75rem' }}>{ICP_LABELS[k]}</MenuItem>)}
+                            </Select>
                         )}
                     </Box>
                     {person.source && (
