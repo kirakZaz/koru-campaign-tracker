@@ -1,7 +1,7 @@
 # KORU Campaign Tracker
 
 ## What this is
-Campaign management app for KORU's go-to-market. Current strategy (from Aug 2026, after the LinkedIn-broadcast/launch plan failed): a free public AI-citation checker + founder-led LinkedIn outreach — Kira runs the checker on target companies and DMs each prospect their own "who does AI cite instead of you" result. Everything remote (no live calls). Twitter and the big-launch/Product-Hunt play are dropped. React + MUI frontend, Express backend, deployed on Vercel.
+Campaign management app for KORU's go-to-market. Current strategy (from Aug 2026, after the LinkedIn-broadcast/launch plan failed): a free public checker (audit + AI-citation) + founder-led LinkedIn outreach — Kira runs the checker on target companies and DMs each prospect their own "who does AI cite instead of you" result. Everything remote (no live calls). Twitter stays dropped. **Product Hunt is BACK (decided 17.08.2026)** — as a ONE-TIME amplifier on top of the steady founder-outreach loop, not a replacement, and gated: a hard 3-condition check (checker stable, landing converts, warm list ≥30) must pass or the launch slips a week. PH launch week lives after the release (dayIndex 1011–1013). React + MUI frontend, Express backend, deployed on Vercel.
 
 ## Campaign roles
 - **Кира:** runs the AI-citation checker on target companies, DMs each prospect their own result on LinkedIn, posts findings from her personal profile, async follow-up (send full report or a recorded walkthrough — NO live calls). All remote.
