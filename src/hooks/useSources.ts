@@ -37,11 +37,12 @@ export function useSources() {
         const prev = sources
         setSources(newSources)
         try {
-            await fetch(API_URL, {
+            const res = await fetch(API_URL, {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ action: 'set-sources', sources: newSources })
             })
+            if (!res.ok) throw new Error('Failed to save sources')
         } catch {
             setSources(prev)
         }

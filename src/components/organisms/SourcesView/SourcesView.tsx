@@ -168,13 +168,41 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
         }
     }, [sources])
 
+    const pendingRef = React.useRef<typeof local | null>(null)
+    const onSaveRef = React.useRef(onSaveSources)
+    onSaveRef.current = onSaveSources
+
     const save = React.useCallback((next: typeof local) => {
         setLocal(next)
+        pendingRef.current = next
         clearTimeout(saveTimerRef.current)
         saveTimerRef.current = setTimeout(() => {
-            onSaveSources(next)
+            pendingRef.current = null
+            onSaveRef.current(next)
         }, 800)
-    }, [onSaveSources])
+    }, [])
+
+    // Flush a pending (debounced) save before the view unmounts or the page
+    // reloads — otherwise a quick "edit then navigate/reload" loses the write
+    // (e.g. archive a person then immediately switch away). This was the bug.
+    React.useEffect(() => {
+        const flush = () => {
+            if (saveTimerRef.current) { clearTimeout(saveTimerRef.current); saveTimerRef.current = undefined }
+            if (pendingRef.current) { onSaveRef.current(pendingRef.current); pendingRef.current = null }
+        }
+        window.addEventListener('beforeunload', flush)
+        return () => { window.removeEventListener('beforeunload', flush); flush() }
+    }, [])
+
+    // Immediate save for discrete actions (archive, delete, move, add, bulk) —
+    // no debounce, so "do it then reload" can't lose the write. Text inputs keep
+    // the debounced save() to avoid a full PATCH on every keystroke.
+    const saveNow = React.useCallback((next: typeof local) => {
+        clearTimeout(saveTimerRef.current)
+        pendingRef.current = null
+        setLocal(next)
+        onSaveRef.current(next)
+    }, [])
 
     // --- People ---
     const addPerson = () => {
@@ -194,7 +222,7 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
             seen.add(key)
             fresh.push({ ...r, id: generateId(), createdAt: now })
         }
-        if (fresh.length) { save({ ...local, people: [...fresh, ...local.people] }); setSnackbarMsg(`Добавлено ${fresh.length} в Люди`) }
+        if (fresh.length) { saveNow({ ...local, people: [...fresh, ...local.people] }); setSnackbarMsg(`Добавлено ${fresh.length} в Люди`) }
         return fresh.length
     }, [local, save])
     const updatePerson = (id: string, patch: Partial<SourcePerson>) => {
@@ -259,7 +287,7 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
     }
     const deleteShortlistPerson = (id: string) => {
         const next = { ...local, shortlist: local.shortlist.filter(s => s.id !== id) }
-        save(next)
+        saveNow(next)
     }
 
     // --- Archive ("проверен") helpers ---
@@ -270,12 +298,12 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
     const archiveShortlistPerson = (id: string) => {
         const now = new Date().toISOString().slice(0, 10)
         const next = { ...local, shortlist: local.shortlist.map(s => s.id === id ? { ...s, reviewed: true, reviewedAt: now, history: [...(s.history || []), { date: now, text: 'В архив (проверен)', auto: true }] } : s) }
-        save(next)
+        saveNow(next)
     }
     const reactivateShortlistPerson = (id: string) => {
         const now = new Date().toISOString().slice(0, 10)
         const next = { ...local, shortlist: local.shortlist.map(s => s.id === id ? { ...s, reviewed: false, reviewedAt: undefined, history: [...(s.history || []), { date: now, text: 'Возвращён в Outreach', auto: true }] } : s) }
-        save(next)
+        saveNow(next)
     }
     // Return an archived person to People: drop the shortlist record; recreate a People
     // row if none matches (e.g. added directly in Outreach).
@@ -290,13 +318,13 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
             source: record.source || '', status: record.status || 'new' as PersonStatus,
             notes: record.notes || '', createdAt: new Date().toISOString(),
         }, ...local.people]
-        save({ ...local, people, shortlist: local.shortlist.filter(s => s.id !== id) })
+        saveNow({ ...local, people, shortlist: local.shortlist.filter(s => s.id !== id) })
     }
     // Fully delete an archived person from both People and the shortlist.
     const deleteArchivedCompletely = (id: string) => {
         const record = local.shortlist.find(s => s.id === id)
         const people = record ? local.people.filter(p => !matchesPerson(p, record)) : local.people
-        save({ ...local, people, shortlist: local.shortlist.filter(s => s.id !== id) })
+        saveNow({ ...local, people, shortlist: local.shortlist.filter(s => s.id !== id) })
     }
 
     // Open the read-only card for a People row: show its outreach record if it has one,
@@ -505,7 +533,7 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
 
     // Move a person (People or Outreach) into Competitors — they're a rival, not a lead.
     const moveToCompetitors = React.useCallback((opts: MoveToCompetitorOpts) => {
-        save(movePersonToCompetitors(local, opts))
+        saveNow(movePersonToCompetitors(local, opts))
         setSnackbarMsg(`${opts.name || 'Человек'} → в Конкуренты`)
     }, [local, save])
 
