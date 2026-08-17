@@ -241,29 +241,38 @@ app.get('/api/sources', (_req, res) => {
 
 app.patch('/api/sources', (req, res) => {
     try {
+        const body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body
+        if (!body || typeof body !== 'object' || !body.action) {
+            return res.status(400).json({ error: 'Bad body', bodyType: typeof req.body })
+        }
         const data = readJSON(SOURCES_PATH, { ...DEFAULT_SOURCES })
-        const { action } = req.body
+        const { action } = body
 
         if (action === 'set-sources') {
-            Object.assign(data, req.body.sources)
+            if (!body.sources || typeof body.sources !== 'object') {
+                return res.status(400).json({ error: 'set-sources: sources missing/not an object' })
+            }
+            Object.assign(data, body.sources)
         } else if (action === 'set-people') {
-            data.people = req.body.people
+            data.people = body.people
         } else if (action === 'set-groups') {
-            data.groups = req.body.groups
+            data.groups = body.groups
         } else if (action === 'set-companies') {
-            data.companies = req.body.companies
+            data.companies = body.companies
         } else if (action === 'set-shortlist') {
-            data.shortlist = req.body.shortlist
+            data.shortlist = body.shortlist
         } else if (action === 'set-competitors') {
-            data.competitors = req.body.competitors
+            data.competitors = body.competitors
         } else if (action === 'set-countries') {
-            data.countries = req.body.countries
+            data.countries = body.countries
+        } else {
+            return res.status(400).json({ error: `Unknown action: ${action}` })
         }
 
         saveJSON(SOURCES_PATH, data)
-        res.json({ ok: true })
-    } catch {
-        res.status(500).json({ error: 'Failed to update sources' })
+        res.json({ ok: true, people: data.people.length, shortlist: data.shortlist.length })
+    } catch (e) {
+        res.status(500).json({ error: 'Failed to update sources', detail: String(e) })
     }
 })
 

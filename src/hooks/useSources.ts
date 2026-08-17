@@ -42,8 +42,13 @@ export function useSources() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ action: 'set-sources', sources: newSources })
             })
-            if (!res.ok) throw new Error('Failed to save sources')
-        } catch {
+            if (!res.ok) {
+                const detail = await res.text().catch(() => '')
+                console.error('[sources save] server rejected', res.status, detail)
+                throw new Error('Failed to save sources')
+            }
+        } catch (e) {
+            console.error('[sources save] failed', e)
             setSources(prev)
         }
     }, [sources])

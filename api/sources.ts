@@ -54,30 +54,44 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     if (req.method === 'PATCH') {
         try {
+            // Vercel may hand us the body as a raw string for larger payloads —
+            // parse it so req.body.sources isn't silently undefined (which made
+            // Object.assign a no-op → 200 OK but nothing saved).
+            const body = (typeof req.body === 'string' ? JSON.parse(req.body) : req.body) as { action?: string, [key: string]: unknown }
+            if (!body || typeof body !== 'object' || !body.action) {
+                res.status(400).json({ error: 'Bad body', bodyType: typeof req.body })
+                return
+            }
             const data = (await redis.get<SourcesData>(SOURCES_KEY)) ?? { ...DEFAULT_SOURCES }
-            const { action } = req.body as { action: string, [key: string]: unknown }
+            const { action } = body
 
             if (action === 'set-sources') {
-                const incoming = req.body.sources as SourcesData
-                Object.assign(data, incoming)
+                if (!body.sources || typeof body.sources !== 'object') {
+                    res.status(400).json({ error: 'set-sources: sources missing/not an object' })
+                    return
+                }
+                Object.assign(data, body.sources as SourcesData)
             } else if (action === 'set-people') {
-                data.people = req.body.people as unknown[]
+                data.people = body.people as unknown[]
             } else if (action === 'set-groups') {
-                data.groups = req.body.groups as unknown[]
+                data.groups = body.groups as unknown[]
             } else if (action === 'set-companies') {
-                data.companies = req.body.companies as unknown[]
+                data.companies = body.companies as unknown[]
             } else if (action === 'set-shortlist') {
-                data.shortlist = req.body.shortlist as unknown[]
+                data.shortlist = body.shortlist as unknown[]
             } else if (action === 'set-competitors') {
-                data.competitors = req.body.competitors as unknown[]
+                data.competitors = body.competitors as unknown[]
             } else if (action === 'set-countries') {
-                data.countries = req.body.countries as string[]
+                data.countries = body.countries as string[]
+            } else {
+                res.status(400).json({ error: `Unknown action: ${action}` })
+                return
             }
 
             await redis.set(SOURCES_KEY, data)
-            res.json({ ok: true })
-        } catch {
-            res.status(500).json({ error: 'Failed to update sources' })
+            res.json({ ok: true, people: data.people.length, shortlist: data.shortlist.length })
+        } catch (e) {
+            res.status(500).json({ error: 'Failed to update sources', detail: String(e) })
         }
         return
     }
