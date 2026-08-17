@@ -1,6 +1,7 @@
 import * as React from 'react'
 import type { ProgressData, CampaignState, CampaignDay, CampaignTask, InsightEntry } from '@/data/campaignData.types'
 import { CAMPAIGN_VERSION, buildInitialState } from '@/data/campaignData'
+import { mergeCampaignState } from './campaignMigration'
 
 const API_URL = '/api/progress'
 
@@ -25,31 +26,9 @@ export function useProgress() {
             if (data.campaignState && data.campaignState.version >= CAMPAIGN_VERSION) {
                 setCampaignState(data.campaignState)
             } else {
-                const state = buildInitialState()
-                // Migrate: carry over completed status and notes from old campaignState if present
-                if (data.campaignState) {
-                    for (const oldDay of data.campaignState.days) {
-                        const newDay = state.days.find(d => d.dayIndex === oldDay.dayIndex)
-                        if (!newDay) continue
-                        if (oldDay.note) newDay.note = oldDay.note
-                        if (oldDay._edited) newDay._edited = oldDay._edited
-                        if (oldDay.title !== newDay.title && oldDay._edited) newDay.title = oldDay.title
-                        if (oldDay.summary !== newDay.summary && oldDay._edited) newDay.summary = oldDay.summary
-                        for (const oldTask of oldDay.tasks) {
-                            const newTask = newDay.tasks.find(t => t.id === oldTask.id)
-                            if (!newTask) {
-                                // Task was created by user — keep it
-                                newDay.tasks.push({ ...oldTask, dayNumber: String(oldDay.dayIndex), phaseNumber: oldDay.phase } as CampaignTask)
-                                continue
-                            }
-                            if (oldTask.completed) newTask.completed = true
-                            if (oldTask.completedSubtasks) Object.assign(newTask.completedSubtasks, oldTask.completedSubtasks)
-                            if (oldTask._edited) {
-                                Object.assign(newTask, oldTask, { dayNumber: String(oldDay.dayIndex), phaseNumber: oldDay.phase })
-                            }
-                        }
-                    }
-                }
+                // Rebuild from the template and merge old progress in. mergeCampaignState
+                // NEVER drops user/baked content (leads, per-person notes, messages) — see its doc.
+                const state = mergeCampaignState(data.campaignState, buildInitialState())
                 setCampaignState(state)
                 await fetch(API_URL, {
                     method: 'PATCH',
