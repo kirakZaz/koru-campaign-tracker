@@ -305,6 +305,28 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
         const next = { ...local, shortlist: local.shortlist.map(s => s.id === id ? { ...s, reviewed: false, reviewedAt: undefined, history: [...(s.history || []), { date: now, text: 'Возвращён в Outreach', auto: true }] } : s) }
         saveNow(next)
     }
+    // Archive a person straight from the Люди table: if they already have a shortlist
+    // record, mark it reviewed; otherwise create a reviewed record. Either way, remove
+    // them from active Люди so they land in the Архив tab. Reversible via «В People».
+    const archivePersonFromPeople = (personId: string) => {
+        const p = local.people.find(x => x.id === personId)
+        if (!p) return
+        const now = new Date().toISOString().slice(0, 10)
+        const existing = local.shortlist.find(s => matchesPerson(p, s))
+        const shortlist = existing
+            ? local.shortlist.map(s => s.id === existing.id ? { ...s, reviewed: true, reviewedAt: now, history: [...(s.history || []), { date: now, text: 'В архив (из Люди)', auto: true }] } : s)
+            : [...local.shortlist, {
+                id: generateId(), batch: '', name: p.name, linkedinUrl: p.linkedinUrl,
+                priority: p.priority, dmStatus: 'not_sent' as DmStatus, connectionStatus: 'not_sent' as ConnectionStatus,
+                source: p.source, status: p.status, notes: p.notes,
+                actions: [] as ShortlistAction[], completedActions: [] as ShortlistAction[],
+                country: p.country, icpSegment: p.icpSegment, createdAt: new Date().toISOString(),
+                reviewed: true, reviewedAt: now,
+                history: [{ date: now, text: 'В архив (из Люди)', auto: true }] as HistoryEntry[],
+            }]
+        saveNow({ ...local, shortlist, people: local.people.filter(x => x.id !== personId) })
+        setSnackbarMsg(`${p.name || 'Человек'} → в Архив`)
+    }
     // Return an archived person to People: drop the shortlist record; recreate a People
     // row if none matches (e.g. added directly in Outreach).
     const returnArchivedToPeople = (id: string) => {
@@ -822,7 +844,7 @@ export default function SourcesView({ sources, onSaveSources, startDate, initial
                         updateShortlistWithHistory={updateShortlistWithHistory}
                         updateShortlistPerson={update}
                         addHistory={addHistory}
-                        onRemoveFromOutreach={closeView}
+                        onRemoveFromOutreach={() => { if (isPeople) archivePersonFromPeople(viewPerson.id); else archiveShortlistPerson(viewPerson.id); closeView() }}
                         onDeleteCompletely={() => { if (isPeople) deletePerson(viewPerson.id); else deleteShortlistPerson(viewPerson.id); closeView() }}
                         onMoveToCompetitors={() => { moveToCompetitors(personToMoveOpts(person)); closeView() }}
                     />
